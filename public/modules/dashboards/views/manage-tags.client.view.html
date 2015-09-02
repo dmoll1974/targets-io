@@ -1,0 +1,22 @@
+<div data-ng-controller="DashboardTagsController" data-ng-init="listTagsForDashboard()">
+    <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Show when opening graphs</th>
+                <th>Tag</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="tag in tags" \>
+                <td><input type="radio" name="tagDefault" ng-model="$parent.defaultTag" ng-value="tag.text"/></td>
+                <td>{{tag.text}}</td>
+                <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteTagModal('', $index)"></i> </th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

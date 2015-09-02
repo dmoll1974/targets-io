@@ -1,0 +1,260 @@
+.top-header {
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height:( $header_height * 2);
+    background-color: $reverse;
+    @include box-shadow(0 1px 2px rgba(0,0,0,.1));
+    @media (min-width:$screen-sm) {
+        height: $header_height;
+    }
+
+    // shared
+    a {
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .hidden-mobile {
+        display: none;
+        @media (min-width: $screen-xs) {
+            display: inline;
+        }
+    }
+
+    //
+    .logo {
+        position: absolute;
+        width: 100%;
+        height: $header_height;
+        background-color: darken($dark, 5%);
+        color: $bright;
+        line-height: $header_height;
+        text-align: center;
+        @media (min-width: $screen-sm) {
+            display: inline-block;
+            width: 220px;
+            background-color: $reverse;
+            color: $text-color;
+            border-right: 1px solid $state-default-border;
+        }
+
+        > a {
+            font-size: 24px;
+            vertical-align: middle;
+            color: $bright;
+            @media (min-width: $screen-sm) {
+                color: $text-color;
+            }
+
+            .logo-icon {
+                color: lighten($brand-primary, 20%);
+                margin-right: 12px;
+            }
+        }
+    }
+
+    // 
+
+    .menu-button {
+        display: block;
+        position: absolute;
+        top:  ( $header_height/2 - 17);
+        right: 20px;
+        width: 46px;
+        padding: 10px 12px;
+        border-radius: 4px;
+        &:hover {
+            cursor: pointer;
+            background-color: darken($dark, 10%);
+        }
+
+        .icon-bar {
+            display: block;
+            width: 22px;
+            height: 2px;
+            border-radius: 1px;
+            background-color: #fff;
+        }
+        .icon-bar + .icon-bar {
+            margin-top: 4px;
+        }
+
+        @media (min-width: $screen-sm) {
+            display: none;
+        }
+    }
+
+    // 
+    .dropdown-menu.panel {
+        padding: 0;
+        white-space: nowrap;
+        
+        .panel-heading,
+        .panel-footer {
+            padding: 10px 15px;
+        }
+
+        .list-group-item {
+            padding: 10px 15px;
+            > a {
+                display: block;
+            }
+        }
+
+        .media {
+            .media-body {
+                padding-right: 75px;
+            }
+        }
+    }
+
+
+    // 
+    .top-nav {
+        width: 100%;
+        padding: 50px 0 0;
+        @media (min-width: $screen-sm) {
+            padding: 0 0 0 220px;
+        }
+
+        // 
+        .nav-left,
+        .nav-right {
+            font-size: 18px;
+            line-height: 22px;
+
+            > li {
+                float: left;
+                &.nav-profile {
+                    > a {
+                        padding: 10px 15px;
+                    }
+                    .hidden-xs {
+                        padding-right: 8px;
+                    }
+                    i {
+                        width: 18px;
+                        font-size: 16px;
+                        margin-right: 5px;
+                    } 
+                }
+
+                > .toggle-min {
+                    display: none;
+                    @media (min-width:$screen-sm) {
+                        display: block;
+                    }
+                }
+
+                a {
+                    &:hover,
+                    &:focus {
+                        text-decoration: none;
+                    }
+                }
+
+                > .btn-group > a,
+                > a {
+                    position: relative;
+                    display: block;
+
+                    height: 50px;
+                    padding: 14px 10px;
+                    @media (min-width:$screen-sm) {
+                        padding: 14px 15px;
+                    }
+
+                    .badge {
+                        position: absolute;
+                        top: 6px;
+                        right: 3px;
+                    }
+                }
+
+                ul.dropdown-menu {
+                    a:hover {
+                        background-color: $skin;
+                        color: #fff;
+                    }
+
+                    .glyphicon {
+                        margin-right: 10px;
+                    }
+                }
+            }
+
+            // color switch
+            // .color-switch {
+            //     > li {
+            //         margin-bottom: 8px;
+            //         &:last-child {
+            //             margin-bottom: 0;
+            //         }
+            //     }
+            // }
+            // .color-option {
+            //     display: block;
+            //     padding: 10px;
+            //     &.color-some_color {
+            //         background-color: #482647;
+            //         &:hover {
+            //             background-color: lighten(#482647, 10%);
+            //         }
+            //     }
+            // }
+        }
+
+        // 
+        .nav-left {
+            float: left;
+            padding: 0;
+            > li {
+                border-right: 1px solid $state-default-border;
+            }
+        }
+
+        // 
+        .nav-right {
+            padding: 0;
+            > li {
+                > a {
+                    width: 50px;
+                    text-align: center;
+                }
+            }
+
+            .badge-info {
+                background-color: transparent;
+            }
+        }
+    }
+
+    // 
+    .langs {
+        .active-flag {
+            .flag {
+                margin-top: -5px;
+            }
+        }
+
+        .list-langs {
+            a {
+                position: relative;
+                padding: 8px 20px 8px 57px;
+
+                .flag {
+                    position: absolute;
+                    top: 2px;
+                    left: 15px;
+                }
+            }
+        }
+    }
+
+
+}
+

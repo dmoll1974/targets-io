@@ -1,0 +1,17 @@
+.on-canvas {
+
+    #nav-container {
+        left: 0;
+    }
+
+    .top-header .top-nav {
+        margin-left: 220px;
+        @media (min-width:$screen-sm) {
+            margin-left: 0;
+        }
+    }
+
+    #content {
+        left: 220px;
+    }
+}

@@ -1,0 +1,83 @@
+<section data-ng-controller="MetricsController" data-ng-init="initCreateForm()">
+    <div class="page-header">
+        <h1>New Metric</h1>
+    </div>
+    <div class="col-md-12">
+        <form name="metricForm" class="form-horizontal"  novalidate>
+            <fieldset>
+                <div class="form-group well well-sm">
+                    <label class="control-label" for="alias">Alias</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="metric.alias" id="alias" class="form-control" placeholder="Alias" required>
+                    </div>
+                </div>
+                <div class="form-group well well-sm">
+                    <label class="control-label" for="target" >Targets</label>
+                    <div class="controls" ng-repeat="target in metric.targets track by $index">
+                        <input class="metric-targets" type="text" id="target" data-ng-model="metric.targets[$index]" placeholder="Enter target" required>
+                        <i class="pull-right glyphicon glyphicon-trash" data-ng-click="removeTarget($index)" data-ng-show="metric.targets.length>1"></i>
+                    </div>
+                    <button ng-click="addTarget()">Add target</button>
+                </div>
+                <div class="form-group well well-sm">
+                    <label class="control-label">Tags</label>
+                    <tags-input data-ng-model="metric.tags" >
+                        <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
+                    </tags-input>
+                </div>
+                <div class="form-group well well-sm">
+                    <label class="control-label" for="type">Type</label>
+                    <div class="controls">
+                        <select id="type" data-ng-model="metric.type" placeholder="Select type" required>
+                            <option data-ng-repeat="type in metricTypes" value="{{type}}">{{type}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group well well-sm">
+                    <div class="col-lg-3">
+                        <label>Requirement {{enableRequirement}}</label><br/>
+                        <label class="switch switch-success"><input type="checkbox" ng-model="enableRequirement"  ng-true-value="'enabled'" ng-false-value="'disabled'"><i></i></label>
+                        <hr>
+                    </div>
+                    <div class="col-lg-9">
+                        <label ng-disabled="enableRequirement==='disabled'" class="control-label" for="requirementOperator">Should be</label>
+                        <div class="controls">
+                            <select ng-disabled="enableRequirement==='disabled'" id="requirementOperator" data-ng-model="metric.requirementOperator">
+                                <option data-ng-repeat="operator in operatorOptions" value="{{operator.value}}">{{operator.alias}}</option>
+                            </select>
+                            <input ng-disabled="enableRequirement==='disabled'" type="text" id="requirementValue" data-ng-model="metric.requirementValue" placeholder="Enter value" >
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-horizontal well well-sm">
+                    <div class="col-lg-3">
+                        <label>Benchmarking {{enableBenchmarking}}</label><br/>
+                        <label class="switch switch-success"><input type="checkbox" ng-model="enableBenchmarking"  ng-true-value="'enabled'" ng-false-value="'disabled'"><i></i></label>
+                        <hr>
+                    </div>
+                    <div class="col-lg-9">
+                        <label ng-disabled="enableBenchmarking==='disabled'" class="control-label" for="benchmarkOperator">Allow a </label>
+                        <div class="controls">
+                            <select ng-disabled="enableBenchmarking==='disabled'" id="benchmarkOperator" data-ng-model="metric.benchmarkOperator" data-ng-init="options[0]">
+                                <option data-ng-repeat="deviation in deviationOptions" value="{{deviation.value}}">{{deviation.alias}}</option>
+                            </select>
+                        </div>
+                        <label ng-disabled="enableBenchmarking==='disabled'" class="control-label" for="benchmarkOperator">of </label>
+                        <div class="controls">
+                            <input ng-disabled="enableBenchmarking==='disabled'" id="benchmarkValue" data-ng-model="metric.benchmarkValue" placeholder="Enter value">
+                        </div>
+                    </div>
+                </div>    
+                <div class="form-group well well-sm">
+                    <button class="btn-primary" data-ng-click="create()" ng-disabled="metricForm.$invalid">Submit</button>
+                    <button class="btn-primary" data-ng-click="cancel()">Cancel</button>
+                </div>
+                <p>Metric: {{metric}}</p>
+				<div data-ng-show="error" class="text-danger">
+					<strong data-ng-bind="error"></strong>
+				</div>
+            </fieldset>
+        </form>
+    </div>
+</section>
+

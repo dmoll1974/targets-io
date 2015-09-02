@@ -1,0 +1,110 @@
+// Dependency: Angular UI Bootstrap
+
+.ui-tab-container {
+    border: 1px solid $panel-default-border;
+    border-radius: $border-radius-base;
+
+    .ui-tab .nav-tabs {
+        margin-bottom: 0;
+    }
+
+    .nav-tabs {
+        background-color: $panel-default-heading-bg;
+        border-bottom: 1px solid $panel-default-border;
+        &.nav-justified {
+            border-bottom: 0;
+            > li {
+                > a {
+                    border: 1px solid transparent;
+                    &:focus,
+                    &:hover,
+                    &:active {
+                        border: 1px solid transparent;
+                    }
+                }
+            }
+        }
+
+        > li {
+            &.active {
+                > a {
+                    background-color: $reverse;
+                    border: 1px solid transparent;
+                    &:hover {
+                        border: 1px solid transparent;
+                    }
+                }
+            }
+            > a {
+                padding: 10px 15px;
+
+                &:hover {
+                    background-color: darken($panel-default-heading-bg, 2%);
+                    border: 1px solid darken($panel-default-heading-bg, 2%);
+                }
+            }
+        }
+    }
+
+    .tab-content {
+        padding: 15px;
+    }
+
+    // Color 
+    &.ui-tab-success {
+        border: 1px solid $panel-success-border;
+        .nav-tabs {
+            background-color: $panel-success-heading-bg;
+            border-bottom: 1px solid $panel-success-border;        
+        }
+    }
+    &.ui-tab-info {
+        border: 1px solid $panel-info-border;
+        .nav-tabs {
+            background-color: $panel-info-heading-bg;
+            border-bottom: 1px solid $panel-info-border;        
+        }
+    }
+    &.ui-tab-warning {
+        border: 1px solid $panel-warning-border;
+        .nav-tabs {
+            background-color: $panel-warning-heading-bg;
+            border-bottom: 1px solid $panel-warning-border;        
+        }
+    }
+    &.ui-tab-danger {
+        border: 1px solid $panel-danger-border;
+        .nav-tabs {
+            background-color: $panel-danger-heading-bg;
+            border-bottom: 1px solid $panel-danger-border;        
+        }
+    }
+}
+
+.ui-tab {
+    .nav-tabs {
+        margin-bottom: 15px;
+        &.nav-justified {
+            > li {
+                &.active {
+                    > a {
+                        border-bottom-color: transparent;
+                    }
+                }
+            }
+        }
+
+        > li {
+            &.active {
+                > a {
+                    background-color: $reverse;
+                }
+            }
+        }
+        a {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}

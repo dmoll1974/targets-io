@@ -1,0 +1,25 @@
+<div data-ng-controller="TestrunsController" data-ng-init="listTestRunsForDashboard()">
+    <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Test run ID</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Requirements</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="testRun in testRuns">
+                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.testRunId}}</td>
+                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
+                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
+                <td class="pointer" data-ng-click="testRunRequirements($index, testRun.testrunMeetsRequirement)"><span ng-class="testRun.testrunMeetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.testrunMeetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.testrunMeetsRequirement === null ? 'fa-lg fa fa-question-circle text-alert center': 'fa-lg fa fa-question-circle fa-spin text-alert center' ))"></span></td>
+                <td class="pointer"><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteTestRunModal('', $index)"></i> </th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

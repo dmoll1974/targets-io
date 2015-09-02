@@ -1,0 +1,98 @@
+.page-lock {
+
+    .lock-centered {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        margin-top: -65px;
+
+        @media screen and (min-width: $screen-sm) {
+            margin-top: -75px;
+        }
+    }
+
+    .lock-container {
+        position: relative;
+        max-width: 420px;
+        margin: 0 auto;
+
+        // .lock-time {
+        //     width: 100%;
+        //     color: $reverse;
+        //     font-size: 100px;
+        //     margin-bottom: 50px;
+        //     display: inline-block;
+        //     text-align: center;
+        //     font-weight: 100;
+
+        //     @media screen and (min-width: $screen-sm) {
+        //         font-size: 125px;
+        //     }          
+        // }
+    }
+
+    .lock-box {
+        position: absolute;
+        left: 0;
+        right: 0;
+
+        .lock-user {
+            background: $reverse;
+            width: 50%;
+            float: left;
+            height: 50px;
+            line-height: 50px;
+            margin-top: 50px;
+            padding: 0 20px;
+            @include border-left-radius($border-radius-base);
+            color: $brand-primary;
+        }
+
+        .lock-img img {
+            position: absolute;
+            border-radius: 50%;
+            left: 40%;
+            width: 80px;
+            height: 80px;
+            border: 6px solid $reverse;
+            background: $reverse;
+
+            @media screen and (min-width: $screen-sm) {
+                left: 33%;
+                width: 150px;
+                height: 150px;
+                border: 10px solid $reverse;
+            }
+        }
+
+        .lock-pwd {
+            background: $reverse;
+            width: 50%;
+            float: right;
+            height: 50px;
+            line-height: 50px;
+            padding: 0 0 0 50px;
+            margin-top: 50px;
+            @include border-right-radius($border-radius-base);
+            color: $brand-primary;
+            @media screen and (min-width: $screen-sm) {
+                padding: 0 0 0 80px;
+            }
+
+            input {
+                width: 80%;
+                height: 50px;
+                color: $gray;
+                border: 0;
+            }
+
+            .btn-submit {
+                position: absolute;
+                top: 50%;
+                right: 20px;
+            }          
+        }
+
+    }
+}

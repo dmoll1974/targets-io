@@ -1,0 +1,40 @@
+.page-services {
+    h2 {
+        font-size: 40px;
+        font-weight: 300;
+    }
+
+    .services-container {
+        margin: 50px 0;
+    }
+
+    .service-item {
+        margin: 0 auto 40px auto;
+        text-align: center;
+        max-width: 480px;
+        @media (min-width: $screen-sm) {
+            text-align: left;
+            max-width: none;
+        }
+
+        .service-icon {
+            float: none;
+            margin: 0 0 30px 0;
+            @media (min-width: $screen-sm) {
+                float: left;
+                margin: 0 30px 30px 0;
+            }
+        }
+
+        h4 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 12px;
+            line-height: 20px;
+        }
+    }
+}

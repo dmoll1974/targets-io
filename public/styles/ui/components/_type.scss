@@ -1,0 +1,113 @@
+
+// Including: Gradient text, Blockquote, Dropcap, Highlight, List, divider/space, background
+
+
+// Gradient text
+.gradient-text {
+    font-size: 150px;
+    font-weight: 300;
+    color: $brand-primary; // fallback
+    background: -webkit-linear-gradient(92deg, #fb83fa, #00aced);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-small { font-size: 12px; }
+.text-normal { font-size: $font-size-base; }
+.text-huge { font-size: 72px; }
+.text-large { font-size: 50px; }
+.size-h1 { font-size: $font-size-h1; }
+.size-h2 { font-size: $font-size-h2; }
+.size-h3 { font-size: $font-size-h3; }
+.size-h4 { font-size: $font-size-h4; }
+.text-thin { font-weight: 300; }
+.text-ultralight { font-weight: 100; }
+
+// color
+.color-primary { color: $brand-primary; }
+.color-success { color: $brand-success; }
+.color-info { color: $brand-info; }
+.color-info-alt { color: $brand-info-alt; }
+.color-warning { color: $brand-warning; }
+.color-danger { color: $brand-danger; }
+.color-dark { color: $dark; }
+.color-reverse { color: $reverse; }
+.color-gray-darker { color: $gray-darker; }
+.color-gray-dark { color: $gray-dark; }
+.color-gray { color: $gray; }
+.color-gray-light { color: $gray-light; }
+.color-gray-lighter { color: $gray-lighter; }
+
+
+// Dropcap
+.dropcap,
+.dropcap-square,
+.dropcap-circle {
+    display: block;
+    float: left;
+    font-weight: normal;
+    line-height: 36px;
+    margin-right: 6px;
+    text-shadow: none;        
+}
+
+.dropcap {
+    font-size: 3.1em;
+}
+
+.dropcap-square,
+.dropcap-circle {
+    background-color: #444;
+    color: $reverse;
+    width: 36px;
+    text-align: center;
+}
+
+.dropcap-square {
+    border-radius: $border-radius-base;        
+    font-size: 2.3em;
+}
+
+.dropcap-circle {
+    border-radius: 50%;        
+    font-size: 1.78em;
+}
+
+.dropcap.colored {
+    color: $brand-primary;
+}
+
+.dropcap-square.colored,
+.dropcap-circle.colored {
+    background-color: $brand-primary;
+}
+
+
+// Hightlight
+.highlight {
+    background-color: $brand-primary;
+    color: $reverse;
+    border-radius: $border-radius-base;        
+    padding: 2px 5px;
+}
+
+
+
+// divider
+.divider {
+    display: block;
+    height: 10px;
+}
+.divider-sm { height: 15px; }
+.divider-md { height: 20px; }
+.divider-lg { height: 30px; }
+.divider-xl { height: 50px; }
+
+.space {
+    display: inline;
+    padding: 5px;
+}
+.space-md { padding: 15px; }
+.space-lg { padding: 25px; }
+
+

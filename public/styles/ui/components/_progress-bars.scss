@@ -1,0 +1,16 @@
+// overrides Bootstrap style
+.progress {
+    @include box-shadow(none);
+    background-color: $pagination-bg;
+}
+
+.progress-rounded {
+    border-radius: 50px;
+}
+.progress-bar {
+    @include box-shadow(none);
+}
+
+// custom
+.progressbar-xs { height: 10px; }
+.progressbar-sm { height: 15px; }

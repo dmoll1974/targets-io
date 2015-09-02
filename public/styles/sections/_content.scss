@@ -1,0 +1,44 @@
+
+.view-containter {
+    position: relative;
+}
+
+#content {
+    position: absolute;
+    top: ($header_height * 2);
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: -blackberry-touch;
+    // @include transition(left .3s ease-in-out);
+    @media (min-width:$screen-sm) {
+        top: $header_height;
+        width: auto;
+        left: 220px;
+    }
+    // !important, avoid flikering for all pages.
+    // @include transition(left .25s ease-in-out);
+    @include transition(none);
+}
+
+// for special page, like 404, sign in, sign up
+.body-special {
+    #content {
+        z-index: 2;
+        top: 0;
+        left: 0;
+    }
+}
+// lock screen
+.body-lock {
+    #content {
+        background: url('../images/background/3.jpg') no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+}

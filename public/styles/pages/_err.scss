@@ -1,0 +1,72 @@
+
+.page-err {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: $bright;
+
+    .err-container {
+        width: 100%;
+        height: 75%;
+        background-color: $brand-primary;
+        border-bottom: 1px solid darken($brand-primary, 5%);
+        padding: 45px 0 0;
+        @media (min-width:$screen-sm) {
+            padding: 100px 0 0;
+        } 
+    }
+    .err-status {
+        h1 {
+            margin: 0 0 -45px;
+            color: $bright;
+            font-size: 100px;
+            @media (min-width:$screen-sm) {
+                font-size: 180px;
+            } 
+        }
+    }
+    .err-message {
+        background-color: $brand-primary;
+        padding: 24px;
+        text-transform: uppercase;
+        h2 {
+            font-size: 32px;
+            color: $reverse;
+            font-weight: 300;
+            @media (min-width:$screen-sm) {
+                font-size: 50px;
+            }
+        }
+    }
+
+    .err-body {
+        padding: 20px 10px;
+    }
+
+    .btn-goback {
+        color: $reverse;
+        background-color: transparent; 
+        border-color: $reverse;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            color: lighten($brand-primary, 5%);
+            background-color: $reverse;
+        }
+        .open & {
+            &.dropdown-toggle {
+                color: lighten($brand-primary, 5%);
+                background-color: $reverse;
+            }
+        }
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+    }
+
+}

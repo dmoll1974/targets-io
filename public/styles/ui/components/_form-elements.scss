@@ -1,0 +1,70 @@
+// dependency: http://angular-ui.github.io/bootstrap/ 
+
+// Datepicker
+.ui-datepicker {
+    table {
+        margin: 0 5px;
+        th,
+        td {
+            padding: 1px;
+
+            .active span {
+                color: $reverse;
+            }
+        }
+    }
+}
+
+
+// Timepicker
+.ui-timepicker {
+    td {
+        padding: 1px;
+    }
+}
+
+
+// Rating
+.ui-rating {
+    &:hover {
+        cursor: pointer;
+    }
+    .fa {
+        // overrides Bootstrap .glyphicon icon fonts.
+        display: inline-block;
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+
+        // custom
+        margin-right: 5px;
+    }
+
+    // when active
+    .fa.fa-star {
+        color: $skin-light;
+    }
+    &.ui-rating-success {
+        .fa.fa-star {
+            color: $brand-success;
+        }        
+    }
+    &.ui-rating-info {
+        .fa.fa-star {
+            color: $brand-info;
+        }        
+    }
+    &.ui-rating-warning {
+        .fa.fa-star {
+            color: $brand-warning;
+        }        
+    }
+    &.ui-rating-danger {
+        .fa.fa-star {
+            color: $brand-danger;
+        }        
+    }
+}

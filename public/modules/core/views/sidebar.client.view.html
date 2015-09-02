@@ -1,0 +1,17 @@
+<nav class="bs-docs-sidebar">
+    <ul class="nav nav-stacked fixed" id="products" data-ng-controller="SidebarController" >
+        <li><a href="#/products"> <i class="fa fa-dashboard"></i><span> Products</span></a></i></li>
+        <li><a data-ng-href="#!/add/product"><i class="glyphicon glyphicon-plus"></i>  Add product</a></li>
+        <li class="nav-divider"></li>
+        <li ng-repeat="product in products" ng-class="{active:productIsActive('{{product.name}}')}">
+            <a data-ng-click="viewProduct($index, product.name)"><span>  {{product.name}}</span></a>
+            <ul class="nav nav-stacked" id="dashboards" >
+                <li ng-repeat="dashboard in product.dashboards" ng-class="{active:dashboardIsActive('{{dashboard.name}}')}"><a data-ng-href="#!/browse/{{product.name}}/{{dashboard.name}}">{{dashboard.name}}  <i class="fa fa-caret-right pull-right"></i></a></li>
+                <li><a data-ng-href="#!/add/dashboard/{{product.name}}"><i class="glyphicon glyphicon-plus"></i> Add dashboard</a></li>
+
+            </ul>
+        </li>
+
+    </ul>
+</nav>
+

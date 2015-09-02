@@ -1,0 +1,30 @@
+<section data-ng-controller="ProductsController">
+    <div class="page-header">
+        <h1>Edit Product</h1>
+    </div>
+    <div class="col-md-12">
+        <form name="productForm" class="form-horizontal" data-ng-submit="update()" novalidate>
+            <fieldset>
+                <input type="hidden" data-ng-model="product._id" id="productId" value="{{product._id}}" class="form-control">
+                <div class="form-group">
+                    <label class="control-label" for="name">Name</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="product.name" id="name" class="form-control" placeholder="Name, required" required>
+                    </div>
+                    <label class="control-label" for="description">Description</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="product.description" id="description" class="form-control" placeholder="Description, required" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" ng-disabled="productForm.$invalid">
+                    <button class="btn btn-primary" data-ng-click="cancel()">Cancel</button>
+                </div>
+                <div data-ng-show="error" class="alert alert-danger alert-error">
+                    <a href="#" class="close" data-dismiss="alert"></a>
+                    <p><strong data-ng-bind="error"></strong></p>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</section>

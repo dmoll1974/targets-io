@@ -1,0 +1,88 @@
+
+@mixin pricing-table ($color){
+    
+}
+
+.pricing-table {
+    margin-bottom: 20px;
+    text-align: center;
+    background-color: #ccc;
+    color: $reverse;
+    > header {
+        display: block;
+        margin: 0;
+        padding: 25px 10px;
+        background-color: rgba(0,0,0,.05);
+        font-size: 22px;
+        line-height: 1;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .pricing-price {
+        position: relative;
+        padding: 35px 10px;
+        font-size: 60px;
+        line-height: 1;
+        border-bottom: 1px solid rgba(255,255,255,.1);
+
+        em {
+            font-size: .6em;
+            font-weight: 300;
+            font-style: normal;
+            vertical-align: 10px;
+        }
+        sup {
+            font-size: .45em;
+        }
+        sub {
+            color: rgba(255,255,255,.7);
+            font-size: .25em;
+            margin-left: -50px;
+        }
+    }
+
+    .pricing-body {
+        > ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 24px;
+            > li {
+                padding: 22px 10px;
+                border-bottom: 1px solid rgba(255,255,255,.1);
+            }
+        }
+    }
+
+    > footer {
+        > a {
+            display: block;
+            margin: 0;
+            padding: 22px 10px;
+            font-size: 16px;
+            color: $reverse;
+            text-decoration: none;
+            background-color: rgba(0,0,0,.05);
+
+            > i {
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+.pricing-table-success {
+    background-color: $brand-success;
+}
+.pricing-table-info {
+    background-color: $brand-info;
+}
+.pricing-table-warning {
+    background-color: $brand-warning;
+}
+.pricing-table-danger {
+    background-color: $brand-danger;
+}

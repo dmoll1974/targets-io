@@ -1,0 +1,12 @@
+.pagination {
+    > li {
+        > a {
+            cursor: pointer;
+        }
+        > a,
+        > span {
+            margin-left: 1px;
+        }
+
+    }   
+}

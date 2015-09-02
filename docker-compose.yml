@@ -1,0 +1,27 @@
+targetsio:
+  build: .
+  ports:
+   - "3000:3000"
+  volumes:
+   - .:/code
+  links:
+   - graphite
+   - memcached
+   - db
+db:
+  image: mongo
+  ports:
+   - "27017:27017"
+graphite:
+  image: hopsoft/graphite-statsd
+  ports:
+   - "8090:80"
+   - "2003:2003"
+   - "8125:8125"
+memcached:
+  image: sameersbn/memcached:latest
+  ports:
+   - "11211:11211"
+  environment:
+   CACHE_SIZE: 1024
+   EXTRA_OPTS: "-I 10m"
