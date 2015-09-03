@@ -19,7 +19,7 @@ var init = require('./config/init')(),
 // Bootstrap db connection
 var db = mongoose.connect(config.db, function(err) {
 	if (err) {
-		console.error(chalk.red('Could not connect to MongoDB!'));
+		console.error(chalk.red('Could not connect to MongoDB! process.env.MONGO_URL:' + process.env.MONGO_URL));
 		console.log(chalk.red(err));
 	}
 });
