@@ -12,6 +12,8 @@ var init = require('./config/init')(),
  * Please note that the order of loading is important.
  */
 console.log ("mongoDb connect to: " + config.db)
+console.log ("memcached host: " + config.memcachedHost)
+
 // Bootstrap db connection
 var db = mongoose.connect(config.db, function(err) {
 	if (err) {
