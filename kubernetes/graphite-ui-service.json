@@ -2,7 +2,7 @@
   "kind": "Service",
   "apiVersion": "v1",
   "metadata": {
-    "name": "graphite-ui"
+    "name": "graphiteui"
   },
   "spec": {
     "ports": [
