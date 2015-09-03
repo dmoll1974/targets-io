@@ -110,11 +110,12 @@ module.exports = function(db) {
 		saveUninitialized: true,
 		resave: true,
 		secret: config.sessionSecret,
-		store: new mongoStore({
-			mongooseConnection: db.connection,
-			//db: db.connection.db,
-			collection: config.sessionCollection
-		})
+		//store: new mongoStore({
+		//	mongooseConnection: db.connection,
+		//	//db: db.connection.db,
+		//	collection: config.sessionCollection
+		//})
+		store: mongoStore
 	}));
 
 	// use passport session

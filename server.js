@@ -20,8 +20,13 @@ var db = mongoose.connect(config.db, function(err) {
 	}
 });
 
+var mongoStore = new MongoStore({
+	mongooseConnection: mongoose.connection,
+	collection: config.sessionCollection
+});
+
 // Init the express application
-var app = require('./config/express')(db);
+var app = require('./config/express')(mongoStore);
 
 // Bootstrap passport config
 require('./config/passport')();
