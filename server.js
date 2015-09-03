@@ -13,6 +13,8 @@ var init = require('./config/init')(),
  */
 console.log ("mongoDb connect to: " + config.db)
 console.log ("memcached host: " + config.memcachedHost)
+console.log ("graphite host: " + config.graphiteHost)
+
 
 // Bootstrap db connection
 var db = mongoose.connect(config.db, function(err) {
