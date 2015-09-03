@@ -2,30 +2,30 @@
    "kind":"ReplicationController",
    "apiVersion":"v1",
    "metadata":{
-      "name":"mongodb",
+      "name":"graphite",
       "labels":{
-         "name":"mongodb"
+         "name":"graphite"
       }
    },
    "spec":{
       "replicas":1,
       "selector":{
-         "name":"mongodb"
+         "name":"graphite"
       },
       "template":{
          "metadata":{
             "labels":{
-               "name":"mongodb"
+               "name":"graphite"
             }
          },
          "spec":{
             "containers":[
                {
-                  "name":"mongodb",
-                  "image":"mongo",
+                  "name":"graphite",
+                  "image":"gcr.io/targets-io-docker/graphite:latest",
                   "ports":[
                      {
-                        "containerPort":27017,
+                        "containerPort":8080,
                         "protocol":"TCP"
                      }
                   ]

@@ -1,0 +1,20 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "targetsio"
+  },
+  "spec": {
+    "ports": [
+      {
+        "port": 3000,
+        "targetPort": "http-server"
+      }
+    ],
+    "selector": {
+      "name": "targetsio"
+    },
+    "sessionAffinity": "ClientIP",
+    "type": "LoadBalancer"
+  }
+}

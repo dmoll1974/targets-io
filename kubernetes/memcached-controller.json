@@ -1,0 +1,37 @@
+{
+   "kind":"ReplicationController",
+   "apiVersion":"v1",
+   "metadata":{
+      "name":"memcached",
+      "labels":{
+         "name":"memcached"
+      }
+   },
+   "spec":{
+      "replicas":1,
+      "selector":{
+         "name":"memcached"
+      },
+      "template":{
+         "metadata":{
+            "labels":{
+               "name":"memecached"
+            }
+         },
+         "spec":{
+            "containers":[
+               {
+                  "name":"memcached",
+                  "image":"sameersbn/memcached:latest",
+                  "ports":[
+                     {
+                        "containerPort":11211,
+                        "protocol":"TCP"
+                     }
+                  ]
+               }
+            ]
+         }
+      }
+   }
+}

@@ -2,21 +2,21 @@
    "kind":"Service",
    "apiVersion":"v1",
    "metadata":{
-      "name":"mongodb",
+      "name":"graphite",
       "labels":{
-         "name":"mongodb"
+         "name":"graphite"
       }
    },
    "spec":{
       "ports": [
         {
-          "port":27017,
-          "targetPort":27017,
+          "port":8080,
+          "targetPort":8080,
           "protocol":"TCP"
         }
       ],
       "selector":{
-         "name":"mongod"
+         "name":"graphite"
       }
    }
 }

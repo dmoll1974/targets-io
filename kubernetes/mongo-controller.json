@@ -2,31 +2,30 @@
    "kind":"ReplicationController",
    "apiVersion":"v1",
    "metadata":{
-      "name":"targetsio",
+      "name":"mongo",
       "labels":{
-         "name":"targetsio"
+         "name":"mongo"
       }
    },
    "spec":{
       "replicas":1,
       "selector":{
-         "name":"targetsio"
+         "name":"mongo"
       },
       "template":{
          "metadata":{
             "labels":{
-               "name":"targetsio"
+               "name":"mongo"
             }
          },
          "spec":{
             "containers":[
                {
-                  "name":"targetsio",
-                  "image":"gcr.io/targets-io-docker/targets-io:latest",
+                  "name":"mongo",
+                  "image":"mongo",
                   "ports":[
                      {
-                        "containerPort":3000,
-			"hostPort":3000,
+                        "containerPort":27017,
                         "protocol":"TCP"
                      }
                   ]
