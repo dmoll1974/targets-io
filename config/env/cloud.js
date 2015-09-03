@@ -20,7 +20,7 @@ module.exports = {
 	//	js: 'public/dist/application.min.js'
 	//},
     graphiteHost: 'http://' + process.env.GRAPHITE_HOST,
-    db: 'mongodb://' + process.env.MONGO_URL + '/targets-io',
+    db: process.env.MONGO_URL + '/targets-io',
     memcachedHost: [ process.env.MEMCACHED_HOST],
     assets: {
         lib: {
