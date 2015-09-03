@@ -15,7 +15,7 @@
       "template":{
          "metadata":{
             "labels":{
-               "name":"memecached"
+               "name":"memcached"
             }
          },
          "spec":{
