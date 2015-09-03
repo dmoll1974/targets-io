@@ -30,7 +30,7 @@
                         "protocol":"TCP"
                      },
                      {
-                        "name": "http-server-graphite",
+                        "name": "graphite-ui",
                         "containerPort": 80,
                         "hostPort": 80
                      }
