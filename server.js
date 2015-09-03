@@ -11,7 +11,7 @@ var init = require('./config/init')(),
  * Main application entry file.
  * Please note that the order of loading is important.
  */
-
+console.log ("mongoDb connect to: " + config.db)
 // Bootstrap db connection
 var db = mongoose.connect(config.db, function(err) {
 	if (err) {
