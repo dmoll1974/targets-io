@@ -19,9 +19,9 @@ module.exports = {
 	//	css: 'public/dist/application.min.css',
 	//	js: 'public/dist/application.min.js'
 	//},
-    graphiteHost: 'http://graphite',
-    db: 'mongodb://db/lt-dash-dev',
-    memcachedHost: [ 'memcached:11211'],
+    graphiteHost: 'http://localhost:8090',
+    db: 'mongodb://mongodb/lt-dash-dev',
+    memcachedHost: [ 'localhost:11211'],
     assets: {
         lib: {
             css: [
