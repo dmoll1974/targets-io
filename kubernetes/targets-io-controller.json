@@ -24,12 +24,11 @@
                   "name":"targetsio",
                   "image":"gcr.io/targets-io-docker/targets-io:latest",
                   "ports":[
-                   	   {
-               	            "name": "http-server",
-                            "containerPort": 3000,
-			    "hostPort": 3000
-                           }
-                     
+                             {
+                                  "name": "http-server",
+                                  "containerPort": 3000,
+                                  "hostPort": 3000
+                             }
                   ]
                }
             ]

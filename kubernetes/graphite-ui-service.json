@@ -1,0 +1,20 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "graphite-ui"
+  },
+  "spec": {
+    "ports": [
+      {
+        "port": 80,
+        "targetPort": "http-server-graphite"
+      }
+    ],
+    "selector": {
+      "name": "graphite-ui"
+    },
+    "sessionAffinity": "ClientIP",
+    "type": "LoadBalancer"
+  }
+}

@@ -10,8 +10,8 @@
    "spec":{
       "ports": [
         {
-          "port":8080,
-          "targetPort":8080,
+          "port":2003,
+          "targetPort": "graphite-carbon",
           "protocol":"TCP"
         }
       ],
