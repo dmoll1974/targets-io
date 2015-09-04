@@ -1,0 +1,38 @@
+{
+   "kind":"ReplicationController",
+   "apiVersion":"v1",
+   "metadata":{
+      "name":"dropwizard",
+      "labels":{
+         "name":"dropwizard"
+      }
+   },
+   "spec":{
+      "replicas":1,
+      "selector":{
+         "name":"dropwizard"
+      },
+      "template":{
+         "metadata":{
+            "labels":{
+               "name":"dropwizard"
+            }
+         },
+         "spec":{
+            "containers":[
+               {
+                  "name":"dropwizard",
+                  "image":"gcr.io/targets-io-docker/dropwizard:latest",
+                  "ports":[
+                     {
+                        "name": "dropwizard",
+                        "containerPort":8080,
+                        "protocol":"TCP"
+                     }
+                  ]
+               }
+            ]
+         }
+      }
+   }
+}
