@@ -22,7 +22,7 @@
             "containers":[
                {
                   "name":"memcached",
-                  "image":"sameersbn/memcached:latest",
+                  "image":"gcr.io/targets-io-docker/memcached:latest",
                   "ports":[
                      {
                         "containerPort":11211,
