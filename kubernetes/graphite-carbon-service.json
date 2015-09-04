@@ -12,7 +12,7 @@
       }
     ],
     "selector": {
-      "name": "graphite-carbon"
+      "name": "graphite"
     },
     "sessionAffinity": "ClientIP",
     "type": "LoadBalancer"
