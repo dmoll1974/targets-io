@@ -7,7 +7,7 @@
   "spec": {
     "ports": [
       {
-        "port": 8090,
+        "port": 8443,
           "targetPort": "dropwizard"
       }
     ],
