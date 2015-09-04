@@ -12,7 +12,7 @@
       }
     ],
     "selector": {
-      "name": "graphite-ui"
+      "name": "graphiteui"
     },
     "sessionAffinity": "ClientIP",
     "type": "LoadBalancer"
