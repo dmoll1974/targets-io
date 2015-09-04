@@ -2,31 +2,31 @@
    "kind":"ReplicationController",
    "apiVersion":"v1",
    "metadata":{
-      "name":"dropwizard",
+      "name":"jenkins",
       "labels":{
-         "name":"dropwizard"
+         "name":"jenkins"
       }
    },
    "spec":{
       "replicas":1,
       "selector":{
-         "name":"dropwizard"
+         "name":"jenkins"
       },
       "template":{
          "metadata":{
             "labels":{
-               "name":"dropwizard"
+               "name":"jenkins"
             }
          },
          "spec":{
             "containers":[
                {
-                  "name":"dropwizard",
-                  "image":"gcr.io/targets-io-docker/dropwizard:latest",
+                  "name":"jenkins",
+                  "image":"jenkins",
                   "ports":[
                      {
-                        "name": "dropwizard",
-                        "containerPort":8090,
+                        "name": "jenkins",
+                        "containerPort":8080,
                         "protocol":"TCP"
                      }
                   ]
