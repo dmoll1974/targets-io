@@ -27,7 +27,8 @@
                      {
                         "name": "dropwizard",
                         "containerPort":8080,
-                        "protocol":"TCP"
+                         "hostPort":8080,
+                         "protocol":"TCP"
                      }
                   ]
                }
