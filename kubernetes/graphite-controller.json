@@ -31,7 +31,7 @@
                         "protocol":"TCP"
                      },
                      {
-                        "name": "graphiteui",
+                        "name": "graphite",
                         "containerPort": 80,
                         "hostPort": 80,
                         "protocol":"TCP"

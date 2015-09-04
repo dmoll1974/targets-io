@@ -1,22 +1,20 @@
 {
-   "kind":"Service",
-   "apiVersion":"v1",
-   "metadata":{
-      "name":"graphite",
-      "labels":{
-         "name":"graphite"
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "graphite-carbon"
+  },
+  "spec": {
+    "ports": [
+      {
+        "port": 2003,
+        "targetPort": "graphite-carbon"
       }
-   },
-   "spec":{
-      "ports": [
-        {
-          "port":2003,
-          "targetPort": "graphite-carbon",
-          "protocol":"TCP"
-        }
-      ],
-      "selector":{
-         "name":"graphite"
-      }
-   }
+    ],
+    "selector": {
+      "name": "graphite-carbon"
+    },
+    "sessionAffinity": "ClientIP",
+    "type": "LoadBalancer"
+  }
 }
