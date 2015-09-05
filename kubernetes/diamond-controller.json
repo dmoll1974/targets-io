@@ -19,17 +19,27 @@
             }
          },
          "spec":{
+             "volumes": [
+                 {
+                     "name": "diamond-disk",
+                     "gcePersistentDisk": {
+                         "pdName": "diamond-disk",
+                         "fsType": "ext4"
+                     }
+                 }
+             ]
+             ,
             "containers":[
                {
                   "name":"diamond",
                   "image":"lesaux/diamond-containercollector",
                   "volumeMounts": [
                        {
-
+                           "name": "diamond-disk",
                            "mountPath": "/proc:/host_proc:ro"
                        },
                       {
-
+                          "name": "diamond",
                           "mountPath": "/var/run/docker.sock:/var/run/docker.sock:ro"
                       }
 
