@@ -22,9 +22,41 @@
             "containers":[
                {
                   "name":"diamond",
-                  "image":"gcr.io/targets-io-docker/diamond:latest"
+                  "image":"lesaux/diamond-containercollector",
+                  "volumeMounts": [
+                       {
 
+                           "mountPath": "/proc:/host_proc:ro"
+                       },
+                      {
+
+                          "mountPath": "/var/run/docker.sock:/var/run/docker.sock:ro"
+                      }
+
+                   ]
                }
+            ],
+            "env":[
+                 {
+                     "name":"GRAPHITE_HOST",
+                     "image":"146.148.5.81"
+
+                 },
+                {
+                    "name":"GRAPHITE_PORT",
+                    "image":"2003"
+
+                },
+                {
+                    "name":"DOCKER_HOSTNAME",
+                    "image":"kubernetes-minion-tscr"
+
+                },
+                {
+                    "name":"INTERVAL",
+                    "image":"5"
+
+                }
             ]
          }
       }
