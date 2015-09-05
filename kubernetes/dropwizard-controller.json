@@ -30,6 +30,12 @@
                          "hostPort":8080,
                          "protocol":"TCP"
                      }
+                      {
+                          "name": "dropwizard-jmx",
+                          "containerPort":8888,
+                          "hostPort":8888,
+                          "protocol":"TCP"
+                      }
                   ]
                }
             ]

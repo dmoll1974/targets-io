@@ -1,0 +1,20 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "dropwizard-jmx"
+  },
+  "spec": {
+    "ports": [
+      {
+        "port": 8888,
+          "targetPort": "dropwizard-jmx"
+      }
+    ],
+    "selector": {
+      "name": "dropwizard"
+    },
+    "sessionAffinity": "ClientIP",
+    "type": "LoadBalancer"
+  }
+}
