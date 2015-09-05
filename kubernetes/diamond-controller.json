@@ -1,0 +1,32 @@
+{
+   "kind":"ReplicationController",
+   "apiVersion":"v1",
+   "metadata":{
+      "name":"diamond",
+      "labels":{
+         "name":"diamond"
+      }
+   },
+   "spec":{
+      "replicas":1,
+      "selector":{
+         "name":"diamond"
+      },
+      "template":{
+         "metadata":{
+            "labels":{
+               "name":"diamond"
+            }
+         },
+         "spec":{
+            "containers":[
+               {
+                  "name":"diamond",
+                  "image":"gcr.io/targets-io-docker/diamond:latest"
+
+               }
+            ]
+         }
+      }
+   }
+}
