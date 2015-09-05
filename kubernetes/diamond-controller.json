@@ -39,7 +39,7 @@
                            "mountPath": "/proc:/host_proc:ro"
                        },
                       {
-                          "name": "diamond",
+                          "name": "diamond-disk",
                           "mountPath": "/var/run/docker.sock:/var/run/docker.sock:ro"
                       }
 
