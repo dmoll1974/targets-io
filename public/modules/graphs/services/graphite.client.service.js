@@ -116,13 +116,16 @@ angular.module('graphs').factory('Graphite', ['$http','$q', '$log', '$state', 'E
 
                 }
 
-                series.push({
-                    name: graphiteData[j].target,
-                    data: data,
-                    tooltip: {
-                        yDecimals: 0
-                    }
-                });
+                if(data.length > 0){
+
+                    series.push({
+                        name: graphiteData[j].target,
+                        data: data,
+                        tooltip: {
+                            yDecimals: 0
+                        }
+                    });
+                }
             }
 
                 return series;
