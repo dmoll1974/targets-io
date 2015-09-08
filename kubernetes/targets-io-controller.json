@@ -2,26 +2,26 @@
    "kind":"ReplicationController",
    "apiVersion":"v1",
    "metadata":{
-      "name":"targetsio-controller",
+      "name":"targets-io",
       "labels":{
-         "name":"targetsio"
+         "name":"targets-io"
       }
    },
    "spec":{
       "replicas":1,
       "selector":{
-         "name":"targetsio"
+         "name":"targets-io"
       },
       "template":{
          "metadata":{
             "labels":{
-               "name":"targetsio"
+               "name":"targets-io"
             }
          },
          "spec":{
             "containers":[
                {
-                  "name":"targetsio",
+                  "name":"targets-io",
                   "image":"gcr.io/targets-io-docker/targets-io:latest",
                   "ports":[
                              {

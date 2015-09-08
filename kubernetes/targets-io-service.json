@@ -2,7 +2,7 @@
   "kind": "Service",
   "apiVersion": "v1",
   "metadata": {
-    "name": "targetsio"
+    "name": "targets-io"
   },
   "spec": {
     "ports": [
@@ -12,7 +12,7 @@
       }
     ],
     "selector": {
-      "name": "targetsio"
+      "name": "targets-io"
     },
     "sessionAffinity": "ClientIP",
     "type": "LoadBalancer"
