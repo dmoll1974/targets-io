@@ -125,7 +125,7 @@ angular.module('graphs').factory('Graphite', ['$http','$q', '$log', '$state', 'E
                 });
             }
 
-            return series;
+                return series;
 
 
         }

@@ -65,9 +65,10 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback){
 
         client.get(graphiteTargetUrl, function (err, response, body) {
             if (err) {
-                //return response.status(400).send({
-                //    message: errorHandler.getErrorMessage(err)
-                //});
+//                return response.status(400).send({
+//                    message: errorHandler.getErrorMessage(err)
+//                });
+                callback([]);
             } else {
 
                 callback(body);
@@ -96,7 +97,7 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback){
                 /* if no cache hit, go to graphite back end */
                 client.get(graphiteTargetUrl, function (err, response, body) {
                     if (err) {
-                        callback(err);
+                        callback([]);
                     } else {
 
                         callback(body);
