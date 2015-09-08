@@ -3,7 +3,7 @@
 // Init the application configuration module for AngularJS application
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
-	var applicationModuleName = 'lt-dash';
+	var applicationModuleName = 'targets-io';
 	var applicationModuleVendorDependencies = ['ngResource', 'ui.router', 'ui.bootstrap', 'ui.utils', 'ngTagsInput', 'highcharts-ng', 'ui.bootstrap.datetimepicker', 'ngTable', 'ngClipboard'];
 
 	// Add a new vertical module

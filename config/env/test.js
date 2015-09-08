@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://localhost/lt-dash-test',
+	db: 'mongodb://localhost/targets-io-test',
 	port: 3001,
 	app: {
-		title: 'lt-dash - Test Environment'
+		title: 'targets-io - Test Environment'
 	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',

@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	//db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/lt-dash',
+	//db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/targets-io',
 	//assets: {
 	//	lib: {
 	//		css: [
@@ -20,7 +20,7 @@ module.exports = {
 	//	js: 'public/dist/application.min.js'
 	//},
     graphiteHost: 'http://localhost:8090',
-    db: 'mongodb://mongodb/lt-dash-dev',
+    db: 'mongodb://mongodb/targets-io-dev',
     memcachedHost: [ 'localhost:11211'],
     assets: {
         lib: {

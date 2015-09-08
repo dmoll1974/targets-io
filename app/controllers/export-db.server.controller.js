@@ -20,7 +20,7 @@ module.exports.dbExport = function (req, res) {
     var started = false;
 
     function start(response) {
-        response.setHeader('Content-disposition', 'attachment; filename=lt-dash.dump');
+        response.setHeader('Content-disposition', 'attachment; filename=targets-io.dump');
         response.write('var products = [\n')
         started = true;
     }

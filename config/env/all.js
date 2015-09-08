@@ -2,13 +2,13 @@
 
 module.exports = {
 	app: {
-		title: 'lt-dash',
+		title: 'targets-io',
 		description: 'Performance test dashboard',
 		keywords: 'MongoDB, Express, AngularJS, Node.js'
 	},
 	graphiteHost: 'http://localhost:8090',
 	graphiteRetentionPeriod: '90d', /*90 days*/
-	db: 'mongodb://mongodb/lt-dash-dev',
+	db: 'mongodb://mongodb/targets-io-dev',
 	memcachedHost: [ 'localhost:11211'],
     port: process.env.PORT || 3000,
 	templateEngine: 'swig',

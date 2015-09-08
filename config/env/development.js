@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://localhost/lt-dash-dev',
+	db: 'mongodb://localhost/targets-io-dev',
 	graphiteHost: 'http://localhost:8090',
 	memcachedHost: [ 'http://localhost:11211'],
 	app: {
-		title: 'lt-dash - Development Environment'
+		title: 'targets-io - Development Environment'
 	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',
