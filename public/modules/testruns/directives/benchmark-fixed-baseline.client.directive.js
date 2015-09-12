@@ -1,29 +1,28 @@
 (function() {
     'use strict';
 
-    /* public/modules/graphs/directives/gatling-details.client.directive.js */
 
     /**
      * @desc
      * @example <div requirements></div>
      */
     angular
-        .module('graphs')
+        .module('testruns')
         .directive(
-        'requirements', RequirementsDirective)
+        'benchmarkFixedBaseline', BenchmarkFixedBaselineDirective)
 
-    function RequirementsDirective() {
+    function BenchmarkFixedBaselineDirective() {
         var directive = {
             restrict: 'EA',
-            templateUrl: 'modules/graphs/views/requirements-directive.client.view.html',
-            controller: RequirementsController,
+            templateUrl: 'modules/testruns/views/benchmark-fixed-baseline-directive.client.view.html',
+            controller: BenchmarkFixedBaselineController,
             controllerAs: 'vm'
         };
 
         return directive;
 
         /* @ngInject */
-        function RequirementsController (
+        function BenchmarkFixedBaselineController (
             $scope,
             $timeout,
             $filter,
@@ -35,20 +34,20 @@
         ) {
 
 
-            $scope.showPassedRequirements = $stateParams.requirementsResult === "passed" ? true : false;
+            $scope.showPassed = $stateParams.benchmarkResult === "passed" ? true : false;
 
             /* set tab number based on url */
 
-            $scope.tabNumber = $stateParams.requirementsResult === "passed" ? 0 : 1;
+            $scope.tabNumber = $stateParams.benchmarkResult === "passed" ? 0 : 1;
 
             $scope.setTab = function(newValue){
                 $scope.tabNumber = newValue;
                 switch (newValue) {
                     case 0:
-                        $state.go('requirementsTestRun',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : TestRuns.selected.testRunId, "requirementsResult" : "passed" });
+                        $state.go('benchmarkFixedBaselineTestRun',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : TestRuns.selected.testRunId, "benchmarkResult" : "passed" });
                         break;
                     case 1:
-                        $state.go('requirementsTestRun',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : TestRuns.selected.testRunId, "requirementsResult" : "failed" });
+                        $state.go('benchmarkFixedBaselineTestRun',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : TestRuns.selected.testRunId, "benchmarkResult" : "failed" });
                         break;
                 }
 
@@ -63,7 +62,7 @@
             };
 
 
-//            $scope.$watch('showPassedRequirements', function (newVal, oldVal) {
+//            $scope.$watch('showPassed', function (newVal, oldVal) {
 
 //                    if (newVal !== oldVal) {
 
@@ -90,28 +89,39 @@
                                             _.each(testRun.metrics, function (metric) {
 
                                                 /* only show metrics failed / passed requirements */
-                                                if (metric.metricMeetsRequirement === $scope.showPassedRequirements) {
+                                                if (metric.benchmarkResultFixedOK === $scope.showPassed) {
 
                                                     var tag = (metric.tags) ? metric.tags[0].text : 'All';
 
                                                     _.each(metric.targets, function (target) {
 
+                                                        if(target.benchmarkFixedValue) {
 
-                                                        data.push({
+                                                            var humanReadableBenchmarkOperator = (metric.benchmarkOperator === '>') ? '+' : '-';
 
-                                                            target: target.target,
-                                                            value: target.value,
-                                                            targetMeetsRequirement: target.targetMeetsRequirement,
-                                                            metric: metric.alias,
-                                                            metricId: metric._id,
-                                                            requirementOperator: metric.requirementOperator,
-                                                            requirementValue: metric.requirementValue,
-                                                            testRunId: testRun.testRunId,
-                                                            productName: $stateParams.productName,
-                                                            dashboardName: $stateParams.dashboardName,
-                                                            tag: tag
+                                                            data.push({
 
-                                                        });
+                                                                target: target.target,
+                                                                value: target.value,
+                                                                benchmarkResultPreviousOK: target.benchmarkResultPreviousOK,
+                                                                benchmarkResultFixedOK: target.benchmarkResultFixedOK,
+                                                                benchmarkPreviousValue: target.benchmarkPreviousValue,
+                                                                benchmarkFixedValue: target.benchmarkFixedValue,
+                                                                meetsRequirement: target.meetsRequirement,
+                                                                metric: metric.alias,
+                                                                metricId: metric._id,
+                                                                requirementOperator: metric.requirementOperator,
+                                                                requirementValue: metric.requirementValue,
+                                                                benchmarkOperator: humanReadableBenchmarkOperator,
+                                                                benchmarkValue: metric.benchmarkValue,
+                                                                testRunId: testRun.testRunId,
+                                                                productName: $stateParams.productName,
+                                                                dashboardName: $stateParams.dashboardName,
+                                                                tag: tag
+
+
+                                                            });
+                                                        }
                                                     });
                                                 }
                                             });

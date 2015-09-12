@@ -10,11 +10,13 @@ var mongoose = require('mongoose'),
 
 
 var testRunTargetSchema = new Schema({
-    "targetMeetsRequirement": Boolean,
-    "targetBenchmarkResultFixedOK": Boolean,
-    "targetBenchmarkResultPreviousOK": Boolean,
+    "meetsRequirement": Boolean,
+    "benchmarkResultFixedOK": Boolean,
+    "benchmarkResultPreviousOK": Boolean,
     "target": String,
-    "value": Number
+    "value": Number,
+    "benchmarkPreviousValue": Number,
+    "benchmarkFixedValue": Number
 });
 
 
@@ -26,9 +28,11 @@ var testRunMetricSchema = new Schema({
     "tags": [{text: String}],
     "requirementOperator": String,
     "requirementValue": String,
-    "metricMeetsRequirement": Boolean,
-    "metricBenchmarkResultFixedOK": Boolean,
-    "metricBenchmarkResultPreviousOK": Boolean,
+    "benchmarkOperator": String,
+    "benchmarkValue": String,
+    "meetsRequirement": {type:Boolean, default: null},
+    "benchmarkResultFixedOK": {type:Boolean, default: null},
+    "benchmarkResultPreviousOK": {type:Boolean, default: null},
     "annotation": String,
     "targets": [testRunTargetSchema]
 
@@ -48,9 +52,10 @@ var TestrunSchema = new Schema({
     "start": {type:Date, expires: config.graphiteRetentionPeriod},
     "end": Date,
     "baseline" : String,
-    "testrunMeetsRequirement": Boolean,
-    "testrunBenchmarkResultFixedOK": Boolean,
-    "testrunBenchmarkResultPreviousOK": Boolean,
+    "previousBuild": {type:String, default:null},
+    "meetsRequirement": Boolean,
+    "benchmarkResultFixedOK": Boolean,
+    "benchmarkResultPreviousOK": Boolean,
     "buildResultKey": String,
     "eventIds": [String],
     "metrics":[testRunMetricSchema]

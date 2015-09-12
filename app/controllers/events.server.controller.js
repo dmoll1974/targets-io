@@ -45,7 +45,7 @@ exports.create = function(req, res) {
 						testRun.buildResultKey = event.buildResultKey
 						testRun.eventIds.push(startEvent._id, event._id);
 
-						testruns.persistTestRunById(testRun.productName, testRun.dashboardName, testRun, function(storedTestrun){
+						testruns.getTestRunById(testRun.productName, testRun.dashboardName, testRun, function(storedTestrun){
 
 							console.log("test run stored");
 						})
