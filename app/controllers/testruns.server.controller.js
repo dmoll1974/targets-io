@@ -39,7 +39,9 @@ exports.testRunsForDashboard = function(req, res) {
                     });
                 } else {
 
-                    res.jsonp(addTestrunsFromEvents(testRuns,createTestrunFromEvents(events)));
+                    createTestrunFromEvents(req.params.productName, req.params.dashboardName,events, function(eventsTestruns){
+                        res.jsonp(addTestrunsFromEvents(testRuns, eventsTestruns));
+                    });
 
                 }
 
@@ -118,7 +120,11 @@ exports.testRunById = function(req, res) {
                         });
                     } else {
 
-                        res.jsonp(createTestrunFromEvents(events)[0]);
+                        createTestrunFromEvents(req.params.productName, req.params.dashboardName,events, function(eventsTestruns) {
+
+                            res.jsonp(eventsTestruns[0]);
+
+                        });
                     }
                 });
             }
@@ -176,7 +182,7 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
 
                         if(events.length > 0) {
 
-                            getAndPersistTestRunById(productName, dashboardName, createTestrunFromEvents(events)[0], function (persistedTestrun) {
+                            getAndPersistTestRunById(productName, dashboardName, createTestrunFromEvents(productName, dashboardName, events)[0], function (persistedTestrun) {
 
                                 callback(persistedTestrun);
                             });
@@ -479,36 +485,47 @@ function evaluateRequirement(value, requirementOperator, requirementValue){
     return requirementResult;
 }
 
-function createTestrunFromEvents(events) {
+function createTestrunFromEvents(productName, dashboardName, events, callback) {
 
     var testRuns = [];
 
+    Product.findOne({name: productName}).exec(function(err, product){
+        if(err) console.log(err);
 
-    for (var i = 0; i < events.length; i++) {
+        Dashboard.findOne( { $and: [ { productId: product._id }, { name: dashboardName } ] } ).exec(function(err, dashboard) {
 
-        if (events[i].eventDescription === 'start') {
+            if (err) {
+                console.log(err);
+            } else {
 
-            for ( var j = 0; j < events.length; j++) {
 
-                if (events[j].eventDescription  === 'end' && events[j].testRunId == events[i].testRunId ) {
+                for (var i = 0; i < events.length; i++) {
 
-                    if(events[i].buildResultKey) {
+                    if (events[i].eventDescription === 'start') {
 
-                        testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, buildResultKey: events[i].buildResultKey, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: events[i].baseline});
-                    }else{
+                        for (var j = 0; j < events.length; j++) {
 
-                        testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: events[i].baseline});
+                            if (events[j].eventDescription === 'end' && events[j].testRunId == events[i].testRunId) {
+
+                                if (events[i].buildResultKey) {
+
+                                    testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, buildResultKey: events[i].buildResultKey, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: dashboard.baseline || events[i].baseline});
+                                } else {
+
+                                    testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: dashboard.baseline || events[i].baseline});
+                                }
+
+                                break;
+                            }
+
+                        }
                     }
-
-                    break;
                 }
 
+                callback(testRuns);
             }
-        }
-    }
-
-
-    return testRuns;
+        });
+    });
 }
 
 /**
