@@ -21,34 +21,39 @@ angular.module('dashboards').factory('Dashboards', ['$http',
         return Dashboards;
 
 
-        function updateTags (tags){
+        function updateTags (productName, dashboardName, tags){
 
             /* if new tags are added, update dashbboard */
 
-            var updatedTags = Dashboards.selected.tags;
-            var updated = false;
+            getFn(productName, dashboardName).success(function(dashboard) {
 
-            _.each(tags, function(tag){
 
-                var tagExists = false;
+                Dashboards.selected = dashboard;
+                var updatedTags = Dashboards.selected.tags;
+                var updated = false;
 
-                _.each(Dashboards.selected.tags, function(existingTag){
+                _.each(tags, function (tag) {
 
-                    if (tag.text === existingTag.text) tagExists = true;
+                    var tagExists = false;
+
+                    _.each(Dashboards.selected.tags, function (existingTag) {
+
+                        if (tag.text === existingTag.text) tagExists = true;
+
+                    });
+
+                    if (tagExists === false) {
+                        updatedTags.push({text: tag.text});
+                        updated = true;
+                    }
 
                 });
 
-                if (tagExists === false){
-                    updatedTags.push({text: tag.text});
-                    updated = true;
-                }
+                Dashboards.selected.tags = updatedTags;
+
+                return updated;
 
             });
-
-            Dashboards.selected.tags = updatedTags;
-            
-            return updated;
-
         }
         
         function clone() {
@@ -72,6 +77,7 @@ angular.module('dashboards').factory('Dashboards', ['$http',
             return $http.get('/dashboards/' + productName + '/' + dashboardName).success(function(dashboard){
 
                 Dashboards.selected = dashboard;
+
                 Dashboards.defaultTag = getDefaultTag(Dashboards.selected.tags)
             });
         }

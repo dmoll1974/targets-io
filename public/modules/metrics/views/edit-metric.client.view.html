@@ -26,18 +26,18 @@
                         <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
                     </tags-input>
                 </div>
-                <div class="form-group well well-sm">
-                    <label class="control-label" for="type">Type</label>
-                    <div class="controls">
-                        <select id="type" data-ng-model="metric.type" placeholder="Select type" required>
-                            <option data-ng-repeat="type in metricTypes" value="{{type}}">{{type}}</option>
-                        </select>
-                    </div>
-                </div>
+                <!--<div class="form-group well well-sm">-->
+                    <!--<label class="control-label" for="type">Type</label>-->
+                    <!--<div class="controls">-->
+                        <!--<select id="type" data-ng-model="metric.type" placeholder="Select type" required>-->
+                            <!--<option data-ng-repeat="type in metricTypes" value="{{type}}">{{type}}</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                <!--</div>-->
                 <div class="form-group well well-sm">
                     <div class="col-lg-3">
                         <label>Requirement {{enableRequirement}}</label><br/>
-                        <label class="switch switch-success"><input type="checkbox" ng-model="enableRequirement"  ng-true-value="'enabled'" ng-false-value="'disabled'"><i></i></label>
+                        <label class="switch switch-success"><input type="checkbox" ng-model="enableRequirement"  ng-true-value="enabled" ng-false-value="disabled"><i></i></label>
                         <hr>
                     </div>
                     <div class="col-lg-9">
@@ -53,7 +53,7 @@
                 <div class="form-group form-horizontal well well-sm">
                     <div class="col-lg-3">
                         <label>Benchmarking {{enableBenchmarking}}</label><br/>
-                        <label class="switch switch-success"><input type="checkbox" ng-model="enableBenchmarking"  ng-true-value="'enabled'" ng-false-value="'disabled'"><i></i></label>
+                        <label class="switch switch-success"><input type="checkbox" ng-model="enableBenchmarking"  ng-true-value="enabled" ng-false-value="disabled"><i></i></label>
                         <hr>
                     </div>
                     <div class="col-lg-9">
