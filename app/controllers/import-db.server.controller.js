@@ -75,6 +75,8 @@ function upload (req, res) {
                                 newDashboard.applications = importDashboard.applications;
                                 newDashboard.instances = importDashboard.instances;
                                 newDashboard.tags = importDashboard.tags;
+                                newDashboard.baseline = importDashboard.baseline;
+
                                 //
                                 newDashboard.save(function(err,newDashboard){
                                     if(err) console.log(err);
@@ -97,8 +99,8 @@ function upload (req, res) {
                                             newMetric.productName = newProduct.name;
                                             newMetric.alias = importDashboardMetric.alias;
                                             newMetric.targets = importDashboardMetric.targets;
-                                            newMetric.benchmarkWarning = importDashboardMetric.benchmarkWarning;
-                                            newMetric.benchmarkIssue = importDashboardMetric.benchmarkIssue;
+                                            newMetric.benchmarkOperator = importDashboardMetric.benchmarkOperator;
+                                            newMetric.benchmarkValue = importDashboardMetric.benchmarkValue;
                                             newMetric.requirementValue = importDashboardMetric.requirementValue;
                                             newMetric.requirementOperator = importDashboardMetric.requirementOperator;
                                             newMetric.tags = importDashboardMetric.tags;
