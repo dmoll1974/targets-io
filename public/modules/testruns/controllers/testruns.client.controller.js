@@ -17,21 +17,14 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
             //var pending = false;
             //var intervalId = setInterval(function(){
 
-                TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
+            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
 
-                    //$scope.testRuns = result.testRuns;
-                    ///* if all testruns have been persisted, stop polling */
-                    //if (result.pending === false){
-                    //    clearInterval(intervalId);
-                    //}else{
-                    //    pending = true;
-                    //}
 
-                    $scope.testRuns = testRuns;
+                $scope.testRuns = testRuns;
 
-                }, function(errorResponse) {
-                    $scope.error = errorResponse.data.message;
-                });
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
 
 
 
@@ -46,35 +39,62 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
             $state.go('viewGraphs',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : $scope.testRuns[index].testRunId, tag: Dashboards.getDefaultTag(Dashboards.selected.tags) });
         }
 
-        $scope.testRunRequirements = function(index, status){
+
+
+        $scope.testRunFixedBaselineBenchmark = function(index){
 
             TestRuns.selected = $scope.testRuns[index];
 
-            switch (status){
+            var benchmarkFixedResult = $scope.testRuns[index].benchmarkResultFixedOK ? "passed" : "failed";
 
-                case null:
+            $state.go('benchmarkFixedBaselineTestRun',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : $scope.testRuns[index].testRunId, "benchmarkResult" : benchmarkFixedResult });
 
-                    $scope.testRuns[index].testrunMeetsRequirement = "pending";
-
-                    TestRuns.persistTestRunByIdFromEvents($stateParams.productName,$stateParams.dashboardName, $scope.testRuns[index].testRunId).success(function (testRun){
-
-                        $scope.testRuns[index] = testRun;
-
-                    }, function(errorResponse) {
-                        $scope.error = errorResponse.data.message;
-                    });
-                    break;
-
-                default:
-
-                    var requirementsResult = $scope.testRuns[index].testrunMeetsRequirement ? "passed" : "failed";
-
-                    $state.go('requirementsTestRun',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : $scope.testRuns[index].testRunId, "requirementsResult" : requirementsResult });
-
-            }
 
         }
 
+        $scope.testRunPreviousBuildBenchmark = function(index){
+
+            TestRuns.selected = $scope.testRuns[index];
+
+            var benchmarkPreviousResult = $scope.testRuns[index].benchmarkResultPreviousOK ? "passed" : "failed";
+
+            $state.go('benchmarkPreviousBuildTestRun',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : $scope.testRuns[index].testRunId, "benchmarkResult" : benchmarkPreviousResult });
+
+
+        }
+
+
+        $scope.testRunRequirements = function(index){
+
+            TestRuns.selected = $scope.testRuns[index];
+
+            var requirementsResult = $scope.testRuns[index].meetsRequirement ? "passed" : "failed";
+
+            $state.go('requirementsTestRun',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : $scope.testRuns[index].testRunId, "requirementsResult" : requirementsResult });
+
+
+        }
+
+        $scope.refreshTestrun = function(index){
+
+            $scope.testRuns[index].meetsRequirement = "pending";
+            $scope.testRuns[index].benchmarkResultPreviousOK = "pending";
+            $scope.testRuns[index].benchmarkResultFixedOK = "pending";
+
+            TestRuns.persistTestRunByIdFromEvents($stateParams.productName,$stateParams.dashboardName, $scope.testRuns[index].testRunId).success(function (testRun){
+
+                $scope.testRuns[index] = testRun;
+                /* refresh screen*/
+                setTimout(function(){
+                    $state.go($state.current, {}, {reload: true});
+                },1);
+
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+
+
+        }
 
 
         $scope.openDeleteTestRunModal = function (size, index) {

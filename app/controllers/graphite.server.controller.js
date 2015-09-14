@@ -15,7 +15,7 @@ var mongoose = require('mongoose'),
 /* Memcached config */
 
 Memcached.config.poolSize = 25;
-Memcached.config.timeout = 1000;
+Memcached.config.timeout = 100;
 Memcached.config.retries = 3;
 Memcached.config.reconnect = 1000;
 Memcached.config.maxValue = 10480000;
@@ -65,9 +65,10 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback){
 
         client.get(graphiteTargetUrl, function (err, response, body) {
             if (err) {
-                //return response.status(400).send({
-                //    message: errorHandler.getErrorMessage(err)
-                //});
+//                return response.status(400).send({
+//                    message: errorHandler.getErrorMessage(err)
+//                });
+                callback([]);
             } else {
 
                 callback(body);
@@ -79,9 +80,9 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback){
 
         /* first check memcached */
         memcached.get(memcachedKey, function (err, result) {
-            if (err) console.error(err);
+            if (err) console.error('memcached error: ' + err);
 
-            if (result) {
+            if (result && !err) {
 
                 console.dir("cache hit: " + memcachedKey);
 
@@ -96,7 +97,7 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback){
                 /* if no cache hit, go to graphite back end */
                 client.get(graphiteTargetUrl, function (err, response, body) {
                     if (err) {
-                        callback(err);
+                        callback([]);
                     } else {
 
                         callback(body);

@@ -42,10 +42,10 @@ exports.update = function(req, res) {
 
 	/* update testruns if requirements have changed */
 
-	if (req.metric.requirementValue !== req.body.requirementValue || req.metric.requirementOperator !== req.body.requirementOperator){
-
-		testruns.updateTestRunRequirementForMetric(req.body)
-	}
+//	if (req.metric.requirementValue !== req.body.requirementValue || req.metric.requirementOperator !== req.body.requirementOperator){
+//
+//		testruns.updateTestRunRequirementForMetric(req.body)
+//	}
 
 	metric = _.extend(metric , req.body);
 

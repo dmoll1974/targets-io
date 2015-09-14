@@ -212,6 +212,7 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                     }
 
                 },
+
                 rangeSelector: {
                     enabled: false
                 },
@@ -307,6 +308,8 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                 }
               }]
             },
+
+
             loading: true,
             useHighStocks: true
         }
@@ -346,34 +349,38 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
             Graphite.getData(from, until, targets, 900).then(function (series) {
 
-                Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
+              if(series.length > 0) {
+                  Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
 
 
-                    $scope.config.series = seriesEvents;
+                      $scope.config.series = seriesEvents;
 
-                    if(drawEvents) {
-                        /* draw xAxis plotlines for events*/
-                        if (seriesEvents[seriesEvents.length - 1].type) {
+                      if (drawEvents) {
+                          /* draw xAxis plotlines for events*/
+                          if (seriesEvents[seriesEvents.length - 1].type) {
 
-                            _.each(seriesEvents[seriesEvents.length - 1].data, function (flag) {
+                              _.each(seriesEvents[seriesEvents.length - 1].data, function (flag) {
 
-                                $scope.config.xAxis.plotLines.push(
-                                    {
-                                        value: flag.x,
-                                        width: 1,
-                                        color: 'blue',
-                                        dashStyle: 'dash'
-                                    }
-                                );
-                            })
-                        }
-                    }
-                    $scope.config.loading = false;
+                                  $scope.config.xAxis.plotLines.push(
+                                      {
+                                          value: flag.x,
+                                          width: 1,
+                                          color: 'blue',
+                                          dashStyle: 'dash'
+                                      }
+                                  );
+                              })
+                          }
+                      }
+                      $scope.config.loading = false;
 
-                    $scope.config.options.exporting.filename = TestRuns.selected.testRunId + '_' + $scope.metric.alias;
+                      $scope.config.options.exporting.filename = TestRuns.selected.testRunId + '_' + $scope.metric.alias;
 
-                });
-
+                  });
+              }else{
+                  $scope.config.series = series;
+                  $scope.config.noData = 'No data to display';
+              }
             });
 
         }

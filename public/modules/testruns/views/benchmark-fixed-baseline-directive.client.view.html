@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h1>Requirement details</h1>
+    <h1>Benchmark to fixed baseline - details</h1>
 </div>
 <ul class="nav nav-tabs nav-justified">
     <li ng-class="{active: isSet(0)}" >
@@ -15,18 +15,19 @@
                 <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
                 <strong>{{ group.value }}</strong>
             </a>
-       </td>
+        </td>
     </tr>
     <tr ng-hide="group.$hideRows" ng-repeat="target in group.data">
-        <td sortable="target" data-title="'Metric'" header-class="'text-left'">
+        <td sortable="target" data-title="'Metric'" header-class="text-left">
             {{target.target}}
         </td>
-        <td sortable="value" data-title="'Value'">
-            {{target.value}}
+        <td sortable="value" data-title="'Baseline value'" header-class="text-left">
+            {{target.benchmarkFixedValue}}
         </td>
-        <td data-title="'Requirement'">{{target.requirementOperator}} {{target.requirementValue}}</td>
-        <td data-title="'Result'">
-            <span title="Go to graph" ui-sref="deepLinkGraph({productName: target.productName, dashboardName:target.dashboardName, testRunId: target.testRunId, tag: target.tag, metricId: target.metricId})" ng-class="target.targetMeetsRequirement ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
+        <td data-title="'Value'" header-class="text-left">{{target.value}}</td>
+        <td data-title="'Allowed deviation'" header-class="text-left">{{target.benchmarkOperator}} {{target.benchmarkValue}}</td>
+        <td data-title="'Result'" header-class="text-left">
+            <span title="Go to graph" ui-sref="deepLinkGraph({productName: target.productName, dashboardName:target.dashboardName, testRunId: target.testRunId, tag: target.tag, metricId: target.metricId})" ng-class="target.benchmarkResultFixedOK ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
             <span title="Configure metric" ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})" class="fa-lg fa fa-wrench pull-right"></span>
         </td>
 

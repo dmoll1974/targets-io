@@ -18,11 +18,11 @@ var dashboardSchema = new mongoose.Schema({
         { type: Schema.Types.ObjectId, ref: "Metric"}
     ],
     "granularity": {type: Number, default: 15},
-    "metricsRegexWily": [String],
+    "baseline": {type: String, default: null},
     "hosts": [String],
     "applications": [String],
     "instances": Number,
-    "tags": {type:[{text: String, default: Boolean}], default: [{text: 'Load', default: true},{text: 'JVM', default: false}, {text: 'DB', default: false}, {text:'CPU', default: false}, {text:'Frontend', default: false}, {text: 'JDBC', default: false}, {text: 'GC', default: false}, {text: 'Heap', default: false}, {text: 'Sessions', default: false}, {text: 'Threads', default: false}]}
+    "tags": {type:[{text: String, default: Boolean}], default: [{text: 'Load', default: true},{text: 'JVM', default: false}, {text: 'Database', default: false}, {text:'CPU', default: false}, {text:'Frontend', default: false}, {text: 'JDBC', default: false}, {text: 'Garbage Collection', default: false}, {text: 'Heap', default: false}, {text: 'Sessions', default: false}, {text: 'Threads', default: false}]}
 });
 
 dashboardSchema.pre('remove', function(next){

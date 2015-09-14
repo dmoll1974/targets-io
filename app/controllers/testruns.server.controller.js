@@ -12,6 +12,9 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     graphite = require('./graphite.server.controller'),
     Utils = require('./utils.server.controller'),
+    Requirements = require('./testruns.requirements.server.controller'),
+    Benchmarks = require('./testruns.benchmarks.server.controller'),
+
     async = require('async');
 
 
@@ -36,7 +39,9 @@ exports.testRunsForDashboard = function(req, res) {
                     });
                 } else {
 
-                    res.jsonp(addTestrunsFromEvents(testRuns,createTestrunFromEvents(events)));
+                    createTestrunFromEvents(req.params.productName, req.params.dashboardName,events, function(eventsTestruns){
+                        res.jsonp(addTestrunsFromEvents(testRuns, eventsTestruns));
+                    });
 
                 }
 
@@ -65,60 +70,7 @@ exports.testRunsForDashboard = function(req, res) {
         return testRuns.sort(Utils.dynamicSort('-start'));
 
     }
-    //Event.find( { $and: [ { productName: req.params.productName }, { dashboardName: req.params.dashboardName } ] } ).sort('-eventTimestamp').exec(function(err, storedEvents) {
-    //    if (err) {
-    //        return res.status(400).send({
-    //            message: errorHandler.getErrorMessage(err)
-    //        });
-    //    } else {
-    //
-    //        var events = [];
-    //        for (var i=0;i<storedEvents.length;i++){
-    //
-    //            events.push({"id" : storedEvents[i].toObject()._id, "eventTimestamp" : storedEvents[i].toObject().eventTimestamp.getTime() , "baseline" : storedEvents[i].toObject().baseline, "eventDescription" : storedEvents[i].toObject().eventDescription, "testRunId" : storedEvents[i].toObject().testRunId, "productName" : storedEvents[i].toObject().productName, "dashboardName" : storedEvents[i].toObject().dashboardName, "buildResultKey" : storedEvents[i].toObject().buildResultKey});
-    //
-    //        }
-    //
-    //        var testRuns = createTestrunFromEvents(events);
-    //
-    //        /* persist test runs */
-    //        var persistedTestrunsPending = [];
-    //        var persistedTestruns = [];
-    //        var pendingStatus = false;
-    //        var testRunsPendingResponse = {};
-    //
-    //
-    //
-    //        async.forEachLimit(testRuns, 30, function (testRun, callback) {
-    //
-    //            getAndPersistTestRunById(req.params.productName, req.params.dashboardName, testRun, req.params.pending, function(result){
-    //
-    //                persistedTestrunsPending.push(result);
-    //                callback();
-    //
-    //
-    //            });
-    //        }, function (err) {
-    //        if (err) return next(err);
-    //
-    //            _.each(persistedTestrunsPending, function(testRunPending){
-    //
-    //                persistedTestruns.push(testRunPending.testRun);
-    //                if (testRunPending.persisted === false)  pendingStatus = true;
-    //
-    //            })
-    //
-    //        testRunsPendingResponse.testRuns = persistedTestruns.sort(utils.dynamicSort('-start'));
-    //        testRunsPendingResponse.pending  = pendingStatus;
-    //        res.jsonp(testRunsPendingResponse);
-    //
-    //    });
-    //
-    //
-    //    }
-    //
-    //});
-};
+  };
 
 exports.deleteTestRunById = function (req, res) {
 
@@ -168,16 +120,17 @@ exports.testRunById = function(req, res) {
                         });
                     } else {
 
-                        res.jsonp(createTestrunFromEvents(events)[0]);
+                        createTestrunFromEvents(req.params.productName, req.params.dashboardName,events, function(eventsTestruns) {
+
+                            res.jsonp(eventsTestruns[0]);
+
+                        });
                     }
                 });
             }
         }
     });
-    //getAndPersistTestRunById(req.params.productName, req.params.dashboardName, req.params.testRunId, false, function(result){
-    //
-    //    res.jsonp(result.testRun);
-    //});
+
 
 }
 
@@ -200,159 +153,214 @@ exports.persistTestRunByIdFromEvents = function (req, res) {
 
 
 
-exports.persistTestRunById = function (productName, dashboardName, testRun, callback) {
+exports.getTestRunById = function (productName, dashboardName, testRunId, callback) {
 
-    getAndPersistTestRunById (productName, dashboardName, testRun, function(persistedTestrun){
+    Testrun.findOne({ $and: [
+        { productName: productName },
+        { dashboardName: dashboardName },
+        { testRunId: testRunId }
+    ] }).sort('-end').exec(function (err, testRun) {
 
-        callback(persistedTestrun);
-    })
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+
+            if (testRun) {
+
+                callback(testRun);
+
+            } else {
+
+                Event.find({ $and: [ { productName:productName }, { dashboardName: dashboardName },{ testRunId:testRunId }  ] }).sort('-end').exec(function(err, events) {
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    } else {
+
+                        if(events.length > 0) {
+
+                            getAndPersistTestRunById(productName, dashboardName, createTestrunFromEvents(productName, dashboardName, events)[0], function (persistedTestrun) {
+
+                                callback(persistedTestrun);
+                            });
+                        }else{
+
+                            callback(null);
+                        }
+                    }
+                });
+
+            }
+        }
+
+    });
 }
-
 
 function  getAndPersistTestRunById (productName, dashboardName, testRun, callback){
 
-    getDataForTestrun(productName, dashboardName, testRun.start, testRun.end, function (metrics) {
+    Testrun.findOne({testRunId: testRun.testRunId}).exec(function(err, savedTestrun) {
 
-        saveTestrun(testRun, metrics, function (savedTestrun) {
+        if (err){
+            console.log(err);
+        }else{
+            if(savedTestrun) {
 
-            callback(savedTestrun);
-        });
+                savedTestrun.remove(function (err) {
 
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    }else{
+
+                        getDataForTestrun(productName, dashboardName, testRun, function (metrics) {
+
+                            saveTestrun(testRun, metrics, function (savedTestrun) {
+
+                                Requirements.setRequirementResultsForTestRun(savedTestrun, function (requirementsTestrun) {
+
+                                    Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviuosBuildTestrun) {
+
+                                        Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviuosBuildTestrun, function (benchmarkFixedBaselineTestrun) {
+
+                                            /* Save updated test run */
+                                            Testrun.findById(benchmarkPreviuosBuildTestrun._id, function(err, savedTestRun) {
+                                                if (!savedTestRun)
+                                                    return next(new Error('Could not load Document'));
+                                                else {
+
+                                                    savedTestRun = benchmarkFixedBaselineTestrun;
+
+                                                    savedTestRun.save(function(err) {
+                                                        if (err)
+                                                            console.log('error')
+                                                        else
+                                                            callback(savedTestRun);
+                                                    });
+                                                }
+                                            });
+
+                                        });
+                                    });
+
+                                });
+                            });
+
+                        });
+
+
+                    }
+
+                });
+
+            }else{
+
+                getDataForTestrun(productName, dashboardName, testRun, function (metrics) {
+
+                    saveTestrun(testRun, metrics, function (savedTestrun) {
+
+                        Requirements.setRequirementResultsForTestRun(savedTestrun, function (requirementsTestrun) {
+
+                            Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviuosBuildTestrun) {
+
+                                Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviuosBuildTestrun, function (benchmarkFixedBaselineTestrun) {
+
+                                    /* Save updated test run */
+                                    Testrun.findById(benchmarkPreviuosBuildTestrun._id, function(err, savedTestRun) {
+                                        if (!savedTestRun)
+                                            return next(new Error('Could not load Document'));
+                                        else {
+
+                                            savedTestRun = benchmarkFixedBaselineTestrun;
+
+                                            savedTestRun.save(function(err) {
+                                                if (err)
+                                                    console.log('error')
+                                                else
+                                                    callback(savedTestRun);
+                                            });
+                                        }
+                                    });
+
+                                });
+                            });
+
+                        });
+                    });
+
+                });
+
+            }
+        }
     });
 
 
-    //var result = {};
-    //var testRunUnPersisted = {};
-    //
-    //Testrun.findOne( { $and: [ { productName: productName }, { dashboardName: dashboardName }, { testRunId: testRun.testRunId } ] } ).exec(function(err, storedTestrun) {
-    //
-    //    if(storedTestrun){
-    //
-    //        result.persisted = true;
-    //        result.testRun = storedTestrun.toObject();
-    //        callback(result);
-    //
-    //    }else{
-    //
-    //        testRunUnPersisted.start = testRun.start;
-    //        testRunUnPersisted.end = testRun.end;
-    //        testRunUnPersisted.productName = testRun.productName;
-    //        testRunUnPersisted.dashboardName = testRun.dashboardName;
-    //        testRunUnPersisted.testRunId = testRun.testRunId;
-    //        testRunUnPersisted.eventIds = testRun.eventIds;
-    //
-    //        result.persisted = false;
-    //        result.testRun = testRunUnPersisted;
-    //        callback(result);
-    //
-    //        /* if persisting was not yet initiated, get Graphite data and persist it */
-    //        if (pending === false) {
-    //            //Event.find({
-    //            //    $and: [
-    //            //        {productName: productName},
-    //            //        {dashboardName: dashboardName},
-    //            //        {testRunId: testRun.testRunId}
-    //            //    ]
-    //            //}).sort('-eventTimestamp').exec(function (err, storedEvents) {
-    //            //    if (err) {
-    //            //        return res.status(400).send({
-    //            //            message: errorHandler.getErrorMessage(err)
-    //            //        });
-    //            //    } else {
-    //            //
-    //            //        var events = [];
-    //            //        for (var i = 0; i < storedEvents.length; i++) {
-    //            //
-    //            //            events.push({
-    //            //                "id": storedEvents[i].toObject()._id,
-    //            //                "eventTimestamp": storedEvents[i].toObject().eventTimestamp.getTime(),
-    //            //                "baseline": storedEvents[i].toObject().baseline,
-    //            //                "eventDescription": storedEvents[i].toObject().eventDescription,
-    //            //                "testRunId": storedEvents[i].toObject().testRunId,
-    //            //                "productName": storedEvents[i].toObject().productName,
-    //            //                "dashboardName": storedEvents[i].toObject().dashboardName,
-    //            //                "buildResultKey": storedEvents[i].toObject().buildResultKey
-    //            //            });
-    //            //
-    //            //        }
-    //            //
-    //            //        var testrun = createTestrunFromEvents(events);
-    //
-    //                    getDataForTestrun(productName, dashboardName, testrun[0].start, testrun[0].end, function (metrics) {
-    //
-    //                        saveTestrun(testrun[0], metrics, function (savedTestrun) {
-    //
-    //
-    //                        });
-    //
-    //                    });
-    //
-    //                }
-    //            });
-    //        }
-    //    }
-    //});
 };
 
-function getDataForTestrun(productName, dashboardName, start, end, callback){
+function getDataForTestrun(productName, dashboardName, testRun, callback){
 
-    Product.findOne({name: productName}).exec(function(err, product){
-        if(err) console.log(err);
 
-        Dashboard.findOne( { $and: [ { productId: product._id }, { name: dashboardName } ] } ).populate('metrics').exec(function(err, dashboard){
 
+        Product.findOne({name: productName}).exec(function(err, product){
             if(err) console.log(err);
-            var metrics = [];
 
-            // _.each(dashboard.metrics, function(metric){
+            Dashboard.findOne( { $and: [ { productId: product._id }, { name: dashboardName } ] } ).populate('metrics').exec(function(err, dashboard){
 
-            async.forEachLimit(dashboard.metrics, 16, function (metric, callback) {
+                if(err) console.log(err);
+                var metrics = [];
 
-                var targets = [];
 
-                async.forEachLimit(metric.targets, 16, function (target, callback) {
+                async.forEachLimit(dashboard.metrics, 16, function (metric, callback) {
 
-                    graphite.getGraphiteData(Math.round(start / 1000), Math.round(end / 1000), target, 900, function(body){
+                    var targets = [];
 
-                        _.each(body, function(target){
+                    async.forEachLimit(metric.targets, 16, function (target, callback) {
 
-                            targets.push({
-                                target: target.target,
-                                value: calculateAverage(target.datapoints)
-                            });
+                        graphite.getGraphiteData(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target, 900, function(body){
 
-                        })
+                            _.each(body, function(target){
+
+                                targets.push({
+                                    target: target.target,
+                                    value: calculateAverage(target.datapoints)
+                                });
+
+                            })
+                            callback();
+                        });
+
+                    }, function (err) {
+                        if (err) return next(err);
+
+                        metrics.push({
+                            _id: metric._id,
+                            tags: metric.tags,
+                            alias: metric.alias,
+                            type: metric.type,
+                            benchmarkValue: metric.benchmarkValue,
+                            benchmarkOperator: metric.benchmarkOperator,
+                            requirementValue: metric.requirementValue,
+                            requirementOperator: metric.requirementOperator,
+                            targets: targets
+                        });
+
+                        targets = [];
                         callback();
-                    });
 
+                    });
                 }, function (err) {
                     if (err) return next(err);
 
-                    metrics.push({
-                        _id: metric._id,
-                        tags: metric.tags,
-                        alias: metric.alias,
-                        type: metric.type,
-                        benchmarkValue: metric.benchmarkValue,
-                        benchmarkOperator: metric.benchmarkOperator,
-                        requirementValue: metric.requirementValue,
-                        requirementOperator: metric.requirementOperator,
-                        targets: targets
-                    });
-
-                    targets = [];
-                    callback();
+                    callback(metrics);
 
                 });
-            }, function (err) {
-                if (err) return next(err);
-
-                callback(metrics);
 
             });
-
         });
-    });
+
 }
 
 function calculateAverage(datapoints){
@@ -375,119 +383,91 @@ function calculateAverage(datapoints){
 
 function saveTestrun(testrun, metrics, callback){
 
-    var persistTestrun = new Testrun();
+    getPreviousBuild(testrun.productName, testrun.dashboardName,testrun.testRunId, function(previousBuild){
 
-    persistTestrun.productName = testrun.productName;
-    persistTestrun.dashboardName = testrun.dashboardName;
-    persistTestrun.testRunId = testrun.testRunId;
-    persistTestrun.start = testrun.start;
-    persistTestrun.end = testrun.end;
-    persistTestrun.baseline = testrun.baseline;
-    persistTestrun.buildResultKey = testrun.buildResultKey;
-    persistTestrun.eventIds = testrun.eventIds;
+        var persistTestrun = new Testrun();
+
+        persistTestrun.productName = testrun.productName;
+        persistTestrun.dashboardName = testrun.dashboardName;
+        persistTestrun.testRunId = testrun.testRunId;
+        persistTestrun.start = testrun.start;
+        persistTestrun.end = testrun.end;
+        persistTestrun.baseline = testrun.baseline;
+        persistTestrun.previousBuild = previousBuild;
+        persistTestrun.buildResultKey = testrun.buildResultKey;
+        persistTestrun.eventIds = testrun.eventIds;
+        persistTestrun.metrics = metrics;
 
 
-    _.each(metrics, function(metric, i){
-
-        if(metric.requirementValue) {
-            metric.targets = setTargetRequirementResults(metric.targets, metric.requirementOperator, metric.requirementValue);
-            metric.metricMeetsRequirement = setMetricRequirementResults(metric.targets);
-        }
-
-        persistTestrun.metrics.push({
-            _id: metric._id,
-            tags: metric.tags,
-            alias: metric.alias,
-            type: metric.type,
-            metricMeetsRequirement: metric.metricMeetsRequirement,
-            requirementOperator: metric.requirementOperator,
-            requirementValue: metric.requirementValue
+        persistTestrun.save(function(err) {
+            if (err) {
+                console.log(err);
+                callback(err);
+            } else {
+                callback(persistTestrun);
+            }
         });
 
-        _.each(metric.targets, function(target){
+    });
+}
 
-            persistTestrun.metrics[i].targets.push({
-                targetMeetsRequirement: target.targetMeetsRequirement,
-                target: target.target,
-                value: target.value
+function getPreviousBuild(productName, dashboardName, testrunId, callback){
+
+    var previousBuild;
+
+    Event.find({ $and: [ { productName: productName }, { dashboardName: dashboardName } ] }).sort('-eventTimestamp').exec(function(err, events) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+
+            _.each(events, function (event, i) {
+
+                if (event.testRunId === testrunId && event.eventDescription === 'start' && i+1 < events.length) {
+                    previousBuild = events[i + 1].testRunId;
+                    return previousBuild;
+                }
+
             })
-        })
 
-    })
-
-    persistTestrun.testrunMeetsRequirement = setTestrunRequirementResults(persistTestrun.metrics)
-    persistTestrun.save(function(err) {
-        if (err) {
-            console.log(err);
-            callback(err);
-        } else {
-            callback(persistTestrun);
+            callback(previousBuild);
         }
     });
-
-
 }
 
 function setTestrunRequirementResults(metrics){
 
-    var testrunMeetsRequirement = true;
+    var meetsRequirement = true;
 
     _.each(metrics, function(metric){
 
-        if(metric.metricMeetsRequirement === false) {
+        if(metric.meetsRequirement === false) {
 
-            testrunMeetsRequirement = false;
+            meetsRequirement = false;
             return;
         }
     })
 
-    return testrunMeetsRequirement;
+    return meetsRequirement;
 }
 
 function setMetricRequirementResults(targets){
 
-    var metricMeetsRequirement = true;
+    var meetsRequirement = true;
 
     _.each(targets, function(target){
 
-        if(target.targetMeetsRequirement === false) {
+        if(target.meetsRequirement === false) {
 
-            metricMeetsRequirement = false;
+            meetsRequirement = false;
             return;
         }
     })
 
-    return metricMeetsRequirement;
+    return meetsRequirement;
 }
 
-//function setMetricRequirementResults(metric){
-//
-//
-//    var updatedTargets = [];
-//
-//    var metricMeetsRequirement = true;
-//
-//    _.each(metric.targets, function (target) {
-//
-//        var targetMeetsRequirement = evaluateRequirement(target.value, metric.requirementOperator, metric.requirementValue);
-//
-//        updatedTargets.push({
-//            targetMeetsRequirement: targetMeetsRequirement,
-//            target: target.target,
-//            value: target.value,
-//            _id: target._id
-//        });
-//
-//        if (targetMeetsRequirement === false) metricMeetsRequirement = false;
-//
-//    })
-//
-//    metric.targets = updatedTargets;
-//    metric.metricMeetsRequirement = metricMeetsRequirement;
-//
-//
-//    return metric;
-//}
 
 function evaluateRequirement(value, requirementOperator, requirementValue){
 
@@ -505,36 +485,47 @@ function evaluateRequirement(value, requirementOperator, requirementValue){
     return requirementResult;
 }
 
-function createTestrunFromEvents(events) {
+function createTestrunFromEvents(productName, dashboardName, events, callback) {
 
     var testRuns = [];
 
+    Product.findOne({name: productName}).exec(function(err, product){
+        if(err) console.log(err);
 
-    for (var i = 0; i < events.length; i++) {
+        Dashboard.findOne( { $and: [ { productId: product._id }, { name: dashboardName } ] } ).exec(function(err, dashboard) {
 
-        if (events[i].eventDescription === 'start') {
+            if (err) {
+                console.log(err);
+            } else {
 
-            for ( var j = 0; j < events.length; j++) {
 
-                if (events[j].eventDescription  === 'end' && events[j].testRunId == events[i].testRunId ) {
+                for (var i = 0; i < events.length; i++) {
 
-                    if(events[i].buildResultKey) {
+                    if (events[i].eventDescription === 'start') {
 
-                        testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, buildResultKey: events[i].buildResultKey, eventIds: [events[i].id, events[j].id], testrunMeetsRequirement: null});
-                    }else{
+                        for (var j = 0; j < events.length; j++) {
 
-                        testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, eventIds: [events[i].id, events[j].id], testrunMeetsRequirement: null});
+                            if (events[j].eventDescription === 'end' && events[j].testRunId == events[i].testRunId) {
+
+                                if (events[i].buildResultKey) {
+
+                                    testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, buildResultKey: events[i].buildResultKey, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: dashboard.baseline || events[i].baseline});
+                                } else {
+
+                                    testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: dashboard.baseline || events[i].baseline});
+                                }
+
+                                break;
+                            }
+
+                        }
                     }
-
-                    break;
                 }
 
+                callback(testRuns);
             }
-        }
-    }
-
-
-    return testRuns;
+        });
+    });
 }
 
 /**
@@ -607,9 +598,9 @@ function updateTestRunRequirementForMetric(metric) {
             metricToUpdate.requirementValue = metric.requirementValue;
 
             metricToUpdate.targets = setTargetRequirementResults( metricToUpdate.targets, metricToUpdate.requirementOperator, metricToUpdate.requirementValue );
-            metricToUpdate.metricMeetsRequirement = setMetricRequirementResults(metricToUpdate.targets)
+            metricToUpdate.meetsRequirement = setMetricRequirementResults(metricToUpdate.targets)
 
-            testrun.testrunMeetsRequirement = setTestrunRequirementResults(testrun.metrics);
+            testrun.meetsRequirement = setTestrunRequirementResults(testrun.metrics);
 
             testrun.save(function(err){
                 if (err) console.log("bla: " + err.stack);
@@ -620,25 +611,9 @@ function updateTestRunRequirementForMetric(metric) {
 
 
 };
-function setTargetRequirementResults(targets,requirementOperator, requirementValue){
 
-    var updatedTargets = [];
 
-    _.each(targets, function(target){
 
-        var targetMeetsRequirement = evaluateRequirement(target.value, requirementOperator, requirementValue);
-
-        updatedTargets.push({
-            targetMeetsRequirement: targetMeetsRequirement,
-            target: target.target,
-            value: target.value,
-            _id: target._id
-        });
-
-    })
-
-    return updatedTargets;
-}
 
 
 function updateTestRunMetric(testrun, metric){

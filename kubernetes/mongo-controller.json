@@ -22,7 +22,7 @@
             "containers":[
                {
                   "name":"mongo",
-                  "image":"mongo",
+                  "image":"mongo:2.6.11",
                   "ports":[
                      {
                         "containerPort":27017,

@@ -52,6 +52,19 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
             }
         });
 
+        $scope.$watch('enableBenchmarking', function (newVal, oldVal) {
+
+            if (newVal !== oldVal) {
+
+                if($scope.enableBenchmarking === 'disabled'){
+
+                    $scope.metric.benchmarkOperator = null;
+                    $scope.metric.benchmarkValue = null;
+
+                }
+            }
+        });
+
         $scope.addTarget = function() {
 
             $scope.metric.targets.push('');
@@ -88,7 +101,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
             /* Update tags in Dashboard if any new are added */
 
-            if(Dashboards.updateTags($scope.metric.tags)) Dashboards.update().success(function(dashboard){});
+            if(Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags)) Dashboards.update().success(function(dashboard){});
 
             $scope.metric.productName = $stateParams.productName;
             $scope.metric.dashboardName = $stateParams.dashboardName;
@@ -125,7 +138,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
             /* Update tags in Dashboard if any new are added */
 
-            if(Dashboards.updateTags($scope.metric.tags)) Dashboards.update().success(function(dashboard){});
+            if(Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags)) Dashboards.update().success(function(dashboard){});
 
             $scope.metric.productName = $stateParams.productName;
             $scope.metric.dashboardName = $stateParams.dashboardName;

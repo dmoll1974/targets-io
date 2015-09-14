@@ -374,6 +374,7 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
             yAxis: {
                 min: 0 // this sets minimum values of y to 0
             },
+
             loading: false,
             useHighStocks: true
 
@@ -402,6 +403,7 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
 
             Graphite.getData(from, until, targets, 900).then(function (series) {
 
+             if(series.length > 0) {
                 Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName).then(function (seriesEvents) {
 
 
@@ -428,6 +430,10 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
 
                 });
 
+             }else{
+                 $scope.config.series = series;
+                 $scope.config.noData = 'No data to display';
+             }
             });
 
         }
