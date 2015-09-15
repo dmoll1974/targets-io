@@ -95,7 +95,7 @@
 
                                                     _.each(metric.targets, function (target) {
 
-                                                        if(target.benchmarkPreviousValue) {
+                                                        if(target.benchmarkResultPreviousOK === $scope.showPassed) {
 
                                                             var humanReadableBenchmarkOperator = (metric.benchmarkOperator === '>') ? '+' : '-';
 

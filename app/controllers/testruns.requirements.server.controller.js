@@ -64,14 +64,16 @@ function setRequirementResultsForTestRun(testRun, callback){
     else
         testRun.meetsRequirement = null;
 
-    testRun.save(function(err) {
-        if (err) {
-            console.log(err);
-            callback(err);
-        } else {
-            callback(testRun);
-        }
-    });
+    //testRun.save(function(err) {
+    //    if (err) {
+    //        console.log(err);
+    //        callback(err);
+    //    } else {
+    //        callback(testRun);
+    //    }
+    //});
+
+    callback(testRun);
 
 }
 

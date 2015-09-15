@@ -1,4 +1,5 @@
-<div data-ng-controller="TestrunsController" data-ng-init="listTestRunsForDashboard()">
+<!--<div data-ng-controller="TestrunsController" data-ng-init="listTestRunsForDashboard()">-->
+<div data-ng-controller="TestrunsController">
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div>
         <table class="table">
@@ -12,6 +13,7 @@
                 <th>Fixed Baseline</th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -19,10 +21,11 @@
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.testRunId}}</td>
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
-                <td header-class="text-center" class="text-center pointer" data-ng-click="testRunRequirements($index)"><span ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle fa-spin text-alert center' ))"></span></td>
-                <td header-class="text-center" title="{{testRun.previousBuild}}" class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark($index)"><span ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-spin fa-question-circle  text-alert center' ))"></span></td>
-                <td header-class="text-center" title="{{testRun.baseline}}" class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark($index)"><span ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-spin fa-question-circle  text-alert center' ))"></span></td>
-                <td class="pointer"><i class="fa-lg fa fa-refresh" data-ng-click="refreshTestrun($index)"></i> </th>
+                <td header-class="text-center" class="text-center pointer" data-ng-click="testRunRequirements($index)"><span ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle text-alert center' ))"></span></td>
+                <td header-class="text-center" title="{{testRun.previousBuild}}" class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark($index)"><span ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle  text-alert center' ))"></span></td>
+                <td header-class="text-center" title="{{testRun.baseline}}" class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark($index)"><span ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle  text-alert center' ))"></span></td>
+                <td><i ng-if="testRun.testRunId === dashboard.baseline" class="glyphicon glyphicon-flag warning"></i></td>
+                <td class="pointer"><i ng-class="testRun.busy ? 'fa-lg fa fa-refresh fa-spin' : 'fa-lg fa fa-refresh'" data-ng-click="refreshTestrun($index)"></i> </th>
                 <td class="pointer"><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteTestRunModal('', $index)"></i> </th>
             </tr>
             </tbody>

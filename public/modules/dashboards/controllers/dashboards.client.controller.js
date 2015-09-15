@@ -1,8 +1,8 @@
 'use strict';
 
 // Dashboards controller
-angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'DashboardTabs',
-	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, DashboardTabs) {
+angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'DashboardTabs', 'TestRuns',
+	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, DashboardTabs, TestRuns) {
 
         
         
@@ -189,10 +189,27 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
                 $scope.dashboard = Dashboards.selected;
 
+                TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns) {
 
-            });
+
+                    $scope.testRuns = testRuns;
+                });
+
+
+                });
 
         };
+
+        $scope.setTestRunAsBaseline = function(testRunId) {
+
+            Dashboards.selected.baseline = testRunId;
+
+            Dashboards.update().success(function (dashboard) {
+
+                $scope.dashboard = dashboard;
+            });
+
+        }
 
         $scope.openDeleteMetricModal = function (size, index) {
 

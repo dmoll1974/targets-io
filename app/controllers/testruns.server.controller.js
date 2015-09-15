@@ -143,10 +143,15 @@ exports.persistTestRunByIdFromEvents = function (req, res) {
             });
         } else {
 
-            getAndPersistTestRunById(req.params.productName, req.params.dashboardName, createTestrunFromEvents(events)[0], function (persistedTestrun) {
+            createTestrunFromEvents(req.params.productName, req.params.dashboardName,events, function(testrunFromEvents){
 
-                res.jsonp(persistedTestrun);
-            })
+                benchmarkAndPersistTestRunById(req.params.productName, req.params.dashboardName,testrunFromEvents[0] , function (persistedTestrun) {
+
+                    res.jsonp(persistedTestrun);
+
+                });
+
+            });
         }
     });
 }
@@ -182,10 +187,15 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
 
                         if(events.length > 0) {
 
-                            getAndPersistTestRunById(productName, dashboardName, createTestrunFromEvents(productName, dashboardName, events)[0], function (persistedTestrun) {
+                            createTestrunFromEvents(productName, dashboardName,events, function(testrunFromEvents){
 
-                                callback(persistedTestrun);
+                                     getAndPersistTestRunById(productName, dashboardName, testrunFromEvents[0], function (persistedTestrun) {
+
+                                        callback(persistedTestrun);
+
+                                    });
                             });
+
                         }else{
 
                             callback(null);
@@ -199,7 +209,7 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
     });
 }
 
-function  getAndPersistTestRunById (productName, dashboardName, testRun, callback){
+function benchmarkAndPersistTestRunById (productName, dashboardName, testRun, callback){
 
     Testrun.findOne({testRunId: testRun.testRunId}).exec(function(err, savedTestrun) {
 
@@ -222,14 +232,15 @@ function  getAndPersistTestRunById (productName, dashboardName, testRun, callbac
 
                                 Requirements.setRequirementResultsForTestRun(savedTestrun, function (requirementsTestrun) {
 
-                                    Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviuosBuildTestrun) {
+                                    Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviousBuildTestrun) {
 
-                                        Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviuosBuildTestrun, function (benchmarkFixedBaselineTestrun) {
+                                        Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviousBuildTestrun, function (benchmarkFixedBaselineTestrun) {
 
                                             /* Save updated test run */
-                                            Testrun.findById(benchmarkPreviuosBuildTestrun._id, function(err, savedTestRun) {
+                                            Testrun.findById(benchmarkFixedBaselineTestrun._id, function(err, savedTestRun) {
+                                                if(err) console.log(err)
                                                 if (!savedTestRun)
-                                                    return next(new Error('Could not load Document'));
+                                                    console.log('Could not load Document');
                                                 else {
 
                                                     savedTestRun = benchmarkFixedBaselineTestrun;
@@ -264,23 +275,26 @@ function  getAndPersistTestRunById (productName, dashboardName, testRun, callbac
 
                         Requirements.setRequirementResultsForTestRun(savedTestrun, function (requirementsTestrun) {
 
-                            Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviuosBuildTestrun) {
+                            Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviousBuildTestrun) {
 
-                                Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviuosBuildTestrun, function (benchmarkFixedBaselineTestrun) {
+                                Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviousBuildTestrun, function (benchmarkFixedBaselineTestrun) {
 
                                     /* Save updated test run */
-                                    Testrun.findById(benchmarkPreviuosBuildTestrun._id, function(err, savedTestRun) {
+                                    Testrun.findById(benchmarkFixedBaselineTestrun._id, function(err, savedTestRun) {
+                                        if (err) console.log(err);
                                         if (!savedTestRun)
-                                            return next(new Error('Could not load Document'));
+                                            console.log('Could not load Document');
                                         else {
 
                                             savedTestRun = benchmarkFixedBaselineTestrun;
 
                                             savedTestRun.save(function(err) {
-                                                if (err)
+                                                if (err) {
                                                     console.log('error')
-                                                else
+                                                }else {
+                                                    console.log('test run saved: ' + savedTestRun.testRunId);
                                                     callback(savedTestRun);
+                                                }
                                             });
                                         }
                                     });
@@ -299,6 +313,32 @@ function  getAndPersistTestRunById (productName, dashboardName, testRun, callbac
 
 
 };
+
+function getAndPersistTestRunById (productName, dashboardName, testRun, callback){
+
+    Testrun.findOne({testRunId: testRun.testRunId}).exec(function(err, savedTestrun) {
+
+        if (err){
+            console.log(err);
+        }else{
+
+            getDataForTestrun(productName, dashboardName, testRun, function (metrics) {
+
+                saveTestrun(testRun, metrics, function (savedTestrun) {
+
+                        console.log('test run saved: ' + savedTestrun.testRunId);
+                        callback(savedTestrun);
+                });
+
+            });
+
+        }
+
+    });
+
+
+};
+
 
 function getDataForTestrun(productName, dashboardName, testRun, callback){
 
@@ -422,16 +462,25 @@ function getPreviousBuild(productName, dashboardName, testrunId, callback){
                 });
             } else {
 
-            _.each(events, function (event, i) {
+            createTestrunFromEvents(productName, dashboardName, events, function(testruns){
 
-                if (event.testRunId === testrunId && event.eventDescription === 'start' && i+1 < events.length) {
-                    previousBuild = events[i + 1].testRunId;
-                    return previousBuild;
-                }
+                _.each(testruns, function (testrun, i) {
 
-            })
+                    if (testrun.testRunId === testrunId) {
+                        if(i+1 === testruns.length){
 
-            callback(previousBuild);
+                            return null;
+
+                        }else {
+                            previousBuild = testruns[i + 1].testRunId;
+                            return previousBuild;
+                        }
+                    }
+
+                })
+
+                callback(previousBuild);
+            });
         }
     });
 }
