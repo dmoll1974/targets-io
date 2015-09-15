@@ -15,11 +15,18 @@ angular.module('events').factory('TestRuns', ['$http', 'Products', 'Dashboards',
             getTestRunById: getTestRunById,
             getRunningTest: getRunningTest,
             persistTestRunByIdFromEvents: persistTestRunByIdFromEvents,
-            delete: deleteFn
+            delete: deleteFn,
+            updateFixedBaseline: updateFixedBaseline
 
         };
 
         return TestRuns;
+
+
+        function updateFixedBaseline(testRun) {
+
+            return $http.post('/update-fixed-baseline-benchmark', testRun);
+        }
 
         function getRunningTest(productName, dashboardName){
 

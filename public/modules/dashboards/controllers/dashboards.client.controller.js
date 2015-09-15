@@ -200,16 +200,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
         };
 
-        $scope.setTestRunAsBaseline = function(testRunId) {
 
-            Dashboards.selected.baseline = testRunId;
-
-            Dashboards.update().success(function (dashboard) {
-
-                $scope.dashboard = dashboard;
-            });
-
-        }
 
         $scope.openDeleteMetricModal = function (size, index) {
 

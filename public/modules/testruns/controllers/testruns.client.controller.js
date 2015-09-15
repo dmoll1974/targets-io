@@ -124,7 +124,45 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
         }
 
+        $scope.setTestRunAsBaseline = function(baseline) {
 
+
+            Dashboards.selected.baseline = baseline;
+
+            Dashboards.update().success(function (dashboard) {
+
+                $scope.dashboard = dashboard;
+
+                var baselineSet = false;
+
+                _.each($scope.testRuns, function(testRun, index){
+
+                    /* Only update test runs more recent than baseline */
+                    if(testRun.testRunId === baseline) baselineSet = true;
+
+                    if(testRun.testRunId !== baseline && baselineSet == false) {
+
+                        $scope.testRuns[index].benchmarkResultFixedOK = "pending";
+                        $scope.testRuns[index].busy = true;
+
+                        testRun.baseline = baseline;
+
+                        TestRuns.updateFixedBaseline(testRun).success(function (updatedTestRun) {
+
+                            $scope.testRuns[index] = updatedTestRun;
+
+                            $scope.testRuns[index].busy = false;
+
+                        }, function(errorResponse) {
+                            $scope.error = errorResponse.data.message;
+                        });
+                    }
+                })
+
+
+            });
+
+        }
 
         $scope.refreshTestrun = function(index){
 
