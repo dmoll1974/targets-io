@@ -53,9 +53,9 @@ function upload (req, res) {
                             newProduct.description = importProduct.description;
                             newProduct.dashboards = importProduct.dashboards;
 
-                            newProduct.save(function (err, NewProduct) {
+                            newProduct.save(function (err, NewProduct, i) {
                                 if (err) return console.error(err);
-
+                                console.log('Saved product #'+ i);
                                 var importProductDashboards = [];
                                 _.each(dashboards, function(dashboard){
 
@@ -64,7 +64,7 @@ function upload (req, res) {
 
                                 });
 
-                                _.each(importProductDashboards, function(importDashboard){
+                                _.each(importProductDashboards, function(importDashboard, j){
 
                                     var newDashboard = new Dashboard();
                                     var dashboardName = importDashboard.name.split('-');
@@ -82,6 +82,9 @@ function upload (req, res) {
                                     newDashboard.save(function(err,newDashboard){
                                         if(err) console.log(err);
                                         if(newDashboard){
+
+                                            console.log('Saved dashboard #'+ j);
+
                                             var importDashboardMetrics = [];
                                             _.each(metrics, function(metric){
 
@@ -90,7 +93,7 @@ function upload (req, res) {
 
                                             });
 
-                                            _.each(importDashboardMetrics, function(importDashboardMetric) {
+                                            _.each(importDashboardMetrics, function(importDashboardMetric, k) {
 
                                                 var newMetric = new Metric();
                                                 var tags = [];
@@ -108,6 +111,8 @@ function upload (req, res) {
                                                 newMetric.type = importDashboardMetric.type;
 
                                                 newMetric.save(function (err, newMetric) {
+
+                                                    console.log('Saved metric #'+ k);
 
                                                 });
 
@@ -151,7 +156,7 @@ function upload (req, res) {
 
                             event.save(function (err) {
                                 if(err) console.log(err);
-                                if(i === events.length -1) res.redirect('/#!/');
+                                console.log('Saved event #'+ i);
                             });
 
                         });

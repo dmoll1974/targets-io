@@ -228,17 +228,27 @@ function benchmarkAndPersistTestRunById (productName, dashboardName, testRun, ca
 
                         getDataForTestrun(productName, dashboardName, testRun, function (metrics) {
 
+                            if(metrics) console.log('Data retrieved for:' + productName + '-' + dashboardName);
+
                             saveTestrun(testRun, metrics, function (savedTestrun) {
+
+                                if(savedTestrun) console.log('Testrun saved retrieved for:' + productName + '-' + dashboardName + 'testrunId: ' + savedTestrun.testRunId);
 
                                 Requirements.setRequirementResultsForTestRun(savedTestrun, function (requirementsTestrun) {
 
+                                    if(requirementsTestrun) console.log('Requirements set for:' + productName + '-' + dashboardName + 'testrunId: ' + requirementsTestrun.testRunId);
+
                                     Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviousBuildTestrun) {
+
+                                        if(benchmarkPreviousBuildTestrun) console.log('Benchmark previous build done for:' + productName + '-' + dashboardName + 'testrunId: ' + benchmarkPreviousBuildTestrun.testRunId);
 
                                         Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviousBuildTestrun, function (benchmarkFixedBaselineTestrun) {
 
+                                            if(benchmarkFixedBaselineTestrun) console.log('Benchmark fixed baseline done for:' + productName + '-' + dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
+
                                             /* Save updated test run */
                                             Testrun.findById(benchmarkFixedBaselineTestrun._id, function(err, savedTestRun) {
-                                                if(err) console.log(err)
+                                                if (err) console.log(err);
                                                 if (!savedTestRun)
                                                     console.log('Could not load Document');
                                                 else {
@@ -246,10 +256,12 @@ function benchmarkAndPersistTestRunById (productName, dashboardName, testRun, ca
                                                     savedTestRun = benchmarkFixedBaselineTestrun;
 
                                                     savedTestRun.save(function(err) {
-                                                        if (err)
+                                                        if (err) {
                                                             console.log('error')
-                                                        else
+                                                        }else {
+                                                            console.log('Complete testrun saved for:' + productName + '-' + dashboardName + 'testrunId: ' + savedTestRun.testRunId);
                                                             callback(savedTestRun);
+                                                        }
                                                     });
                                                 }
                                             });
@@ -271,13 +283,23 @@ function benchmarkAndPersistTestRunById (productName, dashboardName, testRun, ca
 
                 getDataForTestrun(productName, dashboardName, testRun, function (metrics) {
 
+                    if(metrics) console.log('Data retrieved for:' + productName + '-' + dashboardName);
+
                     saveTestrun(testRun, metrics, function (savedTestrun) {
+
+                        if(savedTestrun) console.log('Testrun saved retrieved for:' + productName + '-' + dashboardName + 'testrunId: ' + savedTestrun.testRunId);
 
                         Requirements.setRequirementResultsForTestRun(savedTestrun, function (requirementsTestrun) {
 
+                            if(requirementsTestrun) console.log('Requirements set for:' + productName + '-' + dashboardName + 'testrunId: ' + requirementsTestrun.testRunId);
+
                             Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviousBuildTestrun) {
 
+                                if(benchmarkPreviousBuildTestrun) console.log('Benchmark previous build done for:' + productName + '-' + dashboardName + 'testrunId: ' + benchmarkPreviousBuildTestrun.testRunId);
+
                                 Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviousBuildTestrun, function (benchmarkFixedBaselineTestrun) {
+
+                                    if(benchmarkFixedBaselineTestrun) console.log('Benchmark fixed baseline done for:' + productName + '-' + dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
 
                                     /* Save updated test run */
                                     Testrun.findById(benchmarkFixedBaselineTestrun._id, function(err, savedTestRun) {
@@ -292,7 +314,7 @@ function benchmarkAndPersistTestRunById (productName, dashboardName, testRun, ca
                                                 if (err) {
                                                     console.log('error')
                                                 }else {
-                                                    console.log('test run saved: ' + savedTestRun.testRunId);
+                                                    console.log('Complete testrun saved for:' + productName + '-' + dashboardName + 'testrunId: ' + savedTestRun.testRunId);
                                                     callback(savedTestRun);
                                                 }
                                             });

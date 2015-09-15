@@ -84,7 +84,7 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback){
 
             if (result && !err) {
 
-                //console.dir("cache hit: " + memcachedKey);
+                console.dir("cache hit: " + memcachedKey);
 
                 callback(result);
 
@@ -107,7 +107,7 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback){
 
                             memcached.set(memcachedKey, body, 3600 * 24 * 7, function (err, result) {
                                 if (err) console.error(err);
-                                //console.dir("key set " + memcachedKey + " : " + result);
+                                console.dir("key set " + memcachedKey + " : " + result);
                                 memcached.end();
                             });
                         }
