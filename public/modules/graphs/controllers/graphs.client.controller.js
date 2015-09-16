@@ -30,6 +30,12 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
         $scope.init = function(){
 
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+
                 Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard){
 
 
