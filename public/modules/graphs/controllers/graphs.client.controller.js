@@ -30,13 +30,14 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
         $scope.init = function(){
 
+            /* use local time in graphs */
             Highcharts.setOptions({
                 global: {
                     useUTC: false
                 }
             });
 
-                Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard){
+            Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard){
 
 
                         $scope.dashboard = Dashboards.selected;
