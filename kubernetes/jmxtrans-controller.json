@@ -22,7 +22,7 @@
             "containers":[
                {
                   "name":"jmxtrans",
-                  "image":"gcr.io/targets-io-docker/jmxtrans:latest",
+                  "image":"gcr.io/targets-io-docker/jmxtrans:latest"
 
                }
             ]
