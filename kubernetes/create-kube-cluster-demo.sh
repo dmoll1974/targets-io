@@ -13,10 +13,10 @@ kubectl create -f kubernetes/jenkins-controller.json
 kubectl create -f kubernetes/dropwizard-service.json
 kubectl create -f kubernetes/dropwizard-jmx-service.json
 kubectl create -f kubernetes/dropwizard-controller.json
-gcloud compute firewall-rules create targetsio-3000 --allow=tcp:3000
-gcloud compute firewall-rules create graphite-80 --allow=tcp:80
+gcloud compute firewall-rules create targets-io-80 --allow=tcp:80
 gcloud compute firewall-rules create graphite-2003 --allow=tcp:2003
 gcloud compute firewall-rules create dropwizard-8090 --allow=tcp:8090
+gcloud compute firewall-rules create jenkins-8080 --allow=tcp:8080
 
 
 
