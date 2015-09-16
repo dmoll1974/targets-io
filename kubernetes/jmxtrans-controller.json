@@ -1,0 +1,32 @@
+{
+   "kind":"ReplicationController",
+   "apiVersion":"v1",
+   "metadata":{
+      "name":"jmxtrans",
+      "labels":{
+         "name":"jmxtrans"
+      }
+   },
+   "spec":{
+      "replicas":1,
+      "selector":{
+         "name":"jmxtrans"
+      },
+      "template":{
+         "metadata":{
+            "labels":{
+               "name":"jmxtrans"
+            }
+         },
+         "spec":{
+            "containers":[
+               {
+                  "name":"jmxtrans",
+                  "image":"gcr.io/targets-io-docker/jmxtrans:latest",
+
+               }
+            ]
+         }
+      }
+   }
+}
