@@ -39,27 +39,27 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
             }
         );
 
-        $scope.$watch(function (scope) {
-                return Dashboards.selected.baseline;
-            },
-            function (newVal, oldVal) {
-
-                if (newVal !== oldVal) {
-
-                    $scope.dashboard = Dashboards.selected;
-                    TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
-
-
-                        TestRuns.list = testRuns;
-                        $scope.testRuns = TestRuns.list;
-
-                    }, function(errorResponse) {
-                        $scope.error = errorResponse.data.message;
-                    });
-
-                }
-            }
-        );
+        //$scope.$watch(function (scope) {
+        //        return Dashboards.selected.baseline;
+        //    },
+        //    function (newVal, oldVal) {
+        //
+        //        if (newVal !== oldVal) {
+        //
+        //            $scope.dashboard = Dashboards.selected;
+        //            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
+        //
+        //
+        //                TestRuns.list = testRuns;
+        //                $scope.testRuns = TestRuns.list;
+        //
+        //            }, function(errorResponse) {
+        //                $scope.error = errorResponse.data.message;
+        //            });
+        //
+        //        }
+        //    }
+        //);
 
         //$scope.listTestRunsForDashboard = function () {
         //

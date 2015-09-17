@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Event = mongoose.model('Event'),
 	Testrun = mongoose.model('Testrun'),
-	testruns = require('./testruns.server.controller'),
+	//testruns = require('./controllers/testruns.server.controller.js'),
 	_ = require('lodash');
 
 /**
@@ -45,10 +45,10 @@ exports.create = function(req, res) {
 						testRun.buildResultKey = event.buildResultKey
 						testRun.eventIds.push(startEvent._id, event._id);
 
-						testruns.getTestRunById(testRun.productName, testRun.dashboardName, testRun, function(storedTestrun){
-
-							console.log("test run stored");
-						})
+						//testruns.getTestRunById(testRun.productName, testRun.dashboardName, testRun, function(storedTestrun){
+                        //
+						//	console.log("test run stored");
+						//})
 
 
 					}

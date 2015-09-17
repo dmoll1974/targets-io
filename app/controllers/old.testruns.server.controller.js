@@ -18,41 +18,13 @@ var mongoose = require('mongoose'),
     async = require('async');
 
 
+exports.updateTestRunRequirementForMetric = updateTestRunRequirementForMetric;
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
-exports.testRunsForDashboard = testRunsForDashboard;
-exports.deleteTestRunById = deleteTestRunById;
-exports.testRunById = testRunById;
-exports.persistTestRunByIdFromEventsApi = persistTestRunByIdFromEventsApi;
-exports.runningTest = runningTest;
 
-    function deleteTestRunById (req, res) {
-
-    Testrun.findOne({$and: [{productName: req.params.productName}, {dashboardName: req.params.dashboardName}, {testRunId: req.params.testRunId}]}).sort('-end').exec(function (err, testRun) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-
-            if (testRun) {
-
-                testRun.remove(function (err) {
-
-                    if (err) {
-                        return res.status(400).send({
-                            message: errorHandler.getErrorMessage(err)
-                        });
-                    }
-                })
-            }
-        }
-
-    });
-}
 /**
  * select test runs for dashboard
  */
-function testRunsForDashboard (req, res) {
+exports.testRunsForDashboard = function(req, res) {
 
     Testrun.find({ $and: [ { productName: req.params.productName }, { dashboardName: req.params.dashboardName } ] }).sort('-end').exec(function(err, testRuns) {
         if (err) {
@@ -69,13 +41,7 @@ function testRunsForDashboard (req, res) {
                 } else {
 
                     createTestrunFromEvents(req.params.productName, req.params.dashboardName,events, function(eventsTestruns){
-
-                        /* persist test runs that have not yet been persisted */
-
-                        res.jsonp(persistTestrunsFromEvents(testRuns, eventsTestruns));
-
-
-
+                        res.jsonp(addTestrunsFromEvents(testRuns, eventsTestruns));
                     });
 
                 }
@@ -84,7 +50,7 @@ function testRunsForDashboard (req, res) {
         }
     });
 
-    function persistTestrunsFromEvents(testRuns, testRunsFromEvents, callback){
+    function addTestrunsFromEvents(testRuns, testRunsFromEvents){
 
         _.each(testRunsFromEvents, function (testRunFromEvents){
 
@@ -102,24 +68,11 @@ function testRunsForDashboard (req, res) {
             if (exists === false) testRuns.push(testRunFromEvents);
         })
 
-        async.forEachLimit(testRuns, 16, function (testRun, callback) {
-
-            getAndPersistTestRunById (testRun.productName, testRun.dashboardName, testRun, function (persistedTestRun){
-
-                callback();
-            });
-
-        }, function (err) {
-            if (err) return next(err);
-
-            callback(testRuns.sort(Utils.dynamicSort('-start')));
-
-        });
-
-
+        return testRuns.sort(Utils.dynamicSort('-start'));
 
     }
   };
+
 
 function testRunById(req, res) {
 
@@ -157,8 +110,32 @@ function testRunById(req, res) {
 
 
 }
+exports.deleteTestRunById = function (req, res) {
 
-function persistTestRunByIdFromEventsApi (req, res) {
+    Testrun.findOne({$and: [{productName: req.params.productName}, {dashboardName: req.params.dashboardName}, {testRunId: req.params.testRunId}]}).sort('-end').exec(function (err, testRun) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+
+            if (testRun) {
+
+                testRun.remove(function (err) {
+
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    }
+                })
+            }
+        }
+
+    });
+}
+
+exports.persistTestRunByIdFromEventsApi = function (req, res) {
 
     persistTestRunByIdFromEvents(req.params.productName, req.params.dashboardName, req.params.testRunId, function(persistedTestrun){
 
@@ -636,7 +613,7 @@ function createTestrunFromEvents(productName, dashboardName, events, callback) {
 /**
  * Show the current Testrun
  */
-function runningTest (req, res){
+exports.runningTest = function (req, res){
 
     var currentTime = new Date();
     var anyEventFound = false;
