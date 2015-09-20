@@ -9,25 +9,62 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
         $scope.dashboardName = $stateParams.dashboardName;
 
 
+
+        $scope.$watch(function (scope) {
+                return Dashboards.selected._id;
+            },
+            function (newVal, oldVal) {
+
+                if (newVal !== oldVal) {
+
+                    $scope.dashboard = Dashboards.selected;
+                    TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
+
+
+                        TestRuns.list = testRuns;
+                        $scope.testRuns = TestRuns.list;
+
+                    }, function(errorResponse) {
+                        $scope.error = errorResponse.data.message;
+                    });
+
+                }
+            }
+        );
+
+        $scope.$watch(function (scope) {
+                return TestRuns.list;
+            },
+            function (newVal, oldVal) {
+
+                if (newVal !== oldVal) {
+
+                        $scope.testRuns = TestRuns.list;
+
+
+                }
+            }
+        );
+        
 		/* List test runs for dashboard */
 
 
-        $scope.listTestRunsForDashboard = function() {
-
-            $scope.loading = true;
-
-            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
-
-                TestRuns.list = testRuns;
-                $scope.testRuns = TestRuns.list;
-                $scope.loading = false;
-
-            }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
-
-
-        };
+//        $scope.listTestRunsForDashboard = function() {
+//
+//            $scope.loading = true;
+//
+//            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
+//
+//                TestRuns.list = testRuns;
+//                $scope.testRuns = TestRuns.list;
+//                $scope.loading = false;
+//
+//            }, function (errorResponse) {
+//                $scope.error = errorResponse.data.message;
+//            });
+//
+//
+//        };
 
 
 
@@ -75,7 +112,8 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
         $scope.setTestRunAsBaseline = function(baseline) {
 
-
+            var arrayOfPromises = [];
+            
             Dashboards.selected.baseline = baseline;
 
             Dashboards.update().success(function (dashboard) {
@@ -91,23 +129,38 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
                     if(testRun.testRunId !== baseline && baselineSet == false) {
 
-                        $scope.testRuns[index].benchmarkResultFixedOK = "pending";
-                        $scope.testRuns[index].busy = true;
-
                         testRun.baseline = baseline;
 
-                        TestRuns.updateFixedBaseline(testRun).success(function (updatedTestRun) {
+                        arrayOfPromises.push(TestRuns.updateFixedBaseline(testRun).then(function(testRun){}));
+                        
+                        
+                        //.success(function (updatedTestRun) {
 
-                            $scope.testRuns[index] = updatedTestRun;
-                            $scope.testRuns[index].busy = false;
-
-                        }, function(errorResponse) {
-                            $scope.error = errorResponse.data.message;
-                        });
+//                            $scope.testRuns[index] = updatedTestRun;
+//                            $scope.testRuns[index].busy = false;
+//
+//
+//                        }, function(errorResponse) {
+//                            $scope.error = errorResponse.data.message;
+//                        });
                     }
                 })
 
 
+                $q.all(arrayOfPromises).then(function(results){
+
+                    /* refresh test runs*/
+                    setTimeout(function () {
+                        TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns){
+    
+                            TestRuns.list = testRuns;
+    
+                        }, function(errorResponse) {
+                            $scope.error = errorResponse.data.message;
+                        });
+                    }, 100);
+
+                });
             });
 
         }
@@ -167,7 +220,7 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
                     });
 
 
-                })
+                });
 
             }, function () {
                 //$log.info('Modal dismissed at: ' + new Date());
