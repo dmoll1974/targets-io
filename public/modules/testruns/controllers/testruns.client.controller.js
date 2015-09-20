@@ -12,74 +12,23 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 		/* List test runs for dashboard */
 
 
-        $scope.$watch(function (scope) {
-                return Dashboards.selected._id;
-            },
-            function (newVal, oldVal) {
+        $scope.listTestRunsForDashboard = function() {
 
-                if (newVal !== oldVal) {
+            $scope.loading = true;
 
+            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
 
-                    TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
+                TestRuns.list = testRuns;
+                $scope.testRuns = TestRuns.list;
+                $scope.loading = false;
 
-
-                        TestRuns.list = testRuns;
-                        $scope.testRuns = TestRuns.list;
-
-                    }, function(errorResponse) {
-                        $scope.error = errorResponse.data.message;
-                    });
+            }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
 
 
+        };
 
-                }else{
-
-                    $scope.testRuns = TestRuns.list;
-                }
-            }
-        );
-
-        //$scope.$watch(function (scope) {
-        //        return Dashboards.selected.baseline;
-        //    },
-        //    function (newVal, oldVal) {
-        //
-        //        if (newVal !== oldVal) {
-        //
-        //            $scope.dashboard = Dashboards.selected;
-        //            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
-        //
-        //
-        //                TestRuns.list = testRuns;
-        //                $scope.testRuns = TestRuns.list;
-        //
-        //            }, function(errorResponse) {
-        //                $scope.error = errorResponse.data.message;
-        //            });
-        //
-        //        }
-        //    }
-        //);
-
-        //$scope.listTestRunsForDashboard = function () {
-        //
-        //    //var pending = false;
-        //    //var intervalId = setInterval(function(){
-        //
-        //    TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
-        //
-        //
-        //        $scope.testRuns = testRuns;
-        //
-        //    }, function(errorResponse) {
-        //        $scope.error = errorResponse.data.message;
-        //    });
-        //
-        //
-        //
-        //    //}, 10000);
-        //
-        //};
 
 
         $scope.testRunDetails = function(index){
@@ -150,7 +99,6 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
                         TestRuns.updateFixedBaseline(testRun).success(function (updatedTestRun) {
 
                             $scope.testRuns[index] = updatedTestRun;
-
                             $scope.testRuns[index].busy = false;
 
                         }, function(errorResponse) {
@@ -172,15 +120,15 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
             $scope.testRuns[index].busy = true;
 
 
-            TestRuns.persistTestRunByIdFromEvents($stateParams.productName,$stateParams.dashboardName, $scope.testRuns[index].testRunId).success(function (testRun){
+            TestRuns.refreshTestrun($stateParams.productName,$stateParams.dashboardName, $scope.testRuns[index].testRunId).success(function (testRun){
 
                 $scope.testRuns[index] = testRun;
 
                 $scope.testRuns[index].busy = false;
-                /* refresh screen*/
-                setTimeout(function(){
-                    $state.go($state.current, {}, {reload: true});
-                },1);
+                ///* refresh screen*/
+                //setTimeout(function(){
+                //    $state.go($state.current, {}, {reload: true});
+                //},1);
 
             }, function(errorResponse) {
                 $scope.error = errorResponse.data.message;

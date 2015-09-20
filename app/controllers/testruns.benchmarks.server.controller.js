@@ -12,7 +12,7 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     graphite = require('./graphite.server.controller'),
     Utils = require('./utils.server.controller'),
-    Testruns = require('./controllers/testruns.server.controller.js'),
+    Testruns = require('./testruns.server.controller.js'),
     async = require('async');
 
 
@@ -24,43 +24,31 @@ function updateFixedBaselineBenchmark(req, res){
 
     var testRunToUpdate = new Testrun(req.body);
 
-    //async.forEachLimit(req.testRuns, 4, function (testRun, callback) {
+    setBenchmarkResultsFixedBaselineForTestRun(testRunToUpdate, function(updatedBenchmark){
 
-    /* first make sure both the baseline and benchmark are persisted */
+        /* Save updated test run */
+        Testrun.findById(updatedBenchmark._id, function(err, savedTestRun) {
+            if (err) console.log(err);
+            if (!savedTestRun)
+                console.log('Could not load Document');
+            else {
 
-    Testruns.persistTestRunByIdFromEvents (testRunToUpdate.productName, testRunToUpdate.dashboardName, testRunToUpdate.baseline, function(baseline){
-
-        Testruns.persistTestRunByIdFromEvents (testRunToUpdate.productName, testRunToUpdate.dashboardName, testRunToUpdate.testRunId, function(benchmark){
-
-            setBenchmarkResultsFixedBaselineForTestRun(benchmark, function(updatedBenchmark){
-
-                //updatedTestruns.push(updatedTestRun);
-
-                /* Save updated test run */
-                Testrun.findById(updatedBenchmark._id, function(err, savedTestRun) {
-                    if (err) console.log(err);
-                    if (!savedTestRun)
-                        console.log('Could not load Document');
-                    else {
-
-                        savedTestRun.metrics = updatedBenchmark.metrics;
-                        savedTestRun.baseline = updatedBenchmark.baseline;
-                        savedTestRun.benchmarkResultFixedOK = updatedBenchmark.benchmarkResultFixedOK;
+                savedTestRun.metrics = updatedBenchmark.metrics;
+                savedTestRun.baseline = updatedBenchmark.baseline;
+                savedTestRun.benchmarkResultFixedOK = updatedBenchmark.benchmarkResultFixedOK;
 
 
-                        savedTestRun.save(function(err) {
-                            if (err) {
-                                console.log(err)
-                            }else {
-                                res.jsonp(savedTestRun);                        }
-                        });
-                    }
+                savedTestRun.save(function(err) {
+                    if (err) {
+                        console.log(err)
+                    }else {
+                        res.jsonp(savedTestRun);                        }
                 });
-
-            });
-
+            }
         });
+
     });
+
 
 
 }

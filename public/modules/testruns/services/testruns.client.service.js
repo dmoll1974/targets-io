@@ -14,7 +14,7 @@ angular.module('events').factory('TestRuns', ['$http', 'Products', 'Dashboards',
             zoomRange: '',
             getTestRunById: getTestRunById,
             getRunningTest: getRunningTest,
-            persistTestRunByIdFromEvents: persistTestRunByIdFromEvents,
+            refreshTestrun: refreshTestrun,
             delete: deleteFn,
             updateFixedBaseline: updateFixedBaseline
 
@@ -49,9 +49,9 @@ angular.module('events').factory('TestRuns', ['$http', 'Products', 'Dashboards',
 
         };
 
-        function persistTestRunByIdFromEvents(productName, dashboardName , testRunId){
+        function refreshTestrun(productName, dashboardName , testRunId){
 
-            return $http.get('/persist-testrun/' + productName + '/' + dashboardName + '/' + testRunId );
+            return $http.get('/refresh-testrun/' + productName + '/' + dashboardName + '/' + testRunId );
 
         };
 

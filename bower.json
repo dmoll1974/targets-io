@@ -36,7 +36,8 @@
     "ng-tags-input": "~2.2.0",
     "zeroclipboard": "~2.2.0",
     "ng-clip": "~0.2.6",
-    "moment": "~2.10.6"
+    "moment": "~2.10.6",
+    "angular-spinners": "~3.0.2"
   },
   "resolutions": {
     "angular": "1.2.28",

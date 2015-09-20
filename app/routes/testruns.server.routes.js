@@ -2,7 +2,7 @@
 
 module.exports = function(app) {
 
-    var testruns = require('controllers/old.testruns.server.controller.js');
+    var testruns = require('../../app/controllers/testruns.server.controller.js');
     var benchmarks = require('../../app/controllers/testruns.benchmarks.server.controller');
 
     app.route('/testruns-dashboard/:productName/:dashboardName')
@@ -12,8 +12,8 @@ module.exports = function(app) {
         .get(testruns.testRunById)
         .delete(testruns.deleteTestRunById);
 
-    app.route('/persist-testrun/:productName/:dashboardName/:testRunId')
-        .get(testruns.persistTestRunByIdFromEventsApi);
+    app.route('/refresh-testrun/:productName/:dashboardName/:testRunId')
+        .get(testruns.refreshTestrun);
 
 
 

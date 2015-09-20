@@ -22,7 +22,7 @@ exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
 exports.deleteTestRunById = deleteTestRunById;
 exports.testRunById = testRunById;
-exports.persistTestRunByIdFromEventsApi = persistTestRunByIdFromEventsApi;
+exports.refreshTestrun = refreshTestrun;
 exports.runningTest = runningTest;
 
     function deleteTestRunById (req, res) {
@@ -72,8 +72,11 @@ function testRunsForDashboard (req, res) {
 
                         /* persist test runs that have not yet been persisted */
 
-                        res.jsonp(persistTestrunsFromEvents(testRuns, eventsTestruns));
+                        persistTestrunsFromEvents(testRuns, eventsTestruns, function(persistedTestRuns){
 
+                            res.jsonp(persistedTestRuns);
+
+                        });
 
 
                     });
@@ -86,6 +89,10 @@ function testRunsForDashboard (req, res) {
 
     function persistTestrunsFromEvents(testRuns, testRunsFromEvents, callback){
 
+        var persistedTestRuns = [];
+        var testRunsToBePersisted = [];
+        var testRunsToBenchmark = [];
+
         _.each(testRunsFromEvents, function (testRunFromEvents){
 
             var exists = false;
@@ -94,25 +101,71 @@ function testRunsForDashboard (req, res) {
 
                 if (testRun.testRunId === testRunFromEvents.testRunId ){
                     exists = true;
+                    persistedTestRuns.push(testRun);
                     return exists;
                 }
 
             })
 
-            if (exists === false) testRuns.push(testRunFromEvents);
+            if (exists === false) {
+                testRunsToBePersisted.push(testRunFromEvents);
+            }
+
         })
 
-        async.forEachLimit(testRuns, 16, function (testRun, callback) {
+        async.forEachLimit(testRunsToBePersisted, 16, function (testRun, callback) {
 
-            getAndPersistTestRunById (testRun.productName, testRun.dashboardName, testRun, function (persistedTestRun){
+            getDataForTestrun(testRun.productName, testRun.dashboardName, testRun, function (metrics) {
 
-                callback();
+                saveTestrun(testRun, metrics, function (savedTestrun) {
+
+                    console.log('test run saved: ' + savedTestrun.testRunId);
+                    testRunsToBenchmark.push(savedTestrun);
+                    callback();
+                });
+
             });
 
         }, function (err) {
             if (err) return next(err);
 
-            callback(testRuns.sort(Utils.dynamicSort('-start')));
+            testRunsToBenchmark.sort(Utils.dynamicSort('-start'));
+
+            async.forEachLimit(testRunsToBenchmark, 1, function (testRun, callback) {
+
+                Requirements.setRequirementResultsForTestRun(testRun, function (requirementsTestrun) {
+
+                    if(requirementsTestrun) console.log('Requirements set for: ' + requirementsTestrun.productName + '-' + requirementsTestrun.dashboardName + 'testrunId: ' + requirementsTestrun.testRunId);
+
+                    Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviousBuildTestrun) {
+
+                        if(benchmarkPreviousBuildTestrun) console.log('Benchmark previous build done for: ' + benchmarkPreviousBuildTestrun.productName + '-' + benchmarkPreviousBuildTestrun.dashboardName + 'testrunId: ' + benchmarkPreviousBuildTestrun.testRunId);
+
+                        Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviousBuildTestrun, function (benchmarkFixedBaselineTestrun) {
+
+                            if(benchmarkFixedBaselineTestrun) console.log('Benchmark fixed baseline done for: ' + benchmarkFixedBaselineTestrun.productName + '-' + benchmarkFixedBaselineTestrun.dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
+
+                            benchmarkFixedBaselineTestrun.save(function(err) {
+                                if (err) {
+                                    console.log(err);
+                                    callback(err);
+                                } else {
+                                    persistedTestRuns.push(benchmarkFixedBaselineTestrun);
+                                    callback();
+                                }
+                            });
+
+                        });
+                    });
+                });
+
+            }, function (err) {
+                if (err) console.log(err);
+
+                callback(persistedTestRuns);
+
+
+            });
 
         });
 
@@ -158,37 +211,25 @@ function testRunById(req, res) {
 
 }
 
-function persistTestRunByIdFromEventsApi (req, res) {
+function refreshTestrun (req, res) {
 
-    persistTestRunByIdFromEvents(req.params.productName, req.params.dashboardName, req.params.testRunId, function(persistedTestrun){
+    Testrun.findOne({ $and: [
+        { productName: req.params.productName },
+        { dashboardName: req.params.dashboardName },
+        { testRunId: req.params.testRunId }
+    ]}).exec(function (err, testRun) {
 
-        res.jsonp(persistedTestrun);
+        if(err) console.log(err);
 
+        benchmarkAndPersistTestRunById(req.params.productName, req.params.dashboardName, testRun , function (persistedTestrun) {
+
+            res.jsonp(persistedTestrun);
+
+        });
     });
 
 }
 
-exports.persistTestRunByIdFromEvents = function (productName, dashboardName, testRunId, callback) {
-
-    Event.find({ $and: [ { productName: productName }, { dashboardName: dashboardName },{ testRunId: testRunId }  ] }).sort('-end').exec(function(err, events) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-
-            createTestrunFromEvents(productName, dashboardName,events, function(testrunFromEvents){
-
-                benchmarkAndPersistTestRunById(productName, dashboardName,testrunFromEvents[0] , function (persistedTestrun) {
-
-                    callback(persistedTestrun);
-
-                });
-
-            });
-        }
-    });
-}
 
 
 
@@ -230,7 +271,7 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
                                     });
                             });
 
-b                        }else{
+                        }else{
 
                             callback(null);
                         }
@@ -281,24 +322,35 @@ function benchmarkAndPersistTestRunById (productName, dashboardName, testRun, ca
                                             if(benchmarkFixedBaselineTestrun) console.log('Benchmark fixed baseline done for:' + productName + '-' + dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
 
                                             /* Save updated test run */
-                                            Testrun.findById(benchmarkFixedBaselineTestrun._id, function(err, savedTestRun) {
-                                                if (err) console.log(err);
-                                                if (!savedTestRun)
-                                                    console.log('Could not load Document');
-                                                else {
-
-                                                    savedTestRun = benchmarkFixedBaselineTestrun;
-
-                                                    savedTestRun.save(function(err) {
-                                                        if (err) {
-                                                            console.log('error')
-                                                        }else {
-                                                            console.log('Complete testrun saved for:' + productName + '-' + dashboardName + 'testrunId: ' + savedTestRun.testRunId);
-                                                            callback(savedTestRun);
-                                                        }
-                                                    });
+                                            benchmarkFixedBaselineTestrun.save(function(err) {
+                                                if (err) {
+                                                    console.log('error')
+                                                }else {
+                                                    console.log('Complete testrun saved for:' + benchmarkFixedBaselineTestrun.productName + '-' + benchmarkFixedBaselineTestrun.dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
+                                                    callback(benchmarkFixedBaselineTestrun);
                                                 }
                                             });
+
+
+
+                                            //Testrun.findById(benchmarkFixedBaselineTestrun._id, function(err, savedTestRun) {
+                                            //    if (err) console.log(err);
+                                            //    if (!savedTestRun)
+                                            //        console.log('Could not load Document');
+                                            //    else {
+                                            //
+                                            //        savedTestRun = benchmarkFixedBaselineTestrun;
+                                            //
+                                            //        savedTestRun.save(function(err) {
+                                            //            if (err) {
+                                            //                console.log('error')
+                                            //            }else {
+                                            //                console.log('Complete testrun saved for:' + productName + '-' + dashboardName + 'testrunId: ' + savedTestRun.testRunId);
+                                            //                callback(savedTestRun);
+                                            //            }
+                                            //        });
+                                            //    }
+                                            //});
 
                                         });
                                     });
@@ -372,11 +424,6 @@ function benchmarkAndPersistTestRunById (productName, dashboardName, testRun, ca
 
 function getAndPersistTestRunById (productName, dashboardName, testRun, callback){
 
-    Testrun.findOne({testRunId: testRun.testRunId}).exec(function(err, savedTestrun) {
-
-        if (err){
-            console.log(err);
-        }else{
 
             getDataForTestrun(productName, dashboardName, testRun, function (metrics) {
 
@@ -387,10 +434,6 @@ function getAndPersistTestRunById (productName, dashboardName, testRun, callback
                 });
 
             });
-
-        }
-
-    });
 
 
 };
@@ -495,14 +538,14 @@ function saveTestrun(testrun, metrics, callback){
         persistTestrun.metrics = metrics;
 
 
-        persistTestrun.save(function(err) {
-            if (err) {
-                console.log(err);
-                callback(err);
-            } else {
+        //persistTestrun.save(function(err) {
+        //    if (err) {
+        //        console.log(err);
+        //        callback(err);
+        //    } else {
                 callback(persistTestrun);
-            }
-        });
+        //    }
+        //});
 
     });
 }

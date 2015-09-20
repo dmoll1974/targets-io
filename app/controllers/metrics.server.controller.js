@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Metric = mongoose.model('Metric'),
-	testruns = require('./controllers/testruns.server.controller.js'),
+	testruns = require('./testruns.server.controller.js'),
 	_ = require('lodash');
 
 /**

@@ -35,7 +35,7 @@ module.exports = {
 				'public/lib/angular-ui-utils/ui-utils.min.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
                 'public/lib/moment/moment.js',
-                //'public/lib/angular-aria/angular-aria.min.js',
+                'public/lib/angular-spinners/dist/angular-spinners.js',
                 //'public/lib/angular-material/angular-material.min.js',
                 'public/lib/ng-table/dist/ng-table.js',
                 'public/lib/ng-tags-input/ng-tags-input.min.js',
