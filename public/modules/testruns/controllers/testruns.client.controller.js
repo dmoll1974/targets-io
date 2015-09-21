@@ -10,6 +10,7 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
 
 
+
         $scope.$watch(function (scope) {
                 return Dashboards.selected._id;
             },
@@ -18,10 +19,12 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
                 if (newVal !== oldVal) {
 
                     $scope.dashboard = Dashboards.selected;
+                    $scope.loading = true;
                     TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
 
 
                         TestRuns.list = testRuns;
+                        $scope.loading = false;
                         $scope.testRuns = TestRuns.list;
 
                     }, function(errorResponse) {
