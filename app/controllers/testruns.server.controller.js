@@ -538,14 +538,14 @@ function saveTestrun(testrun, metrics, callback){
         persistTestrun.metrics = metrics;
 
 
-        //persistTestrun.save(function(err) {
-        //    if (err) {
-        //        console.log(err);
-        //        callback(err);
-        //    } else {
+        persistTestrun.save(function(err) {
+            if (err) {
+                console.log(err);
+                callback(err);
+            } else {
                 callback(persistTestrun);
-        //    }
-        //});
+            }
+        });
 
     });
 }
