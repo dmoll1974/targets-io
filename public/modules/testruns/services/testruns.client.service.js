@@ -16,11 +16,18 @@ angular.module('events').factory('TestRuns', ['$http', 'Products', 'Dashboards',
             getRunningTest: getRunningTest,
             refreshTestrun: refreshTestrun,
             delete: deleteFn,
-            updateFixedBaseline: updateFixedBaseline
+            updateFixedBaseline: updateFixedBaseline,
+            updateRequirementsResults:updateRequirementsResults
 
         };
 
         return TestRuns;
+
+        function updateRequirementsResults(productName, dashboardName, metricId){
+
+            return $http.get('/update-requirements-results/' + productName + '/' + dashboardName + '/' + metricId);
+
+        }
 
 
         function updateFixedBaseline(testRun) {

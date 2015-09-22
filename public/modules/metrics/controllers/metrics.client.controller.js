@@ -1,8 +1,8 @@
 'use strict';
 
 // Metrics controller
-angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '$log', '$rootScope', '$stateParams', '$state', '$location', 'Authentication', 'Metrics','Dashboards', 'ConfirmModal',
-	function($scope, $modal, $log, $rootScope, $stateParams, $state, $location, Authentication, Metrics, Dashboards, ConfirmModal) {
+angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '$log', '$rootScope', '$stateParams', '$state', '$location', 'Authentication', 'Metrics','Dashboards', 'ConfirmModal', 'TestRuns',
+	function($scope, $modal, $log, $rootScope, $stateParams, $state, $location, Authentication, Metrics, Dashboards, ConfirmModal, TestRuns) {
 		$scope.authentication = Authentication;
 
         $scope.productName = $stateParams.productName;
@@ -38,6 +38,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
             {alias: '400%', value: '4.00'},
             {alias: '500%', value: '5.00'},
         ];
+
 
         $scope.$watch('enableRequirement', function (newVal, oldVal) {
 
@@ -106,10 +107,22 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
             $scope.metric.productName = $stateParams.productName;
             $scope.metric.dashboardName = $stateParams.dashboardName;
 
+            $scope.currentRequirement = "";
+
             Metrics.create($scope.metric).success(function (metric) {
 
             /* reset cloned metric */
                 Metrics.clone = {};
+
+                /* if requirement has been set, update test runs */
+                if ( $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue) {
+
+                    TestRuns.updateRequirementsResults( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId).success(function(testRuns){
+
+                        TestRuns.list = testRuns;
+
+                    });
+                }
                 
                 $location.path('browse/' + $stateParams.productName + '/' + $stateParams.dashboardName);
             });
@@ -145,10 +158,21 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
             Metrics.update($scope.metric).success(function (metric) {
 
-                if ($rootScope.previousStateParams)
-                    $state.go($rootScope.previousState,$rootScope.previousStateParams);
-                else
-                    $state.go($rootScope.previousState);
+                /* if requirement has changed, update test runs */
+                if ( $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue) {
+
+                    TestRuns.updateRequirementsResults( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId).success(function(testRuns){
+
+                        TestRuns.list = testRuns;
+                        if ($rootScope.previousStateParams)
+                            $state.go($rootScope.previousState,$rootScope.previousStateParams);
+                        else
+                            $state.go($rootScope.previousState);
+
+                    });
+                }
+
+
             });
 		};
 
@@ -173,6 +197,8 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
                     $scope.enableBenchmarking = 'enabled';
 
 
+                /* set current requirements */
+                $scope.currentRequirement = metric.requirementOperator + metric.requirementValue;
 
 
             });
