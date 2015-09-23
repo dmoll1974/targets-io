@@ -17,15 +17,15 @@ angular.module('events').factory('TestRuns', ['$http', 'Products', 'Dashboards',
             refreshTestrun: refreshTestrun,
             delete: deleteFn,
             updateFixedBaseline: updateFixedBaseline,
-            updateRequirementsResults:updateRequirementsResults
+            updateTestruns:updateTestruns
 
         };
 
         return TestRuns;
 
-        function updateRequirementsResults(productName, dashboardName, metricId){
+        function updateTestruns(productName, dashboardName, metricId, updateRequirements, updateBenchmarks){
 
-            return $http.get('/update-requirements-results/' + productName + '/' + dashboardName + '/' + metricId);
+            return $http.get('/update-testruns-results/' + productName + '/' + dashboardName + '/' + metricId + '/' + updateRequirements + '/' + updateBenchmarks );
 
         }
 

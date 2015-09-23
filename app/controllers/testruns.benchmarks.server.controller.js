@@ -19,6 +19,25 @@ var mongoose = require('mongoose'),
 exports.setBenchmarkResultsPreviousBuildForTestRun = setBenchmarkResultsPreviousBuildForTestRun;
 exports.setBenchmarkResultsFixedBaselineForTestRun = setBenchmarkResultsFixedBaselineForTestRun;
 exports.updateFixedBaselineBenchmark = updateFixedBaselineBenchmark;
+exports.updateBenchmarkResults = updateBenchmarkResults;
+
+function updateBenchmarkResults (testRun, callback){
+
+    setBenchmarkResultsFixedBaselineForTestRun(testRun, function(updatedFixedBenchmark){
+
+        Testruns.saveTestRun(updatedFixedBenchmark, function(savedFixedBenchmark){
+
+            setBenchmarkResultsPreviousBuildForTestRun(savedFixedBenchmark, function(updatedPreviousBenchmark) {
+
+                Testruns.saveTestRun(updatedPreviousBenchmark, function(updatedBenchmarksTestRun){
+
+                        callback(updatedBenchmarksTestRun);
+                });
+            });
+        });
+    });
+
+}
 
 function updateFixedBaselineBenchmark(req, res){
 

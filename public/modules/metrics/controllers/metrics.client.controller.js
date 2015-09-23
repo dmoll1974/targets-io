@@ -108,16 +108,22 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
             $scope.metric.dashboardName = $stateParams.dashboardName;
 
             $scope.currentRequirement = "";
+            $scope.currentBenchmark = "";
 
             Metrics.create($scope.metric).success(function (metric) {
 
             /* reset cloned metric */
                 Metrics.clone = {};
 
-                /* if requirement has been set, update test runs */
-                if ( $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue) {
+                var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
+                var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
 
-                    TestRuns.updateRequirementsResults( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId).success(function(testRuns){
+                /* if requirement or benchmark vlaues have changed, update test runs */
+                if (updateRequirements || updateBenchmarks ) {
+
+
+                    TestRuns.updateTestruns( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks ).success(function(testRuns){
+
 
                         TestRuns.list = testRuns;
 
@@ -158,10 +164,14 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
             Metrics.update($scope.metric).success(function (metric) {
 
-                /* if requirement has changed, update test runs */
-                if ( $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue) {
+                var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
+                var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
 
-                    TestRuns.updateRequirementsResults( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId).success(function(testRuns){
+                /* if requirement or benchmark vlaues have changed, update test runs */
+                if (updateRequirements || updateBenchmarks ) {
+
+
+                    TestRuns.updateTestruns( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks ).success(function(testRuns){
 
                         TestRuns.list = testRuns;
                         if ($rootScope.previousStateParams)
@@ -199,6 +209,10 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
                 /* set current requirements */
                 $scope.currentRequirement = metric.requirementOperator + metric.requirementValue;
+
+                /* set current benchmark values */
+                $scope.currentBenchmark = metric.benchmarkOperator + metric.benchmarkValue;
+
 
 
             });
@@ -246,7 +260,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
                         $scope.dashboard = Dashboards.selected;
                         
-                        /* return to previuos state*/
+                        /* return to previous state*/
                         $state.go($rootScope.previousState,$rootScope.previousStateParams);
 
                     });

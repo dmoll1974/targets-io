@@ -16,8 +16,8 @@ module.exports = function(app) {
     app.route('/refresh-testrun/:productName/:dashboardName/:testRunId')
         .get(testruns.refreshTestrun);
 
-    app.route('/update-requirements-results/:productName/:dashboardName/:metricId')
-        .get(requirements.updateRequirementResults);
+    app.route('/update-testruns-results/:productName/:dashboardName/:metricId/:updateRequirements/:updateBenchmarks')
+        .get(testruns.updateTestrunsResults);
 
 
     app.route('/running-test/:productName/:dashboardName')

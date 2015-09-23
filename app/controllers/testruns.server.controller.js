@@ -14,7 +14,7 @@ var mongoose = require('mongoose'),
     Utils = require('./utils.server.controller'),
     Requirements = require('./testruns.requirements.server.controller'),
     Benchmarks = require('./testruns.benchmarks.server.controller'),
-
+    Metric = mongoose.model('Metric'),
     async = require('async');
 
 
@@ -24,8 +24,148 @@ exports.deleteTestRunById = deleteTestRunById;
 exports.testRunById = testRunById;
 exports.refreshTestrun = refreshTestrun;
 exports.runningTest = runningTest;
+exports.updateTestrunsResults = updateTestrunsResults;
+exports.saveTestRun = saveTestRun;
 
-    function deleteTestRunById (req, res) {
+function saveTestRun (testRun, callback){
+
+    /* Save updated test run */
+    Testrun.findById(testRun._id, function (err, savedTestRun) {
+        if (err) console.log(err);
+        if (!savedTestRun)
+            console.log('Could not load Document');
+        else {
+
+            savedTestRun.metrics = testRun.metrics;
+            savedTestRun.baseline = testRun.baseline;
+            savedTestRun.benchmarkResultFixedOK = testRun.benchmarkResultFixedOK;
+            savedTestRun.benchmarkResultPreviousOK = testRun.benchmarkResultPreviousOK;
+
+
+            savedTestRun.save(function (err) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    callback(savedTestRun);
+                }
+            });
+        }
+    });
+}
+
+
+function updateTestrunsResults(req, res) {
+
+    var updateRequirements = req.params.updateRequirements;
+    var updateBenchmarks = req.params.updateBenchmarks;
+
+    Testrun.find({$and: [{productName: req.params.productName}, {dashboardName: req.params.dashboardName}]}).exec(function (err, testRuns) {
+        if (err) {
+            console.log(err);
+        } else {
+
+            async.forEachLimit(testRuns, 1, function (testRun, callback) {
+
+                updateMetricInTestrun(req.params.productName, req.params.dashboardName, req.params.metricId, testRun, function (testRunWithUpdatedMetrics) {
+
+                    if (updateRequirements === "true" && updateBenchmarks === "true") {
+
+                        Requirements.updateRequirementResults(testRunWithUpdatedMetrics, function (updatedRequirementsTestrun) {
+
+                            Benchmarks.updateBenchmarkResults(updatedRequirementsTestrun, function (updatedBenchmarkTestrun) {
+
+                                console.log('Updated requiremenst and benchmarks for: ' + updatedBenchmarkTestrun.testRunId);
+                                callback();
+                            });
+                        });
+
+                    } else {
+
+                        if (updateRequirements === "true" && updateBenchmarks === "false") {
+
+                            Requirements.updateRequirementResults(testRunWithUpdatedMetrics, function (updatedTestrun) {
+
+                                console.log('Updated requirememts for: ' + updatedTestrun.testRunId);
+                                callback();
+                            });
+                        }
+
+                        if (updateRequirements === "false" && updateBenchmarks === "true") {
+
+                            Benchmarks.updateBenchmarkResults(testRunWithUpdatedMetrics, function (updatedTestrun) {
+
+                                console.log('Updated benchmarks for: ' + updatedTestrun.testRunId);
+                                callback();
+                            });
+                        }
+
+                    }
+                });
+            }, function (err) {
+                if (err) console.log(err);
+
+                Testrun.find({$and: [{productName: req.params.productName}, {dashboardName: req.params.dashboardName}]}).exec(function (err, testRuns) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        res.json(testRuns);
+                    }
+                });
+
+
+            });
+
+        }
+    });
+}
+
+
+function updateMetricInTestrun(productName, dashboardName, metricId, testRun, callback){
+
+    var updatedMetrics = [];
+
+    Metric.findOne({_id: metricId}).exec(function(err, dashboardMetric){
+        if(err) console.log(err);
+
+        _.each(testRun.metrics, function(testrunMetric){
+
+            if(testrunMetric.alias === dashboardMetric.alias){
+
+                testrunMetric.requirementOperator = dashboardMetric.requirementOperator;
+                testrunMetric.requirementValue = dashboardMetric.requirementValue;
+                testrunMetric.benchmarkOperator = dashboardMetric.benchmarkOperator;
+                testrunMetric.benchmarkValue = dashboardMetric.benchmarkValue;
+
+            }
+
+            updatedMetrics.push(testrunMetric);
+
+        })
+
+        /* Save updated test run */
+        Testrun.findById(testRun._id, function(err, savedTestRun) {
+            if (err) console.log(err);
+            if (!savedTestRun)
+                console.log('Could not load Document');
+            else {
+
+                savedTestRun.metrics = updatedMetrics;
+
+                savedTestRun.save(function(err) {
+                    if (err) {
+                        console.log(err)
+                    }else {
+                        callback(savedTestRun);                        }
+                });
+            }
+        });
+
+
+    });
+
+}
+
+function deleteTestRunById (req, res) {
 
     Testrun.findOne({$and: [{productName: req.params.productName}, {dashboardName: req.params.dashboardName}, {testRunId: req.params.testRunId}]}).sort('-end').exec(function (err, testRun) {
         if (err) {
