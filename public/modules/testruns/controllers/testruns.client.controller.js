@@ -20,7 +20,7 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
                     $scope.dashboard = Dashboards.selected;
                     $scope.loading = true;
-                    TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
+                    $scope.getTestRuns = TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
 
 
                         TestRuns.list = testRuns;

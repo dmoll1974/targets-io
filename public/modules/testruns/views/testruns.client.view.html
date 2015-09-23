@@ -30,6 +30,8 @@
                 </tr>
             </tbody>
         </table>
-        <img id="TestRunSpinner" class="center" data-ng-show="loading" src="images/assets/spinner.gif"/>
+        <!--<img id="TestRunSpinner" class="center" data-ng-show="loading" src="images/assets/spinner.gif"/>-->
+        <div cg-busy="{promise:getTestRuns,message:'Loading test runs...'}"></div>
+
     </div>
 </div>

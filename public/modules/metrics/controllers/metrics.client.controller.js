@@ -122,7 +122,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
                 if (updateRequirements || updateBenchmarks ) {
 
 
-                    TestRuns.updateTestruns( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks ).success(function(testRuns){
+                    $scope.updateTestrun = TestRuns.updateTestruns( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks ).success(function(testRuns){
 
 
                         TestRuns.list = testRuns;
@@ -171,7 +171,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
                 if (updateRequirements || updateBenchmarks ) {
 
 
-                    TestRuns.updateTestruns( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks ).success(function(testRuns){
+                    $scope.updateTestrun = TestRuns.updateTestruns( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks ).success(function(testRuns){
 
                         TestRuns.list = testRuns;
                         if ($rootScope.previousStateParams)
