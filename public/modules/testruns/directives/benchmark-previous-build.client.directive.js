@@ -85,6 +85,7 @@
                                         $timeout(function () {
 
                                             TestRuns.selected = testRun;
+                                            $scope.testRun = testRun;
 
                                             var data = [];
 

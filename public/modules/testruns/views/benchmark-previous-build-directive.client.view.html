@@ -1,6 +1,8 @@
 <div class="page-header">
     <a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}">Back</a>
-    <h1>Benchmark to previous build - details</h1>
+    <h1>Benchmark to previous build</h1>
+    <h5>ID: {{testRun.testRunId}}</h5>
+    <h5>Baseline: {{testRun.previousBuild}}</h5>
 </div>
 <ul class="nav nav-tabs nav-justified">
     <li ng-class="{active: isSet(0)}" >

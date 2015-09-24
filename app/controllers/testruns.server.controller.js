@@ -441,6 +441,7 @@ function benchmarkAndPersistTestRunById (productName, dashboardName, testRun, ca
                         });
                     }else{
 
+                        console.log("removed testrun: " + savedTestrun.testRunId);
                         getDataForTestrun(productName, dashboardName, testRun, function (metrics) {
 
                             if(metrics) console.log('Data retrieved for:' + productName + '-' + dashboardName);
@@ -648,16 +649,19 @@ function calculateAverage(datapoints){
 
     _.each(datapoints, function(datapoint){
 
-        if(datapoint != null){
+        if(datapoint[0] !== null){
 
             count++;
             total += datapoint[0];
 
         }
 
-    })
+    });
 
-    return Math.round((total / (count)) * 100)/100;
+    if(count > 0)
+        return Math.round((total / count) * 100)/100;
+    else
+        return 0;
 }
 
 function saveTestrun(testrun, metrics, callback){
