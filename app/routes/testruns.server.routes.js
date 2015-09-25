@@ -6,7 +6,7 @@ module.exports = function(app) {
     var benchmarks = require('../../app/controllers/testruns.benchmarks.server.controller');
     var requirements = require('../../app/controllers/testruns.requirements.server.controller');
 
-    app.route('/testruns-dashboard/:productName/:dashboardName')
+    app.route('/testruns-dashboard/:productName/:dashboardName/:useInBenchmark')
         .get(testruns.testRunsForDashboard);
 
     app.route('/testrun/:productName/:dashboardName/:testRunId')

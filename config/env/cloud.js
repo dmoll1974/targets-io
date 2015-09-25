@@ -34,10 +34,13 @@ module.exports = {
                 'public/lib/ng-table/dist/ng-table.css',
                 'public/lib/ng-tags-input/ng-tags-input.min.css',
                 'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css',
-                //'public/lib/angular-tooltips/dist/angular-tooltips.min.css'
+                'public/lib/angular-material/angular-material.min.css'
             ],
             js: [
                 'public/lib/angular/angular.min.js',
+                'public/lib/angular-aria/angular-aria.min.js',
+                'public/lib/angular-animate/angular-animate.min.js',
+                'public/lib/angular-material/angular-material.min.js',
                 'public/lib/angular-resource/angular-resource.min.js',
                 'public/lib/angular-ui-router/release/angular-ui-router.min.js',
                 'public/lib/angular-ui-utils/ui-utils.min.js',

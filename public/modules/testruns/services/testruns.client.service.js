@@ -50,9 +50,9 @@ angular.module('events').factory('TestRuns', ['$http', 'Products', 'Dashboards',
 
         }
 
-        function listTestRunsForDashboard(productName, dashboardName){
+        function listTestRunsForDashboard(productName, dashboardName, useInBenchmark){
 
-            return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName );
+            return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + useInBenchmark );
 
         };
 

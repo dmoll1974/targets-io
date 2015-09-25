@@ -95,6 +95,7 @@ exports.update = function(req, res) {
     dashboard.description = req.body.description;
     dashboard.tags = req.body.tags;
     dashboard.baseline = req.body.baseline;
+    dashboard.useInBenchmark = req.body.useInBenchmark;
 
 	dashboard.save(function(err) {
 		if (err) {

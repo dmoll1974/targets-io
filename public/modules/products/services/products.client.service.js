@@ -1,8 +1,8 @@
 'use strict';
 
 //Products service used to communicate Products REST endpoints
-angular.module('products').factory('Products', ['$resource', '$http',
-	function($resource, $http) {
+angular.module('products').factory('Products', ['$resource', '$http', 'SideMenu',
+	function($resource, $http, SideMenu) {
 
         
         var Products = {
@@ -33,9 +33,9 @@ angular.module('products').factory('Products', ['$resource', '$http',
         }
 
         function fetch(){
-            return $http.get('/products').success(function(items){
-                
-                Products.items = items;
+            return $http.get('/products').success(function(products){
+
+
             });
         }
         

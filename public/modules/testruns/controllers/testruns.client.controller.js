@@ -8,7 +8,7 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
         $scope.dashboardName = $stateParams.dashboardName;
 
-
+        $scope.showBenchmarks = Dashboards.selected.useInBenchmark ? Dashboards.selected.useInBenchmark : false;
 
 
         $scope.$watch(function (scope) {
@@ -20,7 +20,7 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
                     $scope.dashboard = Dashboards.selected;
                     $scope.loading = true;
-                    $scope.getTestRuns = TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns){
+                    $scope.getTestRuns = TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns){
 
 
                         TestRuns.list = testRuns;

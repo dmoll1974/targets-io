@@ -4,8 +4,18 @@
 angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'DashboardTabs', 'TestRuns',
 	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, DashboardTabs, TestRuns) {
 
-        
-        
+        $scope.useInBenchmarkOptions =
+            [
+                {
+                    label: "No",
+                    value: false
+                }, {
+                    label: "Yes",
+                    value: true
+                }
+            ];
+
+
         /* Tab controller */
 
         $scope.$watch(function(scope) { return DashboardTabs.tabNumber },
@@ -30,6 +40,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
             function() {
 
                 $scope.dashboard = Dashboards.selected;
+                $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
             }
         );
         

@@ -1,17 +1,24 @@
-<nav class="bs-docs-sidebar">
-    <ul class="nav nav-stacked fixed" id="products" data-ng-controller="SidebarController" >
-        <li><a href="#/products"> <i class="fa fa-dashboard"></i><span> Products</span></a></i></li>
-        <li><a data-ng-href="#!/add/product"><i class="glyphicon glyphicon-plus"></i>  Add product</a></li>
-        <li class="nav-divider"></li>
-        <li ng-repeat="product in products" ng-class="{active:productIsActive('{{product.name}}')}">
-            <a data-ng-click="viewProduct($index, product.name)"><span>  {{product.name}}</span></a>
-            <ul class="nav nav-stacked" id="dashboards" >
-                <li ng-repeat="dashboard in product.dashboards" ng-class="{active:dashboardIsActive('{{dashboard.name}}')}"><a data-ng-href="#!/browse/{{product.name}}/{{dashboard.name}}">{{dashboard.name}}  <i class="fa fa-caret-right pull-right"></i></a></li>
-                <li><a data-ng-href="#!/add/dashboard/{{product.name}}"><i class="glyphicon glyphicon-plus"></i> Add dashboard</a></li>
-
+<div data-ng-controller="SidebarController as vm">
+    <md-sidenav class="md-sidenav-left md-whiteframe-z1" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <h3>
+                    <span>TARGETS-IO</span>
+                </h3>
+            </div>
+        </md-toolbar>
+        <md-content role="navigation">
+            <ul class="side-menu">
+                <li ng-repeat="section in vm.menu.sections" class="parent-list-item"
+                    ng-class="{'parentActive' : vm.isSectionSelected(section)}">
+                    <h2 class="menu-heading" ng-if="section.type === 'heading'"
+                        id="heading_{{section.name}}">
+                        {{section}}
+                    </h2>
+                    <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
+                    <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
+                </li>
             </ul>
-        </li>
-
-    </ul>
-</nav>
-
+        </md-content>
+    </md-sidenav>
+</div>
