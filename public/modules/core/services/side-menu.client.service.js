@@ -76,25 +76,47 @@
 
                 var url ;
                 var pages = [];
+                SideMenu.sections = [];
+
+                SideMenu.sections.push({
+                    name: 'Add product',
+                    type: 'link',
+                    url: 'add/product',
+                    icon: 'glyphicon glyphicon-plus',
+                    matcher:  'add/product'
+
+                })
 
                 _.each(products, function(product){
 
                     _.each(product.dashboards, function(dashboard){
 
-                        url = product.name + '/' + dashboard.name ;
+                        url = 'browse/' + product.name + '/' + dashboard.name ;
                         pages.push({
                             name: dashboard.name,
                             type: 'link',
-                            url: url
+                            url: url,
+                            matcher:  product.name + '/' + dashboard.name
                         })
 
+
+
                     })
+
+                    pages.push({
+                        name: 'Add dashboard',
+                        type: 'link',
+                        url: 'add/dashboard/' + product.name,
+                        icon: 'glyphicon glyphicon-plus',
+                        matcher: 'add/dashboard/' + product.name
+                    });
 
                     SideMenu.sections.push(
                         {
                             name: product.name,
                             type: 'toggle',
-                            pages: pages
+                            pages: pages,
+                            matcher: product.name
                         }
                     );
                     /* reset pages*/
@@ -114,6 +136,7 @@
 
             function isSectionSelected (section) {
                 return SideMenu.openedSection === section;
+
             }
 
             function sortByHumanName(a, b) {

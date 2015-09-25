@@ -4,8 +4,8 @@
     angular.module('core')
         .run(['$templateCache', function ($templateCache) {
             $templateCache.put('partials/menu-link.tmpl.html',
-                '<md-button ng-class="{active: isActive(\'{{section.url}}\')}"  \n' +
-                '  data-ng-href="#!/browse/{{section.url}}" ng-click="focusSection()">\n' +
+                '<md-button ng-class="{active: isActive(\'{{section.matcher}}\'),\'{{section.icon}}\' : true}"  \n' +
+                '  data-ng-href="#!/{{section.url}}" ng-click="focusSection()">\n' +
                 '  {{section.name}}\n' +
                 '  <span  class="md-visually-hidden "\n' +
                 '    ng-if="isSelected()">\n' +
@@ -24,7 +24,7 @@
                     var controller = $element.parent().controller();
 
                     $scope.isActive = function (viewLocation) {
-                        var regex = new RegExp('.*' + viewLocation + '.*');
+                        var regex = new RegExp('.*\/' + viewLocation + '(\/|$)');
                         var active = regex.test($location.path());
                         return active;
                     };

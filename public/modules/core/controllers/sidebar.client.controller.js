@@ -18,7 +18,12 @@ angular.module('core').controller('SidebarController', ['$scope', '$stateParams'
 
 
         function isOpen(section) {
-            return SideMenu.isSectionSelected(section);
+            var regex = new RegExp('.*\/' + section.matcher + '(\/|$)');
+            var open = regex.test($location.path());
+            if(SideMenu.openedSection)
+                return SideMenu.isSectionSelected(section);
+            else
+                return open;
         }
 
         function toggleOpen(section) {

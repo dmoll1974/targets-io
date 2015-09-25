@@ -44,13 +44,13 @@
 </head>
 
 <body class="ng-cloak">
-	<div layout="column">
+	<div layout="column" layout-fill>
 		<div>
 			<md-toolbar>
 				<header data-ng-include=" '/modules/core/views/header.client.view.html' " class="md-toolbar-tools"></header>
 			</md-toolbar>
 		</div>
-		<div layout="row">
+		<div layout="row" flex>
 			<div data-ng-include="'/modules/core/views/sidebar.client.view.html'"></div>
 			<div class="targetsio-content">
 				<md-content class="md-padding">

@@ -1,8 +1,8 @@
 'use strict';
 
 // Dashboards controller
-angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'DashboardTabs', 'TestRuns',
-	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, DashboardTabs, TestRuns) {
+angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'DashboardTabs', 'TestRuns', 'SideMenu',
+	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, DashboardTabs, TestRuns, SideMenu) {
 
         $scope.useInBenchmarkOptions =
             [
@@ -74,6 +74,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
                 Products.fetch().success(function(products){
 
                     $scope.products = Products.items;
+                    SideMenu.addProducts(products);
                     $state.go('viewDashboard',{productName: $stateParams.productName, dashboardName: response.data.name});
                     $scope.productForm.$setPristine();
 
@@ -116,6 +117,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
                 /* Refresh sidebar */
                 Products.fetch().success(function(products){
+                    SideMenu.addProducts(products);
                     $scope.products = Products.items;
 
                 });
@@ -161,6 +163,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
                 /* Refresh sidebar */
                 Products.fetch().success(function(products){
+                    SideMenu.addProducts(products);
                     $scope.products = Products.items;
 
                 });
@@ -200,7 +203,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
                 $scope.dashboard = Dashboards.selected;
 
-                TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns) {
+                TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
 
 
                     $scope.testRuns = testRuns;
@@ -263,6 +266,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
                     /* Refresh sidebar */
                     Products.fetch().success(function(products){
+                        SideMenu.addProducts(products);
                         $scope.products = Products.items;
 
                     });
