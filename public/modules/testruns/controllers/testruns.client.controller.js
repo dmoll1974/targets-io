@@ -8,7 +8,6 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
         $scope.dashboardName = $stateParams.dashboardName;
 
-        $scope.showBenchmarks = Dashboards.selected.useInBenchmark ? Dashboards.selected.useInBenchmark : false;
 
 
         $scope.$watch(function (scope) {

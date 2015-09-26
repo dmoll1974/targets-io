@@ -9,7 +9,8 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
                 {
                     label: "No",
                     value: false
-                }, {
+                }, 
+                {
                     label: "Yes",
                     value: true
                 }
@@ -40,7 +41,6 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
             function() {
 
                 $scope.dashboard = Dashboards.selected;
-                $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
             }
         );
         
@@ -202,6 +202,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
             Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function(dashboard){
 
                 $scope.dashboard = Dashboards.selected;
+                $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
 
                 TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
 

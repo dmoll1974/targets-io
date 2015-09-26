@@ -39,15 +39,16 @@ angular.module('core').controller('SidebarController', ['$scope', '$stateParams'
             SideMenu.addProducts(products);
 
         });
-    //
-    //
-    //    $scope.$watch(function(scope) { return Products.items },
-    //        function() {
-    //
-    //            $scope.products = Products.items;
-    //        }
-    //    );
-    //
+    
+    
+        $scope.$watch(function(scope) { return Products.items },
+            function() {
+    
+                $scope.products = Products.items;
+                SideMenu.addProducts(Products.items);
+            }
+        );
+    
     //    $scope.productIsActive = function(productName) {
     //        return $location.path().indexOf(productName)!== -1;
     //    };
