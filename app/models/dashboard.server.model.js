@@ -19,7 +19,7 @@ var dashboardSchema = new mongoose.Schema({
     ],
     "granularity": {type: Number, default: 15},
     "baseline": {type: String, default: null},
-    "useInBenchmark":{type: String, default: 'no'},
+    "useInBenchmark":{type: Boolean, default: false},
     "tags": {type:[{text: String, default: Boolean}], default: [{text: 'Load', default: true},{text: 'JVM', default: false}, {text: 'Database', default: false}, {text:'CPU', default: false}, {text:'Frontend', default: false}, {text: 'JDBC', default: false}, {text: 'Garbage Collection', default: false}, {text: 'Heap', default: false}, {text: 'Sessions', default: false}, {text: 'Threads', default: false}]}
 });
 

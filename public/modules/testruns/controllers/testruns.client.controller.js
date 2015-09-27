@@ -153,7 +153,7 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
                     /* refresh test runs*/
                     setTimeout(function () {
-                        TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns){
+                        TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns){
     
                             TestRuns.list = testRuns;
     
@@ -213,7 +213,7 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
                 .then(function(results){
 
                     /* refresh test runs*/
-                    TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns){
+                    TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns){
 
                         $scope.testRuns = testRuns;
 

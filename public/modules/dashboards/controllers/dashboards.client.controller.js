@@ -4,17 +4,7 @@
 angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'DashboardTabs', 'TestRuns', 'SideMenu',
 	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, DashboardTabs, TestRuns, SideMenu) {
 
-        $scope.useInBenchmarkOptions =
-            [
-                {
-                    label: "No",
-                    value: false
-                }, 
-                {
-                    label: "Yes",
-                    value: true
-                }
-            ];
+        $scope.useInBenchmarkOptions =['no', 'yes'];
 
 
         /* Tab controller */

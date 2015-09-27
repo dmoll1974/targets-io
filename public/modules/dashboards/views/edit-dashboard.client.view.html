@@ -20,9 +20,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Benchmark values for this dashboard?</label>
-                    <select data-ng-model="dashboard.useInBenchmark" data-ng-init="dashboard.useInBenchmark" data-ng-options="item as item.label for item in useInBenchmarkOptions">
-                        <!--<option data-ng-repeat="useInBenchmarkOption in useInBenchmarkOptions" value="{{useInBenchmarkOption.value}}">{{useInBenchmarkOption.label}}</option>-->
-                    </select>
+                    <input type="checkbox" data-ng-model="dashboard.useInBenchmark" data-ng-init="dashboard.useInBenchmark">
                 </div>
                 <div class="form-group">
                     <button class="btn-primary" data-ng-click="update()" ng-disabled="dashboardForm.$invalid">Submit</button>
