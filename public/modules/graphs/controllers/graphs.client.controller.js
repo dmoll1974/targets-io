@@ -1,9 +1,23 @@
 'use strict';
 
-angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$rootScope', '$state', '$stateParams', 'Dashboards','Graphite','TestRuns', 'Metrics','$log', 'Tags', 'ConfirmModal',
-	function($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal) {
+angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$rootScope', '$state', '$stateParams', 'Dashboards','Graphite','TestRuns', 'Metrics','$log', 'Tags', 'ConfirmModal', 'Utils',
+	function($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils) {
 
 
+
+        $scope.selectedIndex = Utils.selectedIndex !== '' ? Utils.selectedIndex : 0;
+        
+        $scope.$watch('selectedIndex', function(current, old) {
+           Utils.selectedIndex = current;
+        });
+        
+//        $scope.setSelectedIndex = function(index){
+//
+//            $scope.selectedIndex = index;
+//
+//        }
+
+        
          $scope.gatlingDetails = ($stateParams.tag === 'Gatling') ? true : false;
             /* Get deeplink zoom params from query string */
 

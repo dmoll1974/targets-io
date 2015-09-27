@@ -6,16 +6,15 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
         $scope.useInBenchmarkOptions =['no', 'yes'];
 
-
+        $scope.selectedIndexDashboardView = DashboardTabs.tabNumber;
+        
         /* Tab controller */
 
         $scope.$watch(function(scope) { return DashboardTabs.tabNumber },
             function() {
 
-                this.tab = DashboardTabs.tabNumber;
-            }
+                $scope.selectedIndexDashboardView = DashboardTabs.tabNumber;            }
         );
-//        this.tab = DashboardTabs.tabNumber;
 
         this.setTab = function(newValue){
             DashboardTabs.setTab(newValue);

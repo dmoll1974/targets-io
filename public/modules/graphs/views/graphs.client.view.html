@@ -14,10 +14,14 @@
             <button class="btn default" data-ng-click="openTagsFilterModal('')">Tag filter</button>
         </span>
 
-        <tabset>
-            <tab data-ng-repeat="tag in tags" heading="{{tag.text}}"  data-ng-model="value"  disabled="tag.disabled"  active="isActive(tag.text)" ui-sref="viewGraphs(tag.route)" >
-            </tab>
-        </tabset>
+        <md-tabs md-selected="selectedIndex">
+            <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled"  data-ng-model="value" active="isActive(tag.text)" ng-click="setSelectedIndex($index)" ui-sref="viewGraphs(tag.route)">
+                <span>{{tag.text}}</span>
+            </md-tab>
+        </md-tabs>        <!--<tabset>-->
+            <!--<tab data-ng-repeat="tag in tags" heading="{{tag.text}}"  data-ng-model="value"  disabled="tag.disabled"  active="isActive(tag.text)" ui-sref="viewGraphs(tag.route)" >-->
+            <!--</tab>-->
+        <!--</tabset>-->
     </div>    
     <div gatling-details data-ng-if="gatlingDetails"></div>
     <div data-ng-hide="gatlingDetails">

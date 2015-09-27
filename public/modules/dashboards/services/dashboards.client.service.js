@@ -108,8 +108,9 @@ angular.module('dashboards').factory('Dashboards', ['$http',
 
         var DashboardTabs = {
             setTab : setTab,
-            tabNumber : 1,
+            tabNumber : 0,
             isSet : isSet 
+
         };
 
         return DashboardTabs;

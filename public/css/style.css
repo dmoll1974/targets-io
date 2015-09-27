@@ -11493,3 +11493,9 @@ body {
     width: 80%;
     padding-left: 20px;
 }
+
+.md-fab-toolbar svg{
+    
+    fill: whitesmoke;
+    
+}

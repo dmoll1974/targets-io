@@ -1,64 +1,118 @@
-<section data-ng-controller="DashboardsController as tab" data-ng-init="findOne()">
+<div data-ng-controller="DashboardsController as tab" data-ng-init="findOne()">
     <div class="dashboardView" data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div class="page-header">
         <h1>{{productName}}-{{dashboard.name}}</h1>
         <h3>Description:    {{dashboard.description}}</h3>
         <div running-test></div>
-        <span>
-            <div class="btn-group" dropdown>
-                <button type="button" class="btn btn-primary">Edit</button>
-                <button type="button" class="btn btn-primary dropdown-toggle">
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li class="dashboard-edit-menu" data-ng-click="edit()"><span class="dashboard-edit-menu-icon glyphicon glyphicon-pencil"></span>  Edit</li>
-                    <li class="divider"></li>
-                    <li class="dashboard-edit-menu" data-ng-click="clone()"><span class="dashboard-edit-menu-icon glyphicon glyphicon-duplicate"></span>  Clone</li>
-                    <li class="divider"></li>
-                    <li class="dashboard-edit-menu" data-ng-click="openDeleteDashboardModal('', $index)"><span class="dashboard-edit-menu-icon glyphicon glyphicon-trash btn-alert"></span>  Delete</li>
-                </ul>
-            </div>
-        </span>
-        <span>
-            <div data-ng-controller="TestrunsController" class="btn-group pull-right" dropdown>
-                <button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-flag"></span> Set baseline</button>
-                <button type="button" class="btn btn-warning dropdown-toggle">
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                        <li data-ng-repeat="testRun in testRuns">
-                            <a data-ng-click="setTestRunAsBaseline(testRun.testRunId)">{{testRun.testRunId}}</a>
-                        </li>
-                </ul>
-            </div>
-        </span>
-        <!--<button title="Edit" class="btn btn-primary" data-ng-click="edit()"><span class="glyphicon glyphicon-pencil"></span>  Edit</button>-->
-        <!--<button title="Clone" class="btn btn-warning" data-ng-click="clone()"><span class="glyphicon glyphicon-duplicate"></span>  Clone</button>-->
-        <!--<button title="Delete" class="btn btn-danger" data-ng-click="openDeleteDashboardModal('')"><span class="glyphicon glyphicon-trash"></span>  Delete</button>-->
-
-        <button title="Live dashboard" class="btn btn-success" data-ng-click="viewLiveGraphs()"><span class="glyphicon glyphicon-stats"></span>  Live data</button>
+        <!--<span>-->
+            <!--<div class="btn-group" dropdown>-->
+                <!--<button type="button" class="btn btn-primary">Edit</button>-->
+                <!--<button type="button" class="btn btn-primary dropdown-toggle">-->
+                    <!--<span class="caret"></span>-->
+                <!--</button>-->
+                <!--<ul class="dropdown-menu" role="menu">-->
+                    <!--<li class="dashboard-edit-menu" data-ng-click="edit()"><span class="dashboard-edit-menu-icon glyphicon glyphicon-pencil"></span>  Edit</li>-->
+                    <!--<li class="divider"></li>-->
+                    <!--<li class="dashboard-edit-menu" data-ng-click="clone()"><span class="dashboard-edit-menu-icon glyphicon glyphicon-duplicate"></span>  Clone</li>-->
+                    <!--<li class="divider"></li>-->
+                    <!--<li class="dashboard-edit-menu" data-ng-click="openDeleteDashboardModal('', $index)"><span class="dashboard-edit-menu-icon glyphicon glyphicon-trash btn-alert"></span>  Delete</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</span>-->
+        <!--<span>-->
+            <!--<div data-ng-controller="TestrunsController" class="btn-group pull-right" dropdown>-->
+                <!--<button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-flag"></span> Set baseline</button>-->
+                <!--<button type="button" class="btn btn-warning dropdown-toggle">-->
+                    <!--<span class="caret"></span>-->
+                <!--</button>-->
+                <!--<ul class="dropdown-menu" role="menu">-->
+                        <!--<li data-ng-repeat="testRun in testRuns">-->
+                            <!--<a data-ng-click="setTestRunAsBaseline(testRun.testRunId)">{{testRun.testRunId}}</a>-->
+                        <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</span>-->
+       <!---->
+        <!--<button title="Live dashboard" class="btn btn-success" data-ng-click="viewLiveGraphs()"><span class="glyphicon glyphicon-stats"></span>  Live data</button>-->
     </div>
-
-    <ul class="nav nav-tabs">
-    <li ng-class="{active: tab.isSet(1)}" >
-        <a href ng-click="tab.setTab('Test runs')" >Test runs</a></li>
-    <li ng-class="{active: tab.isSet(2)}">
-        <a href  ng-click="tab.setTab('Metrics')">Metrics configuration</a></li>
-    <li ng-class="{active: tab.isSet(3)}">
-        <a href  ng-click="tab.setTab('Events')">Events</a></li>
-    <li ng-class="{active: tab.isSet(4)}">
-        <a href  ng-click="tab.setTab('Tags')">Tags</a></li>
-    </ul>
-    <div ng-show="tab.isSet(1)">
-        <div data-ng-include="'modules/testruns/views/testruns.client.view.html'"></div>
-    </div>
-    <div ng-show="tab.isSet(2)">
-        <div data-ng-include="'modules/dashboards/views/view-dashboard-metrics.client.view.html'"></div>
-    </div>
-    <div ng-show="tab.isSet(3)">
-        <div data-ng-include="'modules/events/views/list-events-dashboard.client.view.html'"></div>
-    </div>
-    <div ng-show="tab.isSet(4)">
-        <div data-ng-include="'modules/dashboards/views/manage-tags.client.view.html'"></div>
-    </div>
-</section>
+    <md-fab-speed-dial md-open="false" ng-class="md-fling"
+                    md-direction="top">
+        <md-fab-trigger class="align-with-text">
+            <!--<md-button aria-label="Menu" class="md-fab md-primary">-->
+                <!--<md-icon md-svg-src="images/assets/ic_settings_black_36px.svg"></md-icon>-->
+            <!--</md-button>-->
+        </md-fab-trigger>
+        <md-toolbar>
+            <md-fab-actions class="md-toolbar-tools">
+                <md-button aria-label="Edit dashboard" class="md-icon-button" data-ng-click="edit()">
+                    <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
+                    <!--<md-tooltip>-->
+                        <!--Edit dashboard-->
+                    <!--</md-tooltip>-->
+                </md-button>
+                <md-button aria-label="Clone dashboard" class="md-icon-button" data-ng-click="clone()">
+                    <md-icon md-svg-src="images/assets/ic_queue_black_36px.svg"></md-icon>
+                    <!--<md-tooltip>-->
+                        <!--Clone dashboard-->
+                    <!--</md-tooltip>-->
+                </md-button>
+                <md-button aria-label="Delete dashboard" class="md-icon-button" data-ng-click="openDeleteDashboardModal('', $index)">
+                    <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg" ></md-icon>
+                    <!--<md-tooltip>-->
+                        <!--Delete dashboard-->
+                    <!--</md-tooltip>-->
+                </md-button>
+            </md-fab-actions>
+        </md-toolbar>
+    </md-fab-speed-dial>
+    <md-button aria-label="Live graphs" class="md-icon-button" data-ng-click="viewLiveGraphs()">
+        <md-icon md-svg-src="images/assets/ic_mode_live_black_36px.svg"></md-icon>
+        <md-tooltip>
+            Live graphs
+        </md-tooltip>
+    </md-button>
+    <md-tabs md-selected="selectedIndexDashboardView">
+        <md-tab  label="Test runs">
+            <md-content class="md-padding">
+                <div data-ng-include="'modules/testruns/views/testruns.client.view.html'"></div>
+            </md-content>
+        </md-tab>
+        <md-tab  label="Metrics configuration">
+            <md-content class="md-padding">
+                <div data-ng-include="'modules/dashboards/views/view-dashboard-metrics.client.view.html'"></div>
+            </md-content>
+        </md-tab>
+        <md-tab  label="Events">
+            <md-content class="md-padding">
+                <div data-ng-include="'modules/events/views/list-events-dashboard.client.view.html'"></div>
+            </md-content>
+        </md-tab>
+        <md-tab  label="Tags">
+            <md-content class="md-padding">
+                <div data-ng-include="'modules/dashboards/views/manage-tags.client.view.html'"></div>
+            </md-content>
+        </md-tab>
+    </md-tabs>
+    <!--<ul class="nav nav-tabs">-->
+    <!--<li ng-class="{active: tab.isSet(1)}" >-->
+        <!--<a href ng-click="tab.setTab('Test runs')" >Test runs</a></li>-->
+    <!--<li ng-class="{active: tab.isSet(2)}">-->
+        <!--<a href  ng-click="tab.setTab('Metrics')">Metrics configuration</a></li>-->
+    <!--<li ng-class="{active: tab.isSet(3)}">-->
+        <!--<a href  ng-click="tab.setTab('Events')">Events</a></li>-->
+    <!--<li ng-class="{active: tab.isSet(4)}">-->
+        <!--<a href  ng-click="tab.setTab('Tags')">Tags</a></li>-->
+    <!--</ul>-->
+    <!--<div ng-show="tab.isSet(1)">-->
+        <!--<div data-ng-include="'modules/testruns/views/testruns.client.view.html'"></div>-->
+    <!--</div>-->
+    <!--<div ng-show="tab.isSet(2)">-->
+        <!--<div data-ng-include="'modules/dashboards/views/view-dashboard-metrics.client.view.html'"></div>-->
+    <!--</div>-->
+    <!--<div ng-show="tab.isSet(3)">-->
+        <!--<div data-ng-include="'modules/events/views/list-events-dashboard.client.view.html'"></div>-->
+    <!--</div>-->
+    <!--<div ng-show="tab.isSet(4)">-->
+        <!--<div data-ng-include="'modules/dashboards/views/manage-tags.client.view.html'"></div>-->
+    <!--</div>-->
+</div>

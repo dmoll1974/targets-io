@@ -4,7 +4,7 @@ angular.module('graphs').factory('Tags', ['Utils', 'TestRuns',
 	function(Utils, TestRuns) {
 
         var Tags = {
-            setTags: setTags//,
+            setTags: setTags
             //createHighstockSeries: createHighstockSeries
 
         };

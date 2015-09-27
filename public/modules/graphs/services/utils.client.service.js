@@ -8,8 +8,10 @@ angular.module('graphs').service('Utils', [
 
 		var Utils = {
 			dynamicSort: dynamicSort,
-			dynamicSortMultiple: dynamicSortMultiple
-		}
+			dynamicSortMultiple: dynamicSortMultiple,
+            selectedIndex : ''
+
+    }
 
 		return Utils;
 
