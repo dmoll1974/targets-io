@@ -38,25 +38,25 @@
     <md-fab-speed-dial md-open="false" ng-class="md-fling"
                     md-direction="top">
         <md-fab-trigger class="align-with-text">
-            <!--<md-button aria-label="Menu" class="md-fab md-primary">-->
-                <!--<md-icon md-svg-src="images/assets/ic_settings_black_36px.svg"></md-icon>-->
-            <!--</md-button>-->
+            <md-button aria-label="Menu" class="md-fab md-primary">
+                <md-icon md-svg-src="images/assets/ic_settings_black_36px.svg"></md-icon>
+            </md-button>
         </md-fab-trigger>
         <md-toolbar>
             <md-fab-actions class="md-toolbar-tools">
-                <md-button aria-label="Edit dashboard" class="md-icon-button" data-ng-click="edit()">
+                <md-button aria-label="Edit dashboard" class="md-fab md-raised md-mini" data-ng-click="edit()">
                     <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
                     <!--<md-tooltip>-->
                         <!--Edit dashboard-->
                     <!--</md-tooltip>-->
                 </md-button>
-                <md-button aria-label="Clone dashboard" class="md-icon-button" data-ng-click="clone()">
+                <md-button aria-label="Clone dashboard" class="md-fab md-raised md-mini" data-ng-click="clone()">
                     <md-icon md-svg-src="images/assets/ic_queue_black_36px.svg"></md-icon>
                     <!--<md-tooltip>-->
                         <!--Clone dashboard-->
                     <!--</md-tooltip>-->
                 </md-button>
-                <md-button aria-label="Delete dashboard" class="md-icon-button" data-ng-click="openDeleteDashboardModal('', $index)">
+                <md-button aria-label="Delete dashboard" class="md-fab md-raised md-mini" data-ng-click="openDeleteDashboardModal('', $index)">
                     <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg" ></md-icon>
                     <!--<md-tooltip>-->
                         <!--Delete dashboard-->
@@ -66,7 +66,7 @@
         </md-toolbar>
     </md-fab-speed-dial>
     <md-button aria-label="Live graphs" class="md-icon-button" data-ng-click="viewLiveGraphs()">
-        <md-icon md-svg-src="images/assets/ic_mode_live_black_36px.svg"></md-icon>
+        <md-icon md-svg-src="images/assets/ic_live_36px.svg"></md-icon>
         <md-tooltip>
             Live graphs
         </md-tooltip>
