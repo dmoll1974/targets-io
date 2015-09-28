@@ -10,6 +10,7 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
 
 
+
         $scope.$watch(function (scope) {
                 return Dashboards.selected._id;
             },
@@ -17,6 +18,7 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
 
                 if (newVal !== oldVal) {
 
+                    $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
                     $scope.dashboard = Dashboards.selected;
                     $scope.loading = true;
                     $scope.getTestRuns = TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns){
@@ -119,6 +121,9 @@ angular.module('testruns').controller('TestrunsController', ['$scope', '$statePa
             Dashboards.selected.baseline = baseline;
 
             Dashboards.update().success(function (dashboard) {
+
+
+                Dashboards.selected = dashboard;
 
                 $scope.dashboard = dashboard;
 

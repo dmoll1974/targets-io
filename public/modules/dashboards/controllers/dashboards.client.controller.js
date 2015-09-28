@@ -4,6 +4,18 @@
 angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'DashboardTabs', 'TestRuns', 'SideMenu',
 	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, DashboardTabs, TestRuns, SideMenu) {
 
+        var originatorEv;
+        $scope.openMenu = function($mdOpenMenu, ev) {
+            originatorEv = ev;
+            $mdOpenMenu(ev);
+        };
+
+        // Edit Product
+        $scope.editProduct = function(productName) {
+
+            $state.go('editProduct', {productName: productName})
+        };
+
         $scope.useInBenchmarkOptions =['no', 'yes'];
 
         $scope.selectedIndexDashboardView = DashboardTabs.tabNumber;
@@ -184,7 +196,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
 
         }
-        // Find existing Product
+        // Find existing Dashboard
         $scope.findOne = function() {
 
 
@@ -193,14 +205,19 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
                 $scope.dashboard = Dashboards.selected;
                 $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
 
-                TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+                Products.get($stateParams.productName).success(function(product){
 
+                    Products.selected = product;
 
-                    $scope.testRuns = testRuns;
+                    TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+
+                        $scope.testRuns = testRuns;
+
+                    });
+
                 });
 
-
-                });
+            });
 
         };
 

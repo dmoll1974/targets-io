@@ -211,7 +211,7 @@ function testRunsForDashboard (req, res) {
                     createTestrunFromEvents(req.params.productName, req.params.dashboardName,events, function(eventsTestruns){
 
                         /* if benchmarking is not enabled, no need to persist the test runs! */
-                        if(req.params.useInBenchmark === 'no'){
+                        if(req.params.useInBenchmark === 'false'){
 
                             res.jsonp(eventsTestruns);
 
