@@ -16,6 +16,7 @@ angular.module('core').controller('SidebarController', ['$scope', '$stateParams'
             isFirstDisabled: false
         };
 
+        $scope.productFilter="";
 
         function isOpen(section) {
             var regex = new RegExp('.*\/' + section.matcher + '(\/|$)');

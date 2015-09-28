@@ -44,7 +44,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
             if (newVal !== oldVal) {
 
-                if($scope.enableRequirement === 'disabled'){
+                if($scope.enableRequirement === false){
 
                     $scope.metric.requirementOperator = null;
                     $scope.metric.requirementValue = null;
@@ -57,7 +57,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
             if (newVal !== oldVal) {
 
-                if($scope.enableBenchmarking === 'disabled'){
+                if($scope.enableBenchmarking === false){
 
                     $scope.metric.benchmarkOperator = null;
                     $scope.metric.benchmarkValue = null;
@@ -201,10 +201,10 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
                 /* set benchmark and requirement toggles */
 
                 if($scope.metric.requirementValue)
-                    $scope.enableRequirement ='enabled';
+                    $scope.enableRequirement = true;
 
                 if($scope.metric.benchmarkValue)
-                    $scope.enableBenchmarking = 'enabled';
+                    $scope.enableBenchmarking = true;
 
 
                 /* set current requirements */

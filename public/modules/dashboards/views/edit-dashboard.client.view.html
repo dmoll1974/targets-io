@@ -2,35 +2,27 @@
     <div class="page-header">
         <h1>Edit Dashboard</h1>
     </div>
-    <div class="col-md-12">
-        <form name="dashboardForm" class="form-horizontal" novalidate>
-            <fieldset>
-                <input type="hidden" data-ng-model="dashboard.productId" id="productId"  class="form-control"  required>
-                <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="dashboard.name" id="name" class="form-control" placeholder="Name, required" required>
-                    </div>
+        <form name="dashboardForm">
+            <div layout="column">
+                <div layout="column">
+                    <input type="hidden" data-ng-model="dashboard.productId" id="productId"  class="form-control"  required>
+                    <md-input-container flex>
+                        <label>Dashboard name</label>
+                        <input ng-model="dashboard.name">
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Dashboard description</label>
+                        <input ng-model="dashboard.description">
+                    </md-input-container>
+                    <md-checkbox ng-model="dashboard.useInBenchmark" aria-label="Benchmark test runs for this dashboard">
+                        Benchmark test runs for this dashboard
+                    </md-checkbox>
                 </div>
-                <div class="form-group">
-                    <label class="control-label" for="description">Description</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="dashboard.description" id="description" class="form-control" placeholder="Description, required" required>
-                    </div>
+                <div layout="row">
+                    <md-button md-no-ink class="md-primary" data-ng-click="update()">Submit</md-button>
+                    <md-button data-ng-click="cancel()" >Cancel</md-button>
+                    <md-button class="md-warn" data-ng-click="openDeleteDashboardModal('')">Delete dashboard</md-button>
                 </div>
-                <div class="form-group">
-                    <label class="control-label">Benchmark values for this dashboard?</label>
-                    <input type="checkbox" data-ng-model="dashboard.useInBenchmark" data-ng-init="dashboard.useInBenchmark">
-                </div>
-                <div class="form-group">
-                    <button class="btn-primary" data-ng-click="update()" ng-disabled="dashboardForm.$invalid">Submit</button>
-                    <button class="btn-primary" data-ng-click="cancel()">Cancel</button>
-                </div>
-                <div data-ng-show="error" class="alert alert-danger alert-error">
-                    <a href="#" class="close" data-dismiss="alert"></a>
-                    <p><strong data-ng-bind="error"></strong></p>
-                </div>
-            </fieldset>
+            </div>
         </form>
-    </div>
 </section>
