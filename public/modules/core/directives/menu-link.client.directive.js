@@ -4,7 +4,7 @@
     angular.module('core')
         .run(['$templateCache', function ($templateCache) {
             $templateCache.put('partials/menu-link.tmpl.html',
-                '<md-button ng-class="{active: isActive(\'{{section.matcher}}\'),\'{{section.icon}}\' : true}"  \n' +
+                '<md-button  ng-class="{active: isActive(\'{{section.matcher}}\'),\'{{section.icon}}\' : true}"  \n' +
                 '  data-ng-href="#!/{{section.url}}" ng-click="focusSection()">\n' +
                 '  {{section.name}}\n' +
                 '  <span  class="md-visually-hidden "\n' +

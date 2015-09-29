@@ -11411,7 +11411,7 @@ body {
 
 .side-menu .md-button.active {
     color: white;
-    background-color: rgb(63,81,181);
+    background-color: #FF5722;
 }
 
 .side-menu .menu-toggle-list a.md-button {
@@ -11494,12 +11494,9 @@ body {
     padding-left: 20px;
 }
 
-.md-fab-toolbar svg{
-    
-    fill: whitesmoke;
-    
-}
+
 
 * {
     font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
