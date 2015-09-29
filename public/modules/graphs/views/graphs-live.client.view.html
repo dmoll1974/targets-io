@@ -24,7 +24,7 @@
             <button class="btn default" data-ng-click="openTagsFilterModal('')">Tag filter</button>
         </span>
         <md-tabs md-selected="selectedIndex">
-            <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled"  data-ng-model="value" active="isActive(tag.text)" ng-click="setSelectedIndex($index)" ui-sref="viewGraphs(tag.route)">
+            <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled"  data-ng-model="value" active="isActive(tag.text)" ng-click="setSelectedIndex($index)" ui-sref="viewLiveGraphs(tag.route)">
                 <span>{{tag.text}}</span>
             </md-tab>
         </md-tabs>
