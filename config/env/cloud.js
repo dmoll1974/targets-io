@@ -61,7 +61,9 @@ module.exports = {
                 'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
                 'public/lib/angular-busy/dist/angular-busy.js',
                 'public/lib/ng-clip/dest/ng-clip.min.js',
-                'public/lib/zeroclipboard/dist/ZeroClipboard.min.js'
+                'public/lib/zeroclipboard/dist/ZeroClipboard.min.js',
+                'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js'
+
 
             ]
         },
