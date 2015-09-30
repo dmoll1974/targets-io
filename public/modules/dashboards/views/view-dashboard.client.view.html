@@ -3,12 +3,11 @@
     <div class="page-header">
         <div layout="row">
             <div layout="column">
-                <h1>{{productName}}-{{dashboard.name}}</h1>
-
-                <h3>{{dashboard.description}}</h3>
-
+                <div layout="column">
+                    <h1 class="md-display-1">{{productName}}-{{dashboard.name}}</h1>
+                    <h3 class="md-headline">{{dashboard.description}}</h3>
+                </div>
                 <div running-test></div>
-
                 <div layout="row">
                     <div>
                         <md-menu>
@@ -52,7 +51,7 @@
                         </md-menu>
                     </div>
                     <div>
-                        <md-button class="md-icon-button" data-ng-click="viewLiveGraphs()">
+                        <md-button ng-if="!showDialog" class="md-icon-button" data-ng-click="viewLiveGraphs()">
                             <md-icon md-svg-src="images/assets/ic_live_tv_black_36px.svg"></md-icon>
                             <md-tooltip>
                                 Live graphs

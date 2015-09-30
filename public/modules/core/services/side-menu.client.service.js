@@ -78,14 +78,14 @@
                 var pages = [];
                 SideMenu.sections = [];
 
-                SideMenu.sections.push({
-                    name: 'Add product',
-                    type: 'link',
-                    url: 'add/product',
-                    icon: 'glyphicon glyphicon-plus',
-                    matcher:  'add/product'
-
-                })
+                //SideMenu.sections.push({
+                //    name: 'Add product',
+                //    type: 'link',
+                //    url: 'add/product',
+                //    icon: 'glyphicon glyphicon-plus',
+                //    matcher:  'add/product'
+                //
+                //})
 
                 _.each(products, function(product){
 

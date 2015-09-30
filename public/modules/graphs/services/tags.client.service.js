@@ -4,12 +4,26 @@ angular.module('graphs').factory('Tags', ['Utils', 'TestRuns',
 	function(Utils, TestRuns) {
 
         var Tags = {
-            setTags: setTags
+            setTags: setTags,
+            getTagIndex: getTagIndex
             //createHighstockSeries: createHighstockSeries
 
         };
 
         return Tags;
+
+        function getTagIndex(tag, tags){
+
+            var index;
+
+            _.each(tags, function(tagObj, i){
+
+                if (tagObj.text === tag) return index = i;
+
+            })
+
+            return index;
+        }
 
         function setTags (metrics, productName, dashBoardName, testRunId, dashboardTags){
 

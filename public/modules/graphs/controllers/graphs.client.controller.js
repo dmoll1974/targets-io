@@ -5,17 +5,11 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
 
 
-        $scope.selectedIndex = Utils.selectedIndex !== '' ? Utils.selectedIndex : 0;
-        
+
         $scope.$watch('selectedIndex', function(current, old) {
            Utils.selectedIndex = current;
         });
         
-//        $scope.setSelectedIndex = function(index){
-//
-//            $scope.selectedIndex = index;
-//
-//        }
 
         
          $scope.gatlingDetails = ($stateParams.tag === 'Gatling') ? true : false;
@@ -26,7 +20,7 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
          if($state.params.zoomUntil) TestRuns.zoomUntil = $state.params.zoomUntil;
 
 
-         //$scope.value = $stateParams.tag;
+         $scope.value = $stateParams.tag;
 
         /* reset zoom*/
         $scope.resetZoom = function(){
@@ -61,19 +55,24 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
                         /* Get tags used in metrics */
                         $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
-                        /* if reloading a non-existing tag is in $statParams */
+
+                   /* if reloading a non-existing tag is in $statParams */
                         $scope.value = (checkIfTagExists($stateParams.tag)) ? $stateParams.tag : 'All';
 
-                        if($stateParams.testRunId) {
+                    /* set the tab index */
 
-                                TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+                    $scope.selectedIndex = Tags.getTagIndex($scope.value, $scope.tags);
 
-                                        TestRuns.selected = testRun;
+                    if($stateParams.testRunId) {
 
-                                });
+                                    TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
 
-                        }
-                });
+                                            TestRuns.selected = testRun;
+
+                                    });
+
+                            }
+                    });
 
         };
 
