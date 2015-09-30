@@ -14,13 +14,20 @@ angular.module('events').factory('TestRuns', ['$http', 'Products', 'Dashboards',
             zoomRange: '',
             getTestRunById: getTestRunById,
             getRunningTest: getRunningTest,
-            persistTestRunByIdFromEvents: persistTestRunByIdFromEvents,
+            refreshTestrun: refreshTestrun,
             delete: deleteFn,
-            updateFixedBaseline: updateFixedBaseline
+            updateFixedBaseline: updateFixedBaseline,
+            updateTestruns:updateTestruns
 
         };
 
         return TestRuns;
+
+        function updateTestruns(productName, dashboardName, metricId, updateRequirements, updateBenchmarks){
+
+            return $http.get('/update-testruns-results/' + productName + '/' + dashboardName + '/' + metricId + '/' + updateRequirements + '/' + updateBenchmarks );
+
+        }
 
 
         function updateFixedBaseline(testRun) {
@@ -43,15 +50,15 @@ angular.module('events').factory('TestRuns', ['$http', 'Products', 'Dashboards',
 
         }
 
-        function listTestRunsForDashboard(productName, dashboardName){
+        function listTestRunsForDashboard(productName, dashboardName, useInBenchmark){
 
-            return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName );
+            return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + useInBenchmark );
 
         };
 
-        function persistTestRunByIdFromEvents(productName, dashboardName , testRunId){
+        function refreshTestrun(productName, dashboardName , testRunId){
 
-            return $http.get('/persist-testrun/' + productName + '/' + dashboardName + '/' + testRunId );
+            return $http.get('/refresh-testrun/' + productName + '/' + dashboardName + '/' + testRunId );
 
         };
 

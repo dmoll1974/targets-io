@@ -1,8 +1,8 @@
 'use strict';
 
 // Products controller
-angular.module('products').controller('ProductsController', ['$scope', '$rootScope', '$stateParams', '$state', '$location', '$modal', 'Products', 'ConfirmModal',
-	function($scope, $rootScope, $stateParams, $state, $location, $modal, Products, ConfirmModal) {
+angular.module('products').controller('ProductsController', ['$scope', '$rootScope', '$stateParams', '$state', '$location', '$modal', 'Products', 'ConfirmModal','SideMenu',
+	function($scope, $rootScope, $stateParams, $state, $location, $modal, Products, ConfirmModal, SideMenu) {
 
 
         $scope.initCreateForm = function(){
@@ -24,6 +24,7 @@ angular.module('products').controller('ProductsController', ['$scope', '$rootSco
 
                 Products.fetch().success(function(products){
 
+                    SideMenu.addProducts(products);
                     $scope.products = Products.items;
                     $state.go('viewProduct', {productName: response.data.name});
                     $scope.productForm.$setPristine();
@@ -49,6 +50,7 @@ angular.module('products').controller('ProductsController', ['$scope', '$rootSco
                 /* Refresh sidebar */
                 Products.fetch().success(function(product){
                     $scope.products = Products.items;
+                    SideMenu.addProducts(products);
 
                 });
 

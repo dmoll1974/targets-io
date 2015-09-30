@@ -14,7 +14,8 @@ angular.module('dashboards').factory('Dashboards', ['$http',
             create: create,
             delete: deleteFn,
             defaultTag: '',
-            getDefaultTag: getDefaultTag
+            getDefaultTag: getDefaultTag,
+            selectedTab: 0
 
         };
 
@@ -100,47 +101,6 @@ angular.module('dashboards').factory('Dashboards', ['$http',
             })
 
             return defaultTag.text;
-        }
-
-    }
-]).factory('DashboardTabs', ['$http',
-    function($http) {
-
-        var DashboardTabs = {
-            setTab : setTab,
-            tabNumber : 1,
-            isSet : isSet 
-        };
-
-        return DashboardTabs;
-
-        function isSet(tabNumber){
-            
-            return DashboardTabs.tabNumber === tabNumber;
-            
-        }
-
-        function setTab(tabName){
-
-            switch(tabName){
-
-                case 'Test runs':
-                    DashboardTabs.tabNumber = 1;
-                    break;
-                case 'Metrics':
-                    DashboardTabs.tabNumber = 2;
-                    break;
-                case 'Events':
-                    DashboardTabs.tabNumber = 3;
-                    break;
-                case 'Tags':
-                    DashboardTabs.tabNumber = 4;
-                    break;
-                default:
-                    DashboardTabs.tabNumber = 1;
-                    break;
-            }
-
         }
 
     }

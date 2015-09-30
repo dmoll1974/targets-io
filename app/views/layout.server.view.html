@@ -43,16 +43,23 @@
 	<![endif]-->
 </head>
 
-<body class="ng-cloak">
-	<!--<header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>-->
-    <section data-ng-include=" '/modules/core/views/header.client.view.html' " id="header" class="top-header"></section>
-    <aside data-ng-include="'/modules/core/views/sidebar.client.view.html'" id="nav-container"></aside>
-    <section class="content">
-		<section class="container">
-			{% block content %}{% endblock %}
-		</section>
-	</section>
+<body>
 
+	<div layout="column" flex>
+		<div>
+			<md-toolbar>
+				<header data-ng-include=" '/modules/core/views/header.client.view.html' " class="md-toolbar-tools"></header>
+			</md-toolbar>
+		</div>
+		<div layout="row" layout-fill>
+			<div flex="15" data-ng-include="'/modules/core/views/sidebar.client.view.html'" ></div>
+			<div flex="75" class="targetsio-content">
+				<md-content class="md-padding">
+					{% block content %}{% endblock %}
+				</md-content>
+			</div>
+		</div>
+	</div>
 	<!--Embedding The User Object-->
 	<script type="text/javascript">
 		var user = {{ user | json | safe }};

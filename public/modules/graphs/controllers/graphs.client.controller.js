@@ -1,9 +1,19 @@
 'use strict';
 
-angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$rootScope', '$state', '$stateParams', 'Dashboards','Graphite','TestRuns', 'Metrics','$log', 'Tags', 'ConfirmModal',
-	function($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal) {
+angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$rootScope', '$state', '$stateParams', 'Dashboards','Graphite','TestRuns', 'Metrics','$log', 'Tags', 'ConfirmModal', 'Utils', 'SideMenu',
+	function($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
+
+        /* Set product Filter in side menu */
+
+        SideMenu.productFilter = $stateParams.productName;
 
 
+        $scope.$watch('selectedIndex', function(current, old) {
+           Utils.selectedIndex = current;
+        });
+        
+
+        
          $scope.gatlingDetails = ($stateParams.tag === 'Gatling') ? true : false;
             /* Get deeplink zoom params from query string */
 
@@ -12,7 +22,7 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
          if($state.params.zoomUntil) TestRuns.zoomUntil = $state.params.zoomUntil;
 
 
-         //$scope.value = $stateParams.tag;
+         $scope.value = $stateParams.tag;
 
         /* reset zoom*/
         $scope.resetZoom = function(){
@@ -30,20 +40,34 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
         $scope.init = function(){
 
-                Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard){
+            /* use local time in graphs */
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+
+        Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard){
 
 
-                        $scope.dashboard = Dashboards.selected;
+                    $scope.dashboard = Dashboards.selected;
 
-                        $scope.metrics = addAccordionState(Dashboards.selected.metrics);
+                    $scope.metrics = addAccordionState(Dashboards.selected.metrics);
 
-                        /* Get tags used in metrics */
-                        $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
-                        /* if reloading a non-existing tag is in $statParams */
-                        $scope.value = (checkIfTagExists($stateParams.tag)) ? $stateParams.tag : 'All';
+                    /* Get tags used in metrics */
+                    $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
-                        if($stateParams.testRunId) {
+
+
+            /* if reloading a non-existing tag is in $statParams */
+                    $scope.value = (checkIfTagExists($stateParams.tag)) ? $stateParams.tag : 'All';
+
+                /* set the tab index */
+
+                $scope.selectedIndex = Tags.getTagIndex($scope.value, $scope.tags);
+
+                if($stateParams.testRunId) {
 
                                 TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
 
@@ -54,7 +78,7 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
                         }
                 });
 
-        };
+    };
 
         function checkIfTagExists (tag) {
 

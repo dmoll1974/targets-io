@@ -1,8 +1,8 @@
 'use strict';
 
 // Metrics controller
-angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '$log', '$rootScope', '$stateParams', '$state', '$location', 'Authentication', 'Metrics','Dashboards', 'ConfirmModal',
-	function($scope, $modal, $log, $rootScope, $stateParams, $state, $location, Authentication, Metrics, Dashboards, ConfirmModal) {
+angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '$log', '$rootScope', '$stateParams', '$state', '$location', 'Authentication', 'Metrics','Dashboards', 'ConfirmModal', 'TestRuns',
+	function($scope, $modal, $log, $rootScope, $stateParams, $state, $location, Authentication, Metrics, Dashboards, ConfirmModal, TestRuns) {
 		$scope.authentication = Authentication;
 
         $scope.productName = $stateParams.productName;
@@ -39,11 +39,12 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
             {alias: '500%', value: '5.00'},
         ];
 
+
         $scope.$watch('enableRequirement', function (newVal, oldVal) {
 
             if (newVal !== oldVal) {
 
-                if($scope.enableRequirement === 'disabled'){
+                if($scope.enableRequirement === false){
 
                     $scope.metric.requirementOperator = null;
                     $scope.metric.requirementValue = null;
@@ -56,7 +57,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
             if (newVal !== oldVal) {
 
-                if($scope.enableBenchmarking === 'disabled'){
+                if($scope.enableBenchmarking === false){
 
                     $scope.metric.benchmarkOperator = null;
                     $scope.metric.benchmarkValue = null;
@@ -106,10 +107,28 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
             $scope.metric.productName = $stateParams.productName;
             $scope.metric.dashboardName = $stateParams.dashboardName;
 
+            $scope.currentRequirement = "";
+            $scope.currentBenchmark = "";
+
             Metrics.create($scope.metric).success(function (metric) {
 
             /* reset cloned metric */
                 Metrics.clone = {};
+
+                var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
+                var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
+
+                /* if requirement or benchmark vlaues have changed, update test runs */
+                if (updateRequirements || updateBenchmarks ) {
+
+
+                    $scope.updateTestrun = TestRuns.updateTestruns( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks ).success(function(testRuns){
+
+
+                        TestRuns.list = testRuns;
+
+                    });
+                }
                 
                 $location.path('browse/' + $stateParams.productName + '/' + $stateParams.dashboardName);
             });
@@ -145,10 +164,32 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
             Metrics.update($scope.metric).success(function (metric) {
 
-                if ($rootScope.previousStateParams)
-                    $state.go($rootScope.previousState,$rootScope.previousStateParams);
-                else
-                    $state.go($rootScope.previousState);
+                var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
+                var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
+
+                /* if requirement or benchmark vlaues have changed, update test runs */
+                if (updateRequirements || updateBenchmarks ) {
+
+
+                    $scope.updateTestrun = TestRuns.updateTestruns( $stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks ).success(function(testRuns){
+
+                        TestRuns.list = testRuns;
+                        if ($rootScope.previousStateParams)
+                            $state.go($rootScope.previousState,$rootScope.previousStateParams);
+                        else
+                            $state.go($rootScope.previousState);
+
+                    });
+                }else{
+
+                    if ($rootScope.previousStateParams)
+                        $state.go($rootScope.previousState,$rootScope.previousStateParams);
+                    else
+                        $state.go($rootScope.previousState);
+
+                }
+
+
             });
 		};
 
@@ -167,11 +208,17 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
                 /* set benchmark and requirement toggles */
 
                 if($scope.metric.requirementValue)
-                    $scope.enableRequirement ='enabled';
+                    $scope.enableRequirement = true;
 
                 if($scope.metric.benchmarkValue)
-                    $scope.enableBenchmarking = 'enabled';
+                    $scope.enableBenchmarking = true;
 
+
+                /* set current requirements */
+                $scope.currentRequirement = metric.requirementOperator + metric.requirementValue;
+
+                /* set current benchmark values */
+                $scope.currentBenchmark = metric.benchmarkOperator + metric.benchmarkValue;
 
 
 
@@ -220,7 +267,7 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
 
                         $scope.dashboard = Dashboards.selected;
                         
-                        /* return to previuos state*/
+                        /* return to previous state*/
                         $state.go($rootScope.previousState,$rootScope.previousStateParams);
 
                     });

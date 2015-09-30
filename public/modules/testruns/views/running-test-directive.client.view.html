@@ -1,20 +1,64 @@
 <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
-<div class="row">
-    <div class="col-lg-4">
-        <div ng-if="showDialog" class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Running test</h3>
+
+<div layout="column" ng-if="showDialog">
+
+     <md-card>
+        <md-toolbar  class="md-accent" style="color:white;">
+
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" data-ng-click="viewLiveGraphs()" >
+                    <md-icon md-svg-src="images/assets/ic_live_tv_white_36px.svg"></md-icon>
+                    <md-tooltip>
+                        View live graphs
+                    </md-tooltip>
+                </md-button>
+
+                <h4 class="md-flex">RUNNING TEST (since: {{runningTest.eventTimestamp | date:'EEEE, dd-M-yyyy H:mm:ss'}})</h4>
+
             </div>
-            <div class="panel-body">
-                <h4>{{runningTest.testRunId}}</h4>
-                <h5>Start: {{runningTest.eventTimestamp | date:'EEEE, dd-M-yyyy H:mm:ss'}}</h5>
-                 <span class="pull-left">
-                     <button type="button" class="btn btn-primary" ng-click="openSendEndEventModal('')">Send end event</button>
-                 </span>
-                 <span class="pull-right">
-                     <button type="button" class="btn btn-danger" ng-click="openDeleteEventModal('')">Delete start event</button>
-                 </span>
+        </md-toolbar>
+
+        <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+        <div layout="column">
+                    <div layout="row">
+                <md-button flex class="md-primary" data-ng-click="openSendEndEventModal('')">Send end event</md-button>
+                <md-button flex class="md-danger" data-ng-click="openDeleteEventModal('')">Delete start event</md-button>
             </div>
         </div>
-    </div>
+
+
+
+     </md-card>
+        <!--<md-content layout-padding>-->
+            <!--<div layout="column">-->
+                <!--<p>ID: {{runningTest.testRunId}}</p>-->
+                <!--<p>Since: {{runningTest.eventTimestamp | date:'EEEE, dd-M-yyyy H:mm:ss'}}</p>-->
+                <!--<md-divider></md-divider>-->
+            <!--</div>-->
+        <!--</md-content>-->
+        <!--<div layout="row">-->
+            <!--<md-button md-no-ink class="md-primary" data-ng-click="openSendEndEventModal('')">Send end event</md-button>-->
+            <!--<md-button md-no-ink class="md-primary" data-ng-click="openDeleteEventModal('')">Delete start event</md-button>-->
+        <!--</div>-->
+    <!--</md-card>-->
 </div>
+
+<!--<div class="row">-->
+    <!--<div class="col-lg-4">-->
+        <!--<div ng-if="showDialog" class="panel panel-primary">-->
+            <!--<div class="panel-heading">-->
+                <!--<h3 class="panel-title">Running test</h3>-->
+            <!--</div>-->
+            <!--<div class="panel-body">-->
+                <!--<h4>{{runningTest.testRunId}}</h4>-->
+                <!--<h5>Start: {{runningTest.eventTimestamp | date:'EEEE, dd-M-yyyy H:mm:ss'}}</h5>-->
+                 <!--<span class="pull-left">-->
+                     <!--<button type="button" class="btn btn-primary" ng-click="openSendEndEventModal('')">Send end event</button>-->
+                 <!--</span>-->
+                 <!--<span class="pull-right">-->
+                     <!--<button type="button" class="btn btn-danger" ng-click="openDeleteEventModal('')">Delete start event</button>-->
+                 <!--</span>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->

@@ -23,11 +23,16 @@
         <span>
             <button class="btn default" data-ng-click="openTagsFilterModal('')">Tag filter</button>
         </span>
-        <tabset>
-            <tab data-ng-repeat="tag in tags" heading="{{tag.text}}" data-ng-model="value"  disabled="tag.disabled" active="isActive(tag.text)" ui-sref="viewLiveGraphs(tag.route)" >
-            </tab>
-        </tabset>
-    </div>
+        <md-tabs md-selected="selectedIndex" class="metric-panels">
+            <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled"  data-ng-model="value" active="isActive(tag.text)" ng-click="setSelectedIndex($index)" ui-sref="viewLiveGraphs(tag.route)">
+                <span>{{tag.text}}</span>
+            </md-tab>
+        </md-tabs>
+        <!--<tabset>-->
+            <!--<tab data-ng-repeat="tag in tags" heading="{{tag.text}}" data-ng-model="value"  disabled="tag.disabled" active="isActive(tag.text)" ui-sref="viewLiveGraphs(tag.route)" >-->
+            <!--</tab>-->
+        <!--</tabset>-->
+    </div >
     <accordion close-others="false">
         <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsLiveController"  >
             <accordion-group is-open="metric.isOpen" class="graph-accordion-group">

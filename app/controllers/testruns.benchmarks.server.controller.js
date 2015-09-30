@@ -12,60 +12,70 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     graphite = require('./graphite.server.controller'),
     Utils = require('./utils.server.controller'),
-    Testruns = require('./testruns.server.controller'),
+    Testruns = require('./testruns.server.controller.js'),
     async = require('async');
 
 
 exports.setBenchmarkResultsPreviousBuildForTestRun = setBenchmarkResultsPreviousBuildForTestRun;
 exports.setBenchmarkResultsFixedBaselineForTestRun = setBenchmarkResultsFixedBaselineForTestRun;
-exports.updateFixedBaselineBennchmark = updateFixedBaselineBennchmarks;
+exports.updateFixedBaselineBenchmark = updateFixedBaselineBenchmark;
+exports.updateBenchmarkResults = updateBenchmarkResults;
 
-function updateFixedBaselineBennchmarks(req, res){
+function updateBenchmarkResults (testRun, callback){
+
+    setBenchmarkResultsFixedBaselineForTestRun(testRun, function(updatedFixedBenchmark){
+
+        Testruns.saveTestRun(updatedFixedBenchmark, function(savedFixedBenchmark){
+
+            setBenchmarkResultsPreviousBuildForTestRun(savedFixedBenchmark, function(updatedPreviousBenchmark) {
+
+                Testruns.saveTestRun(updatedPreviousBenchmark, function(updatedBenchmarksTestRun){
+
+                        callback(updatedBenchmarksTestRun);
+                });
+            });
+        });
+    });
+
+}
+
+function updateFixedBaselineBenchmark(req, res){
 
     var testRunToUpdate = new Testrun(req.body);
 
-    //async.forEachLimit(req.testRuns, 4, function (testRun, callback) {
+    setBenchmarkResultsFixedBaselineForTestRun(testRunToUpdate, function(updatedBenchmark){
 
-        setBenchmarkResultsFixedBaselineForTestRun(testRunToUpdate, function(updatedTestRun){
+        /* Save updated test run */
+        Testrun.findById(updatedBenchmark._id, function(err, savedTestRun) {
+            if (err) console.log(err);
+            if (!savedTestRun)
+                console.log('Could not load Document');
+            else {
 
-            //updatedTestruns.push(updatedTestRun);
-
-            /* Save updated test run */
-            Testrun.findById(updatedTestRun._id, function(err, savedTestRun) {
-                if (err) console.log(err);
-                if (!savedTestRun)
-                    console.log('Could not load Document');
-                else {
-
-                    savedTestRun.metrics = updatedTestRun.metrics;
-                    savedTestRun.baseline = updatedTestRun.baseline;
-                    savedTestRun.benchmarkResultFixedOK = updatedTestRun.benchmarkResultFixedOK;
+                savedTestRun.metrics = updatedBenchmark.metrics;
+                savedTestRun.baseline = updatedBenchmark.baseline;
+                savedTestRun.benchmarkResultFixedOK = updatedBenchmark.benchmarkResultFixedOK;
 
 
-                    savedTestRun.save(function(err) {
-                        if (err) {
-                            console.log(err)
-                        }else {
-                            res.jsonp(savedTestRun);                        }
-                    });
-                }
-            });
-
+                savedTestRun.save(function(err) {
+                    if (err) {
+                        console.log(err)
+                    }else {
+                        res.jsonp(savedTestRun);                        }
+                });
+            }
         });
 
-    //}, function (err) {
-    //    if (err) return next(err);
-    //
-    //    res.jsonp(updatedTestruns);
-    //
-    //});
+    });
+
+
 
 }
 function setBenchmarkResultsFixedBaselineForTestRun(testRun, callback) {
 
     var benchmarkDone = false;
 
-    if (testRun.baseline) {
+    if (testRun.baseline && testRun.baseline !== testRun.testRunId) {
 
         Testruns.getTestRunById(testRun.productName, testRun.dashboardName, testRun.baseline, function (fixedBaseline) {
 

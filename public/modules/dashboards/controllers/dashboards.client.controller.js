@@ -1,35 +1,44 @@
 'use strict';
 
 // Dashboards controller
-angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'DashboardTabs', 'TestRuns',
-	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, DashboardTabs, TestRuns) {
+angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'TestRuns', 'SideMenu',
+	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu) {
 
-        
-        
+        var originatorEv;
+        $scope.openMenu = function($mdOpenMenu, ev) {
+            originatorEv = ev;
+            $mdOpenMenu(ev);
+        };
+
+        // Edit Product
+        $scope.editProduct = function(productName) {
+
+            $state.go('editProduct', {productName: productName})
+        };
+
+        $scope.useInBenchmarkOptions =['no', 'yes'];
+
+
         /* Tab controller */
 
-        $scope.$watch(function(scope) { return DashboardTabs.tabNumber },
+        $scope.$watch(function(scope) { return Dashboards.selectedTab },
             function() {
 
-                this.tab = DashboardTabs.tabNumber;
-            }
+                $scope.selectedIndex = Dashboards.selectedTab;            }
         );
-//        this.tab = DashboardTabs.tabNumber;
 
-        this.setTab = function(newValue){
-            DashboardTabs.setTab(newValue);
+        $scope.setTab = function(newValue){
+            Dashboards.selectedTab = newValue;
         }
 
-        this.isSet = function(tabNumber){
-            return DashboardTabs.isSet(tabNumber);
-        };
-        
+
         /* Watch on dashboard */
 
         $scope.$watch(function(scope) { return Dashboards.selected },
             function() {
 
                 $scope.dashboard = Dashboards.selected;
+                SideMenu.productFilter = $stateParams.productName;
             }
         );
         
@@ -63,6 +72,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
                 Products.fetch().success(function(products){
 
                     $scope.products = Products.items;
+                    SideMenu.addProducts(products);
                     $state.go('viewDashboard',{productName: $stateParams.productName, dashboardName: response.data.name});
                     $scope.productForm.$setPristine();
 
@@ -105,6 +115,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
                 /* Refresh sidebar */
                 Products.fetch().success(function(products){
+                    SideMenu.addProducts(products);
                     $scope.products = Products.items;
 
                 });
@@ -150,6 +161,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
                 /* Refresh sidebar */
                 Products.fetch().success(function(products){
+                    SideMenu.addProducts(products);
                     $scope.products = Products.items;
 
                 });
@@ -181,22 +193,28 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
 
         }
-        // Find existing Product
+        // Find existing Dashboard
         $scope.findOne = function() {
 
 
             Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function(dashboard){
 
                 $scope.dashboard = Dashboards.selected;
+                $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
 
-                TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, false).success(function (testRuns) {
+                Products.get($stateParams.productName).success(function(product){
 
+                    Products.selected = product;
 
-                    $scope.testRuns = testRuns;
+                    TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+
+                        $scope.testRuns = testRuns;
+
+                    });
+
                 });
 
-
-                });
+            });
 
         };
 
@@ -252,6 +270,7 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
                     /* Refresh sidebar */
                     Products.fetch().success(function(products){
+                        SideMenu.addProducts(products);
                         $scope.products = Products.items;
 
                     });

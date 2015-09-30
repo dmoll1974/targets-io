@@ -36,6 +36,9 @@
 
 
             $scope.showPassedRequirements = $stateParams.requirementsResult === "passed" ? true : false;
+            $scope.productName = $stateParams.productName;
+            $scope.dashboardName = $stateParams.dashboardName;
+
 
             /* set tab number based on url */
 
@@ -83,6 +86,8 @@
                                         $timeout(function () {
 
                                             TestRuns.selected = testRun;
+                                            $scope.testRun = testRun;
+
 
                                             var data = [];
 
