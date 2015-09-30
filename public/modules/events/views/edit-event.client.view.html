@@ -2,14 +2,22 @@
     <div class="page-header">
         <h1>Edit Event</h1>
     </div>
-    <div class="col-md-12">
-        <form name="eventForm" class="form-horizontal"  novalidate>
+    <!--<div class="col-md-12">-->
+        <form name="eventForm" novalidate>
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Timestamp</label>
+                    <input type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss" ng-model="event.eventTimestamp" is-open="isOpen"/>
+                </md-input-container>
+                <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg" data-ng-click="openCalendar($event)" ></md-icon>
+            </div>
             <!--<fieldset>-->
-                <div class="form-group">
-                    <span><label class="timestamp-label">Timestamp<br/></label></span>
-                    <span><datetimepicker hour-step="1" minute-step="1" ng-model="event.eventTimestamp" show-meridian="false" date-format="dd-MMM-yyyy" date-options="dateOptions" date-disabled="disabled(date, mode)" readonly-time="false"></datetimepicker></span>
-               </div>
-                <md-datepicker ng-model="myDate" md-placeholder="Enter date"></md-datepicker>
+                <!--<div class="form-group">-->
+                    <!--<span><label class="timestamp-label">Timestamp<br/></label></span>-->
+                    <!--<span><datetimepicker hour-step="1" minute-step="1" ng-model="event.eventTimestamp" show-meridian="false" date-format="dd-MMM-yyyy" date-options="dateOptions" date-disabled="disabled(date, mode)" readonly-time="false"></datetimepicker></span>-->
+               <!--</div>-->
+                <!--<time-date-picker ng-model="event.eventTimestamp"></time-date-picker>-->
+                <!--<md-datepicker ng-model="myDate" md-placeholder="Enter date"></md-datepicker>-->
                 <md-input-container flex>
                     <label>Product</label>
                     <input ng-model="event.productName"  required>
@@ -17,6 +25,10 @@
                 <md-input-container flex >
                     <label>Dashboard</label>
                     <input ng-model="event.dashboardName"  required>
+                </md-input-container>
+                <md-input-container flex >
+                    <label>Description</label>
+                    <input ng-model="event.eventDescription" typeahead="description for description in descriptions | filter:$viewValue | limitTo:8" required>
                 </md-input-container>
                 <md-input-container flex >
                     <label>Testrun ID</label>
@@ -82,5 +94,5 @@
 
             <!--</fieldset>-->
         </form>
-    </div>
+    <!--</div>-->
 </section>

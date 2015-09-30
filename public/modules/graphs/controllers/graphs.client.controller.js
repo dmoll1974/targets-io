@@ -1,9 +1,11 @@
 'use strict';
 
-angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$rootScope', '$state', '$stateParams', 'Dashboards','Graphite','TestRuns', 'Metrics','$log', 'Tags', 'ConfirmModal', 'Utils',
-	function($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils) {
+angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$rootScope', '$state', '$stateParams', 'Dashboards','Graphite','TestRuns', 'Metrics','$log', 'Tags', 'ConfirmModal', 'Utils', 'SideMenu',
+	function($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
 
+        /* Set product Filter in side menu */
 
+        SideMenu.productFilter = $stateParams.productName;
 
 
         $scope.$watch('selectedIndex', function(current, old) {
@@ -45,36 +47,38 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
                 }
             });
 
-            Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard){
+        Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard){
 
 
-                        $scope.dashboard = Dashboards.selected;
+                    $scope.dashboard = Dashboards.selected;
 
-                        $scope.metrics = addAccordionState(Dashboards.selected.metrics);
-
-                        /* Get tags used in metrics */
-                        $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+                    $scope.metrics = addAccordionState(Dashboards.selected.metrics);
 
 
-                   /* if reloading a non-existing tag is in $statParams */
-                        $scope.value = (checkIfTagExists($stateParams.tag)) ? $stateParams.tag : 'All';
+                    /* Get tags used in metrics */
+                    $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
-                    /* set the tab index */
 
-                    $scope.selectedIndex = Tags.getTagIndex($scope.value, $scope.tags);
 
-                    if($stateParams.testRunId) {
+            /* if reloading a non-existing tag is in $statParams */
+                    $scope.value = (checkIfTagExists($stateParams.tag)) ? $stateParams.tag : 'All';
 
-                                    TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+                /* set the tab index */
 
-                                            TestRuns.selected = testRun;
+                $scope.selectedIndex = Tags.getTagIndex($scope.value, $scope.tags);
 
-                                    });
+                if($stateParams.testRunId) {
 
-                            }
-                    });
+                                TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
 
-        };
+                                        TestRuns.selected = testRun;
+
+                                });
+
+                        }
+                });
+
+    };
 
         function checkIfTagExists (tag) {
 

@@ -40,10 +40,12 @@
     "angular-spinners": "~3.0.2",
     "angular-busy": "~4.1.3",
     "angular-material": "~0.11.0",
-    "material-design-icons": "~2.0.0"
+    "material-design-icons": "~2.0.0",
+    "sc-date-time": "~1.1.2",
+    "bootstrap-ui-datetime-picker": "~1.2.5"
   },
   "resolutions": {
     "angular": "^1.3.0 || >1.4.0-beta.0",
-    "angular-bootstrap": "0.11.2"
+    "angular-bootstrap": "~0.13.2"
   }
 }

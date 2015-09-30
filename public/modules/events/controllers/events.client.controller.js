@@ -5,6 +5,14 @@ angular.module('events').controller('EventsController', ['$scope', '$rootScope',
 	function($scope, $rootScope, $stateParams, $state, $location, $modal, Authentication, Events, Dashboards) {
 
 
+        $scope.isOpen = false;
+
+        $scope.openCalendar = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $scope.isOpen = true;
+        };
+
         $scope.productName = $stateParams.productName;
 
 
@@ -18,10 +26,11 @@ angular.module('events').controller('EventsController', ['$scope', '$rootScope',
             $scope.testRunIds = Events.getTestRunId(Events.list);
             $scope.descriptions = Events.getDescriptions(Events.list);
 
-            $scope.dateOptions = {
-                startingDay: 1,
-                showWeeks: false
-            };
+
+            //$scope.dateOptions = {
+            //    startingDay: 1,
+            //    showWeeks: false
+            //};
         };
 
         // Open create event form

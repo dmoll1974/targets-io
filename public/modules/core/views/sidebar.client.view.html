@@ -1,9 +1,12 @@
 <div class="fix-to-top-sidebar" data-ng-controller="SidebarController as vm">
     <div layout="column">
-        <md-input-container flex>
-            <label>Search product</label>
-            <input ng-model="productFilter" >
-        </md-input-container>
+        <div layout="row">
+            <md-input-container flex>
+                <label>Filter products</label>
+                <input ng-model="productFilter" >
+            </md-input-container>
+            <md-icon ng-if="productFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="clearProductFilter()" ></md-icon>
+        </div>
         <md-button flex data-ng-href="/#!/add/product" style="text-align:left">Add product</md-button>
         <div>
             <md-sidenav class="md-sidenav-left md-whiteframe-z1 fix-to-top-sidebar" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" >

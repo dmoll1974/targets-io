@@ -26,6 +26,8 @@ module.exports = {
                 'public/lib/ng-tags-input/ng-tags-input.min.css',
 				'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css',
 				'public/lib/angular-material/angular-material.min.css'
+
+
 			],
 			js: [
 				'public/lib/angular/angular.min.js',
@@ -48,7 +50,8 @@ module.exports = {
 				'public/lib/highstock-release/exporting.js',
                 'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
 				'public/lib/ng-clip/dest/ng-clip.min.js',
-				'public/lib/zeroclipboard/dist/ZeroClipboard.min.js'
+				'public/lib/zeroclipboard/dist/ZeroClipboard.min.js',
+				'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js'
 
 			]
 		},

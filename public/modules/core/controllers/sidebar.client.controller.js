@@ -16,7 +16,7 @@ angular.module('core').controller('SidebarController', ['$scope', '$stateParams'
             isFirstDisabled: false
         };
 
-        $scope.productFilter="";
+
 
         function isOpen(section) {
             var regex = new RegExp('.*\/' + section.matcher + '(\/|$)');
@@ -31,11 +31,12 @@ angular.module('core').controller('SidebarController', ['$scope', '$stateParams'
             SideMenu.toggleSelectSection(section);
         }
 
+        $scope.clearProductFilter = function(){
+
+          SideMenu.productFilter = '';
+        };
 
 
-    //    $scope.productId = $stateParams.productId;
-    //
-    //
         Products.fetch().success(function(products){
             SideMenu.addProducts(products);
 
@@ -47,6 +48,14 @@ angular.module('core').controller('SidebarController', ['$scope', '$stateParams'
     
                 $scope.products = Products.items;
                 SideMenu.addProducts(Products.items);
+            }
+        );
+
+        $scope.$watch(function(scope) { return SideMenu.productFilter },
+            function() {
+
+                $scope.productFilter = SideMenu.productFilter;
+
             }
         );
     

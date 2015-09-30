@@ -2,58 +2,97 @@
     <div class="page-header">
         <h1>Create Event</h1>
     </div>
-    <div class="col-md-12">
-        <form name="eventForm" class="form-horizontal"  novalidate>
-            <fieldset>
-                <div class="form-group">
-                    <span><label class="timestamp-label">Timestamp<br/></label></span>
-                    <span><datetimepicker hour-step="1" minute-step="1" ng-model="event.eventTimestamp" show-meridian="false" date-format="dd-MMM-yyyy" date-options="dateOptions" date-disabled="disabled(date, mode)" readonly-time="false"></datetimepicker></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="productName">Product</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="event.productName" id="productName" class="form-control" placeholder="Product, required" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="dashboardName">Dashboard</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="event.dashboardName" id="dashboardName" class="form-control" placeholder="Dashboard, required" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="testRunId">Test run ID</label>
-                    <div class="controls">
-                        <input type="text" ng-model="event.testRunId" typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8" class="form-control" placeholder="Test run ID, required" id="testRunId" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="eventDescription">Description</label>
-                    <div class="controls">
-                        <input type="text" ng-model="event.eventDescription" typeahead="description for description in descriptions | filter:$viewValue | limitTo:8" class="form-control" placeholder="Description, required" id="eventDescription" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="baseline">Baseline</label>
-                    <div class="controls">
-                        <input type="text" ng-model="event.baseline" typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8" class="form-control" placeholder="Baseline" id="baseline">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="buildResultKey">CI Build result URL</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="event.buildResultKey" id="buildResultKey" class="form-control" placeholder="CI Build result URL">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button class="btn-primary" data-ng-click="create()" ng-disabled="eventForm.$invalid">Submit</button>
-                    <button class="btn-primary" data-ng-click="cancel()">Cancel</button>
-                </div>
-                <div data-ng-show="error" class="alert alert-danger alert-error">
-                    <a href="#" class="close" data-dismiss="alert"></a>
-                    <p><strong data-ng-bind="error"></strong></p>
-                </div>
-            </fieldset>
-        </form>
-    </div>
+    <!--<div class="col-md-12">-->
+    <form name="eventForm" novalidate>
+        <div layout="row">
+            <md-input-container flex>
+                <label>Timestamp</label>
+                <input type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss" ng-model="event.eventTimestamp" is-open="isOpen"/>
+            </md-input-container>
+            <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg" data-ng-click="openCalendar($event)" ></md-icon>
+        </div>
+        <!--<fieldset>-->
+        <!--<div class="form-group">-->
+        <!--<span><label class="timestamp-label">Timestamp<br/></label></span>-->
+        <!--<span><datetimepicker hour-step="1" minute-step="1" ng-model="event.eventTimestamp" show-meridian="false" date-format="dd-MMM-yyyy" date-options="dateOptions" date-disabled="disabled(date, mode)" readonly-time="false"></datetimepicker></span>-->
+        <!--</div>-->
+        <!--<time-date-picker ng-model="event.eventTimestamp"></time-date-picker>-->
+        <!--<md-datepicker ng-model="myDate" md-placeholder="Enter date"></md-datepicker>-->
+        <md-input-container flex>
+            <label>Product</label>
+            <input ng-model="event.productName"  required>
+        </md-input-container>
+        <md-input-container flex >
+            <label>Dashboard</label>
+            <input ng-model="event.dashboardName"  required>
+        </md-input-container>
+        <md-input-container flex >
+            <label>Description</label>
+            <input ng-model="event.eventDescription" typeahead="description for description in descriptions | filter:$viewValue | limitTo:8" required>
+        </md-input-container>
+        <md-input-container flex >
+            <label>Testrun ID</label>
+            <input ng-model="event.testRunId" typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8" required>
+        </md-input-container>
+        <md-input-container flex >
+            <label>Baseline</label>
+            <input ng-model="event.baseline"  required>
+        </md-input-container>
+        <md-input-container flex >
+            <label>CI Build result URL</label>
+            <input ng-model="event.buildResultkey"  required>
+        </md-input-container>
+        <div layout="row">
+            <md-button md-no-ink class="md-primary" data-ng-click="create()">Submit</md-button>
+            <md-button data-ng-click="cancel()">Cancel</md-button>
+        </div>
+
+        <!--<div class="form-group">-->
+        <!--<label class="control-label" for="productName">Product</label>-->
+        <!--<div class="controls">-->
+        <!--<input type="text" data-ng-model="event.productName" id="productName" class="form-control" placeholder="Product, required" required>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--<label class="control-label" for="dashboardName">Dashboard</label>-->
+        <!--<div class="controls">-->
+        <!--<input type="text" data-ng-model="event.dashboardName" id="dashboardName" class="form-control" placeholder="Dashboard, required" required>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--<label class="control-label" for="testRunId">Test run ID</label>-->
+        <!--<div class="controls">-->
+        <!--<input type="text" ng-model="event.testRunId" typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8" class="form-control" placeholder="Test run ID, required" id="testRunId" required>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--<label class="control-label" for="eventDescription">Description</label>-->
+        <!--<div class="controls">-->
+        <!--<input type="text" ng-model="event.eventDescription" typeahead="description for description in descriptions | filter:$viewValue | limitTo:8" class="form-control" placeholder="Description, required" id="eventDescription" required>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--<label class="control-label" for="baseline">Baseline</label>-->
+        <!--<div class="controls">-->
+        <!--<input type="text" ng-model="event.baseline" typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8" class="form-control" placeholder="Baseline" id="baseline">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--<label class="control-label" for="buildResultKey">CI Build result URL</label>-->
+        <!--<div class="controls">-->
+        <!--<input type="text" data-ng-model="event.buildResultKey" id="buildResultKey" class="form-control" placeholder="CI Build result URL">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--<button class="btn-primary" data-ng-click="update()">Submit</button>-->
+        <!--<button class="btn-primary" data-ng-click="cancel()">Cancel</button>-->
+        <!--</div>-->
+        <div data-ng-show="error" class="alert alert-danger alert-error">
+            <a href="#" class="close" data-dismiss="alert"></a>
+            <p><strong data-ng-bind="error"></strong></p>
+        </div>
+
+        <!--</fieldset>-->
+    </form>
+    <!--</div>-->
 </section>

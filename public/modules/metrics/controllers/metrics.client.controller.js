@@ -180,6 +180,13 @@ angular.module('metrics').controller('MetricsController', ['$scope', '$modal', '
                             $state.go($rootScope.previousState);
 
                     });
+                }else{
+
+                    if ($rootScope.previousStateParams)
+                        $state.go($rootScope.previousState,$rootScope.previousStateParams);
+                    else
+                        $state.go($rootScope.previousState);
+
                 }
 
 

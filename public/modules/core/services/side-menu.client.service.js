@@ -67,7 +67,8 @@
                     toggleSelectSection: toggleSelectSection,
                     isSectionSelected: isSectionSelected ,
                     selectPage: selectPage,
-                    addProducts: addProducts
+                    addProducts: addProducts,
+                    productFilter: ""
                 };
 
             return SideMenu;

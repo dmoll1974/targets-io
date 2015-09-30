@@ -81,23 +81,23 @@
         </div>
     </div>
     <div>
-        <md-tabs md-dynamic-height md-selected="selectedIndexDashboardView">
-            <md-tab label="Test runs">
+        <md-tabs md-dynamic-height md-selected="selectedIndex">
+            <md-tab label="Test runs" ng-click="setTab(0)">
                 <md-content class="md-padding">
                     <div data-ng-include="'modules/testruns/views/testruns.client.view.html'"></div>
                 </md-content>
             </md-tab>
-            <md-tab label="Metrics configuration">
+            <md-tab label="Metrics configuration" ng-click="setTab(1)">
                 <md-content class="md-padding">
                     <div data-ng-include="'modules/dashboards/views/view-dashboard-metrics.client.view.html'"></div>
                 </md-content>
             </md-tab>
-            <md-tab label="Events">
+            <md-tab label="Events" ng-click="setTab(2)">
                 <md-content class="md-padding">
                     <div data-ng-include="'modules/events/views/list-events-dashboard.client.view.html'"></div>
                 </md-content>
             </md-tab>
-            <md-tab label="Tags">
+            <md-tab label="Tags" ng-click="setTab(3)">
                 <md-content class="md-padding">
                     <div data-ng-include="'modules/dashboards/views/manage-tags.client.view.html'"></div>
                 </md-content>

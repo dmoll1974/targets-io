@@ -1,8 +1,8 @@
 'use strict';
 
 // Dashboards controller
-angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'DashboardTabs', 'TestRuns', 'SideMenu',
-	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, DashboardTabs, TestRuns, SideMenu) {
+angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'TestRuns', 'SideMenu',
+	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu) {
 
         var originatorEv;
         $scope.openMenu = function($mdOpenMenu, ev) {
@@ -18,30 +18,27 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
 
         $scope.useInBenchmarkOptions =['no', 'yes'];
 
-        $scope.selectedIndexDashboardView = DashboardTabs.tabNumber;
-        
+
         /* Tab controller */
 
-        $scope.$watch(function(scope) { return DashboardTabs.tabNumber },
+        $scope.$watch(function(scope) { return Dashboards.selectedTab },
             function() {
 
-                $scope.selectedIndexDashboardView = DashboardTabs.tabNumber;            }
+                $scope.selectedIndex = Dashboards.selectedTab;            }
         );
 
-        this.setTab = function(newValue){
-            DashboardTabs.setTab(newValue);
+        $scope.setTab = function(newValue){
+            Dashboards.selectedTab = newValue;
         }
 
-        this.isSet = function(tabNumber){
-            return DashboardTabs.isSet(tabNumber);
-        };
-        
+
         /* Watch on dashboard */
 
         $scope.$watch(function(scope) { return Dashboards.selected },
             function() {
 
                 $scope.dashboard = Dashboards.selected;
+                SideMenu.productFilter = $stateParams.productName;
             }
         );
         
