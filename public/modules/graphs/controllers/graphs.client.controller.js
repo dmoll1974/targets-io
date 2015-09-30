@@ -135,7 +135,7 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
        };
 
-        function updateFilterTags  (filterTags, filterOperator, persistTag) {
+        function updateFilterTags  (filterTags, filterOperator, persistTag, callback) {
 
 
             var combinedTag;
@@ -163,7 +163,7 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
             /* if persist tag is checked, update dashboard tags*/
             if (persistTag) {
-                if (Dashboards.updateTags(newTags)) {
+                if (Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, newTags)) {
 
                     Dashboards.update().success(function (dashboard) {
 
@@ -171,13 +171,13 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
                         /* Get tags used in metrics */
                         $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
+                        callback(newTags);
                     });
 
                 }
+            }else {
+                callback(newTags);
             }
-
-            return newTags;
-
 
         }
 
@@ -206,15 +206,19 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
         modalInstance.result.then(function (data) {
 
-            var newTag = updateFilterTags(data.filterTags, data.filterOperator, data.persistTag);
+            updateFilterTags(data.filterTags, data.filterOperator, data.persistTag, function(newTag){
 
-            /* Get tags used in metrics */
-            $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
-            /* add new tag */
-            $scope.tags.push({text: newTag[0].text, route: {productName: $stateParams.productName, dashboardName: $stateParams.dashBoardName, tag: newTag, testRunId: $stateParams.testRunId}});
+                /* Get tags used in metrics */
+                $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+                /* add new tag */
+                $scope.tags.push({text: newTag[0].text, route: {productName: $stateParams.productName, dashboardName: $stateParams.dashboardName, tag: newTag[0].text, testRunId: $stateParams.testRunId}});
 
-            $scope.value = newTag[0].text;
+                $scope.value = newTag[0].text;
 
+                /* set tab index */
+                Utils.selectedIndex = $scope.tags.length -1
+
+            });
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
