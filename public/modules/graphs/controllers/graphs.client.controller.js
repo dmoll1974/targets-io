@@ -173,7 +173,7 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
                                 $scope.dashboard = Dashboards.selected;
                                 /* Get tags used in metrics */
-                                $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+                                //$scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
                                 callback(newTags);
                             });
@@ -216,16 +216,16 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
             updateFilterTags(data.filterTags, data.filterOperator, data.persistTag, function(newTag){
 
                 /* Get tags used in metrics */
-                $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
-                /* add new tag */
-                $scope.tags.push({text: newTag[0].text, route: {productName: $stateParams.productName, dashboardName: $stateParams.dashboardName, tag: newTag[0].text, testRunId: $stateParams.testRunId}});
+                $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
                 $scope.value = newTag[0].text;
 
                 /* set tab index */
                 setTimeout(function(){
-                    $scope.selectedIndex = $scope.tags.length -1
-                },100);
+                    $scope.$apply(function (){
+                        $scope.selectedIndex = Tags.getTagIndex($scope.value, $scope.tags);
+                    });
+                },1000);
             });
 
         }, function () {
