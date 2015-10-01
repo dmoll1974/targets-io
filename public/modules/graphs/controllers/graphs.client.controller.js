@@ -11,10 +11,11 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
         $scope.$watch('selectedIndex', function(current, old) {
            Utils.selectedIndex = current;
         });
-        
 
-        
-         $scope.gatlingDetails = ($stateParams.tag === 'Gatling') ? true : false;
+
+
+
+        $scope.gatlingDetails = ($stateParams.tag === 'Gatling') ? true : false;
             /* Get deeplink zoom params from query string */
 
          if($state.params.zoomFrom) TestRuns.zoomFrom = $state.params.zoomFrom;
@@ -135,11 +136,12 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
        };
 
-        function updateFilterTags  (filterTags, filterOperator, persistTag) {
+        function updateFilterTags  (filterTags, filterOperator, persistTag, callback) {
 
 
             var combinedTag;
             var newTags = [];
+
 
             _.each(filterTags, function (filterTag, index) {
 
@@ -161,22 +163,27 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
             newTags.push({text: combinedTag})
 
-            /* if persist tag is checked, update dashboard tags*/
-            if (persistTag) {
-                if (Dashboards.updateTags(newTags)) {
 
-                    Dashboards.update().success(function (dashboard) {
+                Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, newTags, function(tagsUpdated){
 
-                        $scope.dashboard = Dashboards.selected;
-                        /* Get tags used in metrics */
-                        $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+                    /* if persist tag is checked and tags are updated, update dashboard tags*/
+                    if(tagsUpdated && persistTag) {
 
-                    });
+                            Dashboards.update().success(function (dashboard) {
 
-                }
-            }
+                                $scope.dashboard = Dashboards.selected;
+                                /* Get tags used in metrics */
+                                $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
-            return newTags;
+                                callback(newTags);
+                            });
+
+                        }else{
+
+                                callback(newTags);
+                        }
+
+                });
 
 
         }
@@ -206,15 +213,20 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
         modalInstance.result.then(function (data) {
 
-            var newTag = updateFilterTags(data.filterTags, data.filterOperator, data.persistTag);
+            updateFilterTags(data.filterTags, data.filterOperator, data.persistTag, function(newTag){
 
-            /* Get tags used in metrics */
-            $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
-            /* add new tag */
-            $scope.tags.push({text: newTag[0].text, route: {productName: $stateParams.productName, dashboardName: $stateParams.dashBoardName, tag: newTag, testRunId: $stateParams.testRunId}});
+                /* Get tags used in metrics */
+                $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+                /* add new tag */
+                $scope.tags.push({text: newTag[0].text, route: {productName: $stateParams.productName, dashboardName: $stateParams.dashboardName, tag: newTag[0].text, testRunId: $stateParams.testRunId}});
 
-            $scope.value = newTag[0].text;
+                $scope.value = newTag[0].text;
 
+                /* set tab index */
+                setTimeout(function(){
+                    $scope.selectedIndex = $scope.tags.length -1
+                },100);
+            });
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

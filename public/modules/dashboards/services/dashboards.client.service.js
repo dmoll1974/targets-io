@@ -22,7 +22,7 @@ angular.module('dashboards').factory('Dashboards', ['$http',
         return Dashboards;
 
 
-        function updateTags (productName, dashboardName, tags){
+        function updateTags (productName, dashboardName, tags, callback){
 
             /* if new tags are added, update dashbboard */
 
@@ -52,7 +52,7 @@ angular.module('dashboards').factory('Dashboards', ['$http',
 
                 Dashboards.selected.tags = updatedTags;
 
-                return updated;
+                callback(updated);
 
             });
         }
