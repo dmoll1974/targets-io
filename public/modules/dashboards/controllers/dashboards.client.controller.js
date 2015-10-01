@@ -24,7 +24,8 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
         $scope.$watch(function(scope) { return Dashboards.selectedTab },
             function() {
 
-                $scope.selectedIndex = Dashboards.selectedTab;            }
+                $scope.selectedIndex = Dashboards.selectedTab;
+            }
         );
 
         $scope.setTab = function(newValue){

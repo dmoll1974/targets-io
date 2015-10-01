@@ -11,10 +11,11 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
         $scope.$watch('selectedIndex', function(current, old) {
            Utils.selectedIndex = current;
         });
-        
 
-        
-         $scope.gatlingDetails = ($stateParams.tag === 'Gatling') ? true : false;
+
+
+
+        $scope.gatlingDetails = ($stateParams.tag === 'Gatling') ? true : false;
             /* Get deeplink zoom params from query string */
 
          if($state.params.zoomFrom) TestRuns.zoomFrom = $state.params.zoomFrom;
@@ -141,6 +142,7 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
             var combinedTag;
             var newTags = [];
 
+
             _.each(filterTags, function (filterTag, index) {
 
                 switch (index) {
@@ -161,23 +163,28 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
 
             newTags.push({text: combinedTag})
 
-            /* if persist tag is checked, update dashboard tags*/
-            if (persistTag) {
-                if (Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, newTags)) {
 
-                    Dashboards.update().success(function (dashboard) {
+                Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, newTags, function(tagsUpdated){
 
-                        $scope.dashboard = Dashboards.selected;
-                        /* Get tags used in metrics */
-                        $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+                    /* if persist tag is checked and tags are updated, update dashboard tags*/
+                    if(tagsUpdated && persistTag) {
 
-                        callback(newTags);
-                    });
+                            Dashboards.update().success(function (dashboard) {
 
-                }
-            }else {
-                callback(newTags);
-            }
+                                $scope.dashboard = Dashboards.selected;
+                                /* Get tags used in metrics */
+                                $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+
+                                callback(newTags);
+                            });
+
+                        }else{
+
+                                callback(newTags);
+                        }
+
+                });
+
 
         }
 
@@ -216,8 +223,9 @@ angular.module('graphs').controller('GraphsController', ['$scope', '$modal', '$r
                 $scope.value = newTag[0].text;
 
                 /* set tab index */
-                Utils.selectedIndex = $scope.tags.length -1
-
+                setTimeout(function(){
+                    $scope.selectedIndex = $scope.tags.length -1
+                },100);
             });
 
         }, function () {
