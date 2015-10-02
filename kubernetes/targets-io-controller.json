@@ -22,7 +22,7 @@
             "containers":[
                {
                   "name":"targets-io",
-                  "image":"gcr.io/targets-io-docker/targets-io:latest",
+                  "image":"dmoll1974/targets-io:latest",
                   "ports":[
                              {
                                   "name": "http-server",
