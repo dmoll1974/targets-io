@@ -22,7 +22,7 @@
             "containers":[
                {
                   "name":"graphite",
-                  "image":"gcr.io/targets-io-docker/graphite:latest",
+                  "image":"dmoll1974/targets-io-graphite:latest",
                   "ports":[
                      {
                         "name": "graphite-carbon",
