@@ -2,8 +2,10 @@
 
 module.exports = {
 	db: 'mongodb://localhost/targets-io-dev',
-	graphiteHost: 'http://104.155.27.180',
-	memcachedHost: [ 'localhost:11211'],
+
+	graphiteHost: 'http://172.21.42.178',
+	memcachedHost: [ '172.21.42.178:11211'],
+
 	app: {
 		title: 'targets-io - Development Environment'
 	},

@@ -11,7 +11,17 @@
                 <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
             </div>
         </div>
-        <md-tabs md-selected="selectedIndex" class="metric-panels">
+        <md-tabs md-selected="selectedIndex" class="metric-panels" >
+            <!--<md-tab ng-click="setSelectedIndex($index)">-->
+                <!--<span ng-if="selectedIndex !== 0">TAGS FILTER</span>-->
+                <!--<div flex ng-if="selectedIndex === 0" layout="row">-->
+                    <!--<md-input-container flex>-->
+                        <!--<label>Filter products</label>-->
+                        <!--<input ng-model="productFilter" >-->
+                    <!--</md-input-container>-->
+                    <!--&lt;!&ndash;<md-icon md-svg-src="images/assets/ic_clear_black_36px.svg"  ></md-icon>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</md-tab>-->
             <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled"  data-ng-model="value" active="isActive(tag.text)" ng-click="setSelectedIndex($index)" ui-sref="viewGraphs(tag.route)">
                 <span>{{tag.text}}</span>
             </md-tab>
