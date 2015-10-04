@@ -34,6 +34,13 @@ jmxtrans:
   links:
    - graphite
    - dropwizard
+jenkins:
+  image: jenkins
+  ports:
+   - "8070:8080"
+  links:
+   - graphite
+   - dropwizard
 
 
   
