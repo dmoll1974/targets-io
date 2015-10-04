@@ -23,6 +23,12 @@
                     <md-button md-no-ink class="md-primary md-raised" data-ng-click="addTarget()">Add target</md-button>
                 </div>
             </div>
+            <md-input-container flex class="well">
+                <!--<label>Alias</label>-->
+                <tags-input data-ng-model="metric.tags">
+                    <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
+                </tags-input>
+            </md-input-container>
             <div layout="column" class="well">
                 <md-checkbox ng-model="enableRequirement" aria-label="Requirements enabled">
                     Requirements enabled
