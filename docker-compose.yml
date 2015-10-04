@@ -1,5 +1,5 @@
 targetsio:
-  build: .
+  image: dmoll1974/targets-io
   ports:
    - "3000:3000"
   volumes:
@@ -13,7 +13,7 @@ db:
   ports:
    - "27017:27017"
 graphite:
-  image: hopsoft/graphite-statsd
+  image: dmoll1974/targets-io-graphite
   ports:
    - "8090:80"
    - "2003:2003"
@@ -25,3 +25,16 @@ memcached:
   environment:
    CACHE_SIZE: 1024
    EXTRA_OPTS: "-I 10m"
+dropwizard:
+  image: dmoll1974/targets-io-dropwizard
+  ports:
+   - "8080:8080"
+jmxtrans:
+  image: dmoll1974/targets-io-jmxtrans
+  links:
+   - graphite
+   - dropwizard
+
+
+  
+   

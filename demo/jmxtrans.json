@@ -1,0 +1,97 @@
+{
+  "servers" : [ {
+    "host" : "dropwizard",
+    "port" : "8888",
+    "queries" : [ {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : 2003,
+          "host" : "172.17.0.22",
+          "rootPrefix":"jmxtrans"
+        }
+      } ],
+      "obj" : "java.lang:type=OperatingSystem",
+      "resultAlias": "OS",
+      "attr" : [ "HeapMemoryUsage", "AvailableProcessors", "TotalPhysicalMemorySize","FreePhysicalMemorySize", "TotalSwapSpaceSize", "FreeSwapSpaceSize", "OpenFileDescriptorCount", "MaxFileDescriptorCount", "SystemCpuLoad", "ProcessCpuLoad" ]
+    }
+    ,
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : 2003,
+          "host" : "172.17.0.22",
+          "rootPrefix":"jmxtrans"
+        }
+      } ],
+          "obj" : "java.lang:type=Threading",
+      "resultAlias": "threads",
+      "attr" : [ "ThreadCount", "PeakThreadCount" ]
+    } 
+     
+  ,
+
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : 2003,
+          "host" : "172.17.0.22",
+          "rootPrefix":"jmxtrans"
+        }
+      } ],
+     "obj" : "jboss.web:type=ThreadPool,name=*",
+      "resultAlias": "connectors",
+      "attr" : [ "currentThreadCount", "currentThreadsBusy", "" ]
+    } 
+     
+  ,
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : 2003,
+          "host" : "172.17.0.22",
+          "rootPrefix":"jmxtrans"
+        }
+      } ],
+         "obj" : "java.lang:type=Memory",
+      "resultAlias": "heap",
+      "attr" : [ "HeapMemoryUsage", "NonHeapMemoryUsage" ]
+    } 
+     
+  ,
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : 2003,
+          "host" : "172.17.0.22",
+          "rootPrefix":"jmxtrans"
+        }
+      } ],
+          "obj" : "java.lang:type=GarbageCollector,name=*",
+      "resultAlias": "gc",
+      "attr" : [ "CollectionCount", "CollectionTime" ]
+    } 
+     
+  ,
+    {
+      "outputWriters" : [ {
+        "@class" : "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+        "settings" : {
+          "port" : 2003,
+          "host" : "172.17.0.22",
+          "rootPrefix":"jmxtrans"
+        }
+      } ],
+   "obj" : "java.lang:name=CMS Old Gen,type=MemoryPool",
+      "resultAlias": "cmsoldgen",
+      "attr" : [ "Usage" ]
+    } 
+     ],
+    "numQueryThreads" : 2
+  }
+   ]
+}
