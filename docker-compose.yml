@@ -42,6 +42,3 @@ jenkins:
    - graphite
    - dropwizard
    - targetsio
-
-  
-   
