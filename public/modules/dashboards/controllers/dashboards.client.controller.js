@@ -62,11 +62,12 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
         // Create new Dashboard
 		$scope.create = function() {
 			// Create new Dashboard object
-            var dashboard = {};
-            dashboard.name = this.name;
-            dashboard.description = this.description;
+            //var dashboard = {};
+            //dashboard.name = this.name;
+            //dashboard.description = this.description;
+            //dashboard.useInBenchmark = this.useInBenchmark;
 
-            Dashboards.create(dashboard, $stateParams.productName).then(function(response){
+            Dashboards.create($scope.dashboard, $stateParams.productName).then(function(response){
 
 
                 /* Refresh sidebar */
@@ -176,6 +177,15 @@ angular.module('dashboards').controller('DashboardsController', ['$scope', '$roo
         };
 
 
+        $scope.init = function(){
+
+            /* reset form*/
+            //$scope.dashboardForm.$setPristine();
+            $scope.dashboard ={};
+            Dashboards.selected={};
+
+
+        }
 
 
 
