@@ -139,7 +139,7 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback){
 
                             if (percentageOfErrors){
 
-                                var error1 = /(.*?) ?\s+\d+\s\(\s?\d+\.\d+%\)\s/g.exec(consoleLine);
+                                var error1 = /(.*?)\s+\d+\s\(\s?\d+\.\d+%\)\s/g.exec(consoleLine);
                                 var error2 = /.*\s+\d+\s\(\s?\d+\.\d+%\)\s+([^\=]*)/g.exec(consoleLine);
                                 var error = (error2[1]) ? error1[1] + error2[1] : error1[1];
                                 var numberOfErrors =  /.*\s+(\d+)\s\(\s?\d+\.\d+%\)/g.exec(consoleLine);
