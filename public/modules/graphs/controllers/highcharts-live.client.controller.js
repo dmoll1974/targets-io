@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Interval', '$stateParams', '$state', 'Graphite', 'TestRuns', 'Metrics', 'Dashboards', 'Tags', '$q','$http', '$log',
-    function($scope, Interval, $stateParams, $state, Graphite, TestRuns, Metrics, Dashboards, Tags,  $q, $http, $log) {
+angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Interval', '$stateParams', '$state', 'Graphite', 'TestRuns', 'Metrics', 'Dashboards', 'Tags', '$q','$http', '$log','Events',
+    function($scope, Interval, $stateParams, $state, Graphite, TestRuns, Metrics, Dashboards, Tags,  $q, $http, $log, Events) {
 
         /* Zero copied logic */
 
@@ -236,6 +236,21 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                     zoomType: 'x',
                     height: 500,
                     events: {
+                        click: function (e) {
+                            // Upon cmd-click of the chart area, go to add Event dialog
+                            var addEvent = e.metaKey || e.ctrlKey;
+                            if (addEvent) {
+                                var eventTimestamp = new Date( Math.round(e.xAxis[0].value));
+                                Events.selected.productName = $stateParams.productName
+                                Events.selected.dashboardName = $stateParams.dashboardName
+                                Events.selected.eventTimestamp = eventTimestamp;
+
+                                $state.go('createEvent', {
+                                    productName: $stateParams.productName,
+                                    dashboardName: $stateParams.dashboardName
+                                });
+                            }
+                        },
                         load: function () {
 
                             /* Clear interval that might be already running for this metric */
