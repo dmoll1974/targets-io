@@ -3,6 +3,7 @@
 angular.module('graphs').controller('HighchartsController', ['$scope','Graphite','$stateParams', '$state', 'TestRuns', 'Metrics', 'Dashboards', 'Tags','Events',
 	function($scope, Graphite, $stateParams, $state, TestRuns, Metrics, Dashboards, Tags, Events) {
 
+
         /* Zero copied logic */
 
         $scope.clipClicked = function(){
@@ -180,7 +181,13 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                     var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
                     var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
 
-                    updateGraph(from, until, $scope.metric.targets, false);
+                    updateGraph(TestRuns.zoomFrom, TestRuns.zoomUntil, $scope.metric.targets, function(series) {
+
+                            $scope.config.loading = false;
+                            $scope.config.series = series;
+
+                    });
+
 
                 }
             }
@@ -278,7 +285,7 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                         var until = (typeof e.min == 'undefined' && typeof e.max == 'undefined') ? TestRuns.selected.endEpoch : Math.round(e.max);
 
                         /* If zoom lock is checked, set zoom timestamps in TestRuns service */
-                        if ($scope.zoomLock) {
+                        if ($scope.zoomLock === true) {
 
                             TestRuns.zoomFrom = from;
                             TestRuns.zoomUntil = until;
@@ -286,7 +293,30 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
                         } else {
 
-                            updateGraph(from, until, $scope.metric.targets, true);
+                            updateGraph(from, until, $scope.metric.targets, function(series){
+
+
+                                $scope.config.loading = false;
+                                $scope.config.series = series;
+
+                                /* draw xAxis plotlines for events*/
+                                //if (series[series.length - 1].type) {
+                                //
+                                //    _.each(series[series.length - 1].data, function (flag) {
+                                //
+                                //        $scope.config.xAxis.plotLines.push(
+                                //            {
+                                //                value: flag.x,
+                                //                width: 1,
+                                //                color: 'blue',
+                                //                dashStyle: 'dash'
+                                //            }
+                                //        );
+                                //    })
+                                //}
+
+
+                            });
 
                         }
                     }
@@ -337,50 +367,51 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                 var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
                 var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
 
-                updateGraph(from, until, metric.targets, true);
+                updateGraph(from, until, metric.targets, function(series) {
 
+                    $scope.config.loading = false;
+                    $scope.config.series = series;
+
+                    /* draw xAxis plotlines for events*/
+                    if (series[series.length - 1].type) {
+
+                        _.each(series[series.length - 1].data, function (flag) {
+
+                            $scope.config.xAxis.plotLines.push(
+                                {
+                                    value: flag.x,
+                                    width: 1,
+                                    color: 'blue',
+                                    dashStyle: 'dash'
+                                }
+                            );
+                        })
+                    }
+
+                });
             });
 
         }
 
-        function updateGraph(from, until, targets, drawEvents){
+        function updateGraph(from, until, targets, callback){
 
             $scope.config.loading = true;
 
             Graphite.getData(from, until, targets, 900).then(function (series) {
 
-              if(series.length > 0) {
-                  Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
+                  if(series.length > 0) {
 
+                      Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
 
-                      $scope.config.series = seriesEvents;
+                          callback(seriesEvents);
 
-                      if (drawEvents) {
-                          /* draw xAxis plotlines for events*/
-                          if (seriesEvents[seriesEvents.length - 1].type) {
+                      });
 
-                              _.each(seriesEvents[seriesEvents.length - 1].data, function (flag) {
+                  }else{
+                      $scope.config.series = series;
+                      $scope.config.noData = 'No data to display';
 
-                                  $scope.config.xAxis.plotLines.push(
-                                      {
-                                          value: flag.x,
-                                          width: 1,
-                                          color: 'blue',
-                                          dashStyle: 'dash'
-                                      }
-                                  );
-                              })
-                          }
-                      }
-                      $scope.config.loading = false;
-
-                      $scope.config.options.exporting.filename = TestRuns.selected.testRunId + '_' + $scope.metric.alias;
-
-                  });
-              }else{
-                  $scope.config.series = series;
-                  $scope.config.noData = 'No data to display';
-              }
+                  }
             });
 
         }

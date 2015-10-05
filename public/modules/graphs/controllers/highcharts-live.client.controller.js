@@ -151,7 +151,13 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                     var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.start;
                     var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.end;
 
-                    updateGraph(from, until, $scope.metric.targets, false);
+                    updateGraph(from, until, $scope.metric.targets, function(series) {
+
+                        $scope.config.loading = false;
+                        $scope.config.series = series;
+
+
+                    });
 
                 }
             }
@@ -364,7 +370,30 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                         } else {
 
                             Interval.clearIntervalForMetric($scope.metric._id);
-                            updateGraph(from, until, $scope.metric.targets, true);
+
+                            updateGraph(from, until, metric.targets, function(series) {
+
+                                $scope.config.loading = false;
+                                $scope.config.series = series;
+
+
+                                /* draw xAxis plotlines for events*/
+                                //if (series[series.length - 1].type) {
+                                //
+                                //    _.each(series[series.length - 1].data, function (flag) {
+                                //
+                                //        $scope.config.xAxis.plotLines.push(
+                                //            {
+                                //                value: flag.x,
+                                //                width: 1,
+                                //                color: 'blue',
+                                //                dashStyle: 'dash'
+                                //            }
+                                //        );
+                                //    })
+                                //}
+
+                            });
 
                         }
                     }
@@ -392,48 +421,49 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
             var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : $scope.zoomRange;
             var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : 'now';
 
-            updateGraph(from, until, metric.targets, true);
+            updateGraph(from, until, metric.targets, function(series) {
 
+                $scope.config.loading = false;
+                $scope.config.series = series;
+
+                /* draw xAxis plotlines for events*/
+                if (series[series.length - 1].type) {
+
+                    _.each(series[series.length - 1].data, function (flag) {
+
+                        $scope.config.xAxis.plotLines.push(
+                            {
+                                value: flag.x,
+                                width: 1,
+                                color: 'blue',
+                                dashStyle: 'dash'
+                            }
+                        );
+                    })
+                }
+
+            });
 
         }
 
-        function updateGraph(from, until, targets, drawEvents){
+        function updateGraph(from, until, targets, callback){
 
             $scope.config.loading = true;
 
             Graphite.getData(from, until, targets, 900).then(function (series) {
 
-             if(series.length > 0) {
-                Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName).then(function (seriesEvents) {
+                if(series.length > 0) {
 
+                    Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
 
-                    $scope.config.series = seriesEvents;
+                        callback(seriesEvents);
 
-                    if(drawEvents) {
-                        /* draw xAxis plotlines for events*/
-                        if (seriesEvents[seriesEvents.length - 1].type) {
+                    });
 
-                            _.each(seriesEvents[seriesEvents.length - 1].data, function (flag) {
-
-                                $scope.config.xAxis.plotLines.push(
-                                    {
-                                        value: flag.x,
-                                        width: 1,
-                                        color: 'blue',
-                                        dashStyle: 'dash'
-                                    }
-                                );
-                            })
-                        }
-                    }
-                    $scope.config.loading = false;
-
-                });
-
-             }else{
-                 $scope.config.series = series;
-                 $scope.config.noData = 'No data to display';
-             }
+                }else{
+                    $scope.config.series = series;
+                    $scope.config.noData = 'No data to display';
+                }
             });
 
         }
