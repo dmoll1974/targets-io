@@ -1,28 +1,39 @@
 <div ng-controller="GraphsController"  data-ng-init="init()">
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
     <div fix-to-top="fix-to-top" class="graphs-header">
-        <span>
-            <label class="checkbox">
-                <input title="Apply zoom to all graphs" type="checkbox" ng-model="zoomLock">
-                Zoom lock
-            </label>
-        </span>
-        <span>
-            <button class="btn default" data-ng-click="resetZoom()">Reset zoom</button>
-        </span>
-        <div class="btn-group" >
-            <label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-10min'" uncheckable>10min</label>
-            <label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-30min'" uncheckable>30min</label>
-            <label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-1h'" uncheckable>1h</label>
-            <label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-3h'" uncheckable>3h</label>
-            <label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-6h'" uncheckable>6h</label>
-            <label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-12h'" uncheckable>12h</label>
-            <label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-1d'" uncheckable>1d</label>
-            <label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-2d'" uncheckable>2d</label>
+        <div layout="row" flex>
+            <md-checkbox ng-model="zoomLock" aria-label="Apply zoom to all graphs">
+                Apply zoom to all graphs
+            </md-checkbox>
+            <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
+            <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
         </div>
-        <span>
-            <button class="btn default" data-ng-click="openTagsFilterModal('')">Tag filter</button>
-        </span>
+
+        <md-radio-group ng-model="zoomRange">
+            <div layout="row" flex>
+                <md-radio-button value="-10min" class="md-primary">10min</md-radio-button>
+                <md-radio-button value="-30min" class="md-primary">30min</md-radio-button>
+                <md-radio-button value="-1h" class="md-primary">1h</md-radio-button>
+                <md-radio-button value="-3h" class="md-primary">3h</md-radio-button>
+                <md-radio-button value="-6h" class="md-primary">6h</md-radio-button>
+                <md-radio-button value="-12h" class="md-primary">12h</md-radio-button>
+                <md-radio-button value="-1d" class="md-primary">1d</md-radio-button>
+                <md-radio-button value="-2d" class="md-primary">2d</md-radio-button>
+                <md-radio-button value="-3d" class="md-primary">3d</md-radio-button>
+            </div>
+        </md-radio-group>
+
+        <!--<div class="btn-group" >-->
+            <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-10min'" uncheckable>10min</label>-->
+            <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-30min'" uncheckable>30min</label>-->
+            <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-1h'" uncheckable>1h</label>-->
+            <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-3h'" uncheckable>3h</label>-->
+            <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-6h'" uncheckable>6h</label>-->
+            <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-12h'" uncheckable>12h</label>-->
+            <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-1d'" uncheckable>1d</label>-->
+            <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-2d'" uncheckable>2d</label>-->
+        <!--</div>-->
+
         <md-tabs md-selected="selectedIndex" class="metric-panels">
             <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled"  data-ng-model="value" active="isActive(tag.text)" ng-click="setSelectedIndex($index)" ui-sref="viewLiveGraphs(tag.route)">
                 <span>{{tag.text}}</span>
