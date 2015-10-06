@@ -9,7 +9,7 @@ targetsio:
    - memcached
    - db
 db:
-  image: mongo
+  image: mongo:2.6.1
   ports:
    - "27017:27017"
 graphite:
