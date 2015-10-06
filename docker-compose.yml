@@ -35,7 +35,7 @@ jmxtrans:
    - graphite
    - dropwizard
 jenkins:
-  image: jenkins
+  image: /dmoll1974/targets-io-demo-jenkins
   ports:
    - "8070:8080"
   links:
