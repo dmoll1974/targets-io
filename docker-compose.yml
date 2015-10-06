@@ -8,10 +8,12 @@ targetsio:
    - graphite
    - memcached
    - db
+  mem_limit: 1000000000 
 db:
   image: mongo:2.6.11
   ports:
    - "27017:27017"
+  mem_limit: 1000000000 
 graphite:
   image: dmoll1974/targets-io-graphite
   ports:
@@ -25,15 +27,18 @@ memcached:
   environment:
    CACHE_SIZE: 1024
    EXTRA_OPTS: "-I 10m"
+  mem_limit: 1000000000 
 dropwizard:
   image: dmoll1974/targets-io-dropwizard
   ports:
    - "8080:8080"
+   mem_limit: 1000000000
 jmxtrans:
   image: dmoll1974/targets-io-jmxtrans
   links:
    - graphite
    - dropwizard
+  mem_limit: 1000000000 
 jenkins:
   image: dmoll1974/targets-io-jenkins
   ports:
@@ -42,3 +47,4 @@ jenkins:
    - graphite
    - dropwizard
    - targetsio
+   mem_limit: 1500000000
