@@ -21,7 +21,7 @@ This fires up 7 docker containers:
 | Container  	| Description                                            	| port  	|
 |------------	|--------------------------------------------------------	|-------	|
 | targets-io 	| Performance dashboard application                      	| 3000  	|
-| mongodb    	| Databasese to store dashboard configurations           	| 27017 	|
+| mongodb    	| Database to store dashboard configurations           		| 27017 	|
 | graphite   	| Time based series database                             	| 8090  	|
 | memcached  	| Distributed cache between targets-io and Graphite      	| 11211 	|
 | jenkins    	| CI server to start demo Gatling and Jmeter scripts     	| 8070  	|
@@ -42,7 +42,7 @@ To start one of the demo scripts open the Jenkins console
 `http://localhost:8070` 
 
 Go to the configuration page `http://localhost:8070/configure` and scroll down to the Maven section.
-Click "Add maven", make sure "install automatically" is checked an provide a name for the installation. The save the configuration.
+Click "Add maven", make sure "install automatically" is checked an provide a name for the installation. Then save the configuration.
 
 To start Gatling or Jmeter tests click on of the corresponding jobs and click "Build now"
 
