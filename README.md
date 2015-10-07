@@ -12,7 +12,7 @@ To set up a local demo environment take the following steps (instructions for li
 
     `sudo docker-compose up`
 
-This start up 7 docker containers:
+This fires up 7 docker containers:
 
 | Container  	| Description                                            	| port  	|
 |------------	|--------------------------------------------------------	|-------	|
