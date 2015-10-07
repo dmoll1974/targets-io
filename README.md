@@ -1,5 +1,9 @@
 #targets-io #
-##Performance test dashboard for Gatling Tool or JMeter
+##Performance test dashboard
+
+Dashboard app for organising, analysing, and benchmarking of test results of performance tests executed with Gatling Tool or JMeter.
+The load related metrics are stored in Graphite along with for instance resource usage metrics of the application under test.
+Any metric stored in Graphite can be benchmarked between test runs, to provide automated feedback on the performance of an application.
 
 **Demo**
 
