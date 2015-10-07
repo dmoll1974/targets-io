@@ -1,6 +1,5 @@
 #targets-io #
-##Performance test dashboard
-### for Gatling Tool or JMeter, based on Graphite metric database##
+##Performance test dashboard for Gatling Tool or JMeter
 
 **Demo**
 
@@ -10,7 +9,6 @@ To set up a local demo environment take the following steps (instructions for li
 - [Install docker compose](https://github.com/docker/compose/releases)
 - Clone this repository
 - Run docker compose 
-
 
     `sudo docker-compose up`
 
@@ -31,9 +29,7 @@ Open the targets-io performance dashboard via
 
 `http://localhost:3000`
 
-First import the pre-configured demo dashboard configurations via
-
-`http://localhost:3000/#!/import-db`
+First restore the pre-configured demo dashboard configurations via the menu in the right top of the screen
 
 Select the configuration file from the repo (targets-io/demo/targets-io-demo.dump) and click "upload me". After reloading the page you should two "Products", "GATLING" and "JMETER"
 
