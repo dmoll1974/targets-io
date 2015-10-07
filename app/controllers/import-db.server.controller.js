@@ -82,6 +82,7 @@ function upload (req, res) {
                                     newDashboard.instances = importDashboard.instances;
                                     newDashboard.tags = importDashboard.tags;
                                     newDashboard.baseline = importDashboard.baseline;
+                                    newDashboard.useInBenchmark=importDashboard.useInBenchmark;
 
                                     //
                                     newDashboard.save(function(err,newDashboard){
