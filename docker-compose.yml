@@ -32,7 +32,7 @@ dropwizard:
   image: dmoll1974/targets-io-dropwizard
   ports:
    - "8080:8080"
-   mem_limit: 1000000000
+  mem_limit: 1000000000
 jmxtrans:
   image: dmoll1974/targets-io-jmxtrans
   links:
@@ -47,4 +47,4 @@ jenkins:
    - graphite
    - dropwizard
    - targetsio
-   mem_limit: 1500000000
+  mem_limit: 1500000000
