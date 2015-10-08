@@ -34,7 +34,7 @@ Open the targets-io performance dashboard via
 
 First restore the pre-configured demo dashboard configurations via the menu in the right top of the screen
 
-Select the configuration file from the repo (targets-io/demo/targets-io-demo.dump) and click "upload me". After reloading the page you should two "Products", "GATLING" and "JMETER"
+Select the configuration file from the repo (targets-io/demo/targets-io-demo.dump) and click "upload me". After reloading the page you should see two "Products", "GATLING" and "JMETER"
 
 To start one of the demo scripts open the Jenkins console
 
