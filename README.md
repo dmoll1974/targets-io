@@ -47,10 +47,22 @@ To start Gatling or Jmeter tests click on of the corresponding jobs and click "B
 
 This will trigger the [Gatling demo script](https://github.com/dmoll1974/gatling-demo-script) or the [JMeter demo script](https://github.com/dmoll1974/jmeter-demo-script)
 
+**Libraries / Dependencies**
+------------------------
++ Meanjs [https://github.com/meanjs/mean]
++ highcharts-ng [https://github.com/pablojim/highcharts-ng] *NOTE: Not free for commercial use.  See this page for licensing details: http://shop.highsoft.com/highcharts.html*
++ Angular-Material [https://github.com/angular/material]
++ Twitter Bootstrap [http://twitter.github.com/bootstrap/]
++ ngTagsInput [https://github.com/mbenford/ngTagsInput]
++ ng-clip [https://github.com/asafdav/ng-clip]
++ bootstrap-ui-datetime-picker [https://github.com/Gillardo/bootstrap-ui-datetime-picker]
+
 **Documentation**
 
 TBD
 ## License
+
+MIT license [https://github.com/dmoll1974/targets-io/edit/master/license.md]
 (The MIT License)
 
 Permission is hereby granted, free of charge, to any person obtaining
