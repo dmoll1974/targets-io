@@ -1,4 +1,11 @@
-<div ng-controller = "ImportDbController">
-    <input type="file" file-model="myFile"/>
-    <button ng-click="uploadFileLegacy()">upload me</button>
-</div>
+<section data-ng-controller="ImportDbController">
+    <div class="page-header">
+        <h1>Restore database</h1>
+    </div>
+
+    <form>
+        <input type="file" file-model="myFile"/>
+        <button data-ng-click="uploadFile('/upload-legacy')">Upload</button>
+
+    </form>
+</section>
