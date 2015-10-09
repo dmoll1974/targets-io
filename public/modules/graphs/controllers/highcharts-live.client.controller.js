@@ -318,8 +318,8 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                     align: 'center',
                     verticalAlign: 'bottom',
                     maxHeight: 100,
-                    //layout: 'horizontal',
-                    itemWidth: 250
+                    labelFormatter: hcLabelRender,
+                    itemWidth: 300
                 },
                 tooltip:{
                     enabled:true,
@@ -513,6 +513,25 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                 }
             });
 
+        }
+
+        function hcLabelRender(){
+            var s = this.name;
+            var r = "";
+            var lastAppended = 0;
+            var lastSpace = -1;
+            for (var i = 0; i < s.length; i++) {
+                if (s.charAt(i) == ' ') lastSpace = i;
+                if (i - lastAppended > 40) {
+                    if (lastSpace == -1) lastSpace = i;
+                    r += s.substring(lastAppended, lastSpace);
+                    lastAppended = lastSpace;
+                    lastSpace = -1;
+                    r += "<br>";
+                }
+            }
+            r += s.substring(lastAppended, s.length);
+            return r;
         }
     }
 ]);
