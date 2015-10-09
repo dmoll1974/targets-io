@@ -1,8 +1,9 @@
 <div class="page-header">
-    <a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}">Back</a>
-    <h1>Benchmark to fixed baseline</h1>
-    <h5 ng-if="testRun.testRunId">ID: {{testRun.testRunId}}</h5>
-    <h5 ng-if="testRun.baseline">Baseline: {{testRun.baseline}}</h5>
+    <div layout="column">
+        <span class="md-subhead" style="padding-bottom: 20px;"><a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}">{{productName}}-{{dashboardName}}</a>  /  {{testRun.testRunId}}</span>
+        <span class="md-display-1">Benchmark to fixed baseline</span>
+        <h5 ng-if="testRun.baseline">Baseline: {{testRun.baseline}}</h5>
+    </div>
 </div>
 <ul class="nav nav-tabs nav-justified">
     <li ng-class="{active: isSet(0)}" >

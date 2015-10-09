@@ -1,10 +1,9 @@
 <div class="page-header">
-    <div layout="row">
-        <a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}">{{productName}}/{{dashboardName}}</a>
-        <span> / {{testRun.testRunId}}</span>
+    <div layout="column">
+        <span class="md-subhead" style="padding-bottom: 20px;"><a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}">{{productName}}-{{dashboardName}}</a>  /  {{testRun.testRunId}}</span>
+        <span class="md-display-1">Benchmark to previous build</span>
+        <h5 ng-if="testRun.previousBuild">Baseline: {{testRun.previousBuild}}</h5>
     </div>
-    <h1>Benchmark to previous build ({{testRun.previousBuild}})</h1>
-    <!--<h5 ng-if="testRun.previousBuild">Baseline: {{testRun.previousBuild}}</h5>-->
 </div>
 <ul class="nav nav-tabs nav-justified">
     <li ng-class="{active: isSet(0)}" >

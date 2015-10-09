@@ -317,8 +317,9 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                     enabled: true,
                     align: 'center',
                     verticalAlign: 'bottom',
-                    maxHeight: 100
-                    //layout: 'vertical'
+                    maxHeight: 100,
+                    //layout: 'horizontal',
+                    itemWidth: 250
                 },
                 tooltip:{
                     enabled:true,
@@ -355,6 +356,36 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                                     this.chart.redraw();
                                     return false;
                                 }
+                            },
+                            click: function (event) {
+                                // Upon cmd-click of a legend item, rather than toggling visibility, we want to hide all other items.
+                                var hideAllOthers = event.metaKey || event.ctrlKey;
+                                var seriesIndex = this.index;
+                                var series = this.chart.series;
+
+                                if (hideAllOthers) {
+
+                                    for (var i = 0; i < series.length; i++) {
+                                        // rather than calling 'show()' and 'hide()' on the series', we use setVisible and then
+                                        // call chart.redraw --- this is significantly faster since it involves fewer chart redraws
+                                        if (series[i].index === seriesIndex) {
+                                            if (!series[i].visible) series[i].setVisible(true, false);
+                                        } else {
+                                            if (series[i].visible) {
+                                                series[i].setVisible(false, false);
+                                            } else {
+                                                series[i].setVisible(true, false);
+                                            }
+                                        }
+                                    }
+                                }else{
+
+                                    series[seriesIndex].setVisible(false, false);
+                                }
+
+                                this.chart.redraw();
+                                return false;
+
                             }
                         }
                     }
