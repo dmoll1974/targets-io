@@ -168,6 +168,10 @@ function upload (req, res) {
 
                                            dashboardCallback();
                                         });
+                                    }else{
+
+                                        dashboardCallback();
+
                                     }
                                 });
 
@@ -183,6 +187,8 @@ function upload (req, res) {
                     }, function (err) {
 
                         console.log('import done!');
+                        res.sendStatus(200);
+
                     });
 
 

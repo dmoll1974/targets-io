@@ -3,9 +3,15 @@
         <h1>Restore database</h1>
     </div>
 
-    <form>
+    <form ng-hide="activated">
         <input type="file" file-model="myFile"/>
         <button data-ng-click="uploadFile('/upload-legacy')">Upload</button>
 
     </form>
+    <div class="container" ng-if="activated">
+        <md-progress-circular md-mode="{{modes[4]}}" md-diameter="96"></md-progress-circular>
+        <div class="bottom-block">
+            <span>Restoring database ...</span>
+        </div>
+    </div>
 </section>
