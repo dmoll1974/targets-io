@@ -331,6 +331,7 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                 },
                 plotOptions: {
                     series: {
+                        cursor: 'pointer',
                         events: {
                             legendItemClick: function(e) {
                                 // Upon cmd-click of a legend item, rather than toggling visibility, we want to hide all other items.
