@@ -7,7 +7,8 @@
         <div layout="row">
             <md-input-container flex>
                 <label>Timestamp</label>
-                <input type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss" ng-model="event.eventTimestamp" is-open="isOpen"/>
+                <input type="text"  ng-model="event.eventTimestamp"/>
+                <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss" ng-model="event.eventTimestamp" is-open="isOpen"/>
             </md-input-container>
             <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg" data-ng-click="openCalendar($event)" ></md-icon>
         </div>
