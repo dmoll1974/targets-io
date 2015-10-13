@@ -17,7 +17,7 @@
             </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="testRun in testRuns" ng-class="testRun.testRunId === dashboard.baseline ? 'warning': ''">
+                <tr ng-repeat="testRun in testRuns | orderBy:'end':true" ng-class="testRun.testRunId === dashboard.baseline ? 'warning': ''">
                     <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.testRunId}}</td>
                     <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
                     <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
