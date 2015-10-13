@@ -22,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="event in events" \>
+            <tr ng-repeat="event in events | orderBy:'eventTimestamp':true" \>
                 <td data-ng-click="editEvent($index)">{{event.eventTimestamp | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
                 <td data-ng-click="editEvent($index)">{{event.testRunId}}</td>
                 <td data-ng-click="editEvent($index)">{{event.eventDescription}}</td>
