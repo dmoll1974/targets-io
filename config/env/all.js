@@ -46,7 +46,7 @@ module.exports = {
                 'public/lib/underscore/underscore-min.js',
                 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
                 'public/lib/highstock-release/highstock.js',
-                'public/lib/highcharts-ng/dist/highcharts-ng.min.js',
+				'public/modules/graphs/lib/highcharts-ng.js',
 				'public/lib/highstock-release/exporting.js',
                 'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
 				'public/lib/ng-clip/dest/ng-clip.min.js',
