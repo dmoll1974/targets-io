@@ -47,7 +47,7 @@ exports.create = function(req, res) {
 								testRun.productName = event.productName;
 								testRun.dashboardName = event.dashboardName;
 								testRun.testRunId = event.testRunId;
-								testRun.baseline = event.baseline;
+								testRun.baseline = dashboard.baseline || event.baseline;
 								testRun.buildResultKey = event.buildResultKey
 								testRun.eventIds.push(startEvent._id, event._id);
 
