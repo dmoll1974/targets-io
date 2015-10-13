@@ -380,13 +380,7 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
         $scope.initConfig = function (config, metric) {
             //debugger;
 
-            $scope.config = angular.copy(config);
-            $scope.config.title.text = metric.alias;
 
-
-
-            /* if no requirement valaue is set, remove plotline*/
-            if(!$scope.metric.requirementValue) $scope.config.yAxis.plotLines=[];
 
             /* Set the TestRuns.selected based on $stateParams*/
 
@@ -401,8 +395,15 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
                 updateGraph(from, until, metric.targets, function(series) {
 
+                    $scope.config = angular.copy(config);
+                    $scope.config.title.text = metric.alias;
+
                     $scope.config.loading = false;
                     $scope.config.series = series;
+
+                    /* if no requirement valaue is set, remove plotline*/
+                    if(!$scope.metric.requirementValue) $scope.config.yAxis.plotLines=[];
+
 
                     /* draw xAxis plotlines for events*/
                     if (series[series.length - 1].type) {
@@ -427,7 +428,7 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
         function updateGraph(from, until, targets, callback){
 
-            $scope.config.loading = true;
+            //$scope.config.loading = true;
 
             Graphite.getData(from, until, targets, 900).then(function (series) {
 
