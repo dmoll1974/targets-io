@@ -17,14 +17,14 @@
                 </md-button>
                 <md-menu-content width="4">
                     <md-menu-item>
-                        <md-button>
-                            <a data-ng-href="/download">Backup database</a>
+                        <md-button ng-click="backup()">
+                            Backup database
                         </md-button>
                     </md-menu-item>
 
                     <md-menu-item>
-                        <md-button>
-                            <a data-ng-href="/#!/import-db">Restore database</a>
+                        <md-button ng-click="go('/import-db')">
+                            Restore database
                         </md-button>
                     </md-menu-item>
 
