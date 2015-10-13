@@ -19,12 +19,11 @@ module.exports = {
 	//	css: 'public/dist/application.min.css',
 	//	js: 'public/dist/application.min.js'
 	//},
-    graphiteHost: 'http://localhost:8090',
-    db: 'mongodb://mongodb/targets-io-dev',
-    memcachedHost: [ 'localhost:11211'],
-    assets: {
-        lib: {
-            css: [
+    graphiteHost: 'http://172.21.42.178',
+   db: 'mongodb://db/targets-io',
+    memcachedHost: [ '172.21.42.178:11211'],    
+   assets: {
+        lib: {            css: [
                 //'public/css/bootstrap.css',
                 'public/css/style.css',
                 'public/lib/components-font-awesome/css/font-awesome.min.css',

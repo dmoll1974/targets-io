@@ -22,9 +22,9 @@ RUN bower install --config.interactive=false --allow-root
 ADD . /home/mean
 
 # currently only works for development
-ENV NODE_ENV cloud
+ENV NODE_ENV production
 
 # Port 3000 for server
 # Port 35729 for livereload
 EXPOSE 3000 35729
-ENTRYPOINT MONGO_URL=mongodb://$MONGO_SERVICE_HOST:$MONGO_SERVICE_PORT  MEMCACHED_HOST=$MEMCACHED_SERVICE_HOST:$MEMCACHED_SERVICE_PORT GRAPHITE_HOST=http://$GRAPHITE_SERVICE_HOST:$GRAPHITE_SERVICE_PORT forever -c 'node --harmony' server.js
+ENTRYPOINT forever -c 'node --harmony' server.js
