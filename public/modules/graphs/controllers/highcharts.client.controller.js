@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('graphs').controller('HighchartsController', ['$scope','Graphite','$stateParams', '$state', 'TestRuns', 'Metrics', 'Dashboards', 'Tags','Events',
-	function($scope, Graphite, $stateParams, $state, TestRuns, Metrics, Dashboards, Tags, Events) {
+angular.module('graphs').controller('HighchartsController', ['$scope','Graphite','$stateParams', '$state', 'TestRuns', 'Metrics', 'Dashboards', 'Tags','Events','$timeout',
+	function($scope, Graphite, $stateParams, $state, TestRuns, Metrics, Dashboards, Tags, Events, $timeout) {
 
 
         /* Zero copied logic */
@@ -306,7 +306,7 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
             },
             series: [],
             title: {
-                text: 'Hello'
+                text: '...'
             },
             xAxis: {
                 minRange: 10000,
@@ -373,7 +373,8 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
 
             loading: true,
-            useHighStocks: true
+            useHighStocks: true/*,
+            noData: 'No data to display'*/
         }
 
 
@@ -395,32 +396,47 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
                 updateGraph(from, until, metric.targets, function(series) {
 
+
                     $scope.config = angular.copy(config);
-                    $scope.config.title.text = metric.alias;
-
-                    $scope.config.loading = false;
-                    $scope.config.series = series;
-
-                    /* if no requirement valaue is set, remove plotline*/
-                    if(!$scope.metric.requirementValue) $scope.config.yAxis.plotLines=[];
 
 
-                    /* draw xAxis plotlines for events*/
-                    if (series[series.length - 1].type) {
 
-                        _.each(series[series.length - 1].data, function (flag) {
 
-                            $scope.config.xAxis.plotLines.push(
-                                {
-                                    value: flag.x,
-                                    width: 1,
-                                    color: 'blue',
-                                    dashStyle: 'dash'
-                                }
-                            );
-                        })
-                    }
+                    $timeout(function(){
 
+                        $scope.config.title.text = metric.alias;
+                        $scope.config.loading = true;
+
+                        if(series.length > 0){
+
+                            $scope.config.series = series;
+
+                            $scope.config.loading = false;
+
+                            /* if no requirement valaue is set, remove plotline*/
+                            if(!$scope.metric.requirementValue) $scope.config.yAxis.plotLines=[];
+
+                            /* draw xAxis plotlines for events*/
+                            if (series[series.length - 1].type) {
+
+                                _.each(series[series.length - 1].data, function (flag) {
+
+                                    $scope.config.xAxis.plotLines.push(
+                                        {
+                                            value: flag.x,
+                                            width: 1,
+                                            color: 'blue',
+                                            dashStyle: 'dash'
+                                        }
+                                    );
+                                })
+                            }
+                        }else{
+                            $timeout(function(){
+                                $scope.config.noData = 'No data vailable';
+                            },0);
+                        }
+                    },0);
                 });
             });
 
@@ -441,8 +457,8 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                       });
 
                   }else{
-                      $scope.config.series = series;
-                      $scope.config.noData = 'No data to display';
+
+                      callback(series);
 
                   }
             });
