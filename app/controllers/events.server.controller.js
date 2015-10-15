@@ -7,7 +7,9 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Event = mongoose.model('Event'),
 	Testrun = mongoose.model('Testrun'),
-	//testruns = require('./controllers/testruns.server.controller.js'),
+	Dashboard = mongoose.model('Dashboard'),
+	Product = mongoose.model('Product'),
+	testruns = require('./testruns.server.controller.js'),
 	_ = require('lodash');
 
 /**
@@ -26,34 +28,40 @@ exports.create = function(req, res) {
 			res.jsonp(event);
 			/* if "end" event, check if corresponding "start" event exist and add to test runs */
 
-			if (event.eventDescription === "end"){
+			Product.findOne({name: event.productName}).exec(function(err, product){
 
-				Event.findOne({$and:[{testRunId: event.testRunId}, {eventDescription: "start"}]}).exec(function(err, startEvent) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
+				Dashboard.findOne({$and:[{productId: product._id},{name: event.dashboardName}]}).exec(function(err, dashboard){
+
+					if (event.eventDescription === "end" && dashboard.useInBenchmark === true){
+
+						Event.findOne({$and:[{testRunId: event.testRunId}, {eventDescription: "start"}]}).exec(function(err, startEvent) {
+							if (err) {
+								return res.status(400).send({
+									message: errorHandler.getErrorMessage(err)
+								});
+							} else {
+
+								var testRun = new Testrun();
+								testRun.start = startEvent.eventTimestamp;
+								testRun.end = event.eventTimestamp;
+								testRun.productName = event.productName;
+								testRun.dashboardName = event.dashboardName;
+								testRun.testRunId = event.testRunId;
+								testRun.baseline = dashboard.baseline || event.baseline;
+								testRun.buildResultKey = event.buildResultKey
+								testRun.eventIds.push(startEvent._id, event._id);
+
+								testruns.benchmarkAndPersistTestRunById(testRun.productName, testRun.dashboardName, testRun, function(storedTestrun){
+
+									console.log("test run stored");
+								});
+
+
+							}
 						});
-					} else {
-
-						var testRun = new Testrun();
-						testRun.start = startEvent.eventTimestamp;
-						testRun.end = event.eventTimestamp;
-						testRun.productName = event.productName;
-						testRun.dashboardName = event.dashboardName;
-						testRun.testRunId = event.testRunId;
-						testRun.baseline = event.baseline;
-						testRun.buildResultKey = event.buildResultKey
-						testRun.eventIds.push(startEvent._id, event._id);
-
-						//testruns.getTestRunById(testRun.productName, testRun.dashboardName, testRun, function(storedTestrun){
-                        //
-						//	console.log("test run stored");
-						//})
-
-
 					}
 				});
-			}
+			});
 		}
 	});
 };

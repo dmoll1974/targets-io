@@ -201,34 +201,39 @@ function testRunsForDashboard (req, res) {
             });
         } else {
 
-            Event.find({$and: [{productName: req.params.productName}, {dashboardName: req.params.dashboardName}]}).sort('-eventTimestamp').exec(function (err, events) {
-                if (err) {
-                    return res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
-                    });
-                } else {
+            if(testRuns){
 
-                    createTestrunFromEvents(req.params.productName, req.params.dashboardName,events, function(eventsTestruns){
+                res.jsonp(testRuns);
+            }else {
+                Event.find({$and: [{productName: req.params.productName}, {dashboardName: req.params.dashboardName}]}).sort('-eventTimestamp').exec(function (err, events) {
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    } else {
 
-                        /* if benchmarking is not enabled, no need to persist the test runs! */
-                        if(req.params.useInBenchmark === 'false'){
+                        createTestrunFromEvents(req.params.productName, req.params.dashboardName, events, function (eventsTestruns) {
 
-                            res.jsonp(eventsTestruns);
+                            /* if benchmarking is not enabled, no need to persist the test runs! */
+                            if (req.params.useInBenchmark === 'false') {
 
-                        }else {
-                            /* persist test runs that have not yet been persisted */
-                            persistTestrunsFromEvents(testRuns, eventsTestruns, function (persistedTestRuns) {
+                                res.jsonp(eventsTestruns);
 
-                                res.jsonp(persistedTestRuns);
+                            } else {
+                                /* persist test runs that have not yet been persisted */
+                                persistTestrunsFromEvents(testRuns, eventsTestruns, function (persistedTestRuns) {
 
-                            });
-                        }
+                                    res.jsonp(persistedTestRuns);
 
-                    });
+                                });
+                            }
 
-                }
+                        });
 
-            });
+                    }
+
+                });
+            }
         }
     });
 

@@ -12,6 +12,10 @@ angular.module('import-db').config(['$stateProvider',
 		.state('importDbLegacy', {
 			url: '/import-db-legacy',
 			templateUrl: 'modules/import-db/views/import-db-legacy.client.upload.html'
+		})
+		.state('exportDb', {
+			url: '/export-db',
+			redirectTo: '/download'
 		});
 	}
 ]);

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$location',
-	function($scope, Authentication, Menus, $location) {
+angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$location','$http','$window',
+	function($scope, Authentication, Menus, $location, $http, $window) {
 		$scope.authentication = Authentication;
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
@@ -20,6 +20,12 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 			$location.path( path );
 		};
 
+		$scope.backup = function(){
+
+			var url = "http://" + $window.location.host + "/download";
+		//	$log.log(url);
+			$window.location.href = url;
+		}
 		var originatorEv;
 		$scope.openMenu = function($mdOpenMenu, ev) {
 			originatorEv = ev;

@@ -306,7 +306,7 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
             },
             series: [],
             title: {
-                text: '...'
+                text: $scope.metric.alias
             },
             xAxis: {
                 minRange: 10000,
@@ -396,16 +396,15 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
                 updateGraph(from, until, metric.targets, function(series) {
 
-
                     $scope.config = angular.copy(config);
-
+                    $scope.config.title.text = metric.alias;
+                    $scope.config.loading = true;
 
 
 
                     $timeout(function(){
 
-                        $scope.config.title.text = metric.alias;
-                        $scope.config.loading = true;
+
 
                         if(series.length > 0){
 
