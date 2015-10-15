@@ -201,7 +201,7 @@ function testRunsForDashboard (req, res) {
             });
         } else {
 
-            if(testRuns){
+            if(testRuns.length > 0){
 
                 res.jsonp(testRuns);
             }else {
