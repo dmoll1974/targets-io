@@ -2,7 +2,7 @@
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
     <div fix-to-top="fix-to-top" class="graphs-header">
         <div layout="column">
-        <!--<span>-->
+            <!--<span>-->
             <div layout="row" flex>
                 <md-checkbox ng-model="zoomLock" aria-label="Apply zoom to all graphs">
                     Apply zoom to all graphs
@@ -13,30 +13,30 @@
         </div>
         <md-tabs md-selected="selectedIndex" class="metric-panels" >
             <!--<md-tab ng-click="setSelectedIndex($index)">-->
-                <!--<span ng-if="selectedIndex !== 0">TAGS FILTER</span>-->
-                <!--<div flex ng-if="selectedIndex === 0" layout="row">-->
-                    <!--<md-input-container flex>-->
-                        <!--<label>Filter products</label>-->
-                        <!--<input ng-model="productFilter" >-->
-                    <!--</md-input-container>-->
-                    <!--&lt;!&ndash;<md-icon md-svg-src="images/assets/ic_clear_black_36px.svg"  ></md-icon>&ndash;&gt;-->
-                <!--</div>-->
+            <!--<span ng-if="selectedIndex !== 0">TAGS FILTER</span>-->
+            <!--<div flex ng-if="selectedIndex === 0" layout="row">-->
+            <!--<md-input-container flex>-->
+            <!--<label>Filter products</label>-->
+            <!--<input ng-model="productFilter" >-->
+            <!--</md-input-container>-->
+            <!--&lt;!&ndash;<md-icon md-svg-src="images/assets/ic_clear_black_36px.svg"  ></md-icon>&ndash;&gt;-->
+            <!--</div>-->
             <!--</md-tab>-->
             <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled"  data-ng-model="value" active="isActive(tag.text)" ng-click="setSelectedIndex($index)" ui-sref="viewGraphs(tag.route)">
                 <span>{{tag.text}}</span>
             </md-tab>
         </md-tabs>        <!--<tabset>-->
-            <!--<tab data-ng-repeat="tag in tags" heading="{{tag.text}}"  data-ng-model="value"  disabled="tag.disabled"  active="isActive(tag.text)" ui-sref="viewGraphs(tag.route)" >-->
-            <!--</tab>-->
+        <!--<tab data-ng-repeat="tag in tags" heading="{{tag.text}}"  data-ng-model="value"  disabled="tag.disabled"  active="isActive(tag.text)" ui-sref="viewGraphs(tag.route)" >-->
+        <!--</tab>-->
         <!--</tabset>-->
-    </div>    
+    </div>
     <div gatling-details data-ng-if="gatlingDetails"></div>
     <div data-ng-hide="gatlingDetails">
         <accordion close-others="false">
-        <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsController">
+            <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsController">
                 <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
                     <accordion-heading><div>{{metric.alias}}</div></accordion-heading>
-                    <div data-ng-init="initConfig(chart, metric)" ng-if="metric.isOpen">
+                    <div data-ng-init="initConfig(metric, $index)" ng-if="metric.isOpen">
                         <span>
                             <div class="btn-group">
                                 <label title="Edit metric" class="btn default" ng-click="editMetric(metric._id)"><span class="btn btn-xs glyphicon glyphicon-wrench"></span></label>
@@ -47,20 +47,19 @@
                         <span><input ng-readonly="true" ng-model="metricShareUrl" ng-if="showUrl" style="width:50%;" share-graph-url/></span><span><button ng-if="showUrl && hasFlash()" tooltip-size="medium" title="Copy graph URL" tooltip-side="top"  clip-copy="metricShareUrl" clip-click="clipClicked()">Copy</button></span>
                         <span>
                               <div class="input-group"  ng-if="showTags" class="graph-input-tags">
-                                  
-                                    <tags-input data-ng-model="metric.tags" on-tag-removed="tagRemoved($tag)">
-                                        <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
-                                    </tags-input>
+
+                                  <tags-input data-ng-model="metric.tags" on-tag-removed="tagRemoved($tag)">
+                                      <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
+                                  </tags-input>
                                     <span class="input-group-btn">
                                         <button ng-click="updateTags()" class="btn btn-default" type="button"><span class="btn btn-xs glyphicon glyphicon-ok"></button>
                                     </span>
                               </div>
                         </span>
-    
-                        <highchart id="chart1" config="config"></highchart>
+                        <div ng-attr-id="{{'chart-' + $index}}" config="config"></div>
                     </div>
                 </accordion-group>
-          </div>
+            </div>
         </accordion>
     </div>
 </div>
