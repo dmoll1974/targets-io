@@ -25,7 +25,7 @@ module.exports = {
     assets: {
         lib: {
             css: [
-                //'public/css/bootstrap.css',
+                'public/lib/angular-material/angular-material.min.css',
                 'public/css/style.css',
                 'public/lib/components-font-awesome/css/font-awesome.min.css',
                 'public/lib/bootstrap/dist/css/bootstrap.min.css',
@@ -33,10 +33,10 @@ module.exports = {
                 'public/lib/angular-busy/dist/angular-busy.css',
                 'public/lib/ng-table/dist/ng-table.css',
                 'public/lib/ng-tags-input/ng-tags-input.min.css',
-                'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css',
-                'public/lib/angular-material/angular-material.min.css'
+                'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css'
             ],
             js: [
+                'public/lib/jquery/dist/jquery.min.js',
                 'public/lib/angular/angular.min.js',
                 'public/lib/angular-aria/angular-aria.min.js',
                 'public/lib/angular-animate/angular-animate.min.js',
