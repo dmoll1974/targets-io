@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('graphs').controller('HighchartsController', ['$scope','Graphite','$stateParams', '$state', 'TestRuns', 'Metrics', 'Dashboards', 'Tags','Events','$timeout',
-	function($scope, Graphite, $stateParams, $state, TestRuns, Metrics, Dashboards, Tags, Events, $timeout) {
+angular.module('graphs').controller('HighchartsController', ['$scope','Graphite','$stateParams', '$state', 'TestRuns', 'Metrics', 'Dashboards', 'Tags','Events','$document',
+    function($scope, Graphite, $stateParams, $state, TestRuns, Metrics, Dashboards, Tags, Events, $document) {
 
 
         /* Zero copied logic */
@@ -169,6 +169,31 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
             }
         });
 
+        $scope.$watch('value', function (newVal, oldVal) {
+
+            if ($stateParams.metricId) {
+
+                _.each($scope.metrics, function (metric, i) {
+
+                    if (metric._id === $stateParams.metricId)
+                        $scope.metrics[i].isOpen = true;
+
+                })
+
+            } else {
+
+                if (newVal !== 'All') {
+
+                    _.each($scope.metrics, function (metric, i) {
+
+                        $scope.metrics[i].isOpen = true;
+
+                    })
+
+                }
+            }
+        });
+
         /* If zoom lock is checked, update all graphs when zoom is applied in one */
         $scope.$watch(function (scope) {
                 return TestRuns.zoomFrom
@@ -181,132 +206,145 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                     var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
                     var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
 
+                    var chart = angular.element($scope.graphSelector).highcharts();
+
+                    while(chart.series.length >0){
+                        chart.series[0].remove(false); //deletes all series
+                    }
+
+                    chart.showLoading('Loading data ...');
+
                     updateGraph(TestRuns.zoomFrom, TestRuns.zoomUntil, $scope.metric.targets, function(series) {
 
-                            $scope.config.loading = false;
-                            $scope.config.series = series;
+                        chart.hideLoading();
+
+                        _.each(series, function(serie){
+
+                            chart.addSeries(serie, false);
+                        });
+
+                        chart.redraw();
 
                     });
-
 
                 }
             }
         );
 
 
-        $scope.chart = {
-            options: {
-                chart: {
-                    type: 'line',
-                    zoomType: 'x',
-                    height: 500,
-                    events: {
-                        click: function (e) {
-                            // Upon cmd-click of the chart area, go to add Event dialog
-                            var addEvent = e.metaKey || e.ctrlKey;
-                            if (addEvent) {
-                                var eventTimestamp = new Date( Math.round(e.xAxis[0].value));
-                                Events.selected.productName = $stateParams.productName
-                                Events.selected.dashboardName = $stateParams.dashboardName
-                                Events.selected.eventTimestamp = eventTimestamp;
-                                Events.selected.testRunId = $stateParams.testRunId;
-                                $state.go('createEvent', {
-                                    productName: $stateParams.productName,
-                                    dashboardName: $stateParams.dashboardName
-                                });
-                            }
-                        }
-                    }
-
-                },
-
-                rangeSelector: {
-                    enabled: false
-                },
-                legend: {
-                    enabled: true,
-                    align: 'center',
-                    verticalAlign: 'bottom',
-                    maxHeight: 100,
-                    labelFormatter: hcLabelRender,
-                    itemWidth: 300
-                },
-                tooltip: {
-                    enabled: true,
-                    shared: false,
-                    valueDecimals: 1
-
-                },
-                exporting: {
-                    filename: ''
-                },
-                plotOptions: {
-                    series: {
-                        cursor: 'pointer',
-                        events: {
-                            legendItemClick: function(e) {
-                                // Upon cmd-click of a legend item, rather than toggling visibility, we want to hide all other items.
-                                var hideAllOthers = e.browserEvent.metaKey || e.browserEvent.ctrlKey;
-                                if (hideAllOthers) {
-                                    var seriesIndex = this.index;
-                                    var series = this.chart.series;
-
-
-                                    for (var i = 0; i < series.length; i++) {
-                                        // rather than calling 'show()' and 'hide()' on the series', we use setVisible and then
-                                        // call chart.redraw --- this is significantly faster since it involves fewer chart redraws
-                                        if (series[i].index === seriesIndex) {
-                                            if (!series[i].visible) series[i].setVisible(true, false);
-                                        } else {
-                                            if (series[i].visible) {
-                                                series[i].setVisible(false, false);
-                                            } else {
-                                                series[i].setVisible(true, false);
-                                            }
-                                        }
-                                    }
-                                    this.chart.redraw();
-                                    return false;
-                                }
-                            },
-                            click: function (event) {
-                                // Upon cmd-click of a legend item, rather than toggling visibility, we want to hide all other items.
-                                var hideAllOthers = event.metaKey || event.ctrlKey;
-                                var seriesIndex = this.index;
-                                var series = this.chart.series;
-
-                                if (hideAllOthers) {
-
-                                    for (var i = 0; i < series.length; i++) {
-                                        // rather than calling 'show()' and 'hide()' on the series', we use setVisible and then
-                                        // call chart.redraw --- this is significantly faster since it involves fewer chart redraws
-                                        if (series[i].index === seriesIndex) {
-                                            if (!series[i].visible) series[i].setVisible(true, false);
-                                        } else {
-                                            if (series[i].visible) {
-                                                series[i].setVisible(false, false);
-                                            } else {
-                                                series[i].setVisible(true, false);
-                                            }
-                                        }
-                                    }
-                                }else{
-
-                                    series[seriesIndex].setVisible(false, false);
-                                }
-
-                                this.chart.redraw();
-                                return false;
-
-                            }
+        var defaultChartConfig =
+        {
+            chart: {
+                type: 'line',
+                zoomType: 'x',
+                height: 500,
+                events: {
+                    click: function (e) {
+                        // Upon cmd-click of the chart area, go to add Event dialog
+                        var addEvent = e.metaKey || e.ctrlKey;
+                        if (addEvent) {
+                            var eventTimestamp = new Date( Math.round(e.xAxis[0].value));
+                            Events.selected.productName = $stateParams.productName
+                            Events.selected.dashboardName = $stateParams.dashboardName
+                            Events.selected.eventTimestamp = eventTimestamp;
+                            Events.selected.testRunId = $stateParams.testRunId;
+                            $state.go('createEvent', {
+                                productName: $stateParams.productName,
+                                dashboardName: $stateParams.dashboardName
+                            });
                         }
                     }
                 }
 
             },
-            series: [],
+
+            rangeSelector: {
+                enabled: false
+            },
+            navigator: {
+                enabled: false
+            },
+
+            legend: {
+                enabled: true,
+                align: 'center',
+                verticalAlign: 'bottom',
+                maxHeight: 100,
+                labelFormatter: hcLabelRender,
+                itemWidth: 300
+            },
+            tooltip: {
+                enabled: true,
+                shared: false,
+                valueDecimals: 1
+
+            },
+
+            plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    events: {
+                        legendItemClick: function(e) {
+                            // Upon cmd-click of a legend item, rather than toggling visibility, we want to hide all other items.
+                            var hideAllOthers = e.browserEvent.metaKey || e.browserEvent.ctrlKey;
+                            if (hideAllOthers) {
+                                var seriesIndex = this.index;
+                                var series = this.chart.series;
+
+
+                                for (var i = 0; i < series.length; i++) {
+                                    // rather than calling 'show()' and 'hide()' on the series', we use setVisible and then
+                                    // call chart.redraw --- this is significantly faster since it involves fewer chart redraws
+                                    if (series[i].index === seriesIndex) {
+                                        if (!series[i].visible) series[i].setVisible(true, false);
+                                    } else {
+                                        if (series[i].visible) {
+                                            series[i].setVisible(false, false);
+                                        } else {
+                                            series[i].setVisible(true, false);
+                                        }
+                                    }
+                                }
+                                this.chart.redraw();
+                                return false;
+                            }
+                        },
+                        click: function (event) {
+                            // Upon cmd-click of a legend item, rather than toggling visibility, we want to hide all other items.
+                            var hideAllOthers = event.metaKey || event.ctrlKey;
+                            var seriesIndex = this.index;
+                            var series = this.chart.series;
+
+                            if (hideAllOthers) {
+
+                                for (var i = 0; i < series.length; i++) {
+                                    // rather than calling 'show()' and 'hide()' on the series', we use setVisible and then
+                                    // call chart.redraw --- this is significantly faster since it involves fewer chart redraws
+                                    if (series[i].index === seriesIndex) {
+                                        if (!series[i].visible) series[i].setVisible(true, false);
+                                    } else {
+                                        if (series[i].visible) {
+                                            series[i].setVisible(false, false);
+                                        } else {
+                                            series[i].setVisible(true, false);
+                                        }
+                                    }
+                                }
+                            }else{
+
+                                series[seriesIndex].setVisible(false, false);
+                            }
+
+                            this.chart.redraw();
+                            return false;
+
+                        }
+                    }
+                }
+            },
+            //series: $scope.series,
             title: {
-                text: $scope.metric.alias
+                text: 'Hello'
             },
             xAxis: {
                 minRange: 10000,
@@ -325,28 +363,24 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
                         } else {
 
+                            var chart = angular.element($scope.graphSelector).highcharts();
+
+                            while(chart.series.length >0){
+                                chart.series[0].remove(false); //deletes all series
+                            }
+
+                            chart.showLoading('Loading data ...');
+
                             updateGraph(from, until, $scope.metric.targets, function(series){
 
+                                chart.hideLoading();
 
-                                $scope.config.loading = false;
-                                $scope.config.series = series;
+                                _.each(series, function(serie){
 
-                                /* draw xAxis plotlines for events*/
-                                //if (series[series.length - 1].type) {
-                                //
-                                //    _.each(series[series.length - 1].data, function (flag) {
-                                //
-                                //        $scope.config.xAxis.plotLines.push(
-                                //            {
-                                //                value: flag.x,
-                                //                width: 1,
-                                //                color: 'blue',
-                                //                dashStyle: 'dash'
-                                //            }
-                                //        );
-                                //    })
-                                //}
+                                    chart.addSeries(serie, false);
+                                });
 
+                                chart.redraw();
 
                             });
 
@@ -355,72 +389,68 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                 },
                 plotLines: []
             },
+            series:[],
             yAxis: {
                 min: 0, // this sets minimum values of y to 0
                 plotLines: [{
-                value: $scope.metric.requirementValue,
-                width: 2,
-                color: 'green',
-                dashStyle: 'dash',
-                label: {
-                  text: 'Requirement',
-                  align: 'left',
-                  y: -10,
-                  x: 0
-                }
-              }]
-            },
-
-
-            loading: true,
-            useHighStocks: true/*,
-            noData: 'No data to display'*/
+                    value: $scope.metric.requirementValue,
+                    width: 2,
+                    color: 'green',
+                    dashStyle: 'dash',
+                    label: {
+                        text: 'Requirement',
+                        align: 'left',
+                        y: -10,
+                        x: 0
+                    }
+                }]
+            }
         }
 
 
-        $scope.initConfig = function (config, metric) {
-            //debugger;
+        $scope.initConfig = function (metric, index) {
 
+            $scope.graphSelector = '#chart-' + index;
+            $scope.config = angular.extend(defaultChartConfig);
+            $scope.config.title.text = metric.alias;
+            if(!metric.requirementValue) $scope.config.yAxis.plotLines=[];
+            //$scope.config.chart.renderTo = 'chart-' + index;
 
+            setTimeout(function(){
+                angular.element($scope.graphSelector).highcharts('StockChart', $scope.config);
+                var chart = angular.element($scope.graphSelector).highcharts();
 
-            /* Set the TestRuns.selected based on $stateParams*/
+                chart.showLoading('Loading data ...');
 
-            TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+                /* Set the TestRuns.selected based on $stateParams*/
 
-                TestRuns.selected = testRun;
+                TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
 
-                /* If zoom range is set, use these to init the graph*/
+                    TestRuns.selected = testRun;
 
-                var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
-                var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
+                    var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
+                    var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
 
-                updateGraph(from, until, metric.targets, function(series) {
+                    updateGraph(from, until, metric.targets, function(series) {
 
-                    $scope.config = angular.copy(config);
-                    $scope.config.title.text = metric.alias;
-                    $scope.config.loading = true;
+                        while(chart.series.length >0){
+                            chart.series[0].remove(false); //deletes all series
+                        }
 
+                        chart.hideLoading();
 
+                        _.each(series, function(serie){
 
-                    $timeout(function(){
+                            chart.addSeries(serie, false);
+                        });
 
-
-
-                        if(series.length > 0){
-
-                            $scope.config.series = series;
-
-                            $scope.config.loading = false;
-
-                            /* if no requirement valaue is set, remove plotline*/
-                            if(!$scope.metric.requirementValue) $scope.config.yAxis.plotLines=[];
-
+                        if(series.length > 0) {
                             /* draw xAxis plotlines for events*/
                             if (series[series.length - 1].type) {
 
                                 _.each(series[series.length - 1].data, function (flag) {
 
-                                    $scope.config.xAxis.plotLines.push(
+                                    chart.options.xAxis[0].plotLines.push(
                                         {
                                             value: flag.x,
                                             width: 1,
@@ -431,14 +461,23 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                                 })
                             }
                         }else{
-                            $timeout(function(){
-                                $scope.config.noData = 'No data vailable';
-                            },0);
-                        }
-                    },0);
-                });
-            });
 
+                            chart.showLoading('No data to display');
+
+                        }
+
+                        chart.redraw();
+                        //$scope.chart = new Highcharts.StockChart($scope.config);
+
+                        //setTimeout(function(){
+                        //    //$scope.config.loading = false;
+                        //    $scope.chart.series = series;
+                        //    $scope.chart.redraw();
+                        //
+                        //},100);
+                    });
+                });
+            },100)
         }
 
         function updateGraph(from, until, targets, callback){
@@ -447,19 +486,18 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
             Graphite.getData(from, until, targets, 900).then(function (series) {
 
-                  if(series.length > 0) {
+                if(series.length > 0) {
 
-                      Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
+                    Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
 
-                          callback(seriesEvents);
+                        callback(seriesEvents);
 
-                      });
+                    });
 
-                  }else{
+                }else{
+                    callback(series);
 
-                      callback(series);
-
-                  }
+                }
             });
 
         }

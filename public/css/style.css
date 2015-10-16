@@ -6518,7 +6518,7 @@ body {
     -moz-osx-font-smoothing: grayscale !important;
 }
 ::selection {
-    background: #31c0be;
+    background: #315CC0;
     color: #ffffff;
 }
 ::-moz-selection {
