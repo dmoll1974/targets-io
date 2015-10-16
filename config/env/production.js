@@ -45,19 +45,19 @@ module.exports = {
                 'public/lib/angular-ui-router/release/angular-ui-router.min.js',
                 'public/lib/angular-ui-utils/ui-utils.min.js',
                 'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+                'public/lib/moment/moment.js',
+                'public/lib/angular-spinners/dist/angular-spinners.js',
+                'public/lib/angular-busy/dist/angular-busy.js',
                 'public/lib/ng-table/dist/ng-table.js',
                 'public/lib/ng-tags-input/ng-tags-input.min.js',
                 'public/lib/underscore/underscore-min.js',
-                'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
                 'public/lib/highstock-release/highstock.js',
-                'public/modules/graphs/lib/highcharts-ng.js',
+                'public/lib/highcharts-ng/dist/highcharts-ng.min.js',
                 'public/lib/highstock-release/exporting.js',
                 'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
-                'public/lib/angular-busy/dist/angular-busy.js',
                 'public/lib/ng-clip/dest/ng-clip.min.js',
                 'public/lib/zeroclipboard/dist/ZeroClipboard.min.js',
                 'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js'
-
 
             ]
         },
