@@ -467,14 +467,7 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
                         }
 
                         chart.redraw();
-                        //$scope.chart = new Highcharts.StockChart($scope.config);
 
-                        //setTimeout(function(){
-                        //    //$scope.config.loading = false;
-                        //    $scope.chart.series = series;
-                        //    $scope.chart.redraw();
-                        //
-                        //},100);
                     });
                 });
             },100)
@@ -482,7 +475,6 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
         function updateGraph(from, until, targets, callback){
 
-            //$scope.config.loading = true;
 
             Graphite.getData(from, until, targets, 900).then(function (series) {
 

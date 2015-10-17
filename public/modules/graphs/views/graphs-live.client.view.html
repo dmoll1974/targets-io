@@ -48,7 +48,7 @@
         <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsLiveController"  >
             <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
                 <accordion-heading><div>{{metric.alias}}</div></accordion-heading>
-                    <div data-ng-init="initConfig(chart, metric)" ng-if="metric.isOpen">
+                    <div data-ng-init="initConfig(metric, $index)" ng-if="metric.isOpen">
                         <span>
                         <div class="btn-group">
                             <label class="btn default" ng-click="editMetric(metric._id)"><span class="btn btn-xs glyphicon glyphicon-wrench"></span></label>
@@ -67,7 +67,8 @@
                                 </span>
                           </div>
                         </span>
-                        <highchart id="chart1" config="config"></highchart>
+                        <!--<highchart id="chart1" config="config"></highchart>-->
+                        <div ng-attr-id="{{'chart-' + $index}}" config="config"></div>
                     </div>
             </accordion-group>
         </div>
