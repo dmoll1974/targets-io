@@ -140,6 +140,30 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
 
 
         /* If zoom is applied, replace series */
+        //$scope.$watch(function (scope) {
+        //        return TestRuns.zoomFrom
+        //    },
+        //    function (newVal, oldVal) {
+        //
+        //        if (newVal !== oldVal) {
+        //
+        //
+        //            var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.start;
+        //            var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.end;
+        //
+        //            updateGraph(from, until, $scope.metric.targets, function(series) {
+        //
+        //                $scope.config.loading = false;
+        //                $scope.config.series = series;
+        //
+        //
+        //            });
+        //
+        //        }
+        //    }
+        //);
+
+        /* If zoom lock is checked, update all graphs when zoom is applied in one */
         $scope.$watch(function (scope) {
                 return TestRuns.zoomFrom
             },
@@ -148,14 +172,29 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                 if (newVal !== oldVal) {
 
 
-                    var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.start;
-                    var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.end;
+                    Interval.clearAll();
 
-                    updateGraph(from, until, $scope.metric.targets, function(series) {
+                    var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
+                    var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
 
-                        $scope.config.loading = false;
-                        $scope.config.series = series;
+                    var chart = angular.element($scope.graphSelector).highcharts();
 
+                    while(chart.series.length >0){
+                        chart.series[0].remove(false); //deletes all series
+                    }
+
+                    chart.showLoading('Loading data ...');
+
+                    updateGraph(TestRuns.zoomFrom, TestRuns.zoomUntil, $scope.metric.targets, function(series) {
+
+                        chart.hideLoading();
+
+                        _.each(series, function(serie){
+
+                            chart.addSeries(serie, false);
+                        });
+
+                        chart.redraw();
 
                     });
 
@@ -216,45 +255,49 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
 
                 TestRuns.zoomRange = $scope.zoomRange;
 
-                var seriesArray = $scope.config.series;
-                var seriesArraySize = seriesArray.length;
 
-                for (var i = 0; i < seriesArraySize; i++) {
+                //var seriesArray = $scope.config.series;
+                //var seriesArraySize = seriesArray.length;
+                //
+                //for (var i = 0; i < seriesArraySize; i++) {
+                //
+                //    seriesArray.splice(0, 1);
+                //}
 
-                    seriesArray.splice(0, 1);
-                }
-
-                $scope.initConfig($scope.chart, $scope.metric);
+                var chart = angular.element($scope.graphSelector).highcharts();
+                chart.destroy();
+                $scope.initConfig( $scope.metric, $scope.chartIndex);
             }
         });
 
-
-        $scope.chart = {
-            options: {
-                chart: {
-                    type: 'line',
-                    zoomType: 'x',
-                    height: 500,
-                    events: {
-                        click: function (e) {
-                            // Upon cmd-click of the chart area, go to add Event dialog
-                            var addEvent = e.metaKey || e.ctrlKey;
-                            if (addEvent) {
-                                var eventTimestamp = new Date( Math.round(e.xAxis[0].value));
-                                Events.selected.productName = $stateParams.productName
-                                Events.selected.dashboardName = $stateParams.dashboardName
-                                Events.selected.eventTimestamp = eventTimestamp;
-
-                                $state.go('createEvent', {
-                                    productName: $stateParams.productName,
-                                    dashboardName: $stateParams.dashboardName
-                                });
-                            }
-                        },
-                        load: function () {
+        var defaultChartConfig =
+        {
+            chart: {
+                type: 'line',
+                zoomType: 'x',
+                height: 500,
+                events: {
+                    click: function (e) {
+                        // Upon cmd-click of the chart area, go to add Event dialog
+                        var addEvent = e.metaKey || e.ctrlKey;
+                        if (addEvent) {
+                            var eventTimestamp = new Date(Math.round(e.xAxis[0].value));
+                            Events.selected.productName = $stateParams.productName
+                            Events.selected.dashboardName = $stateParams.dashboardName
+                            Events.selected.eventTimestamp = eventTimestamp;
+                            Events.selected.testRunId = $stateParams.testRunId;
+                            $state.go('createEvent', {
+                                productName: $stateParams.productName,
+                                dashboardName: $stateParams.dashboardName
+                            });
+                        }
+                    },
+                    load: function () {
 
                             /* Clear interval that might be already running for this metric */
                             Interval.clearIntervalForMetric($scope.metric._id);
+
+                            var chart = angular.element($scope.graphSelector).highcharts();
 
                             var intervalId = setInterval(function () {
 
@@ -262,10 +305,10 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
 
                                     Graphite.addEvents(graphiteSeries, $scope.zoomRange, 'now', $stateParams.productName, $stateParams.dashboardName).then(function (series) {
 
-                                            /* update series */
+                                        /* update series */
                                         _.each(series, function (serie) {
 
-                                            _.each($scope.config.series, function (existingSerie, i) {
+                                            _.each(chart.series, function (existingSerie, i) {
 
 
                                                 if (serie.name === existingSerie.name) {
@@ -275,7 +318,7 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                                                         var isNew = true;
                                                         _.each(existingSerie.data, function (existingDataPoint) {
 
-                                                            if (newDataPoint[0] === existingDataPoint[0]) isNew = false;
+                                                            if (newDataPoint[0] === existingDataPoint.x) isNew = false;
 
                                                         })
 
@@ -287,32 +330,42 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
 
                                                         _.each(newDatapoints, function (datapoint) {
 
-                                                            $scope.config.series[i].data.push([datapoint[0], datapoint[1]]);
+                                                            chart.series[i].addPoint([datapoint[0], datapoint[1]], true, true, true);
+                                                            //chart.series[i].data.push([datapoint[0], datapoint[1]]);
                                                         })
 
                                                     }
 
-                                                    return;
+
+                                                    //return;
                                                 }
                                             })
 
 
                                         })
+
                                     });
                                 });
 
 
-                                console.log('intervalIds:' + Interval.active)
+                                //console.log('intervalIds:' + Interval.active)
+
                             }, 10000);
 
                             Interval.active.push({intervalId: intervalId, metricId: $scope.metric._id});
 
-                        }
+                            }
                     }
+
                 },
+
                 rangeSelector: {
                     enabled: false
                 },
+                navigator: {
+                    enabled: false
+                },
+
                 legend: {
                     enabled: true,
                     align: 'center',
@@ -321,19 +374,18 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                     labelFormatter: hcLabelRender,
                     itemWidth: 300
                 },
-                tooltip:{
-                    enabled:true,
+                tooltip: {
+                    enabled: true,
                     shared: false,
                     valueDecimals: 1
+
                 },
-                exporting: {
-                    filename: TestRuns.selected.testRunId + '_' + $scope.metric.alias
-                },
+
                 plotOptions: {
                     series: {
                         cursor: 'pointer',
                         events: {
-                            legendItemClick: function(e) {
+                            legendItemClick: function (e) {
                                 // Upon cmd-click of a legend item, rather than toggling visibility, we want to hide all other items.
                                 var hideAllOthers = e.browserEvent.metaKey || e.browserEvent.ctrlKey;
                                 if (hideAllOthers) {
@@ -379,7 +431,7 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                                             }
                                         }
                                     }
-                                }else{
+                                } else {
 
                                     series[seriesIndex].setVisible(false, false);
                                 }
@@ -390,112 +442,139 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                             }
                         }
                     }
-                }
-
-
-            },
-            series: [],
-
-            title: {
-                text: 'Hello'
-            },
-            xAxis: {minRange: 10000,
-                events: {
-                    setExtremes: function (e) {
-
-                        var from = (typeof e.min == 'undefined' && typeof e.max == 'undefined') ? $scope.zoomRange : Math.round(e.min);
-                        var until = (typeof e.min == 'undefined' && typeof e.max == 'undefined') ? 'now' : Math.round(e.max);
-
-                        /* If zoom lock is checked, set zoom timestamps in TestRuns service */
-                        if ($scope.zoomLock) {
-
-                            Interval.clearAll();
-                            TestRuns.zoomFrom = from;
-                            TestRuns.zoomUntil = until;
-                            $scope.$apply();
-
-                        } else {
-
-                            Interval.clearIntervalForMetric($scope.metric._id);
-
-                            updateGraph(from, until, metric.targets, function(series) {
-
-                                $scope.config.loading = false;
-                                $scope.config.series = series;
-
-
-                                /* draw xAxis plotlines for events*/
-                                //if (series[series.length - 1].type) {
-                                //
-                                //    _.each(series[series.length - 1].data, function (flag) {
-                                //
-                                //        $scope.config.xAxis.plotLines.push(
-                                //            {
-                                //                value: flag.x,
-                                //                width: 1,
-                                //                color: 'blue',
-                                //                dashStyle: 'dash'
-                                //            }
-                                //        );
-                                //    })
-                                //}
-
-                            });
-
-                        }
-                    }
                 },
-                plotLines: []
-            },
-            yAxis: {
-                min: 0 // this sets minimum values of y to 0
-            },
+                //series: $scope.series,
+                title: {
+                    text: 'Hello'
+                },
+                xAxis: {
+                    minRange: 10000,
+                    events: {
+                        setExtremes: function (e) {
 
-            loading: false,
-            useHighStocks: true
+                            var from = (typeof e.min == 'undefined' && typeof e.max == 'undefined') ? TestRuns.selected.startEpoch : Math.round(e.min);
+                            var until = (typeof e.min == 'undefined' && typeof e.max == 'undefined') ? TestRuns.selected.endEpoch : Math.round(e.max);
 
-    }
+                            /* If zoom lock is checked, set zoom timestamps in TestRuns service */
+                            if ($scope.zoomLock === true) {
 
+                                TestRuns.zoomFrom = from;
+                                TestRuns.zoomUntil = until;
+                                $scope.$apply();
 
-        $scope.initConfig = function (config, metric) {
-            //debugger;
+                            } else {
 
-            $scope.metric = metric;
-            $scope.config = angular.copy(config);
-            $scope.config.title.text = metric.alias;
+                                var chart = angular.element($scope.graphSelector).highcharts();
 
-            /* if deeplinked including zoom query params use these */
-            var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : $scope.zoomRange;
-            var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : 'now';
+                                while (chart.series.length > 0) {
+                                    chart.series[0].remove(false); //deletes all series
+                                }
 
-            updateGraph(from, until, metric.targets, function(series) {
+                                chart.showLoading('Loading data ...');
 
-                $scope.config.loading = false;
-                $scope.config.series = series;
+                                updateGraph(from, until, $scope.metric.targets, function (series) {
 
-                /* draw xAxis plotlines for events*/
-                if (series[series.length - 1].type) {
+                                    chart.hideLoading();
 
-                    _.each(series[series.length - 1].data, function (flag) {
+                                    _.each(series, function (serie) {
 
-                        $scope.config.xAxis.plotLines.push(
-                            {
-                                value: flag.x,
-                                width: 1,
-                                color: 'blue',
-                                dashStyle: 'dash'
+                                        chart.addSeries(serie, false);
+                                    });
+
+                                    chart.redraw();
+
+                                });
+
                             }
-                        );
-                    })
+                        }
+                    },
+                    plotLines: []
+                },
+                series: [],
+                yAxis: {
+                    min: 0, // this sets minimum values of y to 0
+                    plotLines: [{
+                        value: $scope.metric.requirementValue,
+                        width: 2,
+                        color: 'green',
+                        dashStyle: 'dash',
+                        label: {
+                            text: 'Requirement',
+                            align: 'left',
+                            y: -10,
+                            x: 0
+                        }
+                    }]
                 }
+        }
 
-            });
 
+
+        $scope.initConfig = function (metric, index) {
+
+
+            $scope.chartIndex = index;
+            $scope.metric = metric;
+            $scope.graphSelector = '#chart-' + index;
+            $scope.config = angular.extend(defaultChartConfig);
+            $scope.config.title.text = metric.alias;
+            if(!metric.requirementValue) $scope.config.yAxis.plotLines=[];
+            //$scope.config.chart.renderTo = 'chart-' + index;
+
+            setTimeout(function(){
+                angular.element($scope.graphSelector).highcharts('StockChart', $scope.config);
+                var chart = angular.element($scope.graphSelector).highcharts();
+
+                chart.showLoading('Loading data ...');
+
+
+                var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : $scope.zoomRange;
+                var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : 'now';
+
+                updateGraph(from, until, metric.targets, function(series) {
+
+                    while(chart.series.length >0){
+                        chart.series[0].remove(false); //deletes all series
+                    }
+
+                    chart.hideLoading();
+
+                    _.each(series, function(serie){
+
+                        chart.addSeries(serie, false);
+                    });
+
+                    if(series.length > 0) {
+                        /* draw xAxis plotlines for events*/
+                        if (series[series.length - 1].type) {
+
+                            _.each(series[series.length - 1].data, function (flag) {
+
+                                chart.options.xAxis[0].plotLines.push(
+                                    {
+                                        value: flag.x,
+                                        width: 1,
+                                        color: 'blue',
+                                        dashStyle: 'dash'
+                                    }
+                                );
+                            })
+                        }
+                    }else{
+
+                        chart.showLoading('No data to display');
+
+                    }
+
+                    chart.redraw();
+
+                });
+
+            },100)
         }
 
         function updateGraph(from, until, targets, callback){
 
-            $scope.config.loading = true;
 
             Graphite.getData(from, until, targets, 900).then(function (series) {
 
@@ -508,8 +587,8 @@ angular.module('graphs').controller('HighchartsLiveController', ['$scope', 'Inte
                     });
 
                 }else{
-                    $scope.config.series = series;
-                    $scope.config.noData = 'No data to display';
+                    callback(series);
+
                 }
             });
 
