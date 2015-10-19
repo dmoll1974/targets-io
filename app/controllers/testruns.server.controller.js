@@ -337,6 +337,7 @@ function testRunById(req, res) {
                 var testRunEpoch = testRun.toObject();
                 testRunEpoch.startEpoch = testRun.startEpoch;
                 testRunEpoch.endEpoch = testRun.endEpoch;
+                //res.setHeader('Last-Modified', (new Date()).toUTCString()); //to prevent http 304's
                 res.jsonp(testRunEpoch);
             }else{
 
