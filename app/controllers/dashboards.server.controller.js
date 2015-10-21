@@ -167,7 +167,9 @@ exports.dashboardByID = function(req, res, next, id) {
 exports.dashboardByProductName = function(req, res, next, productName) {
     Product.findOne({name: productName}).exec(function(err, product) {
         if (err) return next(err);
-        if (! product) return next(new Error('Failed to load Product ' + productName));
+        if (! product) return res.status(404).send({
+            message: 'No product with name' + productName + 'has been found'
+        });
         req.product = product ;
         next();
     });

@@ -94,7 +94,9 @@ exports.list = function(req, res) {
 exports.productByName = function(req, res, next, name) {
 	Product.findOne({name: name}).populate('user', 'displayName').populate('dashboards').exec(function(err, product) {
 		if (err) return next(err);
-		if (! product) return next(new Error('Failed to load Product ' + name));
+		if (! product) return res.status(404).send({
+			message: 'No product with name' + name + 'has been found'
+		});
 		req.product = product ;
 		next();
 	});

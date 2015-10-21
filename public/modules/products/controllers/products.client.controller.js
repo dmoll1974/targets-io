@@ -50,11 +50,15 @@ angular.module('products').controller('ProductsController', ['$scope', '$rootSco
                 /* Refresh sidebar */
                 Products.fetch().success(function(product){
                     $scope.products = Products.items;
-                    SideMenu.addProducts(products);
+                    SideMenu.addProducts($scope.products);
 
                 });
 
-                $state.go('viewProduct',{"productName":$scope.product.name});
+                if ($rootScope.previousStateParams)
+                    $state.go($rootScope.previousState, $rootScope.previousStateParams);
+                else
+                    $state.go($rootScope.previousState);
+
 
             }, function(errorResponse) {
                 $scope.error = errorResponse.data.message;

@@ -3,50 +3,34 @@
         <h1>New Product</h1>
     </div>
     <div class="col-md-12">
-        <form name="productForm" submit="productForm.$valid && create()" novalidate>
+        <form name="productForm">
             <div layout="column">
                 <div layout="column">
                     <input type="hidden" data-ng-model="product._id" id="productId" value="{{product._id}}" class="form-control">
                     <md-input-container md-is-error="productForm.productName.$invalid && (productForm.$submitted || productForm.productName.$dirty)" flex>
                         <label>Product name</label>
-                        <input name="productName" ng-model="product.name" required>
+                        <input name="productName" ng-model="product.name" record-availability-validator="/products" required>
                         <div ng-messages="productForm.productName.$error" ng-if="productForm.$submitted || productForm.productName.$touched">
                             <div ng-message="required">Product name is required.</div>
+                            <div ng-message="recordLoading">Checking database...</div>
+                            <div ng-message="recordAvailable">The product name already exists</div>
                         </div>
                     </md-input-container>
                     <md-input-container md-is-error="productForm.productDescription.$invalid && (productForm.$submitted || productForm.productDescription.$dirty)" flex>
                         <label>Product description</label>
-                        <input name="productDescription" ng-model="product.description">
+                        <input name="productDescription" ng-model="product.description" required>
                         <div ng-messages="productForm.productDescription.$error" ng-if="productForm.$submitted || productForm.productDescription.$touched">
                             <div ng-message="required">Product description is required.</div>
                         </div>
                     </md-input-container>
                 </div>
                 <div layout="row">
-                    <md-button md-no-ink class="md-primary" data-ng-click="create()">Submit</md-button>
+                    <md-button md-no-ink class="md-primary" ng-click="productForm.$valid && create()" >Submit</md-button>
                     <md-button data-ng-click="cancel()" >Cancel</md-button>
                 </div>
             </div>
-            <fieldset>
-                <!--<div class="form-group">-->
-                    <!--<label class="control-label" for="name">Name</label>-->
-                    <!--<div class="controls">-->
-                        <!--<input type="text" data-ng-model="product.name" id="name" class="form-control" placeholder="Name, required" required>-->
-                    <!--</div>-->
-                    <!--<label class="control-label" for="description">Description</label>-->
-                    <!--<div class="controls">-->
-                        <!--<input type="text" data-ng-model="product.description" id="description" class="form-control" placeholder="Description, required" required>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="form-group">-->
-                    <!--<input type="submit" class="btn btn-primary" ng-disabled="productForm.$invalid">-->
-                    <!--<button class="btn btn-primary" data-ng-click="cancel()">Cancel</button>-->
-                <!--</div>-->
-                <!--<div data-ng-show="error" class="alert alert-danger alert-error">-->
-                    <!--<a href="#" class="close" data-dismiss="alert"></a>-->
-                    <!--<p><strong data-ng-bind="error"></strong></p>-->
-                <!--</div>-->
-            <!--</fieldset>-->
+
         </form>
     </div>
+
 </section>
