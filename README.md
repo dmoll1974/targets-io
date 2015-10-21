@@ -50,7 +50,7 @@ This will trigger the [Gatling demo script](https://github.com/dmoll1974/gatling
 **Libraries / Dependencies**
 ------------------------
 + [Meanjs](https://github.com/meanjs/mean)
-+ [highcharts-ng] (https://github.com/pablojim/highcharts-ng) PLEASE NOTE: Highcharts is not free for commercial use.  See [this page](http://shop.highsoft.com/faq/licensing) for licensing details. 
++ [Highcharts] (http://www.highcharts.com/) PLEASE NOTE: Highcharts is not free for commercial use.  See [this page](http://shop.highsoft.com/faq/licensing) for licensing details. 
 + [Angular-Material] (https://github.com/angular/material)
 + [Twitter Bootstrap] (http://twitter.github.com/bootstrap/)
 + [ngTagsInput] (https://github.com/mbenford/ngTagsInput)
