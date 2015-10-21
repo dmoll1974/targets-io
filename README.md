@@ -45,7 +45,17 @@ Click "Add maven", make sure "install automatically" is checked an provide a nam
 
 To start Gatling or Jmeter tests click on of the corresponding jobs and click "Build now"
 
-This will trigger the [Gatling demo script](https://github.com/dmoll1974/gatling-demo-script) or the [JMeter demo script](https://github.com/dmoll1974/jmeter-demo-script)
+This will trigger the [Gatling demo script](https://github.com/dmoll1974/gatling-demo-script) or the [JMeter demo script](https://github.com/dmoll1974/jmeter-demo-script). 
+
+To see a demo of the automated assertion of benchmark results, some additional steps are required:
+
+- Run the DEMO-GATLING-ASSERTIONS multi-job
+- After the first run has finished, go to `http://localhost:3000/#!/browse/GATLING/LOAD` and set the test run as baseline (using the "flag" icon)
+- Rerun the the DEMO-GATLING-ASSERTIONS multi-job
+- When the Jenkins build passes it means all your configured requirements / benchmark thresholds (see explanation below) have passed for this run. If the job fails, check the DEMO-GATLING-ASSERTIONS-SCRIPT job logs to find out why :-)
+
+
+
 
 **Libraries / Dependencies**
 ------------------------
