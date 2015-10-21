@@ -3,17 +3,23 @@
         <h1>New Product</h1>
     </div>
     <div class="col-md-12">
-        <form name="productForm" novalidate>
+        <form name="productForm" submit="productForm.$valid && create()" novalidate>
             <div layout="column">
                 <div layout="column">
                     <input type="hidden" data-ng-model="product._id" id="productId" value="{{product._id}}" class="form-control">
-                    <md-input-container flex>
+                    <md-input-container md-is-error="productForm.productName.$invalid && (productForm.$submitted || productForm.productName.$dirty)" flex>
                         <label>Product name</label>
-                        <input ng-model="product.name">
+                        <input name="productName" ng-model="product.name" required>
+                        <div ng-messages="productForm.productName.$error" ng-if="productForm.$submitted || productForm.productName.$touched">
+                            <div ng-message="required">Product name is required.</div>
+                        </div>
                     </md-input-container>
-                    <md-input-container flex>
+                    <md-input-container md-is-error="productForm.productDescription.$invalid && (productForm.$submitted || productForm.productDescription.$dirty)" flex>
                         <label>Product description</label>
-                        <input ng-model="product.description">
+                        <input name="productDescription" ng-model="product.description">
+                        <div ng-messages="productForm.productDescription.$error" ng-if="productForm.$submitted || productForm.productDescription.$touched">
+                            <div ng-message="required">Product description is required.</div>
+                        </div>
                     </md-input-container>
                 </div>
                 <div layout="row">
