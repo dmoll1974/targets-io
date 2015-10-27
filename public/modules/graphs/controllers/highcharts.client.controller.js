@@ -61,17 +61,20 @@ angular.module('graphs').controller('HighchartsController', ['$scope','Graphite'
 
             Metrics.update($scope.metric).success(function(metric){
 
-                if(Dashboards.updateTags($scope.metric.tags)){
+                Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, metric.tags, function(updated){
 
-                    Dashboards.update().success(function(dashboard){
+                    if(updated) {
 
-                        $scope.dashboard = Dashboards.selected;
-                        /* Get tags used in metrics */
-                        $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+                        Dashboards.update().success(function (dashboard) {
 
-                    });
+                            $scope.dashboard = Dashboards.selected;
+                            /* Get tags used in metrics */
+                            $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
-                }
+                        });
+                    }
+                });
+
 
                 $state.go('viewGraphs',{"productName":$stateParams.productName, "dashboardName":$stateParams.dashboardName, "testRunId" : $stateParams.testRunId, tag: metric.tags[metric.tags.length -1].text});
 
