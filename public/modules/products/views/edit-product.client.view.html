@@ -6,7 +6,6 @@
         <form name="productForm">
             <div layout="column">
                 <div layout="column">
-                    <input type="hidden" data-ng-model="product._id" id="productId" value="{{product._id}}" class="form-control">
                     <md-input-container md-is-error="productForm.productName.$invalid && (productForm.$submitted || productForm.productName.$dirty)" flex>
                         <label>Product name</label>
                         <input name="productName" ng-model="product.name" record-availability-validator="/products" required>
