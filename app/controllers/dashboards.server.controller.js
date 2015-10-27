@@ -146,7 +146,9 @@ exports.list = function(req, res) {
 exports.read = function(req, res) {
     Dashboard.findOne({productId: req.product._id, name: req.params.dashboardName}).populate({path: 'metrics', options: { sort: { tag: 1, alias: 1 } } }).exec(function(err, dashboard){
         if (err) return next(err);
-        if (! dashboard) return next(new Error('Failed to load Dashboard ' + req.params.dashboardName));
+        if (! dashboard) return res.status(404).send({
+            message: 'No dashboard with name' + req.params.dashboardName + 'has been found'
+        });
         res.jsonp(dashboard);
     })
 
