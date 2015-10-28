@@ -9,8 +9,8 @@ module.exports = function(app) {
 		.get(events.list)
 		.post(events.create)
 
-//    app.route('/events-product/:productName')
-//        .get(events.eventsForProduct)
+	app.route('/check-events/:productName/:dashboardName/:testRunId/:eventDescription')
+		.get(events.checkEvents)
 
     app.route('/events-dashboard/:productName/:dashboardName')
         .get(events.eventsForDashboard)

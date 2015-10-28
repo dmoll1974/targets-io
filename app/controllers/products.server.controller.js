@@ -92,7 +92,7 @@ exports.list = function(req, res) {
  * Product middleware
  */
 exports.productByName = function(req, res, next, name) {
-	Product.findOne({name: name}).populate('user', 'displayName').populate('dashboards').exec(function(err, product) {
+	Product.findOne({name: name.toUpperCase()}).populate('user', 'displayName').populate('dashboards').exec(function(err, product) {
 		if (err) return next(err);
 		if (! product) return res.status(404).send({
 			message: 'No product with name' + name + 'has been found'

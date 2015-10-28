@@ -4,6 +4,9 @@
 angular.module('dashboards').controller('DashboardsController', ['$scope', '$rootScope', '$modal', '$log', '$stateParams', '$state', '$location', 'ConfirmModal', 'Dashboards', 'Products', 'Metrics', 'TestRuns', 'SideMenu',
 	function($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu) {
 
+
+
+
         var originatorEv;
         $scope.openMenu = function($mdOpenMenu, ev) {
             originatorEv = ev;

@@ -5,6 +5,7 @@ angular.module('events').controller('EventsController', ['$scope', '$rootScope',
 	function($scope, $rootScope, $stateParams, $state, $location, $modal, Authentication, Events, Dashboards) {
 
 
+
         $scope.isOpen = false;
 
         $scope.openCalendar = function(e) {
@@ -33,7 +34,7 @@ angular.module('events').controller('EventsController', ['$scope', '$rootScope',
             //};
         };
 
-        // Open create event form
+        // Open update event form
         $scope.addEventForDashboard = function () {
 
 
@@ -61,6 +62,7 @@ angular.module('events').controller('EventsController', ['$scope', '$rootScope',
 
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
+                $scope.eventForm['eventDescription'].$setValidity('server', false);
             });
 
         };
@@ -84,6 +86,8 @@ angular.module('events').controller('EventsController', ['$scope', '$rootScope',
 
             }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
+                $scope.eventForm['eventDescription'].$setValidity('server', false);
+
             });
 
         };
