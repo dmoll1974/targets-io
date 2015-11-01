@@ -13,8 +13,6 @@ db:
   image: mongo:2.6.11
   ports:
    - "27017:27017"
-  volumes:
-   - /var/lib/targets-io/mongodb:/data/db
   mem_limit: 1000000000 
 graphite:
   image: dmoll1974/targets-io-graphite
@@ -22,9 +20,6 @@ graphite:
    - "8090:80"
    - "2003:2003"
    - "8125:8125"
-  volumes:
-   - /var/lib/targets-io/graphite:/opt/graphite
-   - /var/log:/var/log
 memcached:
   image: sameersbn/memcached:latest
   ports:
