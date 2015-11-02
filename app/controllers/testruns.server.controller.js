@@ -217,7 +217,7 @@ function testRunsForDashboard (req, res) {
                             /* if benchmarking is not enabled, no need to persist the test runs! */
                             if (req.params.useInBenchmark === 'false') {
 
-                                res.jsonp(eventsTestruns);
+                                res.jsonp(eventsTestruns.reverse());
 
                             } else {
                                 /* persist test runs that have not yet been persisted */
