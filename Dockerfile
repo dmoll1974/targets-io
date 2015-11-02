@@ -2,14 +2,14 @@ FROM node:4.2
 
 MAINTAINER Daniel Moll
 
-WORKDIR /home/mean
+WORKDIR /home/targets-io
 
 #USER root
 
 #RUN apt-get update && apt-get install -y --no-install-recommends python2.7
 
 
-# Install Mean.JS Prerequisites
+# Install targets-io Prerequisites
 RUN npm install -g grunt-cli
 RUN npm install -g bower
 RUN npm install -g forever
@@ -17,24 +17,24 @@ RUN apt-get install g++
 
 ENV PYTHON /usr/bin/python2.7
 
-# Install Mean.JS packages
-ADD package.json /home/mean/package.json
+# Install targets-io packages
+ADD package.json /home/targets-io/package.json
 RUN npm install --production
 
 
 # Manually trigger bower. Why doesnt this work via npm install?
-ADD .bowerrc /home/mean/.bowerrc
-ADD bower.json /home/mean/bower.json
+ADD .bowerrc /home/targets-io/.bowerrc
+ADD bower.json /home/targets-io/bower.json
 RUN bower install --config.interactive=false --allow-root
 
 #USER node
 
 # Make everything available for start
-ADD . /home/mean
+ADD . /home/targets-io
 
 #USER root
 
-#RUN chown -R node:node /home/mean
+#RUN chown -R node:node /home/targets-io
 
 
 # currently only works for development
