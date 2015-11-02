@@ -8,6 +8,13 @@ targetsio:
    - graphite
    - memcached
    - db
+  environment:
+     MONGO_SERVICE_HOST: "db"
+     MONGO_SERVICE_PORT: "27017"
+     MEMCACHED_SERVICE_HOST: "memcached"
+     MEMCACHED_SERVICE_PORT: "11211"
+     GRAPHITE_SERVICE_HOST: "graphite"
+     GRAPHITE_SERVICE_PORT: "8090"
   mem_limit: 1000000000 
 db:
   image: mongo:2.6.11
