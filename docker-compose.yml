@@ -23,8 +23,8 @@ graphite:
    - "2003:2003"
    - "8125:8125"
   volumes:
-   - /var/log:/var/log
-   - /var/lib/targets-io/graphite:/opt/graphite
+   - /var/lib/targets-io/graphite/log:/var/log
+   - /var/lib/targets-io/graphite/storage:/opt/graphite/storage
 memcached:
   image: sameersbn/memcached:latest
   ports:
