@@ -1,10 +1,10 @@
-FROM node4-base-image
+FROM node:4.2
 
 MAINTAINER Matthias Luebken, matthias@catalyst-zero.com
 
 WORKDIR /home/mean
 
-USER root
+#USER root
 
 #RUN apt-get update && apt-get install -y --no-install-recommends python2.7
 
@@ -27,12 +27,14 @@ ADD .bowerrc /home/mean/.bowerrc
 ADD bower.json /home/mean/bower.json
 RUN bower install --config.interactive=false --allow-root
 
-
+#USER node
 
 # Make everything available for start
 ADD . /home/mean
 
-RUN chown -R node:node /home/mean
+#USER root
+
+#RUN chown -R node:node /home/mean
 
 
 # currently only works for development
@@ -47,11 +49,11 @@ EXPOSE 3000 35729
 
 COPY docker-entrypoint.sh /entrypoint.sh
 
-RUN chown -R node:node /entrypoint.sh
+#RUN chown -R node:node /entrypoint.sh
 
 RUN chmod +x  /entrypoint.sh
 
-USER node
+#USER node
 
 ENTRYPOINT ["/entrypoint.sh"]
 
