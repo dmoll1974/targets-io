@@ -144,9 +144,11 @@ exports.list = function(req, res) {
  * Show the current Dashboard
  */
 exports.read = function(req, res) {
-    Dashboard.findOne({productId: req.product._id, name: req.params.dashboardName}).populate({path: 'metrics', options: { sort: { tag: 1, alias: 1 } } }).exec(function(err, dashboard){
+    Dashboard.findOne({productId: req.product._id, name: req.params.dashboardName.toUpperCase()}).populate({path: 'metrics', options: { sort: { tag: 1, alias: 1 } } }).exec(function(err, dashboard){
         if (err) return next(err);
-        if (! dashboard) return next(new Error('Failed to load Dashboard ' + req.params.dashboardName));
+        if (! dashboard) return res.status(404).send({
+            message: 'No dashboard with name' + req.params.dashboardName + 'has been found'
+        });
         res.jsonp(dashboard);
     })
 
@@ -165,9 +167,11 @@ exports.dashboardByID = function(req, res, next, id) {
 };
 
 exports.dashboardByProductName = function(req, res, next, productName) {
-    Product.findOne({name: productName}).exec(function(err, product) {
+    Product.findOne({name: productName.toUpperCase()}).exec(function(err, product) {
         if (err) return next(err);
-        if (! product) return next(new Error('Failed to load Product ' + productName));
+        if (! product) return res.status(404).send({
+            message: 'No product with name' + productName + 'has been found'
+        });
         req.product = product ;
         next();
     });

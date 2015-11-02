@@ -38,6 +38,7 @@ module.exports = {
 				'public/lib/angular-resource/angular-resource.min.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
 				'public/lib/angular-ui-utils/ui-utils.min.js',
+				'public/lib/angular-messages/angular-messages.min.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
 				'public/lib/moment/moment.js',
 				'public/lib/angular-spinners/dist/angular-spinners.js',

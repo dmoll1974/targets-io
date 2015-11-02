@@ -139,6 +139,32 @@ exports.eventsForDashboard = function(req, res) {
     });
 };
 
+
+/*
+ * Check if event already exists for product-dashboard-testrun combination
+ */
+
+exports.checkEvents = function(req, res) {
+	Event.findOne( { $and: [ { productName: req.params.productName }, { dashboardName: req.params.dashboardName }, { testRunId: req.params.testRunId }, { eventDescription: req.params.eventDescription } ] } ).exec(function(err, event) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			if (! event) {
+				return res.status(404).send({
+					message: 'No event has been found'
+				});
+			}else{
+
+				res.jsonp(event);
+			}
+
+
+		}
+	});
+};
+
 /*
  * List events for testrun
  */

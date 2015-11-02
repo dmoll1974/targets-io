@@ -27,6 +27,10 @@ var db = mongoose.connect(config.db, function(err) {
 // Init the express application
 var app = require('./config/express')(db);
 
+
+app.disable('etag');
+
+
 // Bootstrap passport config
 require('./config/passport')();
 

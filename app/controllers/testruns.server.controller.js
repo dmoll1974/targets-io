@@ -205,14 +205,14 @@ function testRunsForDashboard (req, res) {
 
                 res.jsonp(testRuns);
             }else {
-                Event.find({$and: [{productName: req.params.productName}, {dashboardName: req.params.dashboardName}]}).sort('-eventTimestamp').exec(function (err, events) {
+                Event.find({$and: [{productName: req.params.productName}, {dashboardName: req.params.dashboardName}]}).sort({eventTimestamp: 1}).exec(function (err, events) {
                     if (err) {
                         return res.status(400).send({
                             message: errorHandler.getErrorMessage(err)
                         });
                     } else {
 
-                        createTestrunFromEvents(req.params.productName, req.params.dashboardName, events, function (eventsTestruns) {
+                        createTestrunFromEvents(req.params.productName, req.params.dashboardName, events, req.params.useInBenchmark, function (eventsTestruns) {
 
                             /* if benchmarking is not enabled, no need to persist the test runs! */
                             if (req.params.useInBenchmark === 'false') {
@@ -337,6 +337,7 @@ function testRunById(req, res) {
                 var testRunEpoch = testRun.toObject();
                 testRunEpoch.startEpoch = testRun.startEpoch;
                 testRunEpoch.endEpoch = testRun.endEpoch;
+                //res.setHeader('Last-Modified', (new Date()).toUTCString()); //to prevent http 304's
                 res.jsonp(testRunEpoch);
             }else{
 
@@ -347,7 +348,7 @@ function testRunById(req, res) {
                         });
                     } else {
 
-                        createTestrunFromEvents(req.params.productName, req.params.dashboardName,events, function(eventsTestruns) {
+                        createTestrunFromEvents(req.params.productName, req.params.dashboardName, events, req.params.useInBenchmark, function(eventsTestruns) {
 
                             res.jsonp(eventsTestruns[0]);
 
@@ -708,14 +709,14 @@ function getPreviousBuild(productName, dashboardName, testrunId, callback){
 
     var previousBuild;
 
-    Event.find({ $and: [ { productName: productName }, { dashboardName: dashboardName } ] }).sort('-eventTimestamp').exec(function(err, events) {
+    Event.find({ $and: [ { productName: productName }, { dashboardName: dashboardName } ] }).sort({eventTimestamp: -1}).exec(function(err, events) {
             if (err) {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
 
-            createTestrunFromEvents(productName, dashboardName, events, function(testruns){
+            createTestrunFromEvents(productName, dashboardName, events, false, function(testruns){
 
                 _.each(testruns, function (testrun, i) {
 
@@ -787,9 +788,11 @@ function evaluateRequirement(value, requirementOperator, requirementValue){
     return requirementResult;
 }
 
-function createTestrunFromEvents(productName, dashboardName, events, callback) {
+function createTestrunFromEvents(productName, dashboardName, events, useInBenchmark, callback) {
 
     var testRuns = [];
+    var baseline;
+    var dashboardBaseline;
 
     Product.findOne({name: productName}).exec(function(err, product){
         if(err) console.log(err);
@@ -800,6 +803,7 @@ function createTestrunFromEvents(productName, dashboardName, events, callback) {
                 console.log(err);
             } else {
 
+                dashboardBaseline = dashboard.baseline ? dashboard.baseline : baseline;
 
                 for (var i = 0; i < events.length; i++) {
 
@@ -809,12 +813,23 @@ function createTestrunFromEvents(productName, dashboardName, events, callback) {
 
                             if (events[j].eventDescription === 'end' && events[j].testRunId == events[i].testRunId) {
 
+                                /* If no baseline has been set for this dashboard, set the first test run as baseline*/
+
+                                if (!dashboardBaseline && !baseline){
+
+                                    baseline = events[i].testRunId;
+                                    dashboardBaseline = events[i].testRunId;
+                                } else{
+
+                                    baseline = dashboardBaseline;
+                                }
+
                                 if (events[i].buildResultKey) {
 
-                                    testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, buildResultKey: events[i].buildResultKey, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: dashboard.baseline || events[i].baseline});
+                                    testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, buildResultKey: events[i].buildResultKey, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: baseline});
                                 } else {
 
-                                    testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: dashboard.baseline || events[i].baseline});
+                                    testRuns.push({start: events[i].eventTimestamp, startEpoch: events[i].eventTimestamp.getTime(), end: events[j].eventTimestamp, endEpoch: events[j].eventTimestamp.getTime(), productName: events[i].productName, dashboardName: events[i].dashboardName, testRunId: events[i].testRunId, eventIds: [events[i].id, events[j].id], meetsRequirement: null, benchmarkResultFixedOK: null, benchmarkResultPreviousOK: null, baseline: baseline});
                                 }
 
                                 break;
@@ -824,7 +839,26 @@ function createTestrunFromEvents(productName, dashboardName, events, callback) {
                     }
                 }
 
-                callback(testRuns);
+
+
+                /* If no baseline has been set for this dashboard, set the first test run as baseline*/
+                if (!dashboard.baseline && testRuns){
+
+                    dashboard.baseline = dashboardBaseline;
+                    dashboard.save(function(err) {
+                        if (err) {
+                            console.log(err);
+                        }else{
+
+                            callback(testRuns);
+                        }
+                    });
+                }else{
+
+                    callback(testRuns);
+                }
+
+
             }
         });
     });
