@@ -19,9 +19,9 @@ module.exports = {
 	//	css: 'public/dist/application.min.css',
 	//	js: 'public/dist/application.min.js'
 	//},
-    graphiteHost: 'http://172.21.42.178',
-   db: 'mongodb://db/targets-io',
-    memcachedHost: [ '172.21.42.178:11211'],    
+    graphiteHost: process.env.GRAPHITE_HOST,
+    db: process.env.MONGO_URL + '/targets-io',
+    memcachedHost: [process.env.MEMCACHED_HOST],
     assets: {
         lib: {
             css: [
