@@ -5,6 +5,7 @@
             <div layout="column">
                 <div layout="column">
                     <h1 class="md-display-1">{{productName}}-{{dashboard.name}}</h1>
+
                     <h3 class="md-headline">{{dashboard.description}}</h3>
                 </div>
                 <div running-test></div>
@@ -58,24 +59,24 @@
                             </md-tooltip>
                         </md-button>
                     </div>
-                    <div data-ng-controller="TestrunsController">
-                        <md-menu ng-if="showBenchmarks">
-                            <md-button aria-label="Set baseline" class="md-icon-button"
-                                       ng-click="openMenu($mdOpenMenu, $event)">
-                                <md-icon md-menu-origin md-svg-src="images/assets/ic_flag_black_36px.svg"></md-icon>
-                                <md-tooltip>
-                                    Set baseline
-                                </md-tooltip>
-                            </md-button>
-                            <md-menu-content width="6">
-                                <md-menu-item data-ng-repeat="testRun in testRuns">
-                                    <md-button data-ng-click="setTestRunAsBaseline(testRun.testRunId)">
-                                        {{testRun.testRunId}}
-                                    </md-button>
-                                </md-menu-item>
-                            </md-menu-content>
-                        </md-menu>
-                    </div>
+                    <!--<div data-ng-controller="TestrunsController">-->
+                        <!--<md-menu ng-if="showBenchmarks">-->
+                            <!--<md-button aria-label="Set baseline" class="md-icon-button"-->
+                                       <!--ng-click="openMenu($mdOpenMenu, $event)">-->
+                                <!--<md-icon md-menu-origin md-svg-src="images/assets/ic_flag_black_36px.svg"></md-icon>-->
+                                <!--<md-tooltip>-->
+                                    <!--Set baseline-->
+                                <!--</md-tooltip>-->
+                            <!--</md-button>-->
+                            <!--<md-menu-content width="6">-->
+                                <!--<md-menu-item data-ng-repeat="testRun in testRuns">-->
+                                    <!--<md-button data-ng-click="setTestRunAsBaseline(testRun.testRunId)">-->
+                                        <!--{{testRun.testRunId}}-->
+                                    <!--</md-button>-->
+                                <!--</md-menu-item>-->
+                            <!--</md-menu-content>-->
+                        <!--</md-menu>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>

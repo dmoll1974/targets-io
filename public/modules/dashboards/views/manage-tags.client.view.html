@@ -13,7 +13,8 @@
             <tr ng-repeat="tag in tags" \>
                 <td><input type="radio" name="tagDefault" ng-model="$parent.defaultTag" ng-value="tag.text"/></td>
                 <td>{{tag.text}}</td>
-                <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteTagModal('', $index)"></i> </th>
+                <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteTagModal('', $index)"></i>
+                </th>
             </tr>
             </tbody>
         </table>

@@ -2,34 +2,44 @@
     <div class="page-header">
         <h1>Edit Dashboard</h1>
     </div>
-        <form name="dashboardForm">
+    <form name="dashboardForm">
+        <div layout="column">
             <div layout="column">
-                <div layout="column">
-                    <md-input-container md-is-error="dashboardForm.dashboardName.$invalid && (dashboardForm.$submitted || dashboardForm.dashboardName.$dirty)" flex>
-                        <label>Dashboard name</label>
-                        <input name="dashboardName" ng-model="dashboard.name" record-availability-validator="/dashboards/{{productName}}" required>
-                        <div ng-messages="dashboardForm.dashboardName.$error" ng-if="dashboardForm.$submitted || dashboardForm.dashboardName.$touched">
-                            <div ng-message="required">Dashboard name is required.</div>
-                            <div ng-message="recordLoading">Checking database...</div>
-                            <div ng-message="recordAvailable">The dashboard name already exists for this product</div>
-                        </div>
-                    </md-input-container>
-                    <md-input-container md-is-error="dashboardForm.dashboardDescription.$invalid && (dashboardForm.$submitted || dashboardForm.dashboardDescription.$dirty)" flex>
-                        <label>Dashboard description</label>
-                        <input name="dashboardDescription" ng-model="dashboard.description" required>
-                        <div ng-messages="dashboardForm.dashboardDescription.$error" ng-if="dashboardForm.$submitted || dashboardForm.dashboardDescription.$touched">
-                            <div ng-message="required">Dashboard description is required.</div>
-                        </div>
-                    </md-input-container>
-                    <md-checkbox ng-model="dashboard.useInBenchmark" aria-label="Benchmark test runs for this dashboard">
-                        Benchmark test runs for this dashboard
-                    </md-checkbox>
-                </div>
-                <div layout="row">
-                    <md-button md-no-ink class="md-primary" data-ng-click="dashboardForm.$valid &&  update()">Submit</md-button>
-                    <md-button data-ng-click="cancel()" >Cancel</md-button>
-                    <md-button class="md-warn" data-ng-click="openDeleteDashboardModal('')">Delete dashboard</md-button>
-                </div>
+                <md-input-container
+                        md-is-error="dashboardForm.dashboardName.$invalid && (dashboardForm.$submitted || dashboardForm.dashboardName.$dirty)"
+                        flex>
+                    <label>Dashboard name</label>
+                    <input name="dashboardName" ng-model="dashboard.name"
+                           record-availability-validator="/dashboards/{{productName}}" required>
+
+                    <div ng-messages="dashboardForm.dashboardName.$error"
+                         ng-if="dashboardForm.$submitted || dashboardForm.dashboardName.$touched">
+                        <div ng-message="required">Dashboard name is required.</div>
+                        <div ng-message="recordLoading">Checking database...</div>
+                        <div ng-message="recordAvailable">The dashboard name already exists for this product</div>
+                    </div>
+                </md-input-container>
+                <md-input-container
+                        md-is-error="dashboardForm.dashboardDescription.$invalid && (dashboardForm.$submitted || dashboardForm.dashboardDescription.$dirty)"
+                        flex>
+                    <label>Dashboard description</label>
+                    <input name="dashboardDescription" ng-model="dashboard.description" required>
+
+                    <div ng-messages="dashboardForm.dashboardDescription.$error"
+                         ng-if="dashboardForm.$submitted || dashboardForm.dashboardDescription.$touched">
+                        <div ng-message="required">Dashboard description is required.</div>
+                    </div>
+                </md-input-container>
+                <md-checkbox ng-model="dashboard.useInBenchmark" aria-label="Benchmark test runs for this dashboard">
+                    Benchmark test runs for this dashboard
+                </md-checkbox>
             </div>
-        </form>
+            <div layout="row">
+                <md-button md-no-ink class="md-primary" data-ng-click="dashboardForm.$valid &&  update()">Submit
+                </md-button>
+                <md-button data-ng-click="cancel()">Cancel</md-button>
+                <md-button class="md-warn" data-ng-click="openDeleteDashboardModal('')">Delete dashboard</md-button>
+            </div>
+        </div>
+    </form>
 </section>

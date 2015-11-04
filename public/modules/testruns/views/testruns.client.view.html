@@ -11,23 +11,85 @@
                 <th data-ng-if="showBenchmarks">Requirements</th>
                 <th data-ng-if="showBenchmarks">Previous Build</th>
                 <th data-ng-if="showBenchmarks">Fixed Baseline</th>
-                <th data-ng-if="showBenchmarks"></th>
-                <th data-ng-if="showBenchmarks"></th>
+                <th data-ng-if="showBenchmarks">
+                    <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
+                </th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="testRun in testRuns | orderBy:'end':true" ng-class="(testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true) ? 'warning': ''">
-                    <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.testRunId}}</td>
-                    <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
-                    <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
-                    <td data-ng-if="showBenchmarks" header-class="text-center" class="text-center pointer" data-ng-click="testRunRequirements($index)"><span ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle text-alert center' ))"></span></td>
-                    <td data-ng-if="showBenchmarks" header-class="text-center" title="{{testRun.previousBuild}}" class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark($index)"><span ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle  text-alert center' ))"></span></td>
-                    <td data-ng-if="showBenchmarks" header-class="text-center" title="{{testRun.baseline}}" class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark($index)"><span ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle  text-alert center' ))"></span></td>
-                    <td data-ng-if="showBenchmarks" class="pointer"><i ng-class="testRun.busy ? 'fa-lg fa fa-refresh fa-spin' : 'fa-lg fa fa-refresh'" data-ng-click="refreshTestrun($index)"></i> </td>
-                    <td class="pointer"><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteTestRunModal('', $index)"></i> </td>
-                    <td data-ng-if="showBenchmarks"><i ng-if="testRun.testRunId === dashboard.baseline" class="glyphicon glyphicon-flag warning"></i></td>
-                </tr>
+            <tr ng-repeat="testRun in testRuns | orderBy:'end':true"
+                ng-class="(testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true) ? 'warning': ''">
+                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.testRunId}}</td>
+                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.start | date:'EEEE, dd-M-yyyy
+                    H:mm:ss'}}
+                </td>
+                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.end | date:'EEEE, dd-M-yyyy
+                    H:mm:ss'}}
+                </td>
+                <td data-ng-if="showBenchmarks" header-class="text-center" class="text-center pointer"
+                    data-ng-click="testRunRequirements($index)"><span
+                        ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle text-alert center' ))"></span>
+                </td>
+                <td data-ng-if="showBenchmarks" header-class="text-center" title="{{testRun.previousBuild}}"
+                    class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark($index)"><span
+                        ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle  text-alert center' ))"></span>
+                </td>
+                <td data-ng-if="showBenchmarks" header-class="text-center" title="{{testRun.baseline}}"
+                    class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark($index)"><span
+                        ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-question-circle  text-alert center' ))"></span>
+                </td>
+                <td data-ng-if="showBenchmarks">
+                    <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="testRun.testRunId === dashboard.baseline"></md-icon>
+                </td>
+                <td>
+                    <md-menu >
+                        <md-button style="line-height: 80%; height: 80%;" aria-label="Open test run menu" class="md-icon-button"
+                                   ng-click="openMenu($mdOpenMenu, $event)">
+                            <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_36px.svg"></md-icon>
+                            <md-tooltip>
+                                Test run menu
+                            </md-tooltip>
+                        </md-button>
+                        <md-menu-content width="4">
+                            <md-menu-item data-ng-if="showBenchmarks">
+                                <md-button data-ng-click="refreshTestrun($index)">
+                                    <md-icon md-svg-src="images/assets/ic_refresh_black_36px.svg"
+                                             md-menu-align-target></md-icon>
+                                    Refresh test run
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item data-ng-if="showBenchmarks && testRun.testRunId !== dashboard.baseline">
+                                <md-button data-ng-click="setTestRunAsBaseline(testRun.testRunId)">
+                                    <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
+                                    Set as baseline
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item data-ng-if="testRun.buildResultKey">
+                                <md-button data-ng-click="go(testRun.buildResultKey)">
+                                    <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
+                                    View in CI server
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-divider></md-menu-divider>
+                            <md-menu-item>
+                                <md-button class="danger" data-ng-click="openDeleteTestRunModal('', $index)">
+                                    <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"></md-icon>
+                                    Delete test run
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </td>
+                <!--<td data-ng-if="showBenchmarks" class="pointer"><i-->
+                        <!--ng-class="testRun.busy ? 'fa-lg fa fa-refresh fa-spin' : 'fa-lg fa fa-refresh'"-->
+                        <!--data-ng-click="refreshTestrun($index)"></i></td>-->
+                <!--<td class="pointer"><i class="glyphicon glyphicon-trash"-->
+                                       <!--data-ng-click="openDeleteTestRunModal('', $index)"></i></td>-->
+
+                <!--<td data-ng-if="testRun.buildResultKey"><a ng-if="testRun.buildResultKey" title="{{testRun.buildResultKey}}"-->
+                                                   <!--class="pointer glyphicon glyphicon-link" data-ng-href="{{testRun.buildResultKey}}"></a></td>-->
+            </tr>
             </tbody>
         </table>
         <!--<img id="TestRunSpinner" class="center" data-ng-show="loading" src="images/assets/spinner.gif"/>-->

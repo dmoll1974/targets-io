@@ -1,24 +1,26 @@
-<div class="page-header" xmlns:padding-bottom="http://www.w3.org/1999/xhtml">
-    <div layout="column" >
-        <span class="md-subhead" style="padding-bottom: 20px;"><a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}">{{productName}}-{{dashboardName}}</a>  /  {{testRun.testRunId}}</span>
+<div xmlns:padding-bottom="http://www.w3.org/1999/xhtml" class="page-header">
+    <div layout="column">
+        <span class="md-subhead" style="padding-bottom: 20px;"><a
+                data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}">{{productName}}-{{dashboardName}}</a>  /  {{testRun.testRunId}}</span>
         <span class="md-display-1">Requirements</span>
     </div>
 </div>
 <ul class="nav nav-tabs nav-justified">
-    <li ng-class="{active: isSet(0)}" >
-        <a href ng-click="setTab(0)" >Passed</a></li>
+    <li ng-class="{active: isSet(0)}">
+        <a href ng-click="setTab(0)">Passed</a></li>
     <li ng-class="{active: isSet(1)}">
-        <a href  ng-click="setTab(1)">Failed</a></li>
+        <a href ng-click="setTab(1)">Failed</a></li>
 </ul>
 <table ng-table="tableParams" class="table">
     <tbody ng-repeat="group in $groups">
     <tr class="ng-table-group">
         <td>
             <a href="" ng-click="group.$hideRows = !group.$hideRows">
-                <span class="glyphicon" ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
+                <span class="glyphicon"
+                      ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
                 <strong>{{ group.value }}</strong>
             </a>
-       </td>
+        </td>
     </tr>
     <tr ng-hide="group.$hideRows" ng-repeat="target in group.data">
         <td sortable="target" data-title="'Metric'" header-class="text-left">
@@ -27,10 +29,16 @@
         <td sortable="value" data-title="'Value'" header-class="text-left">
             {{target.value}}
         </td>
-        <td data-title="'Requirement'" header-class="text-left">{{target.requirementOperator}} {{target.requirementValue}}</td>
+        <td data-title="'Requirement'" header-class="text-left">{{target.requirementOperator}}
+            {{target.requirementValue}}
+        </td>
         <td data-title="'Result'" header-class="text-left">
-            <span title="Go to graph" ui-sref="deepLinkGraph({productName: target.productName, dashboardName:target.dashboardName, testRunId: target.testRunId, tag: target.tag, metricId: target.metricId})" ng-class="target.meetsRequirement ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
-            <span title="Configure metric" ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})" class="fa-lg fa fa-wrench pull-right"></span>
+            <span title="Go to graph"
+                  ui-sref="deepLinkGraph({productName: target.productName, dashboardName:target.dashboardName, testRunId: target.testRunId, tag: target.tag, metricId: target.metricId})"
+                  ng-class="target.meetsRequirement ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
+            <span title="Configure metric"
+                  ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})"
+                  class="fa-lg fa fa-wrench pull-right"></span>
         </td>
 
     </tr>

@@ -3,7 +3,7 @@
         <h3 class="modal-title">Filter on tags</h3>
     </div>
     <div class="modal-body">
-            <div>
+        <div>
                 <span>
                     <label>Filter operator</label>
                 </span>
@@ -16,21 +16,22 @@
                         <!--<option ng-repeat="item in list" ng-selected="{{selected.label == item.label}}">{{item.label}}</option>-->
                     <!--</select>-->
                 </span>
-            </div>
-            <div>
-                <tags-input data-ng-model="filterTags" placeholder="Add tags to filter"  class="graph-filter-tags">
-                    <auto-complete source="loadTags($query)" loadOnDownArrow="true" ></auto-complete>
-                </tags-input>
-            </div>
-            <div>
+        </div>
+        <div>
+            <tags-input data-ng-model="filterTags" placeholder="Add tags to filter" class="graph-filter-tags">
+                <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
+            </tags-input>
+        </div>
+        <div>
                 <span>
-                      <input class="checkbox tags-filter-checkbox" title="Save as dashboard tag?" type="checkbox" data-ng-model="persistTag">
+                      <input class="checkbox tags-filter-checkbox" title="Save as dashboard tag?" type="checkbox"
+                             data-ng-model="persistTag">
 
                 </span>
                 <span>
                         <label>Save as dashboard tag?</label>
                 </span>
-            </div>
+        </div>
 
     </div>
     <div class="modal-footer">

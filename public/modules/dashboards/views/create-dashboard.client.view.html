@@ -5,19 +5,28 @@
     <form name="dashboardForm">
         <div layout="column">
             <div layout="column">
-                <md-input-container md-is-error="dashboardForm.dashboardName.$invalid && (dashboardForm.$submitted || dashboardForm.dashboardName.$dirty)" flex>
+                <md-input-container
+                        md-is-error="dashboardForm.dashboardName.$invalid && (dashboardForm.$submitted || dashboardForm.dashboardName.$dirty)"
+                        flex>
                     <label>Dashboard name</label>
-                    <input name="dashboardName" ng-model="dashboard.name" record-availability-validator="/dashboards/{{productName}}" required>
-                    <div ng-messages="dashboardForm.dashboardName.$error" ng-if="dashboardForm.$submitted || dashboardForm.dashboardName.$touched">
+                    <input name="dashboardName" ng-model="dashboard.name"
+                           record-availability-validator="/dashboards/{{productName}}" required>
+
+                    <div ng-messages="dashboardForm.dashboardName.$error"
+                         ng-if="dashboardForm.$submitted || dashboardForm.dashboardName.$touched">
                         <div ng-message="required">Dashboard name is required.</div>
                         <div ng-message="recordLoading">Checking database...</div>
                         <div ng-message="recordAvailable">The dashboard name already exists for this product</div>
                     </div>
                 </md-input-container>
-                <md-input-container md-is-error="dashboardForm.dashboardDescription.$invalid && (dashboardForm.$submitted || dashboardForm.dashboardDescription.$dirty)" flex>
+                <md-input-container
+                        md-is-error="dashboardForm.dashboardDescription.$invalid && (dashboardForm.$submitted || dashboardForm.dashboardDescription.$dirty)"
+                        flex>
                     <label>Dashboard description</label>
                     <input name="dashboardDescription" ng-model="dashboard.description" required>
-                    <div ng-messages="dashboardForm.dashboardDescription.$error" ng-if="dashboardForm.$submitted || dashboardForm.dashboardDescription.$touched">
+
+                    <div ng-messages="dashboardForm.dashboardDescription.$error"
+                         ng-if="dashboardForm.$submitted || dashboardForm.dashboardDescription.$touched">
                         <div ng-message="required">Dashboard description is required.</div>
                     </div>
                 </md-input-container>
@@ -26,12 +35,12 @@
                 </md-checkbox>
             </div>
             <div layout="row">
-                <md-button  md-no-ink class="md-primary" ng-click="dashboardForm.$valid && create()">Submit</md-button>
+                <md-button md-no-ink class="md-primary" ng-click="dashboardForm.$valid && create()">Submit</md-button>
                 <md-button data-ng-click="cancel()">Cancel</md-button>
             </div>
             <!--<div data-ng-show="error" class="alert alert-danger alert-error">-->
-                <!--<a href="#" class="close" data-dismiss="alert"></a>-->
-                <!--<p><strong data-ng-bind="error"></strong></p>-->
+            <!--<a href="#" class="close" data-dismiss="alert"></a>-->
+            <!--<p><strong data-ng-bind="error"></strong></p>-->
             <!--</div>-->
         </div>
     </form>

@@ -1,11 +1,11 @@
 <ul class="nav nav-pills nav-justified">
-    <li ng-class="{active: isSet(0)}" >
-        <a href ng-click="setTab(0)" >Requests</a></li>
+    <li ng-class="{active: isSet(0)}">
+        <a href ng-click="setTab(0)">Requests</a></li>
     <li ng-class="{active: isSet(1)}">
-        <a href  ng-click="setTab(1)">Errors</a></li>
+        <a href ng-click="setTab(1)">Errors</a></li>
 </ul>
 <div class="clearfix"></div>
-<div loading-container="tableParams.settings().$loading"  ng-if="isSet(0)">
+<div loading-container="tableParams.settings().$loading" ng-if="isSet(0)">
     <table ng-table="tableParams" show-filter="true" class="table">
         <tbody>
         <tr ng-repeat="transaction in $data">
@@ -25,7 +25,7 @@
         </tbody>
     </table>
 </div>
-<div loading-container="tableParams.settings().$loading"  ng-if="isSet(1)">
+<div loading-container="tableParams.settings().$loading" ng-if="isSet(1)">
     <table ng-table="tableParams" show-filter="true" class="table">
         <tbody>
         <tr ng-repeat="transaction in $data">

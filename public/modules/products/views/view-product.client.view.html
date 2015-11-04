@@ -1,18 +1,20 @@
 <section data-ng-controller="ProductsController" data-ng-init="findOne()">
-	<div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
-	<div class="page-header">
+    <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
+    <div class="page-header">
         <h1>{{product.name}}</h1>
-        <h3>Description:    {{product.description}}</h3>
-        <i title="Edit product" class="glyphicon glyphicon-pencil" data-ng-click="edit(product.name)">  </i>
-        <i title="Delete product" class="glyphicon glyphicon-trash" data-ng-click="openDeleteProductModal('', $index)">  </i>
-	</div>
-	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == product.user._id))">
-		<a class="btn btn-primary" href="/#!/products/{{product._id}}/edit">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
-			<i class="glyphicon glyphicon-trash"></i>
-		</a>
-	</div>
+
+        <h3>Description: {{product.description}}</h3>
+        <i title="Edit product" class="glyphicon glyphicon-pencil" data-ng-click="edit(product.name)"> </i>
+        <i title="Delete product" class="glyphicon glyphicon-trash"
+           data-ng-click="openDeleteProductModal('', $index)"> </i>
+    </div>
+    <div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == product.user._id))">
+        <a class="btn btn-primary" href="/#!/products/{{product._id}}/edit">
+            <i class="glyphicon glyphicon-edit"></i>
+        </a>
+        <a class="btn btn-primary" data-ng-click="remove();">
+            <i class="glyphicon glyphicon-trash"></i>
+        </a>
+    </div>
 
 </section>
