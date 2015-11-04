@@ -22,10 +22,10 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 
 		$scope.backup = function(){
 
-			var url = "http://" + $window.location.host + "/download";
+			var url = 'http://' + $window.location.host + '/download';
 		//	$log.log(url);
 			$window.location.href = url;
-		}
+		};
 		var originatorEv;
 		$scope.openMenu = function($mdOpenMenu, ev) {
 			originatorEv = ev;

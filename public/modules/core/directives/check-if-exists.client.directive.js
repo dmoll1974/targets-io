@@ -39,7 +39,7 @@
                     }
 
                         ngModel.$parsers.push(function(value) {
-                            if(!value || value.length == 0) return;
+                            if(!value || value.length === 0) return;
 
                             setAsLoading(true);
                             setAsAvailable(false);
@@ -58,6 +58,6 @@
                             return value;
                         });
                 }
-            }
+            };
         }]);
 }());
