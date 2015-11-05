@@ -184,18 +184,13 @@ angular.module('graphs').controller('HighchartsLiveController', [
     $scope.$watch('zoomRange', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         TestRuns.zoomRange = $scope.zoomRange;
-        //var seriesArray = $scope.config.series;
-        //var seriesArraySize = seriesArray.length;
-        //
-        //for (var i = 0; i < seriesArraySize; i++) {
-        //
-        //    seriesArray.splice(0, 1);
-        //}
+
         var chart = angular.element($scope.graphSelector).highcharts();
         chart.destroy();
         $scope.initConfig($scope.metric, $scope.chartIndex);
       }
     });
+
     var defaultChartConfig = {
       chart: {
         type: 'line',
@@ -248,12 +243,20 @@ angular.module('graphs').controller('HighchartsLiveController', [
                     });
                   });
                 });
-              });  //console.log('intervalIds:' + Interval.active)
+              });
+              console.log('Polling Graphite')
             }, 10000);
             Interval.active.push({
               intervalId: intervalId,
               metricId: $scope.metric._id
             });
+
+            /* if zoomrange execeeds 3h, don't update graph due to bad performance*/
+
+            if(!($scope.zoomRange === '-10min' || $scope.zoomRange === '-30min' || $scope.zoomRange === '-1h' || $scope.zoomRange === '-3h' )){
+              Interval.clearAll();
+            }
+
           }
         }
       },
