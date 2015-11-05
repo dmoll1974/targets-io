@@ -92,8 +92,15 @@
             </tr>
             </tbody>
         </table>
+        <div flex="50" class="container" ng-if="loading">
+            <md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>
+            <div class="bottom-block">
+                <span>Loading test runs ...</span>
+            </div>
+        </div>
+
         <!--<img id="TestRunSpinner" class="center" data-ng-show="loading" src="images/assets/spinner.gif"/>-->
-        <div cg-busy="{promise:getTestRuns,message:'Loading test runs...'}"></div>
+        <!--<div cg-busy="{promise:getTestRuns,message:'Loading test runs...'}"></div>-->
 
     </div>
 </div>

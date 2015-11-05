@@ -69,13 +69,19 @@ angular.module('graphs').controller('HighchartsController', [
     $scope.tagRemoved = function (tag) {
       if (tag.text === $stateParams.tag) {
         Metrics.update($scope.metric).success(function (metric) {
-          if (Dashboards.updateTags($scope.metric.tags)) {
-            Dashboards.update().success(function (dashboard) {
-              $scope.dashboard = Dashboards.selected;
-              /* Get tags used in metrics */
-              $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
-            });
-          }
+
+          /* Update tags in Dashboard if any new are added */
+          Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags, function (tagsUpdated) {
+
+            if (tagsUpdated) {
+
+                Dashboards.update().success(function (dashboard) {
+                  $scope.dashboard = Dashboards.selected;
+                  /* Get tags used in metrics */
+                  $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+                });
+            }
+          });
           $state.go($state.current, {}, { reload: true });
         });
       }

@@ -20,20 +20,27 @@ angular.module('dashboards').factory('Dashboards', [
     function updateTags(productName, dashboardName, tags, callback) {
       /* if new tags are added, update dashbboard */
       getFn(productName, dashboardName).success(function (dashboard) {
+
         Dashboards.selected = dashboard;
         var updatedTags = Dashboards.selected.tags;
         var updated = false;
+
         _.each(tags, function (tag) {
+
           var tagExists = false;
+
           _.each(Dashboards.selected.tags, function (existingTag) {
+
             if (tag.text === existingTag.text)
               tagExists = true;
           });
+
           if (tagExists === false) {
             updatedTags.push({ text: tag.text });
             updated = true;
           }
         });
+
         Dashboards.selected.tags = updatedTags;
         callback(updated);
       });

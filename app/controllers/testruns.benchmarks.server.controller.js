@@ -79,6 +79,7 @@ function setBenchmarkResultsPreviousBuildForTestRun(testRun, callback) {
 }
 function benchmarkTestRuns(benchmark, baseline, benchmarkType, callback) {
   var benchmarkDone = false;
+  var targetBenchmarked;
   var updatedTargets = [];
   var updatedMetrics = [];
   _.each(benchmark.metrics, function (benchmarkMetric) {
@@ -87,10 +88,12 @@ function benchmarkTestRuns(benchmark, baseline, benchmarkType, callback) {
         return metric._id.toString() === benchmarkMetric._id.toString();
       });
       _.each(benchmarkMetric.targets, function (benchmarkMetricTarget) {
+        targetBenchmarked = false;
         if (baselineMetric.length > 0) {
           _.each(baselineMetric[0].targets, function (baselineMetricTarget) {
             if (benchmarkMetricTarget.target === baselineMetricTarget.target) {
               benchmarkDone = true;
+              targetBenchmarked = true;
               if (benchmarkType === 'benchmarkResultPreviousOK') {
                 benchmarkMetricTarget.benchmarkPreviousValue = baselineMetricTarget.value;
               } else {
@@ -100,6 +103,13 @@ function benchmarkTestRuns(benchmark, baseline, benchmarkType, callback) {
               updatedTargets.push(benchmarkMetricTarget);
             }
           });
+
+          if(targetBenchmarked === false){
+
+            updatedTargets.push(benchmarkMetricTarget);
+
+          }
+
         } else {
           updatedTargets.push(benchmarkMetricTarget);
         }
@@ -145,6 +155,7 @@ function benchmarkTestRuns(benchmark, baseline, benchmarkType, callback) {
     benchmark[benchmarkType] = getConsolidateBenchmarkResults(benchmark.metrics, benchmarkType);
   else
     benchmark[benchmarkType] = null;
+
   callback(benchmark);
 }
 function getConsolidateBenchmarkResults(targets, benchmarkProp) {

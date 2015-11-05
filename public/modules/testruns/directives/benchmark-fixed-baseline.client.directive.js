@@ -65,7 +65,7 @@
               _.each(testRun.metrics, function (metric) {
                 /* only show metrics failed / passed requirements */
                 if (metric.benchmarkResultFixedOK === $scope.showPassed) {
-                  var tag = metric.tags ? metric.tags[0].text : 'All';
+                  var tag = metric.tags.length > 0 ? metric.tags[0].text : 'All';
                   _.each(metric.targets, function (target) {
                     if (target.benchmarkResultFixedOK === $scope.showPassed) {
                       var humanReadableBenchmarkOperator = metric.benchmarkOperator === '>' ? '+' : '-';

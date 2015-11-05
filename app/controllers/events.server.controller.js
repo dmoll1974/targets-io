@@ -41,6 +41,7 @@ exports.create = function (req, res) {
                 testRun.baseline = dashboard.baseline || event.baseline;
                 testRun.buildResultKey = event.buildResultKey;
                 testRun.eventIds.push(startEvent._id, event._id);
+
                 testruns.benchmarkAndPersistTestRunById(testRun.productName, testRun.dashboardName, testRun, function (storedTestrun) {
                   console.log('test run stored');
                 });

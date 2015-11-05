@@ -10,11 +10,47 @@ angular.module('testruns').controller('TestrunsController', [
   '$q',
   'ConfirmModal',
   '$window',
-  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window) {
+  '$interval',
+  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window, $interval) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
+    var j = 0, counter = 0;
+    var spinner;
+    $scope.modes = [];
+    $scope.determinateValue = 30;
+    $scope.$watch('loading', function (current, old) {
+      if (current !== old) {
+        if (current === true) {
+          // Iterate every 100ms, non-stop
+          spinner = $interval(function () {
+            // Increment the Determinate loader
+            $scope.determinateValue += 1;
+            if ($scope.determinateValue > 100) {
+              $scope.determinateValue = 30;
+            }
+            // Incrementally start animation the five (5) Indeterminate,
+            // themed progress circular bars
+            if (j < 5 && !$scope.modes[j] && $scope.loading) {
+              $scope.modes[j] = 'indeterminate';
+            }
+            if (counter++ % 4 == 0)
+              j++;
+            console.log('bla');
+          }, 100, 0, true);
+        }else{
+
+          $interval.cancel(spinner);
+
+        }
+      }
+    });
+    $scope.$on('$destroy', function () {
+      // Make sure that the interval is destroyed too
+      $interval.cancel(spinner);
+    });
+    
     var originatorEv;
     $scope.openMenu = function ($mdOpenMenu, ev) {
       originatorEv = ev;

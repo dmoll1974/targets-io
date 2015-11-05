@@ -126,9 +126,12 @@ angular.module('metrics').controller('MetricsController', [
     // Create new Metric
     $scope.create = function () {
       /* Update tags in Dashboard if any new are added */
-      if (Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags))
-        Dashboards.update().success(function (dashboard) {
-        });
+      Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags, function (tagsUpdated) {
+
+        if (tagsUpdated)
+            Dashboards.update().success(function (dashboard) {
+            });
+      });
       $scope.metric.productName = $stateParams.productName;
       $scope.metric.dashboardName = $stateParams.dashboardName;
       $scope.currentRequirement = '';
@@ -165,9 +168,13 @@ angular.module('metrics').controller('MetricsController', [
     // Update existing Metric
     $scope.update = function () {
       /* Update tags in Dashboard if any new are added */
-      if (Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags))
-        Dashboards.update().success(function (dashboard) {
-        });
+      Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags, function (tagsUpdated) {
+
+        if (tagsUpdated)
+          Dashboards.update().success(function (dashboard) {
+          });
+      });
+
       $scope.metric.productName = $stateParams.productName;
       $scope.metric.dashboardName = $stateParams.dashboardName;
       Metrics.update($scope.metric).success(function (metric) {

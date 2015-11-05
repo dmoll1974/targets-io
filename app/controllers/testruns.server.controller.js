@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Event = mongoose.model('Event'), Testrun = mongoose.model('Testrun'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), _ = require('lodash'), graphite = require('./graphite.server.controller'), Utils = require('./utils.server.controller'), Requirements = require('./testruns.requirements.server.controller'), Benchmarks = require('./testruns.benchmarks.server.controller'), Metric = mongoose.model('Metric'), async = require('async');
-//exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
+exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
 exports.deleteTestRunById = deleteTestRunById;
 exports.testRunById = testRunById;
@@ -443,34 +443,44 @@ function getDataForTestrun(productName, dashboardName, testRun, callback) {
       if (err)
         console.log(err);
       var metrics = [];
-      async.forEachLimit(dashboard.metrics, 16, function (metric, callback) {
+      async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
         var targets = [];
-        async.forEachLimit(metric.targets, 16, function (target, callback) {
+        var value
+        async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
           graphite.getGraphiteData(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
-            _.each(body, function (target) {
-              targets.push({
-                target: target.target,
-                value: calculateAverage(target.datapoints)
-              });
+            _.each(body, function (bodyTarget) {
+
+              value = calculateAverage(bodyTarget.datapoints);
+              /* if target has values other than null values only, store it */
+              if(value !== null) {
+                targets.push({
+                  target: bodyTarget.target,
+                  value: value
+                });
+              }
             });
-            callback();
-          });
+            callbackTarget();
+        });
         }, function (err) {
           if (err)
             return next(err);
-          metrics.push({
-            _id: metric._id,
-            tags: metric.tags,
-            alias: metric.alias,
-            type: metric.type,
-            benchmarkValue: metric.benchmarkValue,
-            benchmarkOperator: metric.benchmarkOperator,
-            requirementValue: metric.requirementValue,
-            requirementOperator: metric.requirementOperator,
-            targets: targets
-          });
-          targets = [];
-          callback();
+          if(targets.length > 0) {
+            metrics.push({
+              _id: metric._id,
+              tags: metric.tags,
+              alias: metric.alias,
+              type: metric.type,
+              benchmarkValue: metric.benchmarkValue,
+              benchmarkOperator: metric.benchmarkOperator,
+              requirementValue: metric.requirementValue,
+              requirementOperator: metric.requirementOperator,
+              targets: targets
+            });
+
+            targets = [];
+          }
+
+          callbackMetric();
         });
       }, function (err) {
         if (err)
@@ -483,6 +493,7 @@ function getDataForTestrun(productName, dashboardName, testRun, callback) {
 function calculateAverage(datapoints) {
   var count = 0;
   var total = 0;
+
   _.each(datapoints, function (datapoint) {
     if (datapoint[0] !== null) {
       count++;
@@ -492,7 +503,7 @@ function calculateAverage(datapoints) {
   if (count > 0)
     return Math.round(total / count * 100) / 100;
   else
-    return 0;
+    return null;
 }
 function saveTestrun(testrun, metrics, callback) {
   getPreviousBuild(testrun.productName, testrun.dashboardName, testrun.testRunId, function (previousBuild) {
