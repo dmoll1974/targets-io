@@ -43,14 +43,14 @@
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="testRun.testRunId === dashboard.baseline"></md-icon>
                 </td>
                 <td>
-                    <md-menu >
-                        <md-button style="line-height: 80%; height: 80%;" aria-label="Open test run menu" class="md-icon-button"
+                    <md-menu style="padding-top: 0px; padding-bottom: 0px;">
+                        <div aria-label="Open test run menu" class="md-icon-button"
                                    ng-click="openMenu($mdOpenMenu, $event)">
-                            <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_36px.svg"></md-icon>
+                            <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_24px.svg"></md-icon>
                             <md-tooltip>
                                 Test run menu
                             </md-tooltip>
-                        </md-button>
+                        </div>
                         <md-menu-content width="4">
                             <md-menu-item data-ng-if="showBenchmarks">
                                 <md-button data-ng-click="refreshTestrun($index)">
