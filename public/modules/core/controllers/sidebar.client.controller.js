@@ -7,7 +7,8 @@ angular.module('core').controller('SidebarController', [
   'Products',
   'SideMenu',
   '$filter',
-  function ($scope, $stateParams, $state, $location, Products, SideMenu, $filter) {
+  '$element',
+  function ($scope, $stateParams, $state, $location, Products, SideMenu, $filter, $element) {
     function isOpen(section) {
       var regex = new RegExp('.*/' + section.matcher + '(/|$)');
       var open = regex.test($location.path());
@@ -50,6 +51,9 @@ angular.module('core').controller('SidebarController', [
       return SideMenu.productFilter;
     }, function () {
       $scope.productFilter = SideMenu.productFilter;
+      /*scrollbar to top*/
+
+      angular.element(".sidebar")[0].scrollTop=0;
     });  //    $scope.productIsActive = function(productName) {
          //        return $location.path().indexOf(productName)!== -1;
          //    };

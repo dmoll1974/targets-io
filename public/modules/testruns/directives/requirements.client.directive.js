@@ -15,12 +15,22 @@
     };
     return directive;
     /* @ngInject */
-    function RequirementsController($scope, $timeout, $filter, $state, $stateParams, TestRuns, ngTableParams) {
+    function RequirementsController($scope, $rootScope, $timeout, $filter, $state, $stateParams, TestRuns, ngTableParams) {
       $scope.showPassedRequirements = $stateParams.requirementsResult === 'passed' ? true : false;
       $scope.productName = $stateParams.productName;
       $scope.dashboardName = $stateParams.dashboardName;
+
+      $scope.back = function(){
+
+        if ($rootScope.previousStateParams)
+          $state.go($rootScope.previousState, $rootScope.previousStateParams);
+        else
+          $state.go($rootScope.previousState);
+
+      };
       /* set tab number based on url */
       $scope.tabNumber = $stateParams.requirementsResult === 'passed' ? 0 : 1;
+
       $scope.setTab = function (newValue) {
         $scope.tabNumber = newValue;
         switch (newValue) {
