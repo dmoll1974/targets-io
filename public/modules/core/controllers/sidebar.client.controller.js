@@ -6,7 +6,8 @@ angular.module('core').controller('SidebarController', [
   '$location',
   'Products',
   'SideMenu',
-  function ($scope, $stateParams, $state, $location, Products, SideMenu) {
+  '$filter',
+  function ($scope, $stateParams, $state, $location, Products, SideMenu, $filter) {
     function isOpen(section) {
       var regex = new RegExp('.*/' + section.matcher + '(/|$)');
       var open = regex.test($location.path());
@@ -28,6 +29,11 @@ angular.module('core').controller('SidebarController', [
       isFirstOpen: true,
       isFirstDisabled: false
     };
+
+    $scope.$watch('productFilter', function (val) {
+      $scope.productFilter = $filter('uppercase')(val);
+    }, true);
+
     $scope.clearProductFilter = function () {
       SideMenu.productFilter = '';
     };
