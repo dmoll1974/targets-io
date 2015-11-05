@@ -12,6 +12,11 @@ To set up a local demo environment take the following steps (instructions for li
 - [Install docker](http://docs.docker.com/linux/step_one/)  
 - [Install docker compose](https://github.com/docker/compose/releases)
 - Clone this repository
+- Run init script to prepare Graphite volumes on host
+
+  `sudo chmod +x init-graphite-container-volumes.sh`
+  
+  `sudo .\init-graphite-container-volumes.sh`
 - Run docker compose  `sudo docker-compose up`
 
 
