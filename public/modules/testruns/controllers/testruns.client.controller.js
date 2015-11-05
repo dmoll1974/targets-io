@@ -15,6 +15,7 @@ angular.module('testruns').controller('TestrunsController', [
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
+    $scope.loading = true;
 
     var j = 0, counter = 0;
     var spinner;
@@ -152,6 +153,7 @@ angular.module('testruns').controller('TestrunsController', [
           if (testRun.testRunId === baseline)
             baselineSet = true;
           if (testRun.testRunId !== baseline && baselineSet == false) {
+            $scope.testRuns[index].benchmarkResultFixedOK = 'pending';
             testRun.baseline = baseline;
             arrayOfPromises.push(TestRuns.updateFixedBaseline(testRun).then(function (testRun) {
             }));  //.success(function (updatedTestRun) {
