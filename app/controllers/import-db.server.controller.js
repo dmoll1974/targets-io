@@ -2,8 +2,15 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), _ = require('lodash'), fs = require('fs'), Event = mongoose.model('Event'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), Metric = mongoose.model('Metric'),
-Testrun = mongoose.model('Testrun'), async = require('async');
+var mongoose = require('mongoose'),
+    _ = require('lodash'),
+    fs = require('fs'),
+    Event = mongoose.model('Event'),
+    Dashboard = mongoose.model('Dashboard'),
+    Product = mongoose.model('Product'),
+    Metric = mongoose.model('Metric'),
+    Testrun = mongoose.model('Testrun'),
+    async = require('async');
 
 function upload(req, res) {
   console.log(req.files.file.path);
