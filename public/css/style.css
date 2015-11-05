@@ -11505,3 +11505,14 @@ button.toast-close-button {
     font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+
+.sidebar {
+    position: fixed;
+    top: 20;
+    bottom: 0;
+    /*width: 400px;*/
+}
+
+.sidebar:hover {
+    overflow-y: auto;
+}
