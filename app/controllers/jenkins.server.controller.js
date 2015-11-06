@@ -2,7 +2,13 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), _ = require('lodash'), requestjson = require('request-json'), config = require('../../config/config'), Memcached = require('memcached');
+var mongoose = require('mongoose'),
+    _ = require('lodash'),
+    requestjson = require('request-json'),
+    config = require('../../config/config'),
+    Memcached = require('memcached'),
+    GatlingDetails = mongoose.model('GatlingDetails');
+
 exports.getConsoleData = function (req, res) {
   var memcached = new Memcached(config.memcachedHost);
   var jenkinsKey = req.body.consoleUrl + req.body.running;
@@ -13,13 +19,24 @@ exports.getConsoleData = function (req, res) {
       console.dir('cache hit jenkins: ' + result);
       res.jsonp(result);
     } else {
-      getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, function (consoleData) {
-        res.jsonp(consoleData);
-        memcached.set(jenkinsKey, consoleData, 10, function (err, result) {
-          if (err)
-            console.error(err);
-          memcached.end();
-        });
+
+      /* first check if response is available in db */
+      GatlingDetails.findOne({consoleUrl: req.body.consoleUrl},function(err, GatlingDetailsResponse) {
+
+        if (GatlingDetailsResponse) {
+          res.jsonp(GatlingDetailsResponse.response);
+
+        } else {
+
+          getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, function (consoleData) {
+            res.jsonp(consoleData);
+            memcached.set(jenkinsKey, consoleData, 10, function (err, result) {
+              if (err)
+                console.error(err);
+              memcached.end();
+            });
+          });
+        }
       });
     }
   });
@@ -115,6 +132,16 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback) {
         consoleResponse.errors = errorData;
       }
       callback(consoleResponse);
+
+      /* if test is finished, put response  in db */
+      if (running === false && consoleResponse.hasOwnProperty('data')) {
+
+        var GatlingDetailsResponse = new GatlingDetails({consoleUrl: jenkinsUrl, response: consoleResponse});
+        GatlingDetailsResponse.save(function(err, savedResponse){
+          if (err) console.log(err);
+        });
+      }
+
     });
   });
 }
