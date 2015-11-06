@@ -29,17 +29,19 @@ function upload(req, res) {
     if (err)
       console.log(err);
     console.log('GatlingDetails removed');
-      _.each(gatlingDetails, function (importgatlingDetails) {
+      if(gatlingDetails) {
+        _.each(gatlingDetails, function (importgatlingDetails) {
 
-        var gatlingDetailsDoc = new GatlingDetails();
+          var gatlingDetailsDoc = new GatlingDetails();
 
-        gatlingDetailsDoc.consoleUrl = importgatlingDetails.consoleUrl;
-        gatlingDetailsDoc.response = importgatlingDetails.response;
+          gatlingDetailsDoc.consoleUrl = importgatlingDetails.consoleUrl;
+          gatlingDetailsDoc.response = importgatlingDetails.response;
 
-        gatlingDetailsDoc.save(function (err) {
+          gatlingDetailsDoc.save(function (err) {
+          });
+
         });
-
-      });
+      }
   });
   /* remove existing collections */
   Testrun.remove({}, function (err) {
