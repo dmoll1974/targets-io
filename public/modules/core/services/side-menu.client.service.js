@@ -35,10 +35,11 @@
             });
           });
           pages.push({
-            name: 'Add dashboard',
+            name: 'ADD DASHBOARD',
             type: 'link',
             url: 'add/dashboard/' + product.name,
-            icon: 'glyphicon glyphicon-plus',
+            class: 'md-primary',
+            //icon: 'glyphicon glyphicon-plus',
             matcher: 'add/dashboard/' + product.name
           });
           SideMenu.sections.push({

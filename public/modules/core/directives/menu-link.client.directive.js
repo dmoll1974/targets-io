@@ -3,7 +3,7 @@
   angular.module('core').run([
     '$templateCache',
     function ($templateCache) {
-      $templateCache.put('partials/menu-link.tmpl.html', '<md-button  ng-class="{active: isActive(\'{{section.matcher}}\'),\'{{section.icon}}\' : true}"  \n' + '  data-ng-href="#!/{{section.url}}" ng-click="focusSection()">\n' + '  {{section.name}}\n' + '  <span  class="md-visually-hidden "\n' + '    ng-if="isSelected()">\n' + '    current page\n' + '  </span>\n' + '</md-button>\n' + '');
+      $templateCache.put('partials/menu-link.tmpl.html', '<md-button  ng-class="{active: isActive(\'{{section.matcher}}\'),\'{{section.icon}}\' : true}" class="{{section.class}}"  \n' + '  data-ng-href="#!/{{section.url}}" ng-click="focusSection()">\n' + '  {{section.name}}\n' + '  <span  class="md-visually-hidden "\n' + '    ng-if="isSelected()">\n' + '    current page\n' + '  </span>\n' + '</md-button>\n' + '');
     }
   ]).directive('menuLink', [
     '$location',

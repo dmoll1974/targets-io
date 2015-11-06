@@ -15,7 +15,6 @@ angular.module('testruns').controller('TestrunsController', [
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
-    $scope.loading = true;
 
     var j = 0, counter = 0;
     var spinner;
