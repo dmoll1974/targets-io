@@ -67,7 +67,6 @@ function upload(req, res) {
         event.dashboardName = splitDashboardName[1];
         event.testRunId = importEvent.testRunId;
         event.eventDescription = eventDesciption;
-        event.baseline = importEvent.baseline;
         event.buildResultKey = importEvent.buildResultKey;
         event.save(function (err, savedEvent) {
           if (err)

@@ -22,10 +22,6 @@ var eventSchema = new mongoose.Schema({
     default: Date.now,
     expires: config.graphiteRetentionPeriod
   },
-  'baseline': {
-    type: String,
-    default: 'none'
-  },
   'buildResultKey': { type: String }
 });
 eventSchema.index({
