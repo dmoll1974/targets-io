@@ -55,7 +55,7 @@ This will trigger the [Gatling demo script](https://github.com/dmoll1974/gatling
 To see a demo of the automated assertion of benchmark results, some additional steps are required:
 
 - Run the DEMO-GATLING-BENCHMARKING-MULTIJOB job
-- After the first run has finished, go to `http://localhost:3000/#!/browse/GATLING/LOAD` and set the test run as baseline (using the "flag" icon)
+- After the first run has finished, go to `http://localhost:3000/#!/browse/GATLING/LOAD`to check the results.
 - Rerun the the DEMO-GATLING-BENCHMARKING-MULTIJOB multi-job
 - When the Jenkins build passes it means all your configured requirements / benchmark thresholds (see explanation below) have passed for this run. If the job fails, check the DEMO-GATLING-GET-BENCHMARKING-RESULTS job logs to find out why :-)
 
