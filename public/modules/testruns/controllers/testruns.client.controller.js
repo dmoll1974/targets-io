@@ -16,6 +16,34 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
+    $scope.$watch('allTestRunsSelected', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        _.each($scope.testRuns, function (testRun, i) {
+          testRun.selected = newVal;
+        });
+      }
+    });
+
+    $scope.setTestRunsSelected = function(testRunSelected){
+
+      if (testRunSelected === false){
+
+        $scope.testRunSelected = false;
+
+        _.each($scope.testRuns, function(testRun){
+          if(testRun.selected === true) $scope.testRunSelected = true;
+        })
+
+      }else {
+        $scope.testRunSelected = testRunSelected;
+      }
+    };
+
+    $scope.setAllTestRunsSelected = function(testRunSelected){
+
+      $scope.testRunSelected = testRunSelected;
+    };
+
     var j = 0, counter = 0;
     var spinner;
     $scope.modes = [];
@@ -211,6 +239,43 @@ angular.module('testruns').controller('TestrunsController', [
           $scope.testRuns.splice(selectedIndex,1);
 
         });
+      }, function () {
+      });
+    };
+
+    $scope.openDeleteSelectedTestRunsModal = function (size) {
+      ConfirmModal.itemType = 'Delete ';
+      ConfirmModal.selectedItemDescription = ' selected test runs';
+      var modalInstance = $modal.open({
+        templateUrl: 'ConfirmDelete.html',
+        controller: 'ModalInstanceController',
+        size: size  //,
+      });
+      modalInstance.result.then(function (selectedIndex) {
+
+          var deleteEventsArrayOfPromises = [];
+          var deleteTestRunsArrayOfPromises = [];
+          var i;
+          for(i = $scope.testRuns.length -1; i > -1 ; i--){
+
+            if($scope.testRuns[i].selected === true){
+              deleteEventsArrayOfPromises.push([Events.delete($scope.testRuns[i].eventIds[0]), Events.delete($scope.testRuns[i].eventIds[1])]);
+              deleteTestRunsArrayOfPromises.push($scope.productName, $scope.dashboardName, $scope.testRuns[i].testRunId);
+              $scope.testRuns[i].selected = false;
+              $scope.testRuns.splice(i,1);
+            }
+
+          }
+
+
+          $q.all(deleteEventsArrayOfPromises)
+          .then($q.all(deleteTestRunsArrayOfPromises))
+          .then(function (testRuns){
+
+                    //TestRuns.list = testRuns;
+
+          });
+
       }, function () {
       });
     };

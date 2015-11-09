@@ -1,7 +1,13 @@
 <!--<div data-ng-controller="TestrunsController" data-ng-init="listTestRunsForDashboard()">-->
 <div data-ng-controller="TestrunsController">
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
-    <div>
+    <div layout="column">
+        <div layout="row">
+            <div flex="90"></div>
+            <div flex="10">
+                <md-button ng-if="testRunSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >Delete selected</md-button>
+            </div>
+        </div>
         <table class="table">
             <thead>
             <tr>
@@ -15,6 +21,10 @@
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
                 </th>
                 <th></th>
+                <th>
+                    <md-checkbox md-no-ink aria-label="select all test runs" ng-model="allTestRunsSelected" ng-change="setAllTestRunsSelected(allTestRunsSelected)" style="margin: 0px;">
+                    </md-checkbox>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -78,6 +88,10 @@
                             </md-menu-item>
                         </md-menu-content>
                     </md-menu>
+                </td>
+                <td>
+                    <md-checkbox md-no-ink aria-label="select test run" ng-model="testRun.selected"  ng-change="setTestRunsSelected(testRun.selected)" style="margin: 0px;">
+                    </md-checkbox>
                 </td>
                 <!--<td data-ng-if="showBenchmarks" class="pointer"><i-->
                         <!--ng-class="testRun.busy ? 'fa-lg fa fa-refresh fa-spin' : 'fa-lg fa fa-refresh'"-->

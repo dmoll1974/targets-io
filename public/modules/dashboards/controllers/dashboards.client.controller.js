@@ -236,13 +236,16 @@ angular.module('dashboards').controller('DashboardsController', [
       });
       modalInstance.result.then(function () {
         var deleteMetricArrayOfPromises = [];
+        var i;
 
-        _.each($scope.dashboard.metrics, function(metric, index){
+        for(i = $scope.dashboard.metrics.length -1; i > -1; i--){
 
-          if(metric.selected === true)
-            deleteMetricArrayOfPromises.push(Metrics.delete(metric._id));
-
-        });
+          if($scope.dashboard.metrics[i].selected === true){
+            deleteMetricArrayOfPromises.push(Metrics.delete($scope.dashboard.metrics[i]._id));
+            $scope.dashboard.metrics[i].selected = false;
+            $scope.dashboard.metrics.splice(i,1);
+          }
+        }
 
 
         $q.all(deleteMetricArrayOfPromises)

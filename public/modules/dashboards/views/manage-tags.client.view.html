@@ -1,20 +1,41 @@
 <div data-ng-controller="DashboardTagsController" data-ng-init="listTagsForDashboard()">
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
-    <div>
+    <div layout="column">
+        <div layout="row">
+            <div flex="90"></div>
+            <div flex="10">
+                <md-button ng-if="tagSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedTagsModal('')" style="margin: 0px;" >Delete selected</md-button>
+            </div>
+        </div>
         <table class="table">
+            <colgroup>
+                <col span="1" style="width: 5%;">
+                <col span="1" style="width: 85%;">
+                <col span="1" style="width: 5%;">
+                <col span="1" style="width: 5%;">
+            </colgroup>
             <thead>
             <tr>
-                <th>Show when opening graphs</th>
+                <th>Default</th>
                 <th>Tag</th>
                 <th></th>
+                <td>
+                    <md-checkbox md-no-ink aria-label="select all tags" ng-model="allTagsSelected" ng-change="setAllTagsSelected(allMetricsSelected)" style="margin: 0px;">
+                    </md-checkbox>
+                </td>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="tag in tags" \>
+            <tr ng-repeat="tag in tags">
                 <td><input type="radio" name="tagDefault" ng-model="$parent.defaultTag" ng-value="tag.text"/></td>
                 <td>{{tag.text}}</td>
-                <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteTagModal('', $index)"></i>
-                </th>
+                <td>
+                    <i class="glyphicon glyphicon-trash" data-ng-click="openDeleteTagModal('', $index)"></i>
+                </td>
+                <td>
+                    <md-checkbox md-no-ink aria-label="select tag" ng-model="tag.selected"  ng-change="setTagsSelected(tag.selected)" style="margin: 0px;">
+                    </md-checkbox>
+                </td>
             </tr>
             </tbody>
         </table>

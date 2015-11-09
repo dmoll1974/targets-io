@@ -1,17 +1,12 @@
 <div data-ng-controller="EventsController" data-ng-init="listEventsForDashboard()">
-    <script type="text/ng-template" id="myModalContent.html">
-        <div class="modal-header">
-            <h3 class="modal-title">Confirmation</h3>
+    <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
+    <div layout="column">
+        <div layout="row">
+            <div flex="90"></div>
+            <div flex="10">
+                <md-button ng-if="eventSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedEventsModal('')" style="margin: 0px;" >Delete selected</md-button>
+            </div>
         </div>
-        <div class="modal-body">
-            <p>Delete event?</p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        </div>
-    </script>
-    <div>
         <table class="table">
             <thead>
             <tr>
@@ -19,6 +14,10 @@
                 <th>Test run ID</th>
                 <th>Description</th>
                 <th><i class="glyphicon glyphicon-plus" data-ng-click="addEventForDashboard()"></i></th>
+                <th>
+                    <md-checkbox md-no-ink aria-label="select all events" ng-model="allEventsSelected" ng-change="setAllEventsSelected(allEventsSelected)" style="margin: 0px;">
+                    </md-checkbox>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -26,8 +25,11 @@
                 <td data-ng-click="editEvent($index)">{{event.eventTimestamp | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
                 <td data-ng-click="editEvent($index)">{{event.testRunId}}</td>
                 <td data-ng-click="editEvent($index)">{{event.eventDescription}}</td>
-                <td><i class="glyphicon glyphicon-trash" data-ng-click="open('', $index)"></i>
-                </th>
+                <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteEventModal('', $index)"></i>
+                <td>
+                    <md-checkbox md-no-ink aria-label="select event" ng-model="event.selected"  ng-change="setEventsSelected(event.selected)" style="margin: 0px;">
+                    </md-checkbox>
+                </td>
             </tr>
             </tbody>
         </table>
