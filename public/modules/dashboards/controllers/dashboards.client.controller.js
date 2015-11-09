@@ -14,12 +14,43 @@ angular.module('dashboards').controller('DashboardsController', [
   'Metrics',
   'TestRuns',
   'SideMenu',
-  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu) {
+  '$q',
+  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, $q) {
     var originatorEv;
     $scope.openMenu = function ($mdOpenMenu, ev) {
       originatorEv = ev;
       $mdOpenMenu(ev);
     };
+
+    $scope.$watch('allMetricsSelected', function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          _.each($scope.dashboard.metrics, function (metric, i) {
+            metric.selected = newVal;
+          });
+        }
+    });
+
+    $scope.setMetricsSelected = function(metricSelected){
+
+        if (metricSelected === false){
+
+          $scope.metricSelected = false;
+
+          _.each($scope.dashboard.metrics, function(metric){
+              if(metric.selected === true) $scope.metricSelected = true;
+          })
+
+        }else {
+          $scope.metricSelected = metricSelected;
+        }
+    };
+
+    $scope.setAllMetricsSelected = function(metricSelected){
+
+      $scope.metricSelected = metricSelected;
+    };
+
+
     // Edit Product
     $scope.editProduct = function (productName) {
       $state.go('editProduct', { productName: productName });
@@ -192,6 +223,38 @@ angular.module('dashboards').controller('DashboardsController', [
       }, function () {
         $log.info('Modal dismissed at: ' + new Date());
       });
+    };
+    $scope.openDeleteSelectedMetricsModal = function (size) {
+
+      ConfirmModal.itemType = 'Delete ';
+      ConfirmModal.selectedItemId = '';
+      ConfirmModal.selectedItemDescription = 'selected metrics';
+      var modalInstance = $modal.open({
+        templateUrl: 'ConfirmDelete.html',
+        controller: 'ModalInstanceController',
+        size: size  //,
+      });
+      modalInstance.result.then(function () {
+        var deleteMetricArrayOfPromises = [];
+
+        _.each($scope.dashboard.metrics, function(metric, index){
+
+          if(metric.selected === true)
+            deleteMetricArrayOfPromises.push(Metrics.delete(metric._id));
+
+        });
+
+
+        $q.all(deleteMetricArrayOfPromises)
+          .then(Dashboards.get($scope.productName, $scope.dashboardName))
+          .then(function (dashboard) {
+                  $scope.dashboard = Dashboards.selected;
+          });
+
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
+
     };
     $scope.openDeleteDashboardModal = function (size) {
       ConfirmModal.itemType = 'Delete dashboard ';

@@ -205,14 +205,11 @@ angular.module('testruns').controller('TestrunsController', [
         $q.all([
           Events.delete($scope.testRuns[selectedIndex].eventIds[0]),
           Events.delete($scope.testRuns[selectedIndex].eventIds[1])
-        ]).then(TestRuns.delete($scope.productName, $scope.dashboardName, $scope.testRuns[selectedIndex].testRunId)).then(function (results) {
+        ]).then(TestRuns.delete($scope.productName, $scope.dashboardName, $scope.testRuns[selectedIndex].testRunId))
+          .then(function (results) {
           /* refresh test runs*/
           $scope.testRuns.splice(selectedIndex,1);
-          //TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
-          //  $scope.testRuns = testRuns;
-          //}, function (errorResponse) {
-          //  $scope.error = errorResponse.data.message;
-          //});
+
         });
       }, function () {
       });
