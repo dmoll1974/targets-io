@@ -186,40 +186,7 @@ angular.module('metrics').controller('MetricsController', [
     $scope.metric.targets = [''];
     $scope.enableBenchmarking = 'disabled';
     $scope.enableRequirement = 'disabled';
-    $scope.percentageOptions = [
-      {
-        alias: '10%',
-        value: '0.1'
-      },
-      {
-        alias: '25%',
-        value: '0.25'
-      },
-      {
-        alias: '50%',
-        value: '0.5'
-      },
-      {
-        alias: '100%',
-        value: '1.00'
-      },
-      {
-        alias: '200%',
-        value: '2.00'
-      },
-      {
-        alias: '300%',
-        value: '3.00'
-      },
-      {
-        alias: '400%',
-        value: '4.00'
-      },
-      {
-        alias: '500%',
-        value: '5.00'
-      }
-    ];
+
     $scope.$watch('enableRequirement', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         if ($scope.enableRequirement === false) {

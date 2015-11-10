@@ -243,6 +243,7 @@ angular.module('dashboards').controller('DashboardsController', [
           if($scope.dashboard.metrics[i].selected === true){
             deleteMetricArrayOfPromises.push(Metrics.delete($scope.dashboard.metrics[i]._id));
             $scope.dashboard.metrics[i].selected = false;
+            $scope.metricSelected = false;
             $scope.dashboard.metrics.splice(i,1);
           }
         }
