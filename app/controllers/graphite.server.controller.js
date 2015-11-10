@@ -2,7 +2,14 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), _ = require('lodash'), errorHandler = require('./errors.server.controller'), requestjson = require('request-json'), config = require('../../config/config'), Memcached = require('memcached'), md5 = require('MD5');
+var mongoose = require('mongoose'),
+    _ = require('lodash'),
+    errorHandler = require('./errors.server.controller'),
+    request = require('request'),
+    requestjson = require('request-json'),
+    config = require('../../config/config'),
+    Memcached = require('memcached'),
+    md5 = require('MD5');
 /* Memcached config */
 Memcached.config.poolSize = 25;
 Memcached.config.timeout = 100;
@@ -13,6 +20,37 @@ Memcached.config.poolSize = 50;
 exports.getGraphiteData = getGraphiteData;
 exports.flushMemcachedKey = flushMemcachedKey;
 exports.createMemcachedKey = createMemcachedKey;
+
+/**
+ * Find metrics
+ */
+
+exports.findMetrics = function (req, res) {
+
+
+  // Set the headers
+  var headers = {
+    'Content-Type':     'application/json'
+  }
+
+// Configure the request
+  var options = {
+    url: config.graphiteHost + '/metrics/find',
+    method: 'POST',
+    headers: headers,
+    form: { query: req.params.query }
+  }
+
+  request(options,
+      function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.json(JSON.parse(body));
+        }
+      }
+  );
+
+
+}
 /**
  * Get  Graphite data
  */

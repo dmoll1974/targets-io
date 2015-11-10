@@ -9,10 +9,16 @@ angular.module('graphs').factory('Graphite', [
   function ($http, $q, $log, $state, Events, Utils) {
     var Graphite = {
       getData: getData,
-      addEvents: addEvents  //,
-                 //createHighstockSeries: createHighstockSeries
+      addEvents: addEvents,
+      findMetrics: findMetrics
     };
     return Graphite;
+
+    function findMetrics(query){
+
+      return $http.get('/graphite/find/' + query);
+    }
+
     function addFlagData(series, events, productName, dashboardName, testRunId) {
       var flags = {
         'type': 'flags',

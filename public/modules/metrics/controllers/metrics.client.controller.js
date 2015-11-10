@@ -13,10 +13,59 @@ angular.module('metrics').controller('MetricsController', [
   'Dashboards',
   'ConfirmModal',
   'TestRuns',
-  function ($scope, $modal, $log, $rootScope, $stateParams, $state, $location, Authentication, Metrics, Dashboards, ConfirmModal, TestRuns) {
+  'Graphite',
+  function ($scope, $modal, $log, $rootScope, $stateParams, $state, $location, Authentication, Metrics, Dashboards, ConfirmModal, TestRuns, Graphite) {
     $scope.authentication = Authentication;
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
+
+    var originatorEv;
+    $scope.openMenu = function ($mdOpenMenu, ev, target) {
+
+      /* Check if current target returns any 'leafs'*/
+
+      /* remove trailing dot */
+      if(target.lastIndexOf('.') === (target.length - 1)){
+        target = target.substring(0, target.length - 1);
+      }
+
+      Graphite.findMetrics(target + '.*').success(function(graphiteTargetsLeafs) {
+
+        if (graphiteTargetsLeafs.length > 0) {
+          var graphiteTargets = [];
+          graphiteTargets.push({text: '*', id: '*'});
+
+          _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
+            graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+          });
+
+          $scope.graphiteTargets = graphiteTargets;
+
+        } else {
+
+          $scope.graphiteTargets = $scope.defaultGraphiteTargets;
+
+        }
+
+        originatorEv = ev;
+        $mdOpenMenu(ev);
+
+      });
+    };
+
+    /* get initial values for graphite target picker*/
+    Graphite.findMetrics('*').success(function(graphiteTargetsLeafs){
+
+      var graphiteTargets = [];
+
+      _.each(graphiteTargetsLeafs, function(graphiteTargetsLeaf){
+          graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+      });
+
+      $scope.defaultGraphiteTargets = graphiteTargets;
+      $scope.graphiteTargets = $scope.defaultGraphiteTargets;
+
+    })
     /* values for form drop downs*/
     $scope.metricTypes = [
       'Average',
@@ -105,8 +154,50 @@ angular.module('metrics').controller('MetricsController', [
         }
       }
     });
+
+
+    $scope.getTargets = function(target, graphiteTargetId, targetIndex){
+
+      var query;
+
+      if(graphiteTargetId === '*'){
+
+        query = target + '.' + graphiteTargetId;
+
+      }else{
+
+        query = graphiteTargetId + '.*';
+      }
+      Graphite.findMetrics(query).success(function(graphiteTargetsLeafs){
+
+        var graphiteTargets = [];
+
+
+        _.each(graphiteTargetsLeafs, function(graphiteTargetsLeaf){
+          graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+        });
+
+        $scope.graphiteTargets = graphiteTargets;
+
+        if(graphiteTargetId === '*'){
+
+          $scope.metric.targets[targetIndex] = target + '.' + graphiteTargetId;
+
+
+        }else{
+
+          $scope.metric.targets[targetIndex] = graphiteTargetId;
+        }
+
+
+
+      });
+    };
+
+
     $scope.addTarget = function () {
       $scope.metric.targets.push('');
+      $scope.graphiteTargets = $scope.defaultGraphiteTargets;
     };
     $scope.removeTarget = function (index) {
       $scope.metric.targets.splice(index, 1);
@@ -141,7 +232,7 @@ angular.module('metrics').controller('MetricsController', [
         Metrics.clone = {};
         var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
         var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
-        /* if requirement or benchmark vlaues have changed, update test runs */
+        /* if requirement or benchmark values have changed, update test runs */
         if (updateRequirements || updateBenchmarks) {
           $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
             TestRuns.list = testRuns;

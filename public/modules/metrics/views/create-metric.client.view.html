@@ -11,11 +11,27 @@
             </md-input-container>
             <div layout="column" class="well">
                 <div ng-repeat="target in metric.targets track by $index">
-                    <div layout="row">
+                    <div layout="row" layout-align="end center">
                         <md-input-container flex>
                             <label>Target</label>
                             <input ng-model="metric.targets[$index]">
                         </md-input-container>
+                        <md-menu style="padding-top: 0px; padding-bottom: 0px;">
+                            <div aria-label="Select target" class="md-icon-button"
+                                 ng-click="openMenu($mdOpenMenu, $event, target)">
+                                <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
+                                <md-tooltip>
+                                    Select target
+                                </md-tooltip>
+                            </div>
+                            <md-menu-content width="4">
+                                <md-menu-item ng-repeat="graphiteTarget in graphiteTargets">
+                                    <md-button  ng-click="getTargets(target, graphiteTarget.id, $parent.$index)">
+                                        {{graphiteTarget.text}}
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
                         <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeTarget($index)"
                                  data-ng-show="metric.targets.length>1"></md-icon>
                     </div>
