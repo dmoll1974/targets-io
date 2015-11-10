@@ -87,7 +87,7 @@ angular.module('metrics').controller('MetricsController', [
               if (hasAnyAttribute(target, ["ng-click", "ng-href", "ui-sref"]) || target.nodeName == "BUTTON" || target.nodeName == "MD-BUTTON") {
                 var closestMenu = getClosest(target, "MD-MENU");
                 if (!target.hasAttribute("disabled") && (!closestMenu || closestMenu == opts.parent[0])) {
-                  if (target.hasAttribute("md-menu-disable-close")) {
+                  if (target.hasAttribute("md-menu-disable-close") &&  $scope.expandable) {
                     event.stopPropagation();
                     angular.element(target).triggerHandler('click');
                   }
@@ -145,6 +145,7 @@ angular.module('metrics').controller('MetricsController', [
 
       $scope.defaultGraphiteTargets = graphiteTargets;
       $scope.graphiteTargets = $scope.defaultGraphiteTargets;
+      $scope.expandable = true;
 
     })
     /* values for form drop downs*/
@@ -243,7 +244,7 @@ angular.module('metrics').controller('MetricsController', [
 
       if(graphiteTargetId === '*'){
 
-        query = target + '.' + graphiteTargetId;
+        query = target + '.' + graphiteTargetId + '.*';
 
       }else{
 
@@ -252,11 +253,15 @@ angular.module('metrics').controller('MetricsController', [
       Graphite.findMetrics(query).success(function(graphiteTargetsLeafs){
 
         var graphiteTargets = [];
-        if(graphiteTargetsLeafs.length > 0) graphiteTargets.push({text: '*', id: '*'});
+        if(graphiteTargetsLeafs.length > 0) {
 
-        _.each(graphiteTargetsLeafs, function(graphiteTargetsLeaf){
-          graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
-        });
+          $scope.expandable = isExpandable(graphiteTargetsLeafs);
+
+          graphiteTargets.push({text: '*', id: '*'});
+          _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
+            graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+          });
+        }
 
         $scope.graphiteTargets = graphiteTargets;
 
@@ -275,6 +280,14 @@ angular.module('metrics').controller('MetricsController', [
       });
     };
 
+    function isExpandable(graphiteTargets){
+
+      var isExpandable = false;
+      _.each(graphiteTargets, function(target){
+        if(target.expandable === 1)isExpandable = true;
+      })
+      return isExpandable;
+    }
 
     $scope.addTarget = function () {
       $scope.metric.targets.push('');
