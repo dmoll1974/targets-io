@@ -7,6 +7,7 @@ angular.module('metrics').controller('MetricsController', [
   '$rootScope',
   '$stateParams',
   '$state',
+  '$timeout',
   '$location',
   'Authentication',
   'Metrics',
@@ -14,15 +15,17 @@ angular.module('metrics').controller('MetricsController', [
   'ConfirmModal',
   'TestRuns',
   'Graphite',
-  function ($scope, $modal, $log, $rootScope, $stateParams, $state, $location, Authentication, Metrics, Dashboards, ConfirmModal, TestRuns, Graphite) {
+  function ($scope, $modal, $log, $rootScope, $stateParams, $state, $timeout, $location, Authentication, Metrics, Dashboards, ConfirmModal, TestRuns, Graphite) {
     $scope.authentication = Authentication;
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
-    var originatorEv;
-    $scope.openMenu = function ($mdOpenMenu, ev, target) {
 
-      /* Check if current target returns any 'leafs'*/
+
+    $scope.openMenu = function($mdOpenMenu, $event, target) {
+
+
+    /* Check if current target returns any 'leafs'*/
 
       /* remove trailing dot */
       if(target.lastIndexOf('.') === (target.length - 1)){
@@ -47,11 +50,89 @@ angular.module('metrics').controller('MetricsController', [
 
         }
 
-        originatorEv = ev;
-        $mdOpenMenu(ev);
+        var menu = $mdOpenMenu($event);
+          $timeout(function() {
+          var menuContent = document.getElementById('targets-menu-content');
 
+          function hasAnyAttribute(target, attrs) {
+            if (!target) return false;
+            for (var i = 0, attr; attr = attrs[i]; ++i) {
+              var altForms = [attr, "data-" + attr, "x-" + attr];
+              for (var j = 0, rawAttr; rawAttr = altForms[j]; ++j) {
+                if (target.hasAttribute(rawAttr)) {
+                  return true;
+                }
+              }
+            }
+            return false;
+          };
+
+          function getClosest(el, tagName, onlyParent) {
+            if (el instanceof angular.element) el = el[0];
+            tagName = tagName.toUpperCase();
+            if (onlyParent) el = el.parentNode;
+            if (!el) return null;
+            do {
+              if (el.nodeName === tagName) {
+                return el;
+              }
+            } while (el = el.parentNode);
+            return null;
+          };
+          menuContent.parentElement.addEventListener('click', function(e) {
+            console.log('clicked');
+            var target = e.target;
+            do {
+              if (target === menuContent) return;
+              if (hasAnyAttribute(target, ["ng-click", "ng-href", "ui-sref"]) || target.nodeName == "BUTTON" || target.nodeName == "MD-BUTTON") {
+                var closestMenu = getClosest(target, "MD-MENU");
+                if (!target.hasAttribute("disabled") && (!closestMenu || closestMenu == opts.parent[0])) {
+                  if (target.hasAttribute("md-menu-disable-close")) {
+                    event.stopPropagation();
+                    angular.element(target).triggerHandler('click');
+                  }
+                  return; //let it propagate
+                }
+                break;
+              }
+            } while (target = target.parentNode);
+          }, true);
+        });
       });
     };
+
+    //$scope.openMenu = function ($mdOpenMenu, ev, target) {
+    //
+    //  /* Check if current target returns any 'leafs'*/
+    //
+    //  /* remove trailing dot */
+    //  if(target.lastIndexOf('.') === (target.length - 1)){
+    //    target = target.substring(0, target.length - 1);
+    //  }
+    //
+    //  Graphite.findMetrics(target + '.*').success(function(graphiteTargetsLeafs) {
+    //
+    //    if (graphiteTargetsLeafs.length > 0) {
+    //      var graphiteTargets = [];
+    //      graphiteTargets.push({text: '*', id: '*'});
+    //
+    //      _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
+    //        graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+    //      });
+    //
+    //      $scope.graphiteTargets = graphiteTargets;
+    //
+    //    } else {
+    //
+    //      $scope.graphiteTargets = $scope.defaultGraphiteTargets;
+    //
+    //    }
+    //
+    //    originatorEv = ev;
+    //    $mdOpenMenu(ev);
+    //
+    //  });
+    //};
 
     /* get initial values for graphite target picker*/
     Graphite.findMetrics('*').success(function(graphiteTargetsLeafs){
@@ -171,7 +252,7 @@ angular.module('metrics').controller('MetricsController', [
       Graphite.findMetrics(query).success(function(graphiteTargetsLeafs){
 
         var graphiteTargets = [];
-
+        if(graphiteTargetsLeafs.length > 0) graphiteTargets.push({text: '*', id: '*'});
 
         _.each(graphiteTargetsLeafs, function(graphiteTargetsLeaf){
           graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});

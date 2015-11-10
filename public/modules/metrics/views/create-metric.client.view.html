@@ -24,9 +24,9 @@
                                     Select target
                                 </md-tooltip>
                             </div>
-                            <md-menu-content width="4">
+                            <md-menu-content width="4" id="targets-menu-content">
                                 <md-menu-item ng-repeat="graphiteTarget in graphiteTargets">
-                                    <md-button  ng-click="getTargets(target, graphiteTarget.id, $parent.$index)">
+                                    <md-button md-menu-disable-close="md-menu-disable-close"  ng-click="getTargets(target, graphiteTarget.id, $parent.$index)">
                                         {{graphiteTarget.text}}
                                     </md-button>
                                 </md-menu-item>
