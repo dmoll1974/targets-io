@@ -1,0 +1,53 @@
+<div class="page-header">
+    <h1>Create Template Metric</h1>
+</div>
+<form name="metricForm" novalidate>
+    <div layout="column">
+        <md-input-container flex class="well">
+            <label>Alias</label>
+            <input ng-model="metric.alias">
+        </md-input-container>
+        <div layout="column" class="well">
+            <div ng-repeat="target in metric.targets track by $index">
+                <div layout="row" layout-align="end center">
+                    <md-input-container flex>
+                        <label>Target</label>
+                        <input ng-model="metric.targets[$index]">
+                    </md-input-container>
+                    <md-menu style="padding-top: 0px; padding-bottom: 0px;">
+                        <div aria-label="Select target" class="md-icon-button"
+                             ng-click="openMenu($mdOpenMenu, $event, target)">
+                            <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
+                            <md-tooltip>
+                                Select target
+                            </md-tooltip>
+                        </div>
+                        <md-menu-content width="4" id="targets-menu-content">
+                            <md-menu-item ng-repeat="graphiteTarget in graphiteTargets">
+                                <md-button md-menu-disable-close="md-menu-disable-close"  ng-click="getTargets(target, graphiteTarget.id, $parent.$index)">
+                                    {{graphiteTarget.text}}
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                    <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeTarget($index)"
+                             data-ng-show="metric.targets.length>1"></md-icon>
+                </div>
+            </div>
+            <div>
+                <md-button md-no-ink class="md-primary md-raised" data-ng-click="addTarget()">Add target</md-button>
+            </div>
+        </div>
+        <md-input-container flex class="well">
+            <!--<label>Alias</label>-->
+            <tags-input data-ng-model="metric.tags">
+                <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
+            </tags-input>
+        </md-input-container>
+        <div layout="row">
+            <md-button md-no-ink class="md-primary" data-ng-click="create()">Submit</md-button>
+            <md-button data-ng-click="cancel()">Cancel</md-button>
+        </div>
+    </div>
+</form>
+

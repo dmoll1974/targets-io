@@ -1,0 +1,36 @@
+<div class="page-header">
+    <h1>Create Template</h1>
+</div>
+<form name="templateForm">
+    <div layout="column">
+        <div layout="column">
+            <md-input-container
+                    md-is-error="templateForm.templateName.$invalid && (templateForm.$submitted || templateForm.templateName.$dirty)"
+                    flex>
+                <label>Template name</label>
+                <input name="templateName" ng-model="template.name"
+                       record-availability-validator="/templates" required>
+                <div ng-messages="templateForm.templateName.$error"
+                     ng-if="templateForm.$submitted || templateForm.templateName.$touched">
+                    <div ng-message="required">Template name is required.</div>
+                    <div ng-message="recordLoading">Checking database...</div>
+                    <div ng-message="recordAvailable">The template name already exists</div>
+                </div>
+            </md-input-container>
+            <md-input-container
+                    md-is-error="templateForm.templateDescription.$invalid && (templateForm.$submitted || templateForm.templateDescription.$dirty)"
+                    flex>
+                <label>Template description</label>
+                <input name="templateDescription" ng-model="template.description" required>
+                <div ng-messages="templateForm.templateDescription.$error"
+                     ng-if="templateForm.$submitted || templateForm.templateDescription.$touched">
+                    <div ng-message="required">Template description is required.</div>
+                </div>
+            </md-input-container>
+        </div>
+        <div layout="row">
+            <md-button md-no-ink class="md-primary" ng-click="templateForm.$valid && create()">Submit</md-button>
+            <md-button data-ng-click="cancel()">Cancel</md-button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,53 @@
+<div class="page-header">
+    <h1>Create Template variable</h1>
+</div>
+<form name="variableForm">
+    <div layout="column">
+        <div layout="column">
+            <md-input-container
+                    md-is-error="variableForm.variableName.$invalid && (variableForm.$submitted || variableForm.variableName.$dirty)"
+                    flex>
+                <label>Variable name</label>
+                <input name="variableName" ng-model="variable.name"
+                       record-availability-validator="/variables" required>
+
+                <div ng-messages="variableForm.variableName.$error"
+                     ng-if="variableForm.$submitted || variableForm.variableName.$touched">
+                    <div ng-message="required">Variable name is required.</div>
+                    <div ng-message="recordLoading">Checking database...</div>
+                    <div ng-message="recordAvailable">The variable name already exists</div>
+                </div>
+            </md-input-container>
+            <md-input-container
+                    md-is-error="variableForm.variableQuery.$invalid && (variableForm.$submitted || variableForm.variableQuery.$dirty)"
+                    flex>
+                <label>Variable query</label>
+                <input name="variableQuery" ng-model="variable.query" required>
+                <div ng-messages="variableForm.variableQuery.$error"
+                     ng-if="variableForm.$submitted || variableForm.variableQuery.$touched">
+                    <div ng-message="required">Variable query is required.</div>
+                </div>
+            </md-input-container>
+            <md-menu style="padding-top: 0px; padding-bottom: 0px;">
+                <div aria-label="Select variable" class="md-icon-button"
+                     ng-click="openMenu($mdOpenMenu, $event, variable)">
+                    <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
+                    <md-tooltip>
+                        Select variable
+                    </md-tooltip>
+                </div>
+                <md-menu-content width="4" id="variables-menu-content">
+                    <md-menu-item ng-repeat="graphiteTarget in graphiteTargets">
+                        <md-button md-menu-disable-close="md-menu-disable-close"  ng-click="getTargets(variable, graphiteTarget.id, $parent.$index)">
+                            {{graphiteTarget.text}}
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>
+                <div layout="row">
+            <md-button md-no-ink class="md-primary" ng-click="variableForm.$valid && create()">Submit</md-button>
+            <md-button data-ng-click="cancel()">Cancel</md-button>
+        </div>
+    </div>
+</form>
