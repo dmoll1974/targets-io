@@ -4,6 +4,8 @@ module.exports = function (app) {
   var benchmarks = require('../../app/controllers/testruns.benchmarks.server.controller');
   var requirements = require('../../app/controllers/testruns.requirements.server.controller');
   app.route('/testruns-dashboard/:productName/:dashboardName/:useInBenchmark').get(testruns.testRunsForDashboard);
+  app.route('/testruns-product/:productName').get(testruns.testRunsForProduct);
+
   app.route('/testrun/:productName/:dashboardName/:testRunId')
       .get(testruns.testRunById)
       .delete(testruns.deleteTestRunById);

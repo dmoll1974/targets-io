@@ -95,14 +95,6 @@ angular.module('dashboards').controller('DashboardsController', [
     };
 
 
-    // Edit Product
-    $scope.editProduct = function (productName) {
-      $state.go('editProduct', { productName: productName });
-    };
-    $scope.useInBenchmarkOptions = [
-      'no',
-      'yes'
-    ];
     /* Tab controller */
     $scope.$watch(function (scope) {
       return Dashboards.selectedTab;

@@ -11,6 +11,7 @@ angular.module('events').factory('TestRuns', [
       list: [],
       selected: {},
       listTestRunsForDashboard: listTestRunsForDashboard,
+      listTestRunsForProduct: listTestRunsForProduct,
       zoomFrom: '',
       zoomUntil: '',
       zoomRange: '',
@@ -38,8 +39,13 @@ angular.module('events').factory('TestRuns', [
                                                                                             //
                                                                                             //});
     }
+
     function listTestRunsForDashboard(productName, dashboardName, useInBenchmark) {
       return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + useInBenchmark);
+    }
+    listTestRunsForProduct
+    function listTestRunsForProduct(productName) {
+      return $http.get('/testruns-product/' + productName);
     }
     function refreshTestrun(productName, dashboardName, testRunId) {
       return $http.get('/refresh-testrun/' + productName + '/' + dashboardName + '/' + testRunId);

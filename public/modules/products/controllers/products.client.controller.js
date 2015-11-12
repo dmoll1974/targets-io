@@ -7,15 +7,90 @@ angular.module('products').controller('ProductsController', [
   '$state',
   '$location',
   '$modal',
+  '$interval',
   'Products',
   'ConfirmModal',
   'SideMenu',
-  function ($scope, $rootScope, $stateParams, $state, $location, $modal, Products, ConfirmModal, SideMenu) {
+  'TestRuns',
+  function ($scope, $rootScope, $stateParams, $state, $location, $modal, $interval, Products, ConfirmModal, SideMenu, TestRuns) {
+
+    $scope.productName = $stateParams.productName;
+
+    /* refresh test runs every 30 seconds */
+
+
+    var testRunPolling = function(){
+      TestRuns.listTestRunsForProduct($scope.productName).success(function (testRuns) {
+
+        $scope.testRuns= [];
+        $scope.testRuns= testRuns;
+        $scope.numberOfTestRuns = testRuns.length;
+        $scope.totalDuration = calculateTotalDuration(testRuns);
+
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+
+    };
+
+    function calculateTotalDuration(testRuns){
+
+      var totalDuration = 0;
+
+      _.each(testRuns, function(testRun){
+
+        totalDuration += testRun.duration;
+      })
+
+
+      return(humanReadbleDuration(totalDuration));
+    }
+
+    function humanReadbleDuration(durationInMs){
+
+      var date = new Date(durationInMs);
+      var readableDate = '';
+      if(date.getUTCDate()-1 > 0) readableDate += date.getUTCDate()-1 + " days, ";
+      if(date.getUTCHours() > 0) readableDate += date.getUTCHours() + " hours, ";
+      readableDate += date.getUTCMinutes() + " minutes";
+      return readableDate;
+    }
+
+    testRunPolling();
+    var polling = $interval(testRunPolling, 30000);
+
+    $scope.testRunDetails = function (productName, dashboardName, testRunId) {
+      $state.go('viewGraphs', {
+        'productName': productName,
+        'dashboardName': dashboardName,
+        'testRunId': testRunId,
+        'tag' : 'Load'
+      });
+    };
+
+    $scope.$on('$destroy', function () {
+      // Make sure that the interval is destroyed too
+      $interval.cancel(polling);
+    });
+
     $scope.initCreateForm = function () {
       /* reset form */
       $scope.product = {};
     };
     $scope.product = Products.selected;
+
+
+    var originatorEv;
+    $scope.openMenu = function ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
+
+    // Edit Product
+    $scope.editProduct = function (productName) {
+      $state.go('editProduct', { productName: productName });
+    };
+
     // Create new Product
     $scope.create = function () {
       // Create new Product object

@@ -1,0 +1,35 @@
+<!--<div data-ng-controller="TestrunsController" data-ng-init="listTestRunsForDashboard()">-->
+<div data-ng-controller="ProductsController">
+    <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
+    <div layout="column">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Dashboard</th>
+                    <th>Test run ID</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="testRun in testRuns | orderBy:'end':true" data-ng-click="testRunDetails(testRun.productName, testRun.dashboardName, testRun.testRunId)">
+                    <td class="pointer" >{{testRun.dashboardName}}</td>
+                    <td class="pointer">{{testRun.testRunId}}</td>
+                    <td class="pointer">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                    </td>
+                    <td class="pointer">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                    </td>
+                    <td class="pointer">{{testRun.humanReadbleDuration}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div flex="50" class="container" ng-if="loading">
+            <md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>
+            <div class="bottom-block">
+                <span>Loading test runs ...</span>
+            </div>
+        </div>
+    </div>
+</div>

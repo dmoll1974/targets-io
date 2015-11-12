@@ -46,7 +46,7 @@
             name: product.name,
             type: 'toggle',
             pages: pages,
-            matcher: product.name
+            matcher: product.name,
           });
           /* reset pages*/
           pages = [];

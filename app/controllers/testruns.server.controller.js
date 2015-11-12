@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Event = mongoose.model('Event'), Testrun = mongoose.model('Testrun'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), _ = require('lodash'), graphite = require('./graphite.server.controller'), Utils = require('./utils.server.controller'), Requirements = require('./testruns.requirements.server.controller'), Benchmarks = require('./testruns.benchmarks.server.controller'), Metric = mongoose.model('Metric'), async = require('async');
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
+exports.testRunsForProduct = testRunsForProduct;
 exports.deleteTestRunById = deleteTestRunById;
 exports.testRunById = testRunById;
 exports.refreshTestrun = refreshTestrun;
@@ -141,6 +142,57 @@ function deleteTestRunById(req, res) {
     }
   });
 }
+/**
+ * select test runs for product
+ */
+function testRunsForProduct(req, res) {
+  Event.find({productName: req.params.productName}).sort({eventTimestamp: 1}).exec(function (err, events) {
+    if (err) {
+      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+    } else {
+      createTestRunSummaryFromEvents(events, function (testRunSummary) {
+        res.jsonp(testRunSummary);
+      });
+    }
+  });
+}
+
+  function createTestRunSummaryFromEvents(events, callback) {
+    var testRuns = [];
+    for (var i = 0; i < events.length; i++) {
+      if (events[i].eventDescription === 'start') {
+        for (var j = 0; j < events.length; j++) {
+          if (events[j].eventDescription === 'end' && events[j].testRunId == events[i].testRunId) {
+            testRuns.push({
+              start: events[i].eventTimestamp,
+              startEpoch: events[i].eventTimestamp.getTime(),
+              end: events[j].eventTimestamp,
+              endEpoch: events[j].eventTimestamp.getTime(),
+              productName: events[i].productName,
+              dashboardName: events[i].dashboardName,
+              testRunId: events[i].testRunId,
+              humanReadbleDuration: humanReadbleDuration(events[j].eventTimestamp.getTime() - events[i].eventTimestamp.getTime()),
+              duration: events[j].eventTimestamp.getTime() - events[i].eventTimestamp.getTime()
+            });
+
+            break;
+          }
+        }
+      }
+    }
+
+    callback(testRuns);
+  }
+
+  function humanReadbleDuration(durationInMs){
+
+    var date = new Date(durationInMs);
+    var readableDate = '';
+    if(date.getUTCDate()-1 > 0) readableDate += date.getUTCDate()-1 + " days, ";
+    if(date.getUTCHours() > 0) readableDate += date.getUTCHours() + " hours, ";
+    readableDate += date.getUTCMinutes() + " minutes";
+    return readableDate;
+  }
 /**
  * select test runs for dashboard
  */
