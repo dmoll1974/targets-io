@@ -39,15 +39,15 @@ angular.module('dashboards').controller('DashboardTagsController', [
 
 
     $scope.$watch(function (scope) {
-      return Dashboards.selected;
+      return Dashboards.selected._id;
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
         $scope.tags = Dashboards.selected.tags;
         $scope.defaultTag = Dashboards.getDefaultTag(Dashboards.selected.tags);
-        setDefault($scope.defaultTag);
-        Dashboards.update().success(function (dashboard) {
-          $scope.tags = dashboard.tags;
-        });
+        //setDefault($scope.defaultTag);
+        //Dashboards.update().success(function (dashboard) {
+        //  $scope.tags = dashboard.tags;
+        //});
       }
     });
     $scope.$watch('defaultTag', function (newVal, oldVal) {

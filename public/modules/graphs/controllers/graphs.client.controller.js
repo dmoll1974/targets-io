@@ -15,6 +15,10 @@ angular.module('graphs').controller('GraphsController', [
   'Utils',
   'SideMenu',
   function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
+
+    $scope.productName = $stateParams.productName;
+    $scope.dashboardName = $stateParams.dashboardName;
+
     /* Set product Filter in side menu */
     SideMenu.productFilter = $stateParams.productName;
     $scope.$watch('selectedIndex', function (current, old) {

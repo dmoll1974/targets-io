@@ -60,6 +60,7 @@ angular.module('dashboards').factory('Dashboards', [
     function getFn(productName, dashboardName) {
       return $http.get('/dashboards/' + productName + '/' + dashboardName).success(function (dashboard) {
         Dashboards.selected = dashboard;
+        Dashboards.selected.productName = productName;
         Dashboards.defaultTag = getDefaultTag(Dashboards.selected.tags);
       });
     }

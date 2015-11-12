@@ -163,7 +163,7 @@ exports.eventsForTestRun = function (req, res) {
  * Event middleware
  */
 exports.eventByID = function (req, res, next, id) {
-  Event.findById(id).populate('user', 'displayName').exec(function (err, event) {
+  Event.findById(id).exec(function (err, event) {
     if (err)
       return next(err);
     if (!event)

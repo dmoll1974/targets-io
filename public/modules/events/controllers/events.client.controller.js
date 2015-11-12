@@ -7,12 +7,21 @@ angular.module('events').controller('EventsController', [
   '$state',
   '$location',
   '$modal',
+  '$q',
   'Authentication',
   'Events',
   'Dashboards',
   'ConfirmModal',
-  function ($scope, $rootScope, $stateParams, $state, $location, $modal, Authentication, Events, Dashboards, ConfirmModal) {
+  function ($scope, $rootScope, $stateParams, $state, $location, $modal, $q, Authentication, Events, Dashboards, ConfirmModal) {
 
+    $scope.$watch(function (scope) {
+      return Events.list;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        $scope.events = [];
+        $scope.events = Events.list;
+      }
+    });
 
     $scope.$watch('allEventsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
@@ -150,6 +159,7 @@ angular.module('events').controller('EventsController', [
           if($scope.events[i].selected === true){
             deleteEventArrayOfPromises.push(Events.delete($scope.events[i]._id));
             $scope.events[i].selected = false;
+            $scope.eventSelected = false;
             $scope.events.splice(i, 1);
 
           }

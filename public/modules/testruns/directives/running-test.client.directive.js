@@ -5,8 +5,8 @@
      * @desc
      * @example <div running-test></div>
      */
-  angular.module('testruns').directive('runningTest', RunningTestDirective);
-  function RunningTestDirective() {
+  angular.module('testruns').directive('runningTest', [ 'Dashboards', 'TestRuns', '$timeout', RunningTestDirective]);
+  function RunningTestDirective(Dashboards, TestRuns, $timeout) {
     var directive = {
       restrict: 'EA',
       templateUrl: 'modules/testruns/views/running-test-directive.client.view.html',
@@ -62,12 +62,36 @@
             baseline: $scope.runningTest.baseline,
             buildResultKey: $scope.runningTest.buildResultKey
           };
+
           Events.create(endEvent).success(function (event) {
-            //TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function (runningTest) {
-            //
-            //    $scope.runningTest = runningTest;
+
             $scope.showDialog = false;
-            $state.go($state.current, {}, { reload: true });  //});
+
+            TestRuns.list.unshift({
+              productName: $scope.runningTest.productName,
+              dashboardName: $scope.runningTest.dashboardName,
+              testRunId: $scope.runningTest.testRunId,
+              buildResultKey: $scope.runningTest.buildResultKey,
+              meetsRequirement: 'pending',
+              benchmarkResultFixedOK: 'pending',
+              benchmarkResultPreviousOK: 'pending'
+            });
+
+            $timeout(function(){
+
+              TestRuns.listTestRunsForDashboard(Dashboards.selected.productName, Dashboards.selected.name, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+
+
+                TestRuns.list = testRuns;
+
+              }, function (errorResponse) {
+                $scope.error = errorResponse.data.message;
+              });
+
+            }, 3000);
+
+
+            //$state.go($state.current, {}, { reload: true });  //});
           });
         }, function () {
           $log.info('Modal dismissed at: ' + new Date());

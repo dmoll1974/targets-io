@@ -16,6 +16,43 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
+    /* refresh test runs every 30 seconds */
+
+
+    var testRunPolling = function(){
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+
+        $scope.testRuns= [];
+        $scope.testRuns= testRuns;
+
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+
+    };
+
+    testRunPolling();
+    var polling = $interval(testRunPolling, 30000);
+
+    /* only get test runs from db when neccessary */
+    if (TestRuns.list.length > 0){
+      $scope.testRuns = TestRuns.list;
+
+    }else{
+
+      $scope.loading = true;
+
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+
+        TestRuns.list = testRuns;
+        $scope.loading = false;
+
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+
+    }
+
     $scope.$watch('allTestRunsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         _.each($scope.testRuns, function (testRun, i) {
@@ -77,6 +114,7 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.$on('$destroy', function () {
       // Make sure that the interval is destroyed too
       $interval.cancel(spinner);
+      $interval.cancel(polling);
     });
     
     var originatorEv;
@@ -96,10 +134,11 @@ angular.module('testruns').controller('TestrunsController', [
         $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
         $scope.dashboard = Dashboards.selected;
         $scope.loading = true;
-        $scope.getTestRuns = TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+        TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+
           TestRuns.list = testRuns;
           $scope.loading = false;
-          $scope.testRuns = TestRuns.list;
+
         }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
         });
@@ -109,6 +148,7 @@ angular.module('testruns').controller('TestrunsController', [
       return TestRuns.list;
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
+        $scope.testRuns = [];
         $scope.testRuns = TestRuns.list;
       }
     });
@@ -237,6 +277,13 @@ angular.module('testruns').controller('TestrunsController', [
           .then(function (results) {
           /* refresh test runs*/
           $scope.testRuns.splice(selectedIndex,1);
+          /* refresh Events */
+          Events.listEventsForDashboard($scope.productName, $scope.dashboardName).success(function (events) {
+            Events.list = events;
+            $scope.events = events;
+          }, function (errorResponse) {
+            $scope.error = errorResponse.data.message;
+          });
 
         });
       }, function () {
@@ -260,7 +307,8 @@ angular.module('testruns').controller('TestrunsController', [
 
             if($scope.testRuns[i].selected === true){
               deleteEventsArrayOfPromises.push([Events.delete($scope.testRuns[i].eventIds[0]), Events.delete($scope.testRuns[i].eventIds[1])]);
-              deleteTestRunsArrayOfPromises.push($scope.productName, $scope.dashboardName, $scope.testRuns[i].testRunId);
+              deleteTestRunsArrayOfPromises.push(TestRuns.delete($scope.productName, $scope.dashboardName, $scope.testRuns[i].testRunId));
+              $scope.testRunSelected = false;
               $scope.testRuns[i].selected = false;
               $scope.testRuns.splice(i,1);
             }
@@ -272,8 +320,12 @@ angular.module('testruns').controller('TestrunsController', [
           .then($q.all(deleteTestRunsArrayOfPromises))
           .then(function (testRuns){
 
-                    //TestRuns.list = testRuns;
-
+            /* refresh Events */
+            Events.listEventsForDashboard($scope.productName, $scope.dashboardName).success(function (events) {
+              Events.list = events;
+            }, function (errorResponse) {
+              $scope.error = errorResponse.data.message;
+            });
           });
 
       }, function () {

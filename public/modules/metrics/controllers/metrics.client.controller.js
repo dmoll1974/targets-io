@@ -101,38 +101,6 @@ angular.module('metrics').controller('MetricsController', [
       });
     };
 
-    //$scope.openMenu = function ($mdOpenMenu, ev, target) {
-    //
-    //  /* Check if current target returns any 'leafs'*/
-    //
-    //  /* remove trailing dot */
-    //  if(target.lastIndexOf('.') === (target.length - 1)){
-    //    target = target.substring(0, target.length - 1);
-    //  }
-    //
-    //  Graphite.findMetrics(target + '.*').success(function(graphiteTargetsLeafs) {
-    //
-    //    if (graphiteTargetsLeafs.length > 0) {
-    //      var graphiteTargets = [];
-    //      graphiteTargets.push({text: '*', id: '*'});
-    //
-    //      _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
-    //        graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
-    //      });
-    //
-    //      $scope.graphiteTargets = graphiteTargets;
-    //
-    //    } else {
-    //
-    //      $scope.graphiteTargets = $scope.defaultGraphiteTargets;
-    //
-    //    }
-    //
-    //    originatorEv = ev;
-    //    $mdOpenMenu(ev);
-    //
-    //  });
-    //};
 
     /* get initial values for graphite target picker*/
     Graphite.findMetrics('*').success(function(graphiteTargetsLeafs){
@@ -294,7 +262,7 @@ angular.module('metrics').controller('MetricsController', [
         var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
         var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
         /* if requirement or benchmark values have changed, update test runs */
-        if (updateRequirements || updateBenchmarks) {
+        if ((updateRequirements || updateBenchmarks) && Dashboards.selected.useInBenchmark) {
           $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
             TestRuns.list = testRuns;
           });
@@ -333,7 +301,7 @@ angular.module('metrics').controller('MetricsController', [
         var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
         var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
         /* if requirement or benchmark vlaues have changed, update test runs */
-        if (updateRequirements || updateBenchmarks) {
+        if ((updateRequirements || updateBenchmarks) && Dashboards.selected.useInBenchmark) {
           $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
             TestRuns.list = testRuns;
             if ($rootScope.previousStateParams)

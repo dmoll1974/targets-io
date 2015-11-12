@@ -16,6 +16,50 @@ angular.module('dashboards').controller('DashboardsController', [
   'SideMenu',
   '$q',
   function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, $q) {
+
+    $scope.productName = $stateParams.productName;
+    $scope.dashboardName = $stateParams.dashboardName;
+
+
+
+    if(Dashboards.selected) {
+
+      $scope.dashboard = Dashboards.selected;
+      $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+
+      if (Dashboards.selected.productName !== $stateParams.productName || Dashboards.selected.name !== $stateParams.dashboardName) {
+
+        Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+          $scope.dashboard = Dashboards.selected;
+          $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+        });
+      }
+    }else{
+      Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+        $scope.dashboard = Dashboards.selected;
+        $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+      });
+    }
+
+    $scope.$watch(function (scope) {
+      return Dashboards.selected._id;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        TestRuns.list = [];
+        $scope.dashboard = Dashboards.selected;
+        $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+        Products.get($stateParams.productName).success(function (product) {
+          Products.selected = product;
+          //$scope.loading = true;
+          //TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+          //  $scope.loading = false;
+          //  TestRuns.list = testRuns;
+          //  $scope.testRuns = testRuns;
+          //});
+        });
+      }
+    });
+
     var originatorEv;
     $scope.openMenu = function ($mdOpenMenu, ev) {
       originatorEv = ev;
@@ -75,8 +119,7 @@ angular.module('dashboards').controller('DashboardsController', [
       $scope.dashboard = Dashboards.selected;
       SideMenu.productFilter = $stateParams.productName;
     });
-    $scope.productName = $stateParams.productName;
-    $scope.dashboardName = $stateParams.dashboardName;
+
     //$scope.authentication = Authentication;
     $scope.addMetric = function () {
       //            console.log('add/metric/' + $stateParams.productName + '/' + $stateParams.dashboardName)
@@ -191,18 +234,20 @@ angular.module('dashboards').controller('DashboardsController', [
         $state.go($rootScope.previousState);
     };
     // Find existing Dashboard
-    $scope.findOne = function () {
-      Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
-        $scope.dashboard = Dashboards.selected;
-        $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
-        Products.get($stateParams.productName).success(function (product) {
-          Products.selected = product;
-          TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
-            $scope.testRuns = testRuns;
-          });
-        });
-      });
-    };
+    //$scope.findOne = function () {
+    //  Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+    //    $scope.dashboard = Dashboards.selected;
+    //    $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+    //    Products.get($stateParams.productName).success(function (product) {
+    //      Products.selected = product;
+    //      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+    //              $scope.testRuns = testRuns;
+    //      });
+    //    });
+    //  });
+    //};
+
+
     $scope.openDeleteMetricModal = function (size, index) {
       Metrics.selected = $scope.dashboard.metrics[index];
       ConfirmModal.itemType = 'Delete metric ';

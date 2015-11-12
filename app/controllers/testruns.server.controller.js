@@ -597,9 +597,9 @@ function createTestrunFromEvents(productName, dashboardName, events, callback) {
                       events[i].id,
                       events[j].id
                     ],
-                    meetsRequirement: null,
-                    benchmarkResultFixedOK: null,
-                    benchmarkResultPreviousOK: null,
+                    //meetsRequirement: null,
+                    //benchmarkResultFixedOK: null,
+                    //benchmarkResultPreviousOK: null,
                     baseline: baseline
                   });
                 } else {
@@ -615,9 +615,9 @@ function createTestrunFromEvents(productName, dashboardName, events, callback) {
                       events[i].id,
                       events[j].id
                     ],
-                    meetsRequirement: null,
-                    benchmarkResultFixedOK: null,
-                    benchmarkResultPreviousOK: null,
+                    //meetsRequirement: null,
+                    //benchmarkResultFixedOK: null,
+                    //benchmarkResultPreviousOK: null,
                     baseline: baseline
                   });
                 }
