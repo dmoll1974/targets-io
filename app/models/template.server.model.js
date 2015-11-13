@@ -4,14 +4,6 @@
  */
 var mongoose = require('mongoose'), Schema = mongoose.Schema, config = require('../../config/config');
 
-var templateMetricSchema = new mongoose.Schema({
-  'alias': {
-    type: String,
-    default: null
-  },
-  'targets': [String],
-  'tags': [{ text: String }]
-});
 
 var templateVariableSchema = new mongoose.Schema({
   'name': {
@@ -33,7 +25,10 @@ var templateSchema = new Schema({
     uppercase: true
   },
   'description': String,
-  'metrics':  [templateMetricSchema],
+  'metrics':  [{
+                  type: Schema.Types.ObjectId,
+                  ref: 'Metric'
+              }],
   'variables':  [templateVariableSchema]
 
 });

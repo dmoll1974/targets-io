@@ -1,0 +1,49 @@
+<div data-ng-controller="DashboardsController">
+    <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
+    <div layout="column">
+        <div layout="row">
+            <div flex="90"></div>
+            <div flex="10">
+                <md-button ng-if="metricSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedMetricsModal('')" style="margin: 0px;" >Delete selected</md-button>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Description</th>
+                    <th>Value(s)</th>
+                    <th>Separate graphs</th>
+                    <th>Set tags</th>
+
+                    <th><i class="glyphicon glyphicon-plus" data-ng-click="addMetric()"></i></th>
+                    <td>
+                        <md-checkbox md-no-ink aria-label="select all metrics" ng-model="allMetricsSelected" ng-change="setAllMetricsSelected(allMetricsSelected)" style="margin: 0px;">
+                        </md-checkbox>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="metric in dashboard.metrics">
+                <td>
+                    <a data-ng-href="/#!/edit/metric/{{productName}}/{{dashboardName}}/{{metric._id}}">{{metric.alias}}</a>
+                </td>
+                <td>
+                    <span ng-repeat="tag in metric.tags track by $index">{{tag.text}}<span
+                            data-ng-show="!$last">, </span></span>
+                </td>
+                <td><span>{{metric.requirementOperator}} {{metric.requirementValue}}</span></td>
+                <td><span data-ng-if="metric.benchmarkOperator">{{metric.benchmarkOperator === '>'?'+':'-'}} {{metric.benchmarkValue}}</span>
+                </td>
+                <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteMetricModal('', $index)"></i>
+                </td>
+                <td>
+                    <md-checkbox md-no-ink aria-label="select metric" ng-model="metric.selected"  ng-change="setMetricsSelected(metric.selected)" style="margin: 0px;">
+                    </md-checkbox>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
