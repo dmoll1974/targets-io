@@ -33,6 +33,12 @@
                                         Clone dashboard
                                     </md-button>
                                 </md-menu-item>
+                                <md-menu-item>
+                                    <md-button data-ng-click="addTemplate()">
+                                        <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg"></md-icon>
+                                        Create template
+                                    </md-button>
+                                </md-menu-item>
                                 <md-menu-divider></md-menu-divider>
                                 <md-menu-item>
                                     <md-button class="danger" data-ng-click="openDeleteDashboardModal('', $index)">
@@ -76,7 +82,7 @@
     </div>
     <div>
         <md-tabs md-dynamic-height md-selected="selectedIndex">
-            <md-tab label="Test runs" ng-click="setTab(0)">
+            <md-tab  label="Test runs" ng-click="setTab(0)">
                 <md-content class="md-padding">
                     <div data-ng-include="'modules/testruns/views/testruns.client.view.html'"></div>
                 </md-content>
@@ -96,11 +102,7 @@
                     <div data-ng-include="'modules/dashboards/views/manage-tags.client.view.html'"></div>
                 </md-content>
             </md-tab>
-            <md-tab label="Variables" ng-click="setTab(4)">
-                <md-content class="md-padding">
-                    <div data-ng-include="'modules/dashboards/views/manage-tags.client.view.html'"></div>
-                </md-content>
-            </md-tab>
+
         </md-tabs>
     </div>
 </div>

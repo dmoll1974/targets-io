@@ -4,12 +4,37 @@
  */
 var mongoose = require('mongoose'), Schema = mongoose.Schema, config = require('../../config/config');
 
+var templateMetricSchema = new mongoose.Schema({
+  'alias': {
+    type: String,
+    default: null
+  },
+  'targets': [String],
+  'tags': [{ text: String }],
+  'benchmarkValue': {
+    type: Number,
+    default: null
+  },
+  'benchmarkOperator': {
+    type: String,
+    default: null
+  },
+  'requirementValue': {
+    type: Number,
+    default: null
+  },
+  'requirementOperator': {
+    type: String,
+    default: null
+  }
+});
 
-var templateVariableSchema = new mongoose.Schema({
+var TemplateVariableSchema = new mongoose.Schema({
   'name': {
     type: String,
     default: null
   },
+  'description': String,
   'query': {
     type: String,
     default: null
@@ -17,19 +42,16 @@ var templateVariableSchema = new mongoose.Schema({
 
 });
 
+mongoose.model('TemplateVariable', TemplateVariableSchema);
 
-mongoose.model('TestrunTarget', testRunTargetSchema);
-var templateSchema = new Schema({
+var TemplateSchema = new Schema({
   'name': {
     type: String,
     uppercase: true
   },
   'description': String,
-  'metrics':  [{
-                  type: Schema.Types.ObjectId,
-                  ref: 'Metric'
-              }],
-  'variables':  [templateVariableSchema]
+  'metrics':  [templateMetricSchema],
+  'variables':  [TemplateVariableSchema]
 
 });
 mongoose.model('Template', TemplateSchema);

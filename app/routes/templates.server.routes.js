@@ -4,14 +4,14 @@ module.exports = function (app) {
   var templates = require('../../app/controllers/templates.server.controller');
   // Templates Routes
   app.route('/templates')
-      .get(templates.list)
+  //    .get(templates.list)
       .post(templates.create);
   //users.requiresLogin,
-  app.route('/templates/:templateId').get(templates.read);
+  //app.route('/templates/:').get(templates.read);
 
   app.route('/templates/:templateId')
       .put(templates.update)  // users.requiresLogin, templates.hasAuthorization,
-      .delete(templates.delete);
+  //    .delete(templates.delete);
   //users.requiresLogin, templates.hasAuthorization,
 
   app.param('templateId', templates.templateByID);

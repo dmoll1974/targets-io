@@ -1,0 +1,38 @@
+<div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
+<div layout="column">
+    <div layout="row">
+        <div flex="90"></div>
+        <div flex="10">
+            <md-button ng-if="variableSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedMetricsModal('')" style="margin: 0px;" >Delete selected</md-button>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Variable</th>
+            <th>Description</th>
+            <th>Query</th>
+            <th><i class="glyphicon glyphicon-plus" data-ng-click="addVariable()"></i></th>
+            <td>
+                <md-checkbox md-no-ink aria-label="select all variables" ng-model="allMetricsSelected" ng-change="setAllMetricsSelected(allMetricsSelected)" style="margin: 0px;">
+                </md-checkbox>
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="variable in template.variables">
+            <td>
+                <a>{{variable.name}}</a>
+            </td>
+            <td>{{variable.description}}</td>
+            <td>{{variable.query}}</td>
+            <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteMetricModal('', $index)"></i>
+            </td>
+            <td>
+                <md-checkbox md-no-ink aria-label="select variable" ng-model="variable.selected"  ng-change="setMetricsSelected(variable.selected)" style="margin: 0px;">
+                </md-checkbox>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

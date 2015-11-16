@@ -1,0 +1,48 @@
+<div class="page-header">
+    <h1>Create Template variable</h1>
+</div>
+<form name="variableForm">
+    <div layout="column">
+        <div layout="column">
+            <md-input-container
+                    md-is-error="variableForm.variableName.$invalid && (variableForm.$submitted || variableForm.variableName.$dirty)"
+                    flex>
+                <label>Variable name</label>
+                <input name="variableName" ng-model="variable.name" required>
+
+                <div ng-messages="variableForm.variableName.$error"
+                     ng-if="variableForm.$submitted || variableForm.variableName.$touched">
+                    <div ng-message="required">Variable name is required.</div>
+
+                </div>
+            </md-input-container>
+            <md-input-container
+                    md-is-error="variableForm.variableDescription.$invalid && (variableForm.$submitted || variableForm.variableDescription.$dirty)"
+                    flex>
+                <label>Variable description</label>
+                <input name="variableDescription" ng-model="variable.description" required>
+
+                <div ng-messages="variableForm.variableDescription.$error"
+                     ng-if="variableForm.$submitted || variableForm.variableDescription.$touched">
+                    <div ng-message="required">Variable description is required.</div>
+
+                </div>
+            </md-input-container>
+            <div layout="row" layout-align="end center">
+                <md-input-container md-is-error="variableForm.variableQuery.$invalid && (variableForm.$submitted || variableForm.variableQuery.$dirty)" flex>
+                    <label>Variable query</label>
+                    <input name="variableQuery" ng-model="variable.query">
+                    <!--<div ng-messages="variableForm.variableQuery.$error"-->
+                         <!--ng-if="variableForm.$submitted || variableForm.variableQuery.$touched">-->
+                        <!--<div ng-message="required">Variable query is required.</div>-->
+                    <!--</div>-->
+                </md-input-container>
+                <create-graphite-query target="variable.query"></create-graphite-query>
+            </div>
+        </div>
+                <div layout="row">
+            <md-button md-no-ink class="md-primary" ng-click="variableForm.$valid && create()">Submit</md-button>
+            <md-button data-ng-click="cancel()">Cancel</md-button>
+        </div>
+    </div>
+</form>

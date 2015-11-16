@@ -14,8 +14,9 @@ angular.module('dashboards').controller('DashboardsController', [
   'Metrics',
   'TestRuns',
   'SideMenu',
+  'Templates',
   '$q',
-  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, $q) {
+  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, $q) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -211,6 +212,14 @@ angular.module('dashboards').controller('DashboardsController', [
         $scope.error = errorResponse.data.message;
       });
     };
+
+    $scope.addTemplate = function(){
+
+      Templates.selected = Dashboards.selected;
+      $state.go('addTemplate');
+
+
+    }
     $scope.init = function () {
       /* reset form*/
       //$scope.dashboardForm.$setPristine();
