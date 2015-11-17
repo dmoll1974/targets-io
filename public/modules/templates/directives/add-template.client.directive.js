@@ -13,7 +13,7 @@ function AddTemplateDirective () {
   return directive;
 
   /* @ngInject */
-  function AddTemplateDirectiveController ($scope, $state, Templates, Dashboards, $filter) {
+  function AddTemplateDirectiveController ($scope, $state, Templates, Dashboards, $filter, $rootScope) {
 
     $scope.$watch('template.name', function (val) {
       $scope.template.name = $filter('uppercase')(val);
@@ -34,5 +34,11 @@ function AddTemplateDirective () {
       });
     }
 
+    $scope.cancel = function () {
+      if ($rootScope.previousStateParams)
+        $state.go($rootScope.previousState, $rootScope.previousStateParams);
+      else
+        $state.go($rootScope.previousState);
+    };
   }
 }

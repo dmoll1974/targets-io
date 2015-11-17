@@ -10,10 +10,38 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     async = require('async');
 
-
+exports.list = list;
 exports.create = create;
 exports.update = update;
 exports.templateByID = templateByID;
+exports.getTemplateByName = getTemplateByName;
+exports.templateByName = templateByName;
+
+/**
+ * Get Template by name
+ */
+
+function getTemplateByName(req, res) {
+
+    res.jsonp(req.template);
+
+};
+
+/**
+ * List Templates
+ */
+
+function list(req, res){
+
+    Template.find().sort('name').exec(function(err, templates){
+
+        if (err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        } else {
+            res.jsonp(templates);
+        }
+    });
+};
 
 /**
  * Update a Template
@@ -46,7 +74,7 @@ function create(req, res){
 
     /* if template is created from existing dashboard, clone metrics */
 
-    if (req.body.metrics.length > 0){
+    if (req.body.metrics){
 
         _.each(req.body.metrics, function(metric){
 
@@ -66,9 +94,17 @@ function create(req, res){
 
         template.save(function (err, savedTemplate) {
             if (err) {
-                console.log(err);
+                return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
             } else {
+                res.jsonp(savedTemplate);
+            }
+        });
+    }else{
 
+        template.save(function (err, savedTemplate) {
+            if (err) {
+                return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+            } else {
                 res.jsonp(savedTemplate);
             }
         });
@@ -77,7 +113,7 @@ function create(req, res){
 
 
 /**
- * Metric middleware
+ * Template middleware
  */
 function templateByID(req, res, next, id) {
     Template.findById(id).exec(function (err, template) {
@@ -89,3 +125,15 @@ function templateByID(req, res, next, id) {
         next();
     });
 };
+
+function templateByName(req, res, next, name) {
+    Template.findOne({ name: name.toUpperCase()}).exec(function (err, template) {
+        if (err)
+            return next(err);
+        if (!template)
+            return res.status(404).send({ message: 'No template with name' + name + 'has been found' });
+        req.template = template;
+        next();
+    });
+};
+

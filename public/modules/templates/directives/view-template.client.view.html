@@ -1,6 +1,7 @@
 <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div layout="column">
         <div layout="column">
+            <span class="md-subhead" style="padding-bottom: 20px;"><a data-ui-sref="viewTemplates">TEMPLATES</a>  /  {{template.name}}</span>
             <h1 class="md-display-1">{{template.name}}</h1>
 
             <h3 class="md-headline">{{template.description}}</h3>
@@ -36,13 +37,13 @@
             <div>
                 <md-tabs md-dynamic-height md-selected="selectedIndex">
 
-                    <md-tab label="Variables">
+                    <md-tab label="Variables" ng-click="setTab(0)">
                         <md-content class="md-padding">
                          <template-variables template="template"></template-variables>
                         </md-content>
                     </md-tab>
 
-                    <md-tab label="Metrics configuration">
+                    <md-tab label="Metrics" ng-click="setTab(1)">
                         <md-content class="md-padding">
                             <template-metrics template="template"></template-metrics>
                         </md-content>

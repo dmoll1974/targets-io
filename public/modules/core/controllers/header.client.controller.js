@@ -6,7 +6,8 @@ angular.module('core').controller('HeaderController', [
   '$location',
   '$http',
   '$window',
-  function ($scope, Authentication, Menus, $location, $http, $window) {
+  '$state',
+  function ($scope, Authentication, Menus, $location, $http, $window, $state) {
     $scope.authentication = Authentication;
     $scope.isCollapsed = false;
     $scope.menu = Menus.getMenu('topbar');
@@ -25,6 +26,13 @@ angular.module('core').controller('HeaderController', [
       //	$log.log(url);
       $window.location.href = url;
     };
+
+    $scope.showTemplates = function(){
+
+      $state.go('viewTemplates');
+
+    };
+
     var originatorEv;
     $scope.openMenu = function ($mdOpenMenu, ev) {
       originatorEv = ev;

@@ -9,6 +9,7 @@ angular.module('dashboards').controller('DashboardTagsController', [
     $scope.tags = Dashboards.selected.tags;
     $scope.defaultTag = Dashboards.defaultTag;
 
+
     $scope.$watch('allTagsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         _.each($scope.tags, function (tag, i) {

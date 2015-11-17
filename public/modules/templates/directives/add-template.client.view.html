@@ -8,8 +8,7 @@
                     md-is-error="templateForm.templateName.$invalid && (templateForm.$submitted || templateForm.templateName.$dirty)"
                     flex>
                 <label>Template name</label>
-                <input name="templateName" ng-model="template.name"
-                       record-availability-validator="/templates" required>
+                <input name="templateName" ng-model="template.name" record-availability-validator="/template-by-name" required>
                 <div ng-messages="templateForm.templateName.$error"
                      ng-if="templateForm.$submitted || templateForm.templateName.$touched">
                     <div ng-message="required">Template name is required.</div>

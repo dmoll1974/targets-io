@@ -51,7 +51,54 @@ var TemplateSchema = new Schema({
   },
   'description': String,
   'metrics':  [templateMetricSchema],
-  'variables':  [TemplateVariableSchema]
-
+  'variables':  [TemplateVariableSchema],
+  'tags': {
+    type: [{
+      text: String,
+      default: Boolean
+    }],
+    default: [
+      {
+        text: 'Load',
+        default: true
+      },
+      {
+        text: 'JVM',
+        default: false
+      },
+      {
+        text: 'Database',
+        default: false
+      },
+      {
+        text: 'CPU',
+        default: false
+      },
+      {
+        text: 'Frontend',
+        default: false
+      },
+      {
+        text: 'JDBC',
+        default: false
+      },
+      {
+        text: 'Garbage Collection',
+        default: false
+      },
+      {
+        text: 'Heap',
+        default: false
+      },
+      {
+        text: 'Sessions',
+        default: false
+      },
+      {
+        text: 'Threads',
+        default: false
+      }
+    ]
+  }
 });
 mongoose.model('Template', TemplateSchema);

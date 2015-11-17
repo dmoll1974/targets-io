@@ -9,16 +9,16 @@
         link: function (scope, element, attrs, ngModel) {
           var apiUrl = attrs.recordAvailabilityValidator;
           scope.$watch('dashboard.name', function (val) {
-            scope.dashboard.name = $filter('uppercase')(val);
+            if(scope.dashboard)scope.dashboard.name = $filter('uppercase')(val);
           }, true);
           scope.$watch('product.name', function (val) {
-            scope.product.name = $filter('uppercase')(val);
+            if(scope.product) scope.product.name = $filter('uppercase')(val);
           }, true);
           scope.$watch('event.dashboardName', function (val) {
-            scope.event.dashboardName = $filter('uppercase')(val);
+            if(scope.event) scope.event.dashboardName = $filter('uppercase')(val);
           }, true);
           scope.$watch('event.productName', function (val) {
-            scope.event.productName = $filter('uppercase')(val);
+            if(scope.event) scope.event.productName = $filter('uppercase')(val);
           }, true);
           function setAsLoading(bool) {
             ngModel.$setValidity('recordLoading', !bool);

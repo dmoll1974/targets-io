@@ -21,7 +21,19 @@ angular.module('dashboards').controller('DashboardsController', [
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
+  /* Get templates */
 
+    Templates.getAll().success(function(templates){
+
+      $scope.templates = templates;
+
+    });
+
+    $scope.mergeTemplate = function(index){
+
+        Templates.selected = $scope.templates[index];
+        $state.go('mergeTemplate');
+    };
 
     if(Dashboards.selected) {
 

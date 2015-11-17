@@ -16,15 +16,27 @@ function ViewTemplateDirective () {
   /* @ngInject */
   function ViewTemplateDirectiveController ($scope, $state, $stateParams, Templates, Dashboards) {
 
-    /* Watch on dashboard */
-    $scope.$watch(function (scope) {
-      return Templates.selected;
-    }, function () {
-      $scope.template = Templates.selected;
-    });
+    /* Watch on template */
+    //$scope.$watch(function (scope) {
+    //  return Templates.selected;
+    //}, function () {
+    //  $scope.template = Templates.selected;
+    //});
 
 
+  /* Tab controller*/
+    $scope.selectedIndex = 0;
 
+    $scope.setTab = function (newValue) {
+      $scope.selectedIndex = newValue;
+    };
+
+  Templates.get($stateParams.templateName).success(function(template){
+
+      $scope.template = template;
+      Templates.selected = template;
+
+  });
 
   }
 }

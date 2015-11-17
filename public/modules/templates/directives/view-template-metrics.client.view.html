@@ -3,7 +3,7 @@
     <div layout="row">
         <div flex="90"></div>
         <div flex="10">
-            <md-button ng-if="ctrlTemplateMetrics.metricSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedMetricsModal('')" style="margin: 0px;" >Delete selected</md-button>
+            <md-button ng-if="metricSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedMetricsModal('')" style="margin: 0px;" >Delete selected</md-button>
         </div>
     </div>
     <table class="table">
@@ -21,18 +21,18 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="metric in ctrlTemplateMetrics.template.metrics">
-            <td>
-                <a>{{metric.alias}}</a>
+        <tr ng-repeat="metric in template.metrics">
+            <td class="pointer" ng-click="editMetric($index)">
+                {{metric.alias}}
             </td>
-            <td>
+            <td class="pointer" ng-click="editMetric($index)">
                     <span ng-repeat="tag in metric.tags track by $index">{{tag.text}}<span
                             data-ng-show="!$last">, </span></span>
             </td>
-            <td><span>{{metric.requirementOperator}} {{metric.requirementValue}}</span></td>
-            <td><span data-ng-if="metric.benchmarkOperator">{{metric.benchmarkOperator === '>'?'+':'-'}} {{metric.benchmarkValue}}</span>
+            <td class="pointer" ng-click="editMetric($index)" ><span>{{metric.requirementOperator}} {{metric.requirementValue}}</span></td>
+            <td class="pointer" ng-click="editMetric($index)"><span data-ng-if="metric.benchmarkOperator">{{metric.benchmarkOperator === '>'?'+':'-'}} {{metric.benchmarkValue}}</span>
             </td>
-            <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteMetricModal('', $index)"></i>
+            <td><i class="pointer glyphicon glyphicon-trash" data-ng-click="openDeleteMetricModal('', $index)"></i>
             </td>
             <td>
                 <md-checkbox md-no-ink aria-label="select metric" ng-model="metric.selected"  ng-change="setMetricsSelected(metric.selected)" style="margin: 0px;">

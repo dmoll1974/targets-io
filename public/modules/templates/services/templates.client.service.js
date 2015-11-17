@@ -7,11 +7,19 @@ angular.module('events').factory('Templates', [
     var Templates = {
       list: [],
       selected: {},
+      metric: {},
+      variable: {},
+      getAll: getAll,
+      get: getFn,
       //delete: deleteFn,
       update: update,
       create: create
     };
     return Templates;
+
+    function getFn(templateName) {
+      return $http.get('/template-by-name/' + templateName);
+    }
 
     function create(template) {
       return $http.post('/templates', template);
@@ -21,5 +29,9 @@ angular.module('events').factory('Templates', [
       return $http.put('/templates/' + template._id, template);
     }
 
+    function getAll(){
+
+      return $http.get('/templates');
+    }
   }
 ]);

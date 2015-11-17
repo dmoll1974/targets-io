@@ -1,0 +1,39 @@
+<div>
+    <div class="page-header">
+        <h1>Merge template {{template.name}}</h1>
+    </div>
+    <form name="metricForm" novalidate>
+        <div layout="column">
+            <div layout="column"  ng-repeat="variable in template.variables" >
+                <h3>{{variable.name}}</h3>
+                <h4>{{variable.description}}</h4>
+                <div ng-repeat="value in variable.values track by $index">
+                    <div layout="row" layout-align="end center">
+                        <md-input-container flex>
+                            <label>value</label>
+                            <input ng-model="variable.values[$index]">
+                        </md-input-container>
+                        <get-values-from-graphite ng-if="variable.query" query="variable.query" value="variable.values[$index]"></get-values-from-graphite>
+                        <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeValue($parent.$index, $index)"
+                                 data-ng-show="variable.values.length>1"></md-icon>
+                    </div>
+                </div>
+                <div >
+                    <md-button md-no-ink class="md-primary md-raised" data-ng-click="addValue($index)">Add value</md-button>
+                </div>
+                <div>
+                    <md-checkbox ng-if="variable.values.length > 1" ng-model="variable.separateGraphs" aria-label="Create separate graphs per value">
+                        Create separate graphs per value
+                    </md-checkbox>
+                </div>
+                <md-divider style="margin: 25px;"></md-divider>
+            </div>
+            <div layout="row">
+                <md-button md-no-ink class="md-primary" data-ng-click="create()">Submit</md-button>
+                <md-button data-ng-click="cancel()">Cancel</md-button>
+                <md-button md-no-ink class="md-primary" data-ng-click="preview()">Preview</md-button>
+            </div>
+        </div>
+    </form>
+</div>
+
