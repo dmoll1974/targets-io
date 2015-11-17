@@ -8,7 +8,6 @@ DATA_DIR=/var/lib/targets-io/graphite/storage
 
 VOLUMES_INIT_CONTAINER_NAME=graphite-volumes-init
 
-rm -rf /var/lib/targets-io
 
 # this will fail if one of the volume directories already exists, this prevents you from accidentally deleting your existing data
 mkdir /var/lib/targets-io
