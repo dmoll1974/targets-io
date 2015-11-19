@@ -13,7 +13,7 @@ function MergeTemplateDirective () {
   return directive;
 
   /* @ngInject */
-  function MergeTemplateDirectiveController ($scope, $rootScope, $state, Templates, Dashboards) {
+  function MergeTemplateDirectiveController ($scope, $rootScope, $state, Templates, Dashboards, Metrics) {
 
       $scope.template = Templates.selected;
 
@@ -28,7 +28,7 @@ function MergeTemplateDirective () {
       $scope.addValue = function (index) {
           $scope.template.variables[index].values.push('');
       };
-      $scope.removeTarget = function (parentIndex, index) {
+      $scope.removeValue = function (parentIndex, index) {
           $scope.template.variables[parentIndex].values.splice(index, 1);
       };
 
@@ -39,30 +39,206 @@ function MergeTemplateDirective () {
               $state.go($rootScope.previousState);
       };
 
+      $scope.removeTarget = function(parentIndex, index){
+
+          $scope.metrics[parentIndex].targets.splice(index, 1);
+      }
+
       $scope.preview = function(){
 
           $scope.metrics = [];
           var targets = [];
-          var decoratedTarget;
+          var regExp;
+
+
+          //var variables=[
+          //
+          //    {
+          //        name: 'EERSTE',
+          //        description: 'Eerste variabele',
+          //        values: [
+          //            'A',
+          //            'B'
+          //        ]
+          //    },
+          //    {
+          //        name: 'TWEEDE',
+          //        description: 'Tweede variabele',
+          //        values: [
+          //            'A',
+          //            'B'
+          //        ]
+          //    },
+          //    {
+          //        name: 'DERDE',
+          //        description: 'Derde variabele',
+          //        values: [
+          //            'A',
+          //            //'B'
+          //        ]
+          //    },
+          //
+          //];
+
+          var variableArray = [];
+
+          _.each($scope.template.variables, function(variable){
+
+              if(variableArray.indexOf(variable.name) === -1){
+
+                  variableArray.push({
+                      name: variable.name,
+                      replaceItems:[]
+                  })
+              }
+
+              _.each(variable.values, function(value){
+
+                  var index = variableArray.map(function(e) { return e.name; }).indexOf(variable.name);
+                  regExp = new RegExp('\\$' + variable.name, 'g');
+                  variableArray[index].replaceItems.push({placeholder: regExp, replace: value});
+
+              })
+
+          });
+
+          //_.each(variableArray, function(variableArrayItem){
+          //
+          //    console.log('name: ' + variableArrayItem.name)
+          //    _.each(variableArrayItem.replaceItems, function(replaceValue) {
+          //
+          //        console.log(replaceValue);
+          //        //console.log('placeholder: ' + replaceValue.placeholder);
+          //        //console.log('replace: ' + replaceValue.replace);
+          //    });
+          //
+          //});
+
+
+          var replaceArray = [];
+          var replace1, replace2, replace3, replace4, replace5;
+
+
+
+          for(var j=0; j < variableArray[0].replaceItems.length; j++) {
+
+              replace1 = variableArray[0].replaceItems[j];
+
+              if(variableArray.length > 1) {
+
+
+                      for (var l = 0; l < variableArray[1].replaceItems.length; l++) {
+
+                          replace2 = variableArray[1].replaceItems[l];
+
+                          if(variableArray.length > 2) {
+
+
+                                  for (var n = 0; n < variableArray[2].replaceItems.length; n++) {
+
+                                      replace3 = variableArray[2].replaceItems[n];
+
+                                      if(variableArray.length > 3) {
+
+
+                                              for (var p = 0; p < variableArray[3].replaceItems.length; n++) {
+
+                                                  replace4 = variableArray[3].replaceItems[p];
+
+                                                  if(variableArray.length > 4) {
+
+
+                                                          for (var r = 0; r < variableArray[4].replaceItems.length; n++) {
+
+                                                              replace5 = variableArray[4].replaceItems[r];
+                                                              replaceArray.push([replace1, replace2, replace3, replace4, replace5]);
+
+
+                                                          }
+
+                                                  }else{
+
+                                                      replaceArray.push([replace1, replace2, replace3, replace4]);
+
+                                                  }
+                                              }
+
+                                      }else{
+
+                                          replaceArray.push([replace1, replace2, replace3]);
+
+                                      }
+
+                                  }
+                          }else{
+                              replaceArray.push([replace1, replace2]);
+
+                          }
+                      }
+
+              }else{
+                  replaceArray.push([replace1]);
+
+              }
+
+          }
+
+
+          console.log('*******************************************************');
+          _.each(replaceArray, function(replaceArrayItem){
+
+              console.log('*******************************************************');
+
+              _.each(replaceArrayItem, function(replace){
+
+
+                  console.log('placeholder: ' + replace.placeholder);
+                     console.log('replace: ' + replace.replace);
+
+
+                 })
+
+          });
+
+
+          function replacePlaceholders(target, replaceArray){
+
+              _.each(replaceArray, function(replaceItem){
+
+                  target = target.replace(replaceItem.placeholder, replaceItem.replace);
+
+              });
+
+              return target;
+          }
+
 
 
           _.each($scope.template.metrics, function(metric){
 
               _.each(metric.targets, function(target){
 
-                  _.each($scope.template.variables, function(variable){
+                  _.each(replaceArray, function(replaceItem){
 
-                      var re = new RegExp('\\$' + variable.name, 'g');
-
-                      _.each(variable.values, function(value){
-
-                      })
+                          targets.push(replacePlaceholders(target, replaceItem));
 
                   })
 
-                  decoratedTarget = target.replace(re, value);
-                  console.log(decoratedTarget);
-                  targets.push(decoratedTarget);
+                  $scope.metrics.push(
+                      {
+                          productName: Dashboards.selected.productName,
+                          dashboardId: Dashboards.selected._id,
+                          dashboardName: Dashboards.selected.name,
+                          alias: metric.alias,
+                          targets: targets,
+                          tags: metric.tags,
+                          benchmarkValue: metric.benchmarkValue,
+                          benchmarkOperator: metric.benchmarkOperator,
+                          requirementValue: metric.requirementValue,
+                          requirementOperator: metric.requirementOperator
+                      });
+
+                  targets = [];
 
               })
 
@@ -71,5 +247,44 @@ function MergeTemplateDirective () {
 
       }
 
+      $scope.merge = function() {
+
+          var productName = Dashboards.selected.productName;
+          var dashboardName = Dashboards.selected.name;
+
+
+              _.each($scope.metrics, function (metric, index) {
+
+
+              /* Update tags in Dashboard if any new are added */
+              Dashboards.updateTags(Dashboards.selected.productName, Dashboards.selected.dashboardName, metric.tags, function (tagsUpdated) {
+
+                  if (tagsUpdated)
+                      Dashboards.update().success(function (dashboard) {
+                      });
+              });
+
+
+              Metrics.create(metric).success(function (metric) {
+
+              });
+
+
+          });
+
+          setTimeout(function(){
+
+              /* reset Dashboards.selected to force reload form db */
+
+              Dashboards.selected ={};
+              $state.go('viewDashboard', {
+                  'productName': productName,
+                  'dashboardName': dashboardName
+              });
+
+          },500);
+
+
+      }
   }
 }

@@ -18,22 +18,40 @@
                                  data-ng-show="variable.values.length>1"></md-icon>
                     </div>
                 </div>
-                <div >
-                    <md-button md-no-ink class="md-primary md-raised" data-ng-click="addValue($index)">Add value</md-button>
-                </div>
-                <div>
-                    <md-checkbox ng-if="variable.values.length > 1" ng-model="variable.separateGraphs" aria-label="Create separate graphs per value">
-                        Create separate graphs per value
-                    </md-checkbox>
+                <div layout="row" layout-align="end center">
+                    <md-button md-no-ink  class="md-primary md-raised" data-ng-click="addValue($index)">Add {{variable.name}}</md-button>
                 </div>
                 <md-divider style="margin: 25px;"></md-divider>
             </div>
             <div layout="row">
-                <md-button md-no-ink class="md-primary" data-ng-click="create()">Submit</md-button>
                 <md-button data-ng-click="cancel()">Cancel</md-button>
                 <md-button md-no-ink class="md-primary" data-ng-click="preview()">Preview</md-button>
+                <md-button ng-if="metrics" md-no-ink class="md-primary" data-ng-click="merge()">Submit</md-button>
             </div>
         </div>
     </form>
+
+    <div class="well" ng-if="metrics">
+        <md-card ng-repeat="metric in metrics track by $index" class="md-padding" style="margin: 10px;">
+            <div layout="column">
+                <div>
+                    <md-input-container class="md-title md-padding" flex>
+                        <label>Alias</label>
+                        <input  ng-model="metrics[$index].alias">
+                    <md-divider></md-divider>
+                </div>
+                <div ng-repeat="target in metric.targets track by $index">
+                    <div layout="row" layout-align="end center">
+                        <md-input-container flex>
+                            <label>Target</label>
+                            <input ng-model="metrics[$parent.$index].targets[$index]">
+                        </md-input-container>
+                        <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeTarget($parent.$index, $index)"
+                                 data-ng-show="metric.targets.length>1"></md-icon>
+                    </div>
+                </div>
+            </div>
+        </md-card>
+    </div>
 </div>
 

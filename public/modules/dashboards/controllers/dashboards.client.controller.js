@@ -35,7 +35,7 @@ angular.module('dashboards').controller('DashboardsController', [
         $state.go('mergeTemplate');
     };
 
-    if(Dashboards.selected) {
+    if(Dashboards.selected !== {}) {
 
       $scope.dashboard = Dashboards.selected;
       $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
