@@ -16,7 +16,7 @@ To set up a local demo environment take the following steps (instructions for li
 
   `sudo chmod +x init-graphite-container-volumes.sh`
   
-  `sudo .\init-graphite-container-volumes.sh`
+  `sudo ./init-graphite-container-volumes.sh`
 - Run docker compose  `sudo docker-compose up`
 
 
