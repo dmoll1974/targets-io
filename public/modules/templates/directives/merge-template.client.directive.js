@@ -13,7 +13,7 @@ function MergeTemplateDirective () {
   return directive;
 
   /* @ngInject */
-  function MergeTemplateDirectiveController ($scope, $rootScope, $state, Templates, Dashboards, Metrics) {
+  function MergeTemplateDirectiveController ($scope, $rootScope, $state, $timeout, Templates, Dashboards, Metrics) {
 
       $scope.template = Templates.selected;
 
@@ -25,12 +25,62 @@ function MergeTemplateDirective () {
       })
 
 
+
       $scope.addValue = function (index) {
           $scope.template.variables[index].values.push('');
       };
       $scope.removeValue = function (parentIndex, index) {
           $scope.template.variables[parentIndex].values.splice(index, 1);
       };
+
+      $scope.$watch('template.variables', function(newValue, oldValue) {
+          if(newValue !== oldValue) {
+
+              var regExp;
+              var replaceArray = [];
+              var valuesPerVariable;
+              var totalTemplateCombinations = 1;
+
+              /* force get-values-from-graphite directive to destroy*/
+              _.each($scope.variables, function (variable, index) {
+
+                  $scope.variables[index].query = false;
+
+              });
+
+              $timeout(function(){
+              _.each($scope.template.variables, function (variable) {
+
+                  valuesPerVariable= 0;
+
+                  _.each(variable.values, function (value) {
+
+                      if (value !== '') {
+
+                          valuesPerVariable = valuesPerVariable + 1;
+
+                          regExp = new RegExp('\\$' + variable.name, 'g');
+                          replaceArray.push({variable: variable.name, placeholder: regExp, replaceWith: value});
+                      }
+                  });
+
+                  if(valuesPerVariable > 0) totalTemplateCombinations = totalTemplateCombinations * valuesPerVariable;
+              });
+
+              $scope.totalTemplateCombinations = totalTemplateCombinations;
+
+              _.each($scope.template.variables, function (variable, index) {
+
+                  _.each(replaceArray, function (replaceItem) {
+
+                      $scope.template.variables[index].query = variable.query.replace(replaceItem.placeholder,replaceItem.replaceWith );
+
+                  });
+              });
+              },0);
+          }
+      }, true);
+
 
       $scope.cancel = function () {
           if ($rootScope.previousStateParams)
@@ -42,7 +92,12 @@ function MergeTemplateDirective () {
       $scope.removeTarget = function(parentIndex, index){
 
           $scope.metrics[parentIndex].targets.splice(index, 1);
-      }
+      };
+
+      $scope.removeMetric = function(index){
+
+          $scope.metrics.splice(index, 1);
+      };
 
       $scope.preview = function(){
 

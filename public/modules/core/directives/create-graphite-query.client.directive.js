@@ -153,12 +153,15 @@ function CreateGraphiteQueryDirective () {
 
                 if(graphiteTargetId === '*'){
 
-                    $scope.target = $scope.expandable ? target + '.' + graphiteTargetId + '.*' : target + '.' + graphiteTargetId;
-
+                    $timeout(function(){
+                        $scope.target = $scope.expandable ? target + '.' + graphiteTargetId + '.*' : target + '.' + graphiteTargetId;
+                    }, 0);
 
                 }else{
+                    $timeout(function(){
+                        $scope.target = $scope.expandable ? graphiteTargetId + '.*' : graphiteTargetId ;
+                    }, 0);
 
-                    $scope.target = $scope.expandable ? graphiteTargetId + '.*' : graphiteTargetId ;
                 }
 
 

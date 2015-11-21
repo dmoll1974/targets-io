@@ -20,20 +20,24 @@ function GetValuesFromGraphiteDirective () {
     /* @ngInject */
     function GetValuesFromGraphiteDirectiveController ($scope, $state, $timeout, Graphite) {
 
-        console.log('query: ' + $scope.query);
 
-        /* get initial values for graphite target picker*/
-        Graphite.findMetrics($scope.query).success(function(graphiteTargetsLeafs) {
 
-            var graphiteTargets = [];
+        $scope.$watch('query', function() {
 
-            _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
-                graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+                /* get initial values for graphite target picker*/
+            Graphite.findMetrics($scope.query).success(function(graphiteTargetsLeafs) {
+
+                var graphiteTargets = [];
+
+                _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
+                    graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+                });
+
+                $scope.defaultGraphiteTargets = graphiteTargets;
+                $scope.graphiteTargets = $scope.defaultGraphiteTargets;
+
+                console.log('query: ' + $scope.query);
             });
-
-            $scope.defaultGraphiteTargets = graphiteTargets;
-            $scope.graphiteTargets = $scope.defaultGraphiteTargets;
-
         });
 
         /* Open menu*/
@@ -45,12 +49,13 @@ function GetValuesFromGraphiteDirective () {
         };
 
 
-        $scope.setTarget = function(index){
+        $scope.setTarget = function(index) {
 
-            $scope.value = $scope.graphiteTargets[index].text ;
+
+            $scope.value = $scope.graphiteTargets[index].text;
+
 
         };
-
 
     }
 }

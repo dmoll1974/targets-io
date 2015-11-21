@@ -25,6 +25,7 @@ function AddTemplateVariableDirective () {
 
     $scope.create = function(){
 
+        $scope.variable.placeholder = '$' + $scope.variable.name;
         Templates.selected.variables.push($scope.variable);
         Templates.update(Templates.selected).success(function (template){
             Templates.selected = template;

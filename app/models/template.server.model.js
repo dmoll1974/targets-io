@@ -34,6 +34,7 @@ var TemplateVariableSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  'placeholder': String,
   'description': String,
   'query': {
     type: String,

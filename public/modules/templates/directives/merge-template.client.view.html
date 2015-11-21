@@ -4,24 +4,27 @@
     </div>
     <form name="metricForm" novalidate>
         <div layout="column">
+            <md-subheader class="md-accent" ng-if="totalTemplateCombinations > 7">Maximum number of variable values has been reached!</md-subheader>
             <div layout="column"  ng-repeat="variable in template.variables" >
-                <h3>{{variable.name}}</h3>
-                <h4>{{variable.description}}</h4>
-                <div ng-repeat="value in variable.values track by $index">
-                    <div layout="row" layout-align="end center">
-                        <md-input-container flex>
-                            <label>value</label>
-                            <input ng-model="variable.values[$index]">
-                        </md-input-container>
-                        <get-values-from-graphite ng-if="variable.query" query="variable.query" value="variable.values[$index]"></get-values-from-graphite>
-                        <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeValue($parent.$index, $index)"
-                                 data-ng-show="variable.values.length>1"></md-icon>
+                <div ng-if="$index === 0 || ($index > 0 && template.variables[$index-1].values[0] !== '')">
+                    <h3>{{variable.name}}</h3>
+                    <h4>{{variable.description}}</h4>
+                    <div ng-repeat="value in variable.values track by $index">
+                        <div layout="row" layout-align="end center">
+                            <md-input-container flex>
+                                <label>value</label>
+                                <input ng-model="variable.values[$index]" >
+                            </md-input-container>
+                            <get-values-from-graphite ng-show="template.variables[$parent.$index].query !== false" query="template.variables[$parent.$index].query" value="variable.values[$index]"></get-values-from-graphite>
+                            <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeValue($parent.$index, $index)"
+                                     data-ng-show="variable.values.length>1"></md-icon>
+                        </div>
                     </div>
+                    <div layout="row" layout-align="end center">
+                        <md-button md-no-ink  ng-if="totalTemplateCombinations < 8" class="md-primary md-raised" data-ng-click="addValue($index)">Add {{variable.name}}</md-button>
+                    </div>
+                    <md-divider style="margin: 25px;"></md-divider>
                 </div>
-                <div layout="row" layout-align="end center">
-                    <md-button md-no-ink  class="md-primary md-raised" data-ng-click="addValue($index)">Add {{variable.name}}</md-button>
-                </div>
-                <md-divider style="margin: 25px;"></md-divider>
             </div>
             <div layout="row">
                 <md-button data-ng-click="cancel()">Cancel</md-button>
@@ -34,20 +37,25 @@
     <div class="well" ng-if="metrics">
         <md-card ng-repeat="metric in metrics track by $index" class="md-padding" style="margin: 10px;">
             <div layout="column">
-                <div>
-                    <md-input-container class="md-title md-padding" flex>
+                <div layout="column">
+                   <div layout="row" layout-align="center end">
+                       <md-input-container class="md-title" flex>
                         <label>Alias</label>
                         <input  ng-model="metrics[$index].alias">
-                    <md-divider></md-divider>
-                </div>
-                <div ng-repeat="target in metric.targets track by $index">
-                    <div layout="row" layout-align="end center">
-                        <md-input-container flex>
-                            <label>Target</label>
-                            <input ng-model="metrics[$parent.$index].targets[$index]">
-                        </md-input-container>
-                        <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeTarget($parent.$index, $index)"
-                                 data-ng-show="metric.targets.length>1"></md-icon>
+                       </md-input-container>
+                        <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeMetric($index)"
+                                 data-ng-show="metrics.length>1"></md-icon>
+                   </div>
+
+                    <div ng-repeat="target in metric.targets track by $index">
+                        <div layout="row" layout-align="end center">
+                            <md-input-container flex>
+                                <label>Target</label>
+                                <input ng-model="metrics[$parent.$index].targets[$index]">
+                            </md-input-container>
+                            <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeTarget($parent.$index, $index)"
+                                     data-ng-show="metric.targets.length>1"></md-icon>
+                        </div>
                     </div>
                 </div>
             </div>
