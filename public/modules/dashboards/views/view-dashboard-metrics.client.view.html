@@ -7,11 +7,17 @@
                 <md-button ng-if="metricSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedMetricsModal('')" style="margin: 0px;" >Delete selected</md-button>
             </div>
         </div>
+        <md-input-container>
+            <label>Search metric</label>
+            <input ng-model="searchMetrics">
+        </md-input-container>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Metric</th>
-                    <th>Tag</th>
+                    <th>
+                        <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">Metric <span ng-if="sortType === 'name'" ng-class="sortType === 'name' && !sortReverse ? 'fa fa-caret-down' : 'fa fa-caret-up'"></span></a>
+                    </th>
+                    <th><a href="#" ng-click="sortType = 'tags'; sortReverse = !sortReverse">Tags <span ng-if="sortType === 'tags'" ng-class="sortType === 'tags' && !sortReverse ? 'fa fa-caret-down' : 'fa fa-caret-up'"></span></a></th>
                     <th>Requirement</th>
                     <th>Allowed deviation</th>
                     <th>
@@ -23,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="metric in dashboard.metrics">
+            <tr ng-repeat="metric in dashboard.metrics | orderBy:sortType:sortReverse | filter:searchMetrics">
                 <td>
                     <a data-ng-href="/#!/edit/metric/{{productName}}/{{dashboardName}}/{{metric._id}}">{{metric.alias}}</a>
                 </td>

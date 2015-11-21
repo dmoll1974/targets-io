@@ -20,7 +20,9 @@ angular.module('metrics').controller('MetricsController', [
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
-
+    $scope.sortType     = 'tags'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
+    $scope.searchMetrics  = ''; // set the default sort order
 
     /* values for form drop downs*/
     $scope.metricTypes = [
