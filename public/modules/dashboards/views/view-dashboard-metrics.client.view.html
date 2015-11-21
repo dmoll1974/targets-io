@@ -17,7 +17,9 @@
                     <th>
                         <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">Metric <span ng-if="sortType === 'name'" ng-class="sortType === 'name' && !sortReverse ? 'fa fa-caret-down' : 'fa fa-caret-up'"></span></a>
                     </th>
-                    <th><a href="#" ng-click="sortType = 'tags'; sortReverse = !sortReverse">Tags <span ng-if="sortType === 'tags'" ng-class="sortType === 'tags' && !sortReverse ? 'fa fa-caret-down' : 'fa fa-caret-up'"></span></a></th>
+                    <th>
+                        <a href="#" ng-click="sortType = 'tags'; sortReverse = !sortReverse">Tags <span ng-if="sortType === 'tags'" ng-class="sortType === 'tags' && !sortReverse ? 'fa fa-caret-down' : 'fa fa-caret-up'"></span></a>
+                    </th>
                     <th>Requirement</th>
                     <th>Allowed deviation</th>
                     <th>

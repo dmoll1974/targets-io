@@ -25,10 +25,10 @@ function ViewTemplateDirective () {
 
 
   /* Tab controller*/
-    $scope.selectedIndex = 0;
+    $scope.selectedIndex = Templates.selected.selectedIndex || 0;
 
     $scope.setTab = function (newValue) {
-      $scope.selectedIndex = newValue;
+      Templates.selected.selectedIndex = newValue;
     };
 
   Templates.get($stateParams.templateName).success(function(template){

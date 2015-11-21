@@ -19,6 +19,9 @@ angular.module('templates').config([
     }).state('addVariable', {
       url: '/add/template-variable',
       template: '<add-template-variable></add-template-variable>'
+    }).state('editTemplateVariable', {
+      url: '/edit/template-variable/:variableId',
+      template: '<edit-template-variable></edit-template-variable>'
     }).state('addTemplateMetric', {
       url: '/add/template-metric',
       template: '<add-template-metric></add-template-metric>'

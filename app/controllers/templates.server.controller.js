@@ -16,6 +16,21 @@ exports.update = update;
 exports.templateByID = templateByID;
 exports.getTemplateByName = getTemplateByName;
 exports.templateByName = templateByName;
+exports.delete = deleteTemplate;
+
+/**
+ * Delete a Template
+ */
+function deleteTemplate(req, res) {
+    var template = req.template;
+    template.remove(function (err) {
+        if (err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        } else {
+            res.jsonp(template);
+        }
+    });
+};
 
 /**
  * Get Template by name

@@ -3,33 +3,41 @@
     <div layout="row">
         <div flex="90"></div>
         <div flex="10">
-            <md-button ng-if="variableSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedMetricsModal('')" style="margin: 0px;" >Delete selected</md-button>
+            <md-button ng-if="variableSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedVariablesModal('')" style="margin: 0px;" >Delete selected</md-button>
         </div>
     </div>
     <table class="table">
+        <colgroup>
+            <col span="1" style="width: 20%;">
+            <col span="1" style="width: 20%;">
+            <col span="1" style="width: 50%;">
+            <col span="1" style="width: 5%;">
+            <col span="1" style="width: 5%;">
+        </colgroup>
         <thead>
         <tr>
             <th>Variable</th>
             <th>Description</th>
             <th>Query</th>
             <th><i class="glyphicon glyphicon-plus" data-ng-click="addVariable()"></i></th>
-            <td>
-                <md-checkbox md-no-ink aria-label="select all variables" ng-model="allMetricsSelected" ng-change="setAllMetricsSelected(allMetricsSelected)" style="margin: 0px;">
+            <th>
+                <md-checkbox md-no-ink aria-label="select all variables" ng-model="allVariablesSelected" ng-change="setAllVariablesSelected(allVariablesSelected)" style="margin: 0px;">
                 </md-checkbox>
-            </td>
+            </th>
+
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="variable in template.variables">
-            <td>
-                <a>{{variable.name}}</a>
+            <td class="pointer" ng-click="editVariable($index)">
+                {{variable.name}}
             </td>
-            <td>{{variable.description}}</td>
-            <td>{{variable.query}}</td>
-            <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteMetricModal('', $index)"></i>
+            <td class="pointer" ng-click="editVariable($index)">{{variable.description}}</td>
+            <td class="pointer" ng-click="editVariable($index)">{{variable.query}}</td>
             </td>
+            <td class="pointer" ng-click="editVariable($index)"></td>
             <td>
-                <md-checkbox md-no-ink aria-label="select variable" ng-model="variable.selected"  ng-change="setMetricsSelected(variable.selected)" style="margin: 0px;">
+                <md-checkbox md-no-ink aria-label="select variable" ng-model="variable.selected"  ng-change="setVariablesSelected(variable.selected)" style="margin: 0px;">
                 </md-checkbox>
             </td>
         </tr>

@@ -13,7 +13,7 @@ function AddTemplateMetricDirective () {
   return directive;
 
   /* @ngInject */
-  function AddTemplateMetricDirectiveController ($scope, $rootScope, $state, Templates, Dashboards) {
+  function AddTemplateMetricDirectiveController ($scope, $rootScope, $state, Templates, Dashboards, Utils) {
 
       $scope.metric={};
       $scope.metric.targets = [''];
@@ -41,6 +41,9 @@ function AddTemplateMetricDirective () {
 
 
       $scope.create = function(){
+
+      /* sort tags */
+      $scope.metric.tags = $scope.metric.tags.sort(Utils.dynamicSort('text'));
 
         Templates.selected.metrics.push($scope.metric);
         Templates.update(Templates.selected).success(function (template){

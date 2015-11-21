@@ -13,7 +13,7 @@ function EditTemplateMetricDirective () {
   return directive;
 
   /* @ngInject */
-  function EditTemplateMetricDirectiveController ($scope, $rootScope, $state, Templates, Dashboards) {
+  function EditTemplateMetricDirectiveController ($scope, $rootScope, $state, Templates, Dashboards, Utils) {
 
 
       $scope.metric = Templates.metric;
@@ -37,6 +37,9 @@ function EditTemplateMetricDirective () {
 
 
       $scope.update = function(){
+
+        /* sort tags */
+        $scope.metric.tags = $scope.metric.tags.sort(Utils.dynamicSort('text'));
 
         var updateIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
         Templates.selected.metrics[updateIndex] = $scope.metric;

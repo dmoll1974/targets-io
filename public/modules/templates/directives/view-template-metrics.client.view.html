@@ -6,22 +6,33 @@
             <md-button ng-if="metricSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedMetricsModal('')" style="margin: 0px;" >Delete selected</md-button>
         </div>
     </div>
+    <md-input-container>
+        <label>Search metric</label>
+        <input ng-model="searchMetrics">
+    </md-input-container>
     <table class="table">
         <thead>
         <tr>
-            <th>Metric</th>
-            <th>Tag</th>
+            <th>
+                <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">Metric <span ng-if="sortType === 'name'" ng-class="sortType === 'name' && !sortReverse ? 'fa fa-caret-down' : 'fa fa-caret-up'"></span></a>
+            </th>
+            <th>
+                <a href="#" ng-click="sortType = 'tags'; sortReverse = !sortReverse">Tags <span ng-if="sortType === 'tags'" ng-class="sortType === 'tags' && !sortReverse ? 'fa fa-caret-down' : 'fa fa-caret-up'"></span></a>
+            </th>
             <th>Requirement</th>
             <th>Allowed deviation</th>
-            <th><i class="glyphicon glyphicon-plus" data-ng-click="addMetric()"></i></th>
-            <td>
+            <th>
+                <i class="glyphicon glyphicon-plus" data-ng-click="addMetric()"></i>
+            </th>
+            <th>
                 <md-checkbox md-no-ink aria-label="select all metrics" ng-model="allMetricsSelected" ng-change="setAllMetricsSelected(allMetricsSelected)" style="margin: 0px;">
                 </md-checkbox>
-            </td>
+            </th>
+
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="metric in template.metrics">
+        <tr ng-repeat="metric in template.metrics | orderBy:sortType:sortReverse | filter:searchMetrics">
             <td class="pointer" ng-click="editMetric($index)">
                 {{metric.alias}}
             </td>
@@ -32,8 +43,7 @@
             <td class="pointer" ng-click="editMetric($index)" ><span>{{metric.requirementOperator}} {{metric.requirementValue}}</span></td>
             <td class="pointer" ng-click="editMetric($index)"><span data-ng-if="metric.benchmarkOperator">{{metric.benchmarkOperator === '>'?'+':'-'}} {{metric.benchmarkValue}}</span>
             </td>
-            <td><i class="pointer glyphicon glyphicon-trash" data-ng-click="openDeleteMetricModal('', $index)"></i>
-            </td>
+            <td></td>
             <td>
                 <md-checkbox md-no-ink aria-label="select metric" ng-model="metric.selected"  ng-change="setMetricsSelected(metric.selected)" style="margin: 0px;">
                 </md-checkbox>

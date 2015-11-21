@@ -12,7 +12,8 @@ module.exports = function (app) {
       .get(templates.getTemplateByName);
 
   app.route('/templates/:templateId')
-      .put(templates.update);  // users.requiresLogin, templates.hasAuthorization,
+      .put(templates.update)
+      .delete(templates.delete);  // users.requiresLogin, templates.hasAuthorization,
   //    .delete(templates.delete);
   //users.requiresLogin, templates.hasAuthorization,
 

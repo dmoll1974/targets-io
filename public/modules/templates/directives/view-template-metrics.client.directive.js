@@ -16,10 +16,16 @@ function TemplateMetricsDirective () {
   /* @ngInject */
   function TemplateMetricsDirectiveController ($scope, $state, Templates, ConfirmModal, $modal) {
 
-      $scope.addMetric = function(){
+
+    $scope.sortType     = 'tags'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
+    $scope.searchMetrics  = ''; // set the default sort order
+
+
+    $scope.addMetric = function(){
 
         $state.go('addTemplateMetric');
-      }
+    };
 
     $scope.editMetric = function(index){
 
@@ -29,7 +35,7 @@ function TemplateMetricsDirective () {
 
     $scope.$watch('allMetricsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        _.each($scope.dashboard.metrics, function (metric, i) {
+        _.each($scope.template.metrics, function (metric, i) {
           metric.selected = newVal;
         });
       }
@@ -41,7 +47,7 @@ function TemplateMetricsDirective () {
 
         $scope.metricSelected = false;
 
-        _.each($scope.dashboard.metrics, function(metric){
+        _.each($scope.template.metrics, function(metric){
           if(metric.selected === true) $scope.metricSelected = true;
         })
 

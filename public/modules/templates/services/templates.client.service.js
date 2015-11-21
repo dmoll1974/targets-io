@@ -13,10 +13,15 @@ angular.module('events').factory('Templates', [
       get: getFn,
       //delete: deleteFn,
       update: update,
-      create: create
+      create: create,
+      delete: deleteFn
     };
     return Templates;
 
+    function deleteFn(templateId){
+
+      return $http.delete('/templates/' + templateId)
+    }
     function getFn(templateName) {
       return $http.get('/template-by-name/' + templateName);
     }
