@@ -14,7 +14,7 @@ function ViewTemplatesDirective () {
   return directive;
 
   /* @ngInject */
-  function ViewTemplatesDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, ConfirmModal, $modal) {
+  function ViewTemplatesDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, ConfirmModal, $modal, $q) {
 
     Templates.getAll().success(function(templates){
 
