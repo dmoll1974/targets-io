@@ -25,6 +25,7 @@ angular.module('testruns').controller('TestrunsController', [
         $scope.testRuns= [];
         $scope.testRuns= testRuns;
 
+
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
