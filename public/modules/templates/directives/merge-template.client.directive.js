@@ -332,6 +332,10 @@ function MergeTemplateDirective () {
               /* reset Dashboards.selected to force reload form db */
 
               Dashboards.selected ={};
+
+              /* Go to metrics tab */
+              Dashboards.selectedTab = 1;
+
               $state.go('viewDashboard', {
                   'productName': productName,
                   'dashboardName': dashboardName
