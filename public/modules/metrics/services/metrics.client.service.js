@@ -1,8 +1,8 @@
 'use strict';
 //Metrics service used to communicate Metrics REST endpoints
 angular.module('metrics').factory('Metrics', [
-  '$http',
-  function ($http) {
+  '$http', 'Utils',
+  function ($http, Utils) {
     var Metrics = {
       //            items : [],
       'get': getFn,
@@ -21,10 +21,12 @@ angular.module('metrics').factory('Metrics', [
       return $http.delete('/metrics/' + metricId);
     }
     function create(metric) {
+      metric.tags = metric.tags.sort(Utils.dynamicSort('text'));
       return $http.post('/metrics', metric).success(function (metric) {
       });
     }
     function update(metric) {
+      metric.tags = metric.tags.sort(Utils.dynamicSort('text'));
       return $http.put('/metrics/' + metric._id, metric).success(function (metric) {
       });
     }
