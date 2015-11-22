@@ -3,6 +3,72 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Event = mongoose.model('Event'), Testrun = mongoose.model('Testrun'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), testruns = require('./testruns.server.controller.js'), _ = require('lodash');
+
+exports.updateAllDashboardEvents = function (req, res){
+
+  var regExpDashboardName = new RegExp(req.params.oldDashboardName, 'igm');
+
+  Event.find({
+    $and: [
+      { productName: req.params.oldProductName },
+      { dashboardName: req.params.oldDashboardName }
+    ]}).exec(function(err, events){
+        if (err) {
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        } else {
+
+          _.each(events, function(event){
+
+
+            event.dashboardName = req.params.newDashboardName;
+            event.testRunId = event.testRunId.replace(regExpDashboardName, req.params.newDashboardName);
+
+            event.save(function (err) {
+              if (err) {
+                return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+              } else {
+                //res.jsonp(event);
+              }
+            });
+          });
+
+          res.jsonp(events);
+        }
+
+
+
+    });
+}
+
+exports.updateAllProductEvents = function (req, res){
+
+  var regExpProductName = new RegExp(req.params.oldProductName, 'igm');
+
+  Event.find({productName: req.params.oldProductName}).exec(function(err, events){
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
+
+      _.each(events, function(event){
+
+
+        event.productName = req.params.newProductName;
+        event.testRunId = event.testRunId.replace(regExpProductName,req.params.newProductName);
+
+        event.save(function (err) {
+          if (err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+          } else {
+            //res.jsonp(event);
+          }
+        });
+      });
+
+      res.jsonp(events);
+    }
+});
+}
+
 /**
  * Create a Event
  */

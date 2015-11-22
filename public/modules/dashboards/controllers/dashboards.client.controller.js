@@ -15,8 +15,9 @@ angular.module('dashboards').controller('DashboardsController', [
   'TestRuns',
   'SideMenu',
   'Templates',
+  'Events',
   '$q',
-  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, $q) {
+  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, $q) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -210,7 +211,12 @@ angular.module('dashboards').controller('DashboardsController', [
     };
     // Update existing Dashboard
     $scope.update = function () {
-      Dashboards.update($scope.dashboard).then(function (dashboard) {
+      Dashboards.update($scope.dashboard).success(function (dashboard) {
+
+        Events.updateAllEventsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function(events){
+
+          Events.list = events;
+
         /* Refresh sidebar */
         Products.fetch().success(function (products) {
           SideMenu.addProducts(products);
@@ -220,9 +226,8 @@ angular.module('dashboards').controller('DashboardsController', [
           'productName': $stateParams.productName,
           'dashboardName': $scope.dashboard.name
         });
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
+        });
+    });
     };
 
     $scope.addTemplate = function(){

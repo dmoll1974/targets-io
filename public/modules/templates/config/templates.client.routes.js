@@ -13,8 +13,8 @@ angular.module('templates').config([
     }).state('addTemplate', {
           url: '/add/template',
           template: '<add-template></add-template>'
-    }) .state('editTemplate', {
-        url: '/edite/template/:templateId',
+    }).state('editTemplate', {
+        url: '/edit/template/:templateName',
         template: '<edit-template></edit-template>'
     }).state('addVariable', {
       url: '/add/template-variable',

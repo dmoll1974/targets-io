@@ -41,5 +41,16 @@ function ViewTemplateDirective () {
 
   });
 
+  $scope.edit = function(){
+
+    $state.go('editTemplate', {templateName: Templates.selected.name});
+
+  };
+    var originatorEv;
+    $scope.openMenu = function ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
+
   }
 }

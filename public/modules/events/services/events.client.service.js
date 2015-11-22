@@ -14,7 +14,9 @@ angular.module('events').factory('Events', [
       list: [],
       update: update,
       create: create,
-      delete: deleteFn
+      delete: deleteFn,
+      updateAllEventsForProduct: updateAllEventsForProduct,
+      updateAllEventsForDashboard: updateAllEventsForDashboard
     };
     return Events;
     function deleteFn(eventId) {
@@ -48,6 +50,15 @@ angular.module('events').factory('Events', [
     }
     function update(event) {
       return $http.put('/events/' + event._id, event);
+    }
+    function updateAllEventsForProduct(productName, newProductName){
+
+      return $http.get('/update-all-product-events/' + productName + '/'  + newProductName  );
+    }
+
+    function updateAllEventsForDashboard(productName, dashboardName, newDashboardName){
+
+      return $http.get('/update-all-dashboard-events/' + productName + '/' + dashboardName + '/' + newDashboardName + '/' );
     }
   }
 ]);

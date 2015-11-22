@@ -12,7 +12,8 @@ angular.module('products').controller('ProductsController', [
   'ConfirmModal',
   'SideMenu',
   'TestRuns',
-  function ($scope, $rootScope, $stateParams, $state, $location, $modal, $interval, Products, ConfirmModal, SideMenu, TestRuns) {
+  'Events',
+  function ($scope, $rootScope, $stateParams, $state, $location, $modal, $interval, Products, ConfirmModal, SideMenu, TestRuns, Events) {
 
     $scope.productName = $stateParams.productName;
 
@@ -113,19 +114,24 @@ angular.module('products').controller('ProductsController', [
       $state.go('editProduct', { productName: productName });
     };
     $scope.update = function () {
-      Products.update($scope.product).then(function (product) {
-        /* Refresh sidebar */
-        Products.fetch().success(function (product) {
-          $scope.products = Products.items;
-          SideMenu.addProducts($scope.products);
+
+        Products.update($scope.product).success(function (product) {
+
+          Events.updateAllEventsForProduct($state.params.productName, product.name).success(function(events){
+
+            Events.list = events;
+
+                /* Refresh sidebar */
+            Products.fetch().success(function (products) {
+              $scope.products = Products.items;
+              SideMenu.addProducts(products);
+
+            $state.go('viewProduct',{productName: product.name});
+
+            })
+          })
         });
-        if ($rootScope.previousStateParams)
-          $state.go($rootScope.previousState, $rootScope.previousStateParams);
-        else
-          $state.go($rootScope.previousState);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
+
     };
     // Find a list of Products
     $scope.find = function () {
