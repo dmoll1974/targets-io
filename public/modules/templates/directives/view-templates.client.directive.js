@@ -87,7 +87,7 @@ function ViewTemplatesDirective () {
 
         $q.all(deleteTemplateArrayOfPromises)
             .then( Templates.getAll())
-            .then(function (templates) {
+            .success(function (templates) {
               $scope.templates = templates;
             });
 

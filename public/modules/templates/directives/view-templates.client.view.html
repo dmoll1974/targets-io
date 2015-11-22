@@ -21,19 +21,17 @@
             <th>Name</th>
             <th>Description</th>
             <th><i class="glyphicon glyphicon-plus" data-ng-click="addTemplate()"></i></th>
-            <td>
+            <th>
                 <md-checkbox md-no-ink aria-label="select all templates" ng-model="allTemplatesSelected" ng-change="setAllTemplatesSelected(allTemplatesSelected)" style="margin: 0px;">
                 </md-checkbox>
-            </td>
+            </th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="template in templates">
             <td class="pointer" data-ng-click="viewTemplate($index)">{{template.name}}</td>
             <td class="pointer" data-ng-click="viewTemplate($index)">{{template.description}}</td>
-            <td>
-                <i class="glyphicon glyphicon-trash pointer" data-ng-click="openDeleteTemplateModal('', $index)"></i>
-            </td>
+            <td></td>
             <td>
                 <md-checkbox md-no-ink aria-label="select template" ng-model="template.selected"  ng-change="setTemplatesSelected(template.selected)" style="margin: 0px;">
                 </md-checkbox>

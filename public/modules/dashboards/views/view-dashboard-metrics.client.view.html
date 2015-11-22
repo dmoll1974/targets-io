@@ -8,17 +8,17 @@
             </div>
         </div>
         <md-input-container>
-            <label>Search metric</label>
-            <input ng-model="searchMetrics">
+            <label>Filter metrics</label>
+            <input ng-model="filterMetrics">
         </md-input-container>
         <table class="table">
             <thead>
                 <tr>
                     <th>
-                        <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">Metric <span ng-if="sortType === 'name'" ng-class="sortType === 'name' && !sortReverse ? 'fa fa-caret-down' : 'fa fa-caret-up'"></span></a>
+                        Metric
                     </th>
                     <th>
-                        <a href="#" ng-click="sortType = 'tags'; sortReverse = !sortReverse">Tags <span ng-if="sortType === 'tags'" ng-class="sortType === 'tags' && !sortReverse ? 'fa fa-caret-down' : 'fa fa-caret-up'"></span></a>
+                        Tags
                     </th>
                     <th>Requirement</th>
                     <th>Allowed deviation</th>
@@ -31,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="metric in dashboard.metrics | orderBy:sortType:sortReverse | filter:searchMetrics">
+            <tr ng-repeat="metric in dashboard.metrics |  filter:filterMetrics">
                 <td>
                     <a data-ng-href="/#!/edit/metric/{{productName}}/{{dashboardName}}/{{metric._id}}">{{metric.alias}}</a>
                 </td>

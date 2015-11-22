@@ -14,7 +14,7 @@ function ViewTemplateDirective () {
   return directive;
 
   /* @ngInject */
-  function ViewTemplateDirectiveController ($scope, $state, $stateParams, Templates, Dashboards) {
+  function ViewTemplateDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, Utils) {
 
     /* Watch on template */
     //$scope.$watch(function (scope) {
@@ -33,7 +33,10 @@ function ViewTemplateDirective () {
 
   Templates.get($stateParams.templateName).success(function(template){
 
-      $scope.template = template;
+    /* sort template metrics by tag[0]*/
+    template.metrics = template.metrics.sort(Utils.dynamicSortTags(''));
+
+    $scope.template = template;
       Templates.selected = template;
 
   });

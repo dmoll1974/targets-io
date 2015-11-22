@@ -181,6 +181,7 @@ angular.module('metrics').controller('MetricsController', [
     // Find existing Metric
     $scope.findOne = function () {
       Metrics.get($stateParams.metricId).success(function (metric) {
+
         $scope.metric = metric;
         /* set benchmark and requirement toggles */
         if ($scope.metric.requirementValue)

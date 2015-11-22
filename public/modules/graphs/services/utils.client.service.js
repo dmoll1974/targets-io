@@ -4,9 +4,23 @@ angular.module('graphs').service('Utils', [function () {
     var Utils = {
       dynamicSort: dynamicSort,
       dynamicSortMultiple: dynamicSortMultiple,
+      dynamicSortTags: dynamicSortTags,
       selectedIndex: ''
     };
     return Utils;
+    function dynamicSortTags(sortOrderParam) {
+        var sortOrder = 1;
+        if (sortOrderParam === '-') {
+            sortOrder = -1;
+        }
+        return function (a, b) {
+            var result = a.tags[0].text < b.tags[0].text ? -1 : a.tags[0].text > b.tags[0].text ? 1 : 0;
+            return result * sortOrder;
+        };
+    }
+
+
+
     function dynamicSort(property) {
       var sortOrder = 1;
       if (property[0] === '-') {

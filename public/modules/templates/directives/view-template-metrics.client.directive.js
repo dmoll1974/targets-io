@@ -17,7 +17,7 @@ function TemplateMetricsDirective () {
   function TemplateMetricsDirectiveController ($scope, $state, Templates, ConfirmModal, $modal) {
 
 
-    $scope.sortType     = 'tags'; // set the default sort type
+    $scope.sortType     = 'orderByTags'; // set the default sort type
     $scope.sortReverse  = false;  // set the default sort order
     $scope.searchMetrics  = ''; // set the default sort order
 
@@ -59,6 +59,11 @@ function TemplateMetricsDirective () {
     $scope.setAllMetricsSelected = function(metricSelected){
 
       $scope.metricSelected = metricSelected;
+    };
+
+    $scope.orderByTags= function(metric){
+
+      return metric.tags[0].text;
     };
 
     $scope.openDeleteSelectedMetricsModal = function (size) {

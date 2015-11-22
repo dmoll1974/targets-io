@@ -1,8 +1,8 @@
 'use strict';
 //Dashboards service used to communicate Dashboards REST endpoints
 angular.module('dashboards').factory('Dashboards', [
-  '$http',
-  function ($http) {
+  '$http', 'Utils',
+  function ($http, Utils) {
     var Dashboards = {
       //            items : [],
       'get': getFn,
@@ -20,6 +20,7 @@ angular.module('dashboards').factory('Dashboards', [
     function updateTags(productName, dashboardName, tags, callback) {
       /* if new tags are added, update dashbboard */
       getFn(productName, dashboardName).success(function (dashboard) {
+
 
         Dashboards.selected = dashboard;
         var updatedTags = Dashboards.selected.tags;
@@ -59,6 +60,10 @@ angular.module('dashboards').factory('Dashboards', [
     }
     function getFn(productName, dashboardName) {
       return $http.get('/dashboards/' + productName + '/' + dashboardName).success(function (dashboard) {
+
+        /* sort dashboard metrics by tag[0]*/
+        dashboard.metrics = dashboard.metrics.sort(Utils.dynamicSortTags(''));
+
         Dashboards.selected = dashboard;
         Dashboards.selected.productName = productName;
         Dashboards.defaultTag = getDefaultTag(Dashboards.selected.tags);
