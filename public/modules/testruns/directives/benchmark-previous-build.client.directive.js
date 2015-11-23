@@ -62,7 +62,11 @@
               TestRuns.selected = testRun;
               $scope.testRun = testRun;
               var data = [];
+              /* sort metrics*/
+              testRun.metrics = testRun.metrics.sort(Utils.dynamicSortTags(''));
               _.each(testRun.metrics, function (metric) {
+                /* sort targets*/
+                metric.targets = metric.targets.sort(Utils.dynamicSort('target'));
                 /* only show metrics failed / passed requirements */
                 if (metric.benchmarkResultPreviousOK === $scope.showPassed) {
                   var tag = metric.tags.length > 0 ? metric.tags[0].text : 'All';
