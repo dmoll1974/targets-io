@@ -13,6 +13,9 @@ exports.refreshTestrun = refreshTestrun;
 exports.runningTest = runningTest;
 exports.updateTestrunsResults = updateTestrunsResults;
 exports.saveTestRun = saveTestRun;
+exports.updateAllDashboardTestRuns = updateAllDashboardTestRuns;
+exports.updateAllProductTestRuns = updateAllProductTestRuns;
+
 function saveTestRun(testRun, callback) {
   /* Save updated test run */
   Testrun.findById(testRun._id, function (err, savedTestRun) {
@@ -736,13 +739,67 @@ function runningTest(req, res) {
     }
   });
 }
-/**
- * Delete an Testrun
- */
-exports.delete = function (req, res) {
-};
-/**
- * List of Testruns
- */
-exports.list = function (req, res) {
-};
+function updateAllDashboardTestRuns(req, res){
+
+  var regExpDashboardName = new RegExp(req.params.oldDashboardName, 'igm');
+
+  Testrun.find({
+    $and: [
+      { productName: req.params.oldProductName },
+      { dashboardName: req.params.oldDashboardName }
+    ]}).exec(function(err, testruns){
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
+
+      _.each(testruns, function(testrun){
+
+
+        testrun.dashboardName = req.params.newDashboardName;
+        testrun.testRunId = testrun.testRunId.replace(regExpDashboardName, req.params.newDashboardName);
+
+        testrun.save(function (err) {
+          if (err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+          } else {
+            //res.jsonp(testrun);
+          }
+        });
+      });
+
+      res.jsonp(testruns);
+    }
+
+
+
+  });
+}
+
+function updateAllProductTestRuns(req, res){
+
+  var regExpProductName = new RegExp(req.params.oldProductName, 'igm');
+
+  Testrun.find({productName: req.params.oldProductName}).exec(function(err, testruns){
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
+
+      _.each(testruns, function(testrun){
+
+
+        testrun.productName = req.params.newProductName;
+        testrun.testRunId = testrun.testRunId.replace(regExpProductName,req.params.newProductName);
+
+        testrun.save(function (err) {
+          if (err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+          } else {
+            //res.jsonp(testrun);
+          }
+        });
+      });
+
+      res.jsonp(testruns);
+    }
+  });
+}

@@ -213,21 +213,26 @@ angular.module('dashboards').controller('DashboardsController', [
     $scope.update = function () {
       Dashboards.update($scope.dashboard).success(function (dashboard) {
 
-        Events.updateAllEventsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function(events){
+        TestRuns.updateAllTestRunsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function(testruns) {
 
-          Events.list = events;
+          TestRuns.list = testruns;
 
-        /* Refresh sidebar */
-        Products.fetch().success(function (products) {
-          SideMenu.addProducts(products);
-          $scope.products = Products.items;
+          Events.updateAllEventsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function (events) {
+
+            Events.list = events;
+
+            /* Refresh sidebar */
+            Products.fetch().success(function (products) {
+              SideMenu.addProducts(products);
+              $scope.products = Products.items;
+            });
+            $state.go('viewDashboard', {
+              'productName': $stateParams.productName,
+              'dashboardName': $scope.dashboard.name
+            });
+          });
         });
-        $state.go('viewDashboard', {
-          'productName': $stateParams.productName,
-          'dashboardName': $scope.dashboard.name
-        });
-        });
-    });
+      });
     };
 
     $scope.addTemplate = function(){

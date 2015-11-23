@@ -117,19 +117,24 @@ angular.module('products').controller('ProductsController', [
 
         Products.update($scope.product).success(function (product) {
 
-          Events.updateAllEventsForProduct($state.params.productName, product.name).success(function(events){
+          TestRuns.updateAllTestRunsForProduct($state.params.productName, product.name).success(function(testruns){
 
-            Events.list = events;
+            TestRuns.list = testruns;
 
-                /* Refresh sidebar */
-            Products.fetch().success(function (products) {
-              $scope.products = Products.items;
-              SideMenu.addProducts(products);
+            Events.updateAllEventsForProduct($state.params.productName, product.name).success(function(events){
 
-            $state.go('viewProduct',{productName: product.name});
+              Events.list = events;
 
-            })
-          })
+                  /* Refresh sidebar */
+              Products.fetch().success(function (products) {
+                $scope.products = Products.items;
+                SideMenu.addProducts(products);
+
+               $state.go('viewProduct',{productName: product.name});
+
+              });
+            });
+          });
         });
 
     };

@@ -20,7 +20,9 @@ angular.module('events').factory('TestRuns', [
       refreshTestrun: refreshTestrun,
       delete: deleteFn,
       updateFixedBaseline: updateFixedBaseline,
-      updateTestruns: updateTestruns
+      updateTestruns: updateTestruns,
+      updateAllTestRunsForProduct: updateAllTestRunsForProduct,
+      updateAllTestRunsForDashboard: updateAllTestRunsForDashboard
     };
     return TestRuns;
     function updateTestruns(productName, dashboardName, metricId, updateRequirements, updateBenchmarks) {
@@ -52,6 +54,16 @@ angular.module('events').factory('TestRuns', [
     }
     function deleteFn(productName, dashboardName, testRunId) {
       return $http.delete('/testrun/' + productName + '/' + dashboardName + '/' + testRunId);
+    }
+
+    function updateAllTestRunsForProduct(productName, newProductName){
+
+      return $http.get('/update-all-product-testruns/' + productName + '/'  + newProductName  );
+    }
+
+    function updateAllTestRunsForDashboard(productName, dashboardName, newDashboardName){
+
+      return $http.get('/update-all-dashboard-testruns/' + productName + '/' + dashboardName + '/' + newDashboardName + '/' );
     }
   }
 ]);

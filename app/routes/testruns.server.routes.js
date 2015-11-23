@@ -13,4 +13,6 @@ module.exports = function (app) {
   app.route('/update-testruns-results/:productName/:dashboardName/:metricId/:updateRequirements/:updateBenchmarks').get(testruns.updateTestrunsResults);
   app.route('/running-test/:productName/:dashboardName').get(testruns.runningTest);
   app.route('/update-fixed-baseline-benchmark').post(benchmarks.updateFixedBaselineBenchmark);
+  app.route('/update-all-dashboard-testruns/:oldProductName/:oldDashboardName/:newDashboardName').get(testruns.updateAllDashboardTestRuns);
+  app.route('/update-all-product-testruns/:oldProductName/:newProductName').get(testruns.updateAllProductTestRuns);
 };
