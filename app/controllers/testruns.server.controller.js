@@ -370,7 +370,11 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
           } else {
             if (events.length > 0) {
-              createTestrunFromEvents(productName, dashboardName, events);
+              createTestrunFromEvents(productName, dashboardName, events, function(testRun){
+                benchmarkAndPersistTestRunById(productName, dashboardName, testRun[0], function(persistedTestRun){
+                  callback(persistedTestRun);
+                });
+              });
             } else {
               callback(null);
             }
