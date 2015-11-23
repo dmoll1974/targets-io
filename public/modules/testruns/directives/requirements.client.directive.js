@@ -15,7 +15,7 @@
     };
     return directive;
     /* @ngInject */
-    function RequirementsController($scope, $rootScope, $timeout, $filter, $state, $stateParams, TestRuns, ngTableParams) {
+    function RequirementsController($scope, $rootScope, $timeout, $filter, $state, $stateParams, TestRuns, ngTableParams, Utils) {
       $scope.showPassedRequirements = $stateParams.requirementsResult === 'passed' ? true : false;
       $scope.productName = $stateParams.productName;
       $scope.dashboardName = $stateParams.dashboardName;

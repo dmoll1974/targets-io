@@ -14,7 +14,7 @@
     };
     return directive;
     /* @ngInject */
-    function BenchmarkPreviousBuildController($scope, $timeout, $filter, $state, $stateParams, TestRuns, ngTableParams) {
+    function BenchmarkPreviousBuildController($scope, $timeout, $filter, $state, $stateParams, TestRuns, ngTableParams, Utils) {
       $scope.showPassed = $stateParams.benchmarkResult === 'passed' ? true : false;
       $scope.productName = $stateParams.productName;
       $scope.dashboardName = $stateParams.dashboardName;
