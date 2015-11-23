@@ -100,8 +100,8 @@
               });
               var orderedData = params.sorting() ? $filter('orderBy')(data, $scope.tableParams.orderBy()) : data;
               // update table params
-              params.total(orderedData.length);
-              $defer.resolve(orderedData);
+              params.total(data.length);
+              $defer.resolve(data);
             }, 500);
           });
         }
