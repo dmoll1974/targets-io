@@ -22,7 +22,7 @@
     <!--<div data-ng-hide="gatlingDetails">-->
         <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
             <li data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsController">
-                <div class="collapsible-header" ng-class="metric.isOpen ? 'active' : ''">
+                <div class="collapsible-header" data-ng-click="setMetricIsOpen($index)" ng-class="metric.isOpen ? 'active' : ''">
                     {{metric.alias}}
                 </div>
                 <div class="collapsible-body">

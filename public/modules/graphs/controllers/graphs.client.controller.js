@@ -22,6 +22,9 @@ angular.module('graphs').controller('GraphsController', [
       $('.collapsible').collapsible({});
     },500);
 
+    $scope.setMetricIsOpen = function(index){
+      $scope.metrics[index].isOpen = true;
+    }
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
