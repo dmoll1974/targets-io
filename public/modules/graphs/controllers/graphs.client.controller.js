@@ -14,7 +14,13 @@ angular.module('graphs').controller('GraphsController', [
   'ConfirmModal',
   'Utils',
   'SideMenu',
-  function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
+  '$timeout',
+  function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu, $timeout) {
+
+    /* init collapsible */
+    $timeout(function(){
+      $('.collapsible').collapsible({});
+    },500);
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;

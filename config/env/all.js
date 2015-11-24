@@ -25,7 +25,8 @@ module.exports = {
 				'public/lib/angular-busy/dist/angular-busy.css',
 				'public/lib/ng-table/dist/ng-table.css',
 				'public/lib/ng-tags-input/ng-tags-input.min.css',
-				'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css'
+				'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css',
+				'public/lib/materialize/dist/css/materialize.min.css'
 
 
 			],
@@ -52,7 +53,9 @@ module.exports = {
 				'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
 				'public/lib/ng-clip/dest/ng-clip.min.js',
 				'public/lib/zeroclipboard/dist/ZeroClipboard.min.js',
-				'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js'
+				'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js',
+				'public/lib/materialize/dist/js/materialize.js',
+				'public/lib/angular-elastic-input/dist/angular-elastic-input.min.js'
 
 			]
 		},

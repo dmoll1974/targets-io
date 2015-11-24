@@ -10,6 +10,7 @@ angular.module('graphs').directive('shareGraphUrl', [
         //	$(this).select();
         //});
         $timeout(function () {
+          element.css('width', element[0].value.length * 8 + 'px');
           element[0].select();
         });
       }
