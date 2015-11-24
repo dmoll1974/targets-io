@@ -22,7 +22,7 @@
     <!--<div data-ng-hide="gatlingDetails">-->
         <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
             <li data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsController">
-                <div class="collapsible-header" ng-class="active">
+                <div class="collapsible-header" ng-class="metric.isOpen ? 'active' : ''">
                     {{metric.alias}}
                 </div>
                 <div class="collapsible-body">
@@ -45,8 +45,8 @@
                                    <div>
                                        <md-button ng-if="showUrl && hasFlash()" tooltip-size="medium" title="Copy graph URL" tooltip-side="top" clip-copy="metricShareUrl" clip-click="clipClicked()">Copy</md-button>
                                    </div>
-                                   <div flex  md-padding class="input-group" ng-if="showTags" class="graph-input-tags">
-                                       <tags-input data-ng-model="metric.tags" on-tag-removed="tagRemoved($tag)">
+                                   <div flex  md-padding class="input-group" ng-if="showTags" style="width:30%">
+                                       <tags-input  class="graph-input-tags" data-ng-model="metric.tags" on-tag-removed="tagRemoved($tag)">
                                            <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
                                        </tags-input>
                                        <div class="input-group-btn">
@@ -76,7 +76,7 @@
                                     <!--</div>-->
                                <!--</div>-->
 
-                               <div  ng-attr-id="{{'chart-' + $index}}" config="config">
+                               <div  style="width:75%;" ng-attr-id="{{'chart-' + $index}}" config="config">
                                </div>
                         </div>
                     </div>
