@@ -20,14 +20,14 @@
     </div>
     <div gatling-details data-ng-if="gatlingDetails"></div>
     <!--<div data-ng-hide="gatlingDetails">-->
-        <ul flex class="collapsible collapsible-accordion" data-collapsible="expandable">
-            <li flex data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsController">
+        <ul  class="collapsible collapsible-accordion" data-collapsible="expandable">
+            <li  data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsController">
                 <div class="collapsible-header" data-ng-click="setMetricIsOpen($index)" ng-class="metric.isOpen ? 'active' : ''">
                     {{metric.alias}}
                 </div>
-                <div flex class="collapsible-body">
+                <div  class="collapsible-body">
                     <!--<md-card md-padding>-->
-                        <div layout="column" flex data-ng-init="initConfig(metric, $index)" ng-if="metric.isOpen">
+                        <div layout="column"  data-ng-init="initConfig(metric, $index)" ng-if="metric.isOpen">
                                <div layout="row">
                                    <md-button title="Edit metric" class="md-icon-button" aria-label="Edit metric" ng-click="editMetric(metric._id)">
                                        <md-icon md-svg-icon="images/assets/ic_settings_applications_black_36px.svg"></md-icon>
@@ -60,7 +60,7 @@
                                    </div>
                                </div>
 
-                               <div  flex ng-attr-id="{{'chart-' + $index}}" config="config">
+                               <div  flex ng-attr-id="{{'chart-' + $index}}" config="config" ng-if="metric.isOpen">
                                </div>
                         </div>
                     </div>
