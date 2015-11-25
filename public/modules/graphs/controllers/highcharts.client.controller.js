@@ -314,7 +314,7 @@ angular.module('graphs').controller('HighchartsController', [
         $scope.config.yAxis.plotLines = [];
       //$scope.config.chart.renderTo = 'chart-' + index;
       setTimeout(function () {
-        angular.element($scope.graphSelector).highcharts('StockChart', $scope.config).css(width, '100%');
+        angular.element($scope.graphSelector).highcharts('StockChart', $scope.config).css('width', '100%');
         var chart = angular.element($scope.graphSelector).highcharts();
         chart.showLoading('Loading data ...');
         /* Set the TestRuns.selected based on $stateParams*/
