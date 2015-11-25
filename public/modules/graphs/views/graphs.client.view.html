@@ -25,9 +25,9 @@
                 <div class="collapsible-header" data-ng-click="setMetricIsOpen($index)" ng-class="metric.isOpen ? 'active' : ''">
                     {{metric.alias}}
                 </div>
-                <div  class="collapsible-body">
+                <div  class="collapsible-body" ng-if="metric.isOpen">
                     <!--<md-card md-padding>-->
-                        <div layout="column"  data-ng-init="initConfig(metric, $index)" ng-if="metric.isOpen">
+                        <div layout="column"  data-ng-init="initConfig(metric, $index)">
                                <div layout="row">
                                    <md-button title="Edit metric" class="md-icon-button" aria-label="Edit metric" ng-click="editMetric(metric._id)">
                                        <md-icon md-svg-icon="images/assets/ic_settings_applications_black_36px.svg"></md-icon>
