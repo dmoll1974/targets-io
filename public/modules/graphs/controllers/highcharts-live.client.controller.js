@@ -346,7 +346,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
               TestRuns.zoomUntil = until;
               $scope.$apply();
             } else {
-              var chart = angular.element($scope.graphSelector).highcharts();
+              var chart = angular.element($scope.graphSelector).highcharts().css(width, '100%');
               while (chart.series.length > 0) {
                 chart.series[0].remove(false);  //deletes all series
               }
@@ -362,6 +362,12 @@ angular.module('graphs').controller('HighchartsLiveController', [
           }
         },
         plotLines: []
+      },
+      scrollbar : {
+        enabled : false
+      },
+      credits: {
+        enabled: false
       },
       series: [],
       yAxis: {

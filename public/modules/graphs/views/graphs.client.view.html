@@ -20,12 +20,12 @@
     </div>
     <div gatling-details data-ng-if="gatlingDetails"></div>
     <!--<div data-ng-hide="gatlingDetails">-->
-        <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
-            <li data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsController">
+        <ul flex class="collapsible collapsible-accordion" data-collapsible="expandable">
+            <li flex data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsController">
                 <div class="collapsible-header" data-ng-click="setMetricIsOpen($index)" ng-class="metric.isOpen ? 'active' : ''">
                     {{metric.alias}}
                 </div>
-                <div class="collapsible-body">
+                <div flex class="collapsible-body">
                     <!--<md-card md-padding>-->
                         <div layout="column" flex data-ng-init="initConfig(metric, $index)" ng-if="metric.isOpen">
                                <div layout="row">
@@ -59,24 +59,8 @@
                                        </div>
                                    </div>
                                </div>
-                                    <!--<div class="btn-group">-->
-                                        <!--<label title="Edit metric" class="btn default" ng-click="editMetric(metric._id)"><span-->
-                                                <!--class="btn btn-xs glyphicon glyphicon-wrench"></span></label>-->
-                                        <!--<label title="Edit tags" class="btn default" ng-click="setTags()"><span-->
-                                                <!--class="btn btn-xs glyphicon glyphicon-tag"></span></label>-->
-                                        <!--<label title="Share URL" class="btn default"-->
-                                               <!--ng-click="setMetricShareUrl(metric._id)"><span-->
-                                                <!--class="btn btn-xs glyphicon glyphicon-share"></span></label>-->
-                                    <!--</div>-->
-                                    <!--<div>-->
-                                        <!--<input ng-readonly="true" ng-model="metricShareUrl" ng-if="showUrl" style="width:50%;" share-graph-url/>-->
-                                    <!--</div>-->
-                                    <!--<div>-->
-                                        <!--<button ng-if="showUrl && hasFlash()" tooltip-size="medium" title="Copy graph URL" tooltip-side="top" clip-copy="metricShareUrl" clip-click="clipClicked()">Copy</button>-->
-                                    <!--</div>-->
-                               <!--</div>-->
 
-                               <div  style="width:75%;" ng-attr-id="{{'chart-' + $index}}" config="config">
+                               <div  flex ng-attr-id="{{'chart-' + $index}}" config="config">
                                </div>
                         </div>
                     </div>
