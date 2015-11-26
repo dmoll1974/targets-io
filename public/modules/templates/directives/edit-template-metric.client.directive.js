@@ -41,7 +41,20 @@ function EditTemplateMetricDirective () {
         /* sort tags */
         $scope.metric.tags = $scope.metric.tags.sort(Utils.dynamicSort('text'));
 
-        var updateIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
+      /* add tags */
+
+      _.each($scope.metric.tags, function(tag){
+
+          Templates.selected.tags.push(tag);
+
+      });
+
+      Templates.selected.tags = _.uniq(Templates.selected.tags, 'text');
+
+      Templates.selected.metrics.push($scope.metric);
+
+
+          var updateIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
         Templates.selected.metrics[updateIndex] = $scope.metric;
         Templates.update(Templates.selected).success(function (template){
             Templates.selected = template;

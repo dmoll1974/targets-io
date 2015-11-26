@@ -45,8 +45,19 @@ function AddTemplateMetricDirective () {
       /* sort tags */
       $scope.metric.tags = $scope.metric.tags.sort(Utils.dynamicSort('text'));
 
-        Templates.selected.metrics.push($scope.metric);
-        Templates.update(Templates.selected).success(function (template){
+      /* add tags */
+
+          _.each($scope.metric.tags, function(tag){
+
+              Templates.selected.tags.push(tag);
+
+          });
+
+      Templates.selected.tags = _.uniq(Templates.selected.tags, 'text');
+
+      Templates.selected.metrics.push($scope.metric);
+
+      Templates.update(Templates.selected).success(function (template){
             Templates.selected = template;
             Templates.selected.selectedIndex = 1;
             $state.go('viewTemplate',{templateName: template.name});
