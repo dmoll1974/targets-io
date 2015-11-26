@@ -45,6 +45,7 @@ function EditTemplateMetricDirective () {
         Templates.selected.metrics[updateIndex] = $scope.metric;
         Templates.update(Templates.selected).success(function (template){
             Templates.selected = template;
+            Templates.selected.selectedIndex = 1;
             $state.go('viewTemplate',{templateName: template.name});
         });
       }

@@ -48,6 +48,7 @@ function AddTemplateMetricDirective () {
         Templates.selected.metrics.push($scope.metric);
         Templates.update(Templates.selected).success(function (template){
             Templates.selected = template;
+            Templates.selected.selectedIndex = 1;
             $state.go('viewTemplate',{templateName: template.name});
         });
       }

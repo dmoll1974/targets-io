@@ -29,6 +29,8 @@ function ViewTemplatesDirective () {
 
     $scope.addTemplate = function (){
 
+      /* reset Templates.selected */
+      Templates.selected = {};
       $state.go('addTemplate');
     };
 
