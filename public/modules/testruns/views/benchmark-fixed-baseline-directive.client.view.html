@@ -36,7 +36,7 @@
         </td>
         <td data-title="'Result'" header-class="text-left">
             <span title="Go to graph" class="pointer"
-                  ui-sref="deepLinkGraph({productName: target.productName, dashboardName:target.dashboardName, testRunId: target.testRunId, tag: target.tag, metricId: target.metricId})"
+                  ui-sref="deepLinkGraph({productName: target.productName, dashboardName:target.dashboardName, testRunId: target.testRunId, tag: target.tag, metricId: target.metricId, selectedSeries: target.target})"
                   ng-class="target.benchmarkResultFixedOK ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
             <span title="Configure metric"
                   ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})"
