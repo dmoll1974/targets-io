@@ -13,7 +13,7 @@ angular.module('graphs').config([
       url: '/graphs/:productName/:dashboardName/:testRunId/:tag',
       templateUrl: 'modules/graphs/views/graphs.client.view.html'
     }).state('deepLinkGraph', {
-      url: '/graphs/:productName/:dashboardName/:testRunId/:tag/:metricId?zoomFrom&zoomUntil',
+      url: '/graphs/:productName/:dashboardName/:testRunId/:tag/:metricId?zoomFrom&zoomUntil&selectedSeries',
       templateUrl: 'modules/graphs/views/graphs.client.view.html'
     }).state('viewLiveGraphs', {
       url: '/graphs-live/:productName/:dashboardName/:tag',

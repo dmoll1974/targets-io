@@ -53,7 +53,6 @@ module.exports = {
                 'public/lib/ng-tags-input/ng-tags-input.min.js',
                 'public/lib/underscore/underscore-min.js',
                 'public/lib/highstock-release/highstock.js',
-                'public/lib/highcharts-ng/dist/highcharts-ng.min.js',
                 'public/lib/highstock-release/exporting.js',
                 'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
                 'public/lib/ng-clip/dest/ng-clip.min.js',

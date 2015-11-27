@@ -156,17 +156,20 @@ angular.module('graphs').controller('HighchartsController', [
         });
       }
     });
+
+    var clickDetected = false;
+
     var defaultChartConfig = {
       chart: {
         type: 'line',
         zoomType: 'x',
         height: 500,
         events: {
-          click: function (e) {
-            // Upon cmd-click of the chart area, go to add Event dialog
-            var addEvent = e.metaKey || e.ctrlKey;
-            if (addEvent) {
-              var eventTimestamp = new Date(Math.round(e.xAxis[0].value));
+          click: function(event) {
+            if(clickDetected) {
+
+              clickDetected = false;
+              var eventTimestamp = new Date(Math.round(event.xAxis[0].value));
               Events.selected.productName = $stateParams.productName;
               Events.selected.dashboardName = $stateParams.dashboardName;
               Events.selected.eventTimestamp = eventTimestamp;
@@ -175,6 +178,41 @@ angular.module('graphs').controller('HighchartsController', [
                 productName: $stateParams.productName,
                 dashboardName: $stateParams.dashboardName
               });
+
+
+            } else {
+              clickDetected = true;
+              setTimeout(function() {
+                clickDetected = false;
+              }, 500);
+            }
+
+          },
+          redraw: function(){
+            /* if selected series is provided, show this series only */
+            if (TestRuns.selectedSeries !== ''){
+
+              var seriesIndex = this.series.map(function(series) { return series.name; }).indexOf(TestRuns.selectedSeries);
+
+              var series = this.series;
+              for (var i = 0; i < series.length; i++) {
+                // rather than calling 'show()' and 'hide()' on the series', we use setVisible and then
+                // call chart.redraw --- this is significantly faster since it involves fewer chart redraws
+                if (series[i].index === seriesIndex) {
+                  if (!series[i].visible)
+                    series[i].setVisible(true, false);
+                } else {
+                  if (series[i].visible) {
+                    series[i].setVisible(false, false);
+                  } else {
+                    series[i].setVisible(true, false);
+                  }
+                }
+              }
+
+              TestRuns.selectedSeries = '';
+
+              return false;
             }
           }
         }
@@ -218,7 +256,7 @@ angular.module('graphs').controller('HighchartsController', [
                     }
                   }
                 }
-                this.chart.redraw();
+                //this.chart.redraw();
                 return false;
               }
             },

@@ -197,11 +197,11 @@ angular.module('graphs').controller('HighchartsLiveController', [
         zoomType: 'x',
         height: 500,
         events: {
-          click: function (e) {
-            // Upon cmd-click of the chart area, go to add Event dialog
-            var addEvent = e.metaKey || e.ctrlKey;
-            if (addEvent) {
-              var eventTimestamp = new Date(Math.round(e.xAxis[0].value));
+          click: function(event) {
+            if(clickDetected) {
+
+              clickDetected = false;
+              var eventTimestamp = new Date(Math.round(event.xAxis[0].value));
               Events.selected.productName = $stateParams.productName;
               Events.selected.dashboardName = $stateParams.dashboardName;
               Events.selected.eventTimestamp = eventTimestamp;
@@ -210,7 +210,15 @@ angular.module('graphs').controller('HighchartsLiveController', [
                 productName: $stateParams.productName,
                 dashboardName: $stateParams.dashboardName
               });
+
+
+            } else {
+              clickDetected = true;
+              setTimeout(function() {
+                clickDetected = false;
+              }, 500);
             }
+
           },
           load: function () {
             /* Clear interval that might be already running for this metric */

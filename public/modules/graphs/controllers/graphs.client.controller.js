@@ -30,6 +30,11 @@ angular.module('graphs').controller('GraphsController', [
       TestRuns.zoomFrom = $state.params.zoomFrom;
     if ($state.params.zoomUntil)
       TestRuns.zoomUntil = $state.params.zoomUntil;
+
+    /* Get selected series params from query string */
+    if ($state.params.selectedSeries)
+      TestRuns.selectedSeries = decodeURIComponent($state.params.selectedSeries);
+
     $scope.value = $stateParams.tag;
     /* reset zoom*/
     $scope.resetZoom = function () {
