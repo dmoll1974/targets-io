@@ -32,7 +32,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="metric in template.metrics | filter:filterMetrics">
+        <tr ng-repeat="metric in template.metrics | filter:filterMetrics" class="hover-row">
             <td class="pointer" ng-click="editMetric($index)">
                 {{metric.alias}}
             </td>
