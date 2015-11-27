@@ -29,7 +29,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="testRun in testRuns | orderBy:'end':true"
-                ng-class="(testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true) ? 'warning': ''">
+                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true }">
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.testRunId}}</td>
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>

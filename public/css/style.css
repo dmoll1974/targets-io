@@ -11516,3 +11516,8 @@ button.toast-close-button {
 .sidebar:hover {
     overflow-y: auto;
 }
+
+.hover-row:hover {
+
+    background: rgba(158,158,158,0.2)
+}

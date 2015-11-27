@@ -31,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="metric in dashboard.metrics |  filter:filterMetrics">
+            <tr ng-repeat="metric in dashboard.metrics |  filter:filterMetrics" class="hover-row">
                 <td>
                     <a data-ng-href="/#!/edit/metric/{{productName}}/{{dashboardName}}/{{metric._id}}">{{metric.alias}}</a>
                 </td>
