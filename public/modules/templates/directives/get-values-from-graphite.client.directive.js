@@ -8,6 +8,7 @@ function GetValuesFromGraphiteDirective () {
         scope: {
             value: '=',
             query: '='
+
         },
         restrict: 'EA',
         templateUrl: 'modules/templates/directives/get-values-from-graphite.client.view.html',
@@ -21,6 +22,7 @@ function GetValuesFromGraphiteDirective () {
     function GetValuesFromGraphiteDirectiveController ($scope, $state, $timeout, Graphite) {
 
 
+        $scope.validQuery = true;
 
         $scope.$watch('query', function() {
 
@@ -29,9 +31,18 @@ function GetValuesFromGraphiteDirective () {
 
                 var graphiteTargets = [];
 
-                _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
-                    graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
-                });
+                if(graphiteTargetsLeafs.length === 0){
+
+                    var queryErrorMessage = 'Variable query "' + $scope.query + '" did not return any results'
+                    graphiteTargets.push({text: queryErrorMessage, id: ''});
+
+                }else {
+
+                    _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
+                        graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+                    });
+
+                }
 
                 $scope.defaultGraphiteTargets = graphiteTargets;
                 $scope.graphiteTargets = $scope.defaultGraphiteTargets;
@@ -51,10 +62,22 @@ function GetValuesFromGraphiteDirective () {
 
         $scope.setTarget = function(index) {
 
+            Graphite.findMetrics($scope.graphiteTargets[index].text + '.*').success(function(graphiteTargetsLeafs) {
 
-            $scope.value = $scope.graphiteTargets[index].text;
+                /* if leafs are present, add wildcard '*' */
+                if (graphiteTargetsLeafs.length > 0) {
 
+                    $scope.validQuery = true;
 
+                    /* if no leafs, show root query results*/
+                } else {
+
+                    $scope.validQuery = false;
+                }
+
+                $scope.value = $scope.graphiteTargets[index].text;
+
+            });
         };
 
     }

@@ -13,7 +13,7 @@ function MergeTemplateDirective () {
   return directive;
 
   /* @ngInject */
-  function MergeTemplateDirectiveController ($scope, $rootScope, $state, $timeout, Templates, Dashboards, Metrics) {
+  function MergeTemplateDirectiveController ($scope, $rootScope, $state, $timeout, Templates, Dashboards, Metrics, Graphite) {
 
       $scope.template = Templates.selected;
 
@@ -40,6 +40,7 @@ function MergeTemplateDirective () {
               var replaceArray = [];
               var valuesPerVariable;
               var totalTemplateCombinations = 1;
+
 
               /* force get-values-from-graphite directive to destroy*/
               _.each($scope.variables, function (variable, index) {
@@ -73,7 +74,17 @@ function MergeTemplateDirective () {
 
                   _.each(replaceArray, function (replaceItem) {
 
-                      $scope.template.variables[index].query = variable.query.replace(replaceItem.placeholder,replaceItem.replaceWith );
+                      /* only replace variables in query when the new query returns results */
+                      Graphite.findMetrics(variable.query.replace(replaceItem.placeholder, replaceItem.replaceWith)).success(function(graphiteTargetsLeafs) {
+
+
+                          if(graphiteTargetsLeafs.length > 0) {
+
+                              $scope.template.variables[index].query = variable.query.replace(replaceItem.placeholder, replaceItem.replaceWith);
+
+                          }
+                      });
+
 
                   });
               });
