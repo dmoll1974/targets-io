@@ -18,6 +18,17 @@ function TemplateVariablesDirective () {
   function TemplateVariablesDirectiveController ($scope, $state, Templates, ConfirmModal, $modal) {
 
 
+    $scope.moveUp = function(index){
+
+      var tempArrayItem = $scope.template.variables[index -1];
+      $scope.template.variables[index -1] = $scope.template.variables[index];
+      $scope.template.variables[index] = tempArrayItem;
+
+      Templates.update($scope.template).success(function (template){
+        Templates.selected = template;
+      });
+
+    };
       $scope.addVariable = function(){
 
         $state.go('addVariable');

@@ -35,7 +35,9 @@
             <td class="pointer" ng-click="editVariable($index)">{{variable.description}}</td>
             <td class="pointer" ng-click="editVariable($index)">{{variable.query}}</td>
             </td>
-            <td class="pointer" ng-click="editVariable($index)"></td>
+            <td>
+                <i class="glyphicon glyphicon-arrow-up" data-ng-click="moveUp($index)" ng-if="$index > 0" title="Move up"></i>
+            </td>
             <td>
                 <md-checkbox md-no-ink aria-label="select variable" ng-model="variable.selected"  ng-change="setVariablesSelected(variable.selected)" style="margin: 0px;">
                 </md-checkbox>
