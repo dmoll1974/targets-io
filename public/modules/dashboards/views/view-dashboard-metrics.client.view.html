@@ -32,17 +32,17 @@
             </thead>
             <tbody>
             <tr ng-repeat="metric in dashboard.metrics |  filter:filterMetrics" class="hover-row">
-                <td>
-                    <a data-ng-href="/#!/edit/metric/{{productName}}/{{dashboardName}}/{{metric._id}}">{{metric.alias}}</a>
+                <td ng-click="editMetric(metric._id)">
+                   {{metric.alias}}
                 </td>
-                <td>
+                <td ng-click="editMetric(metric._id)">
                     <span ng-repeat="tag in metric.tags track by $index">{{tag.text}}<span
                             data-ng-show="!$last">, </span></span>
                 </td>
-                <td><span>{{metric.requirementOperator}} {{metric.requirementValue}}</span></td>
-                <td><span data-ng-if="metric.benchmarkOperator">{{metric.benchmarkOperator === '>'?'+':'-'}} {{metric.benchmarkValue}}</span>
+                <td ng-click="editMetric(metric._id)"><span>{{metric.requirementOperator}} {{metric.requirementValue}}</span></td>
+                <td ng-click="editMetric(metric._id)"><span data-ng-if="metric.benchmarkOperator">{{metric.benchmarkOperator === '>'?'+':'-'}} {{metric.benchmarkValue}}</span>
                 </td>
-                <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteMetricModal('', $index)"></i>
+                <td ng-click="editMetric(metric._id)">
                 </td>
                 <td>
                     <md-checkbox md-no-ink aria-label="select metric" ng-model="metric.selected"  ng-change="setMetricsSelected(metric.selected)" style="margin: 0px;">

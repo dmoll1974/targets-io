@@ -30,6 +30,11 @@ angular.module('dashboards').controller('DashboardsController', [
 
     });
 
+    $scope.editMetric = function(metricId){
+
+      $state.go('editMetric',{productName: $stateParams.productname, dashboardName: $stateParams.dashboardName, metricId: metricId });
+
+    }
     $scope.mergeTemplate = function(index){
 
         Templates.selected = $scope.templates[index];
