@@ -18,7 +18,6 @@
             <tr>
                 <th>Default</th>
                 <th>Tag</th>
-                <th></th>
                 <td>
                     <md-checkbox md-no-ink aria-label="select all tags" ng-model="allTagsSelected" ng-change="setAllTagsSelected(allMetricsSelected)" style="margin: 0px;">
                     </md-checkbox>
@@ -29,9 +28,7 @@
             <tr ng-repeat="tag in tags" class="hover-row">
                 <td><input type="radio" name="tagDefault" ng-model="$parent.defaultTag" ng-value="tag.text"/></td>
                 <td>{{tag.text}}</td>
-                <td>
-                    <i class="glyphicon glyphicon-trash" data-ng-click="openDeleteTagModal('', $index)"></i>
-                </td>
+
                 <td>
                     <md-checkbox md-no-ink aria-label="select tag" ng-model="tag.selected"  ng-change="setTagsSelected(tag.selected)" style="margin: 0px;">
                     </md-checkbox>

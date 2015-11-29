@@ -32,7 +32,7 @@
                 <td data-ng-click="editEvent($index)">{{event.eventTimestamp | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
                 <td data-ng-click="editEvent($index)">{{event.testRunId}}</td>
                 <td data-ng-click="editEvent($index)">{{event.eventDescription}}</td>
-                <td><i class="glyphicon glyphicon-trash" data-ng-click="openDeleteEventModal('', $index)"></i>
+                <td data-ng-click="editEvent($index)"></td>
                 <td>
                     <md-checkbox md-no-ink aria-label="select event" ng-model="event.selected"  ng-change="setEventsSelected(event.selected)" style="margin: 0px;">
                     </md-checkbox>
