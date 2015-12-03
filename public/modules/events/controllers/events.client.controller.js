@@ -57,67 +57,18 @@ angular.module('events').controller('EventsController', [
       e.stopPropagation();
       $scope.isOpen = true;
     };
-    $scope.productName = $stateParams.productName;
-    $scope.event = Events.selected;
-    $scope.initEventForm = function () {
-      $scope.testRunIds = Events.getTestRunId(Events.list);
-      $scope.descriptions = Events.getDescriptions(Events.list);  //$scope.dateOptions = {
-                                                                  //    startingDay: 1,
-                                                                  //    showWeeks: false
-                                                                  //};
-    };
+
+
     // Open update event form
     $scope.addEventForDashboard = function () {
-      $scope.event.eventTimestamp = new Date();
-      $scope.event.productName = $stateParams.productName;
-      $scope.event.dashboardName = $stateParams.dashboardName;
+
       $state.go('createEvent', {
         productName: $stateParams.productName,
         dashboardName: $stateParams.dashboardName
       });
     };
-    // Create new Event
-    $scope.create = function () {
-      Events.create($scope.event).then(function (event) {
-        Events.selected = {};
-        //$state.go('viewDashboard', {
-        //    "productName": $scope.event.productName,
-        //    "dashboardName": $scope.event.dashboardName
-        //});
-        if ($rootScope.previousStateParams)
-          $state.go($rootScope.previousState, $rootScope.previousStateParams);
-        else
-          $state.go($rootScope.previousState);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-        $scope.eventForm.eventDescription.$setValidity('server', false);
-      });
-    };
-    // Update Event
-    $scope.update = function () {
-      Events.update(Events.selected).then(function (event) {
-        Events.selected = {};
-        /* reset form*/
-        $scope.eventForm.$setPristine();
-        /* return to previous state */
-        if ($rootScope.previousStateParams)
-          $state.go($rootScope.previousState, $rootScope.previousStateParams);
-        else
-          $state.go($rootScope.previousState);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-        $scope.eventForm.eventDescription.$setValidity('server', false);
-      });
-    };
-    $scope.cancel = function () {
-      Events.selected = {};
-      /* reset form*/
-      $scope.eventForm.$setPristine();
-      if ($rootScope.previousStateParams)
-        $state.go($rootScope.previousState, $rootScope.previousStateParams);
-      else
-        $state.go($rootScope.previousState);
-    };
+
+
     $scope.listEventsForDashboard = function () {
       Events.listEventsForDashboard($scope.productName, $scope.dashboardName).success(function (events) {
         Events.list = events;
@@ -127,11 +78,11 @@ angular.module('events').controller('EventsController', [
       });
     };
     $scope.editEvent = function (index) {
-      Events.selected = $scope.events[index];
+      Events.selected  = $scope.events[index];
       $state.go('editEvent', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName,
-        'eventId': Events.selected._id
+        'eventId':  Events.selected._id
       });
     };
     //// Find existing Event

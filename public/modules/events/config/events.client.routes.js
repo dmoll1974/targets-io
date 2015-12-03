@@ -9,13 +9,10 @@ angular.module('events').config([
       templateUrl: 'modules/events/views/list-events-dashboard.client.view.html'
     }).state('createEvent', {
       url: '/create/event/:productName/:dashboardName',
-      templateUrl: 'modules/events/views/create-event.client.view.html'
-    }).state('viewEvent', {
-      url: '/events/:eventId',
-      templateUrl: 'modules/events/views/view-event.client.view.html'
+      template: '<add-event></add-event>'
     }).state('editEvent', {
       url: '/edit/event/:productName/:dashboardName/:eventId',
-      templateUrl: 'modules/events/views/edit-event.client.view.html'
+      template: '<edit-event></edit-event>'
     });
   }
 ]);

@@ -83,26 +83,27 @@
 
             $scope.showDialog = false;
 
-            TestRuns.list.unshift({
-              productName: $scope.runningTest.productName,
-              dashboardName: $scope.runningTest.dashboardName,
-              testRunId: $scope.runningTest.testRunId,
-              buildResultKey: $scope.runningTest.buildResultKey,
-              meetsRequirement: 'pending',
-              benchmarkResultFixedOK: 'pending',
-              benchmarkResultPreviousOK: 'pending'
-            });
-
-            $timeout(function(){
-
-              TestRuns.listTestRunsForDashboard(Dashboards.selected.productName, Dashboards.selected.name, Dashboards.selected.useInBenchmark).success(function (testRuns) {
-
-
-                TestRuns.list = testRuns;
-
-              }, function (errorResponse) {
-                $scope.error = errorResponse.data.message;
+            if(Dashboards.selected.useInBenchmark) {
+              TestRuns.list.unshift({
+                productName: $scope.runningTest.productName,
+                dashboardName: $scope.runningTest.dashboardName,
+                testRunId: $scope.runningTest.testRunId,
+                buildResultKey: $scope.runningTest.buildResultKey,
+                meetsRequirement: 'pending',
+                benchmarkResultFixedOK: 'pending',
+                benchmarkResultPreviousOK: 'pending'
               });
+            }
+                $timeout(function(){
+
+                  TestRuns.listTestRunsForDashboard(Dashboards.selected.productName, Dashboards.selected.name, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+
+
+                    TestRuns.list = testRuns;
+
+                  }, function (errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                  });
 
             }, 3000);
 
