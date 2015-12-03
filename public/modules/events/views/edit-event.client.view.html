@@ -71,7 +71,7 @@
                         <div ng-message="server">{{error}}</div>
                     </div>
                 </md-input-container>
-                <md-input-container flex>
+                <md-input-container flex ng-if="event.eventDescription === 'start' || event.eventDescription === 'end'">
                     <label>CI Build result URL</label>
                     <input ng-model="event.buildResultKey">
                 </md-input-container>
