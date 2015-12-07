@@ -37,7 +37,7 @@ function MergeTemplateDirective () {
           if(newValue !== oldValue) {
 
               var regExp;
-              var replaceArray = [];
+              var queryVariablesReplaced;
               var valuesPerVariable;
               var totalTemplateCombinations = 1;
 
@@ -61,7 +61,7 @@ function MergeTemplateDirective () {
                           valuesPerVariable = valuesPerVariable + 1;
 
                           regExp = new RegExp('\\$' + variable.name, 'g');
-                          replaceArray.push({variable: variable.name, placeholder: regExp, replaceWith: value});
+                          Templates.replaceItems.push({variable: variable.name, placeholder: regExp, replace: value});
                       }
                   });
 
@@ -72,21 +72,19 @@ function MergeTemplateDirective () {
 
               _.each($scope.template.variables, function (variable, index) {
 
-                  _.each(replaceArray, function (replaceItem) {
+                  queryVariablesReplaced =  replacePlaceholders(variable.query, Templates.replaceItems);
 
-                      /* only replace variables in query when the new query returns results */
-                      Graphite.findMetrics(variable.query.replace(replaceItem.placeholder, replaceItem.replaceWith)).success(function(graphiteTargetsLeafs) {
-
-
-                          if(graphiteTargetsLeafs.length > 0) {
-
-                              $scope.template.variables[index].query = variable.query.replace(replaceItem.placeholder, replaceItem.replaceWith);
-
-                          }
-                      });
+                  /* only replace variables in query when the new query returns results */
+                  Graphite.findMetrics(queryVariablesReplaced).success(function(graphiteTargetsLeafs) {
 
 
+                      if(graphiteTargetsLeafs.length > 0) {
+
+                          $scope.template.variables[index].query = replacePlaceholders(variable.query, Templates.replaceItems);
+
+                      }
                   });
+
               });
               },0);
           }
@@ -109,6 +107,17 @@ function MergeTemplateDirective () {
 
           $scope.metrics.splice(index, 1);
       };
+
+      function replacePlaceholders(target, replaceArray){
+
+          _.each(replaceArray, function(replaceItem){
+
+              target = target.replace(replaceItem.placeholder, replaceItem.replace);
+
+          });
+
+          return target;
+      }
 
       $scope.preview = function(){
 
@@ -267,17 +276,6 @@ function MergeTemplateDirective () {
           });
 
 
-          function replacePlaceholders(target, replaceArray){
-
-              _.each(replaceArray, function(replaceItem){
-
-                  target = target.replace(replaceItem.placeholder, replaceItem.replace);
-
-              });
-
-              return target;
-          }
-
 
 
           _.each($scope.template.metrics, function(metric){
@@ -340,12 +338,15 @@ function MergeTemplateDirective () {
 
           setTimeout(function(){
 
-              /* reset Dashboards.selected to force reload form db */
+              /* reset Dashboards.selected to force reload from db */
 
               Dashboards.selected ={};
 
               /* Go to metrics tab */
               Dashboards.selectedTab = 1;
+
+              /* reset Templates.replaceItems*/
+                Templates.replaceItems = [];
 
               $state.go('viewDashboard', {
                   'productName': productName,

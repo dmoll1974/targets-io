@@ -6,6 +6,7 @@ angular.module('events').factory('Templates', [
   function ($http, Utils) {
     var Templates = {
       list: [],
+      replaceItems: [],
       selected: {},
       metric: {},
       variable: {},
