@@ -16,13 +16,6 @@ function ViewTemplateDirective () {
   /* @ngInject */
   function ViewTemplateDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, Utils) {
 
-    /* Watch on template */
-    //$scope.$watch(function (scope) {
-    //  return Templates.selected;
-    //}, function () {
-    //  $scope.template = Templates.selected;
-    //});
-
 
   /* Tab controller*/
     $scope.selectedIndex = Templates.selected.selectedIndex || 0;
@@ -41,6 +34,14 @@ function ViewTemplateDirective () {
 
   });
 
+    $scope.clone = function(){
+
+      Templates.templateClone = _.clone(Templates.selected);
+      Templates.templateClone.name += '-CLONE';
+      Templates.templateClone._id = undefined;
+      $state.go('addTemplate');
+
+    };
   $scope.edit = function(){
 
     $state.go('editTemplate', {templateName: Templates.selected.name});

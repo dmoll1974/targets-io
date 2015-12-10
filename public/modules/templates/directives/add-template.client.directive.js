@@ -20,9 +20,17 @@ function AddTemplateDirective () {
     }, true);
 
 
-    Templates.selected.name = '';
-    Templates.selected.description = '';
-    $scope.template = Templates.selected;
+    if (Templates.templateClone.name){
+      $scope.template = Templates.templateClone;
+      Templates.templateClone = {};
+
+    }else {
+      Templates.selected.name = '';
+      Templates.selected.description = '';
+      $scope.template = Templates.selected;
+    }
+
+
 
     $scope.create = function() {
 

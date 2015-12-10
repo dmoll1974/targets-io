@@ -15,10 +15,42 @@ function AddTemplateMetricDirective () {
   /* @ngInject */
   function AddTemplateMetricDirectiveController ($scope, $rootScope, $state, Templates, Dashboards, Utils) {
 
-      $scope.metric={};
-      $scope.metric.targets = [''];
-      $scope.enableBenchmarking = 'disabled';
-      $scope.enableRequirement = 'disabled';
+
+      if (Templates.metricClone.alias){
+          $scope.metric = Templates.metricClone;
+          Templates.metricClone = {};
+          /* set benchmark and requirement toggles */
+          if ($scope.metric.requirementValue)
+              $scope.enableRequirement = true;
+          if ($scope.metric.benchmarkValue)
+              $scope.enableBenchmarking = true;
+      }else {
+          $scope.metric = {};
+          $scope.metric.targets = [''];
+          $scope.enableBenchmarking = 'disabled';
+          $scope.enableRequirement = 'disabled';
+      }
+
+      /* watch benchmark and requirement toggles */
+
+      $scope.$watch('enableRequirement', function (newVal, oldVal) {
+          if (newVal !== oldVal) {
+              if ($scope.enableRequirement === false) {
+                  $scope.metric.requirementOperator = null;
+                  $scope.metric.requirementValue = null;
+              }
+          }
+      });
+      $scope.$watch('enableBenchmarking', function (newVal, oldVal) {
+          if (newVal !== oldVal) {
+              if ($scope.enableBenchmarking === false) {
+                  $scope.metric.benchmarkOperator = null;
+                  $scope.metric.benchmarkValue = null;
+              }
+          }
+      });
+
+
 
       $scope.variables = Templates.selected.variables;
 

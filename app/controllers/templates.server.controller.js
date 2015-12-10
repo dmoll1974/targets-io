@@ -87,6 +87,12 @@ function create(req, res){
     template.name = req.body.name;
     template.description = req.body.description;
 
+    /* if template is cloned ther will be variables */
+
+    if(req.body.variables){
+
+        template.variables = req.body.variables;
+    }
     /* if template is created from existing dashboard, clone metrics */
 
     if (req.body.metrics){

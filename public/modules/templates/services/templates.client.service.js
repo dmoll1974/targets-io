@@ -10,12 +10,15 @@ angular.module('events').factory('Templates', [
       selected: {},
       metric: {},
       variable: {},
+      metricClone: {},
+      templateClone: {},
       getAll: getAll,
       get: getFn,
       //delete: deleteFn,
       update: update,
       create: create,
       delete: deleteFn
+
     };
     return Templates;
 

@@ -18,6 +18,32 @@ function EditTemplateMetricDirective () {
 
       $scope.metric = Templates.metric;
 
+      /* watch benchmark and requirement toggles */
+
+      $scope.$watch('enableRequirement', function (newVal, oldVal) {
+          if (newVal !== oldVal) {
+              if ($scope.enableRequirement === false) {
+                  $scope.metric.requirementOperator = null;
+                  $scope.metric.requirementValue = null;
+              }
+          }
+      });
+      $scope.$watch('enableBenchmarking', function (newVal, oldVal) {
+          if (newVal !== oldVal) {
+              if ($scope.enableBenchmarking === false) {
+                  $scope.metric.benchmarkOperator = null;
+                  $scope.metric.benchmarkValue = null;
+              }
+          }
+      });
+
+      /* set benchmark and requirement toggles */
+      if ($scope.metric.requirementValue)
+          $scope.enableRequirement = true;
+      if ($scope.metric.benchmarkValue)
+          $scope.enableBenchmarking = true;
+
+
       $scope.addTarget = function () {
           $scope.metric.targets.push('');
           $scope.graphiteTargets = $scope.defaultGraphiteTargets;
@@ -51,17 +77,24 @@ function EditTemplateMetricDirective () {
 
       Templates.selected.tags = _.uniq(Templates.selected.tags, 'text');
 
-      Templates.selected.metrics.push($scope.metric);
 
-
-          var updateIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
-        Templates.selected.metrics[updateIndex] = $scope.metric;
+        //var updateIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
+        //Templates.selected.metrics[updateIndex] = $scope.metric;
         Templates.update(Templates.selected).success(function (template){
             Templates.selected = template;
             Templates.selected.selectedIndex = 1;
             $state.go('viewTemplate',{templateName: template.name});
         });
       }
+
+      $scope.clone = function () {
+          //$scope.metric._id = undefined;
+          //var cloneIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
+          Templates.metricClone = _.clone($scope.metric);
+          Templates.metricClone._id = null;
+          Templates.metricClone.name += '-CLONE';
+          $state.go('addTemplateMetric');
+      };
 
       $scope.cancel = function () {
           if ($rootScope.previousStateParams)
