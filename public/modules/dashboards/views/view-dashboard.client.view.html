@@ -28,6 +28,12 @@
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item>
+                                    <md-button data-ng-click="manageTags()">
+                                        <md-icon md-svg-src="images/assets/ic_queue_black_36px.svg"></md-icon>
+                                        Manage tags
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
                                     <md-button data-ng-click="clone()">
                                         <md-icon md-svg-src="images/assets/ic_queue_black_36px.svg"></md-icon>
                                         Clone dashboard
@@ -97,11 +103,7 @@
                     <div data-ng-include="'modules/events/views/list-events-dashboard.client.view.html'"></div>
                 </md-content>
             </md-tab>
-            <md-tab label="Tags" ng-click="setTab(3)">
-                <md-content class="md-padding">
-                    <div data-ng-include="'modules/dashboards/views/manage-tags.client.view.html'"></div>
-                </md-content>
-            </md-tab>
+
 
         </md-tabs>
     </div>

@@ -35,6 +35,13 @@ angular.module('dashboards').controller('DashboardsController', [
       $state.go('editMetric',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName, metricId: metricId });
 
     }
+
+    $scope.manageTags = function(){
+
+      $state.go('manageDashboardTags',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});
+
+    }
+
     $scope.mergeTemplate = function(index){
 
         Templates.selected = $scope.templates[index];

@@ -16,6 +16,9 @@ angular.module('dashboards').config([
     }).state('editDashboard', {
       url: '/edit/dashboard/:productName/:dashboardName',
       templateUrl: 'modules/dashboards/views/edit-dashboard.client.view.html'
+    }).state('manageDashboardTags', {
+      url: '/manage-tags/:productName/:dashboardName',
+      template: '<manage-dashboard-tags></manage-dashboard-tags>'
     });
   }
 ]);

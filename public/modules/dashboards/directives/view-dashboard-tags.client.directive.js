@@ -1,14 +1,20 @@
 'use strict';
-angular.module('dashboards').controller('DashboardTagsController', [
-  '$scope',
-  'Dashboards',
-  '$modal',
-  'Metrics',
-  'ConfirmModal',
-  function ($scope, Dashboards, $modal, Metrics, ConfirmModal) {
-    $scope.tags = Dashboards.selected.tags;
-    $scope.defaultTag = Dashboards.defaultTag;
 
+angular.module('dashboards').directive('manageDashboardTags', ManageDashboardTagsDirective);
+
+function ManageDashboardTagsDirective () {
+
+  var directive = {
+    restrict: 'EA',
+    templateUrl: 'modules/dashboards/directives/view-dashboard-tags.client.view.html',
+    controller: ManageDashboardTagsDirectiveController//,
+    //controllerAs: 'ctrlTemplate'
+  };
+
+  return directive;
+
+  /* @ngInject */
+  function ManageDashboardTagsDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, ConfirmModal, $modal, $q) {
 
     $scope.$watch('allTagsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
@@ -106,6 +112,5 @@ angular.module('dashboards').controller('DashboardTagsController', [
 
     };
 
-
   }
-]);
+}
