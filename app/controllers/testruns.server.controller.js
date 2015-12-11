@@ -223,14 +223,14 @@ function testRunsForDashboard(req, res) {
           } else {
             createTestrunFromEvents(req.params.productName, req.params.dashboardName, events, function (eventsTestruns) {
               /* if benchmarking is not enabled, no need to persist the test runs! */
-              if (req.params.useInBenchmark === 'false') {
+              //if (req.params.useInBenchmark === 'false') {
                 res.jsonp(eventsTestruns.reverse());
-              } else {
-                /* persist test runs that have not yet been persisted */
-                persistTestrunsFromEvents(testRuns, eventsTestruns, function (persistedTestRuns) {
-                  res.jsonp(persistedTestRuns);
-                });
-              }
+              //} else {
+              //  /* persist test runs that have not yet been persisted */
+              //  persistTestrunsFromEvents(testRuns, eventsTestruns, function (persistedTestRuns) {
+              //    res.jsonp(persistedTestRuns);
+              //  });
+              //}
             });
           }
         });
