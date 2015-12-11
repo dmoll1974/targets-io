@@ -178,12 +178,7 @@ angular.module('dashboards').controller('DashboardsController', [
         'dashboardName': $stateParams.dashboardName
       });
     };
-    $scope.manageTags = function () {
-      $state.go('manageTags', {
-        'productName': $stateParams.productName,
-        'dashboardName': $stateParams.dashboardName
-      });
-    };
+
     $scope.clone = function () {
       Dashboards.clone().success(function (dashboard) {
         /* Refresh sidebar */

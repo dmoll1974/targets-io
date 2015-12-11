@@ -16,6 +16,12 @@ function ManageDashboardTagsDirective () {
   /* @ngInject */
   function ManageDashboardTagsDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, ConfirmModal, $modal, $q) {
 
+    $scope.productName = $stateParams.productName;
+    $scope.dashboardName = $stateParams.dashboardName;
+
+    $scope.tags = Dashboards.selected.tags;
+    $scope.defaultTag = Dashboards.getDefaultTag(Dashboards.selected.tags);
+
     $scope.$watch('allTagsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         _.each($scope.tags, function (tag, i) {
@@ -45,18 +51,18 @@ function ManageDashboardTagsDirective () {
     };
 
 
-    $scope.$watch(function (scope) {
-      return Dashboards.selected._id;
-    }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        $scope.tags = Dashboards.selected.tags;
-        $scope.defaultTag = Dashboards.getDefaultTag(Dashboards.selected.tags);
-        //setDefault($scope.defaultTag);
-        //Dashboards.update().success(function (dashboard) {
-        //  $scope.tags = dashboard.tags;
-        //});
-      }
-    });
+    //$scope.$watch(function (scope) {
+    //  return Dashboards.selected._id;
+    //}, function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //    $scope.tags = Dashboards.selected.tags;
+    //    $scope.defaultTag = Dashboards.getDefaultTag(Dashboards.selected.tags);
+    //    //setDefault($scope.defaultTag);
+    //    //Dashboards.update().success(function (dashboard) {
+    //    //  $scope.tags = dashboard.tags;
+    //    //});
+    //  }
+    //});
     $scope.$watch('defaultTag', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         setDefault($scope.defaultTag);
