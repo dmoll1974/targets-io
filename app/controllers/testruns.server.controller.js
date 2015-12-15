@@ -33,6 +33,7 @@ function recentTestRuns(req, res){
   });
 }
 
+
 function saveTestRun(testRun, callback) {
   /* Save updated test run */
   Testrun.findById(testRun._id, function (err, savedTestRun) {
@@ -240,14 +241,14 @@ function testRunsForDashboard(req, res) {
           } else {
             createTestrunFromEvents(req.params.productName, req.params.dashboardName, events, function (eventsTestruns) {
               /* if benchmarking is not enabled, no need to persist the test runs! */
-              //if (req.params.useInBenchmark === 'false') {
+              if (req.params.useInBenchmark === 'false') {
                 res.jsonp(eventsTestruns.reverse());
-              //} else {
-              //  /* persist test runs that have not yet been persisted */
-              //  persistTestrunsFromEvents(testRuns, eventsTestruns, function (persistedTestRuns) {
-              //    res.jsonp(persistedTestRuns);
-              //  });
-              //}
+              } else {
+                /* persist test runs that have not yet been persisted */
+                TempSaveTestruns(eventsTestruns, function (persistedTestRuns) {
+                  res.jsonp(persistedTestRuns);
+                });
+              }
             });
           }
         });
@@ -581,6 +582,38 @@ function calculateAverage(datapoints) {
   else
     return null;
 }
+
+function TempSaveTestruns(testruns,  callback) {
+
+  var savedTesruns = [];
+
+  _.each(testruns, function(testrun){
+  var persistTestrun = new Testrun();
+    persistTestrun.productName = testrun.productName;
+    persistTestrun.dashboardName = testrun.dashboardName;
+    persistTestrun.testRunId = testrun.testRunId;
+    persistTestrun.start = testrun.start;
+    persistTestrun.end = testrun.end;
+    persistTestrun.eventIds = testrun.eventIds;
+
+    savedTesruns.push(persistTestrun);
+
+    persistTestrun.save(function (err) {
+      if (err) {
+        console.log(err);
+        callback(err);
+      } else {
+        //callback(persistTestrun);
+      }
+    });
+  });
+
+  setTimeout(function(){
+
+    callback(savedTesruns);
+  },500);
+}
+
 function saveTestrun(testrun, metrics, callback) {
   getPreviousBuild(testrun.productName, testrun.dashboardName, testrun.testRunId, function (previousBuild) {
     var persistTestrun = new Testrun();

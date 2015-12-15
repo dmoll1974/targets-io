@@ -52,8 +52,8 @@ angular.module('dashboards').factory('Dashboards', [
         Dashboards.defaultTag = getDefault(Dashboards.selected.tags);
       });
     }
-    function update() {
-      return $http.put('/dashboards/' + Dashboards.selected._id, Dashboards.selected);
+    function update(dashboard) {
+      return $http.put('/dashboards/' + dashboard._id, dashboard);
     }
     function create(dashboard, productName) {
       return $http.post('/dashboards/' + productName, dashboard);
