@@ -22,6 +22,7 @@
         TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function (runningTest) {
           if (Object.keys(runningTest).length !== 0) {
             $scope.runningTest = runningTest;
+            $scope.runningTest.duration = TestRuns.calculateDuration(runningTest);
             $scope.showDialog = true;
           }else{
             $scope.showDialog = false;

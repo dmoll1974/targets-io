@@ -4,17 +4,34 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Event = mongoose.model('Event'), Testrun = mongoose.model('Testrun'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), _ = require('lodash'), graphite = require('./graphite.server.controller'), Utils = require('./utils.server.controller'), Requirements = require('./testruns.requirements.server.controller'), Benchmarks = require('./testruns.benchmarks.server.controller'), Metric = mongoose.model('Metric'), async = require('async');
+
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
 exports.testRunsForProduct = testRunsForProduct;
 exports.deleteTestRunById = deleteTestRunById;
 exports.testRunById = testRunById;
 exports.refreshTestrun = refreshTestrun;
-exports.runningTest = runningTest;
 exports.updateTestrunsResults = updateTestrunsResults;
 exports.saveTestRun = saveTestRun;
 exports.updateAllDashboardTestRuns = updateAllDashboardTestRuns;
 exports.updateAllProductTestRuns = updateAllProductTestRuns;
+exports.recentTestRuns = recentTestRuns;
+
+function recentTestRuns(req, res){
+
+  /* Get all test runs from the last 24 hours*/
+  var pastDay = new Date() - 1000 * 60 * 60 * 24;
+
+  Event.find({eventTimestamp: {$gte: pastDay}}).exec(function (err, events) {
+
+    createTestRunSummaryFromEvents(events, function(recentTestRuns){
+
+      res.jsonp(recentTestRuns);
+
+    }) ;
+
+  });
+}
 
 function saveTestRun(testRun, callback) {
   /* Save updated test run */
@@ -700,43 +717,6 @@ function createTestrunFromEvents(productName, dashboardName, events, callback) {
         }
       }
     });
-  });
-}
-/**
- * Show the current Testrun
- */
-function runningTest(req, res) {
-  var currentTime = new Date();
-  var anyEventFound = false;
-  Event.find({
-    $and: [
-      { productName: req.params.productName },
-      { dashboardName: req.params.dashboardName }
-    ]
-  }).sort({ eventTimestamp: -1 }).lean().exec(function (err, events) {
-    if (err)
-      throw err;
-    for (var i = 0; i < events.length; i++) {
-      if (events[i].eventDescription === 'start') {
-        var endEventFound = false;
-        var tooOld = false;
-        anyEventFound = true;
-        for (var j = 0; j < events.length; j++) {
-          if (events[i].testRunId === events[j].testRunId && events[j].eventDescription === 'end')
-            endEventFound = true;
-        }
-        if (endEventFound === false && currentTime.getTime() - events[i].eventTimestamp.getTime() < 176400000) {
-          var returnEvent = events[i];
-          res.jsonp(returnEvent);
-          break;  /* If running test is older than 48 hours, leave it*/
-        } else if (currentTime.getTime() - events[i].eventTimestamp.getTime() > 176400000) {
-          tooOld = true;
-        }
-      }
-    }
-    if (endEventFound === true || tooOld === true || anyEventFound === false) {
-      res.jsonp({});
-    }
   });
 }
 function updateAllDashboardTestRuns(req, res){

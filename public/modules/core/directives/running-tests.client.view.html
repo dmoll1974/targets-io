@@ -1,0 +1,47 @@
+<div layout="column">
+    <h1>Running test runs</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Product
+            </th>
+            <th>
+                Dashboard
+            </th>
+            <th>
+                Test run ID
+            </th>
+            <th>
+                Started
+            </th>
+
+       
+        </thead>
+        <tr ng-if="runningTests.length === 0">
+            <td>No running tests</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tbody>
+        <tr ng-repeat="runningTest in runningTests" class="hover-row" ui-sref="viewDashboard({productName: runningTest.productName, dashboardName: runningTest.dashboardName})">
+            <td>
+                {{runningTest.productName}}
+            </td>
+            <td>
+                {{runningTest.dashboardName}}
+            </td>
+            <td>
+                {{runningTest.testRunId}}
+            </td>
+
+            <td>
+                {{runningTest.duration}} ago
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>

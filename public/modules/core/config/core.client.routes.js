@@ -10,6 +10,10 @@ angular.module('core', ['dashboards']).config([
     $stateProvider.state('home', {
       url: '/',
       templateUrl: 'modules/core/views/home.client.view.html'
+    })
+    .state('gettingStarted', {
+      url: '/',
+      templateUrl: 'modules/core/views/getting-started.client.view.html'
     });
   }
 ]);

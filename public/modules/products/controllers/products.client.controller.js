@@ -26,7 +26,7 @@ angular.module('products').controller('ProductsController', [
         $scope.testRuns= [];
         $scope.testRuns= testRuns;
         $scope.numberOfTestRuns = testRuns.length;
-        $scope.totalDuration = calculateTotalDuration(testRuns);
+        $scope.totalDuration = TestRuns.calculateTotalDuration(testRuns);
 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
@@ -34,28 +34,7 @@ angular.module('products').controller('ProductsController', [
 
     };
 
-    function calculateTotalDuration(testRuns){
 
-      var totalDuration = 0;
-
-      _.each(testRuns, function(testRun){
-
-        totalDuration += testRun.duration;
-      })
-
-
-      return(humanReadbleDuration(totalDuration));
-    }
-
-    function humanReadbleDuration(durationInMs){
-
-      var date = new Date(durationInMs);
-      var readableDate = '';
-      if(date.getUTCDate()-1 > 0) readableDate += date.getUTCDate()-1 + " days, ";
-      if(date.getUTCHours() > 0) readableDate += date.getUTCHours() + " hours, ";
-      readableDate += date.getUTCMinutes() + " minutes";
-      return readableDate;
-    }
 
     testRunPolling();
     var polling = $interval(testRunPolling, 30000);

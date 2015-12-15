@@ -1,0 +1,58 @@
+<div layout="column">
+    <h1>Recent test runs (last 24 hours)</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Product
+            </th>
+            <th>
+                Dashboard
+            </th>
+            <th>
+                Test run ID
+            </th>
+            <th>
+                Start
+            </th>
+            <th>
+                End
+            </th>
+            <th>
+                Duration
+            </th>
+
+       
+        </thead>
+        <tr ng-if="recentTests.length === 0">
+            <td>No recents tests</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tbody>
+        <tr ng-repeat="recentTest in recentTests | orderBy:'-end'" class="hover-row" ui-sref="viewDashboard({productName: recentTest.productName, dashboardName: recentTest.dashboardName})">
+            <td>
+                {{recentTest.productName}}
+            </td>
+            <td>
+                {{recentTest.dashboardName}}
+            </td>
+            <td>
+                {{recentTest.testRunId}}
+            </td>
+            <td>
+                {{recentTest.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+            </td>
+            <td>
+                {{recentTest.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+            </td>
+            <td>
+                {{recentTest.humanReadbleDuration}}
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>

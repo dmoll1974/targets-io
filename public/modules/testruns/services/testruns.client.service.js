@@ -12,6 +12,7 @@ angular.module('events').factory('TestRuns', [
       selected: {},
       listTestRunsForDashboard: listTestRunsForDashboard,
       listTestRunsForProduct: listTestRunsForProduct,
+      getRecentTestruns: getRecentTestruns,
       zoomFrom: '',
       zoomUntil: '',
       zoomRange: '',
@@ -22,7 +23,9 @@ angular.module('events').factory('TestRuns', [
       updateFixedBaseline: updateFixedBaseline,
       updateTestruns: updateTestruns,
       updateAllTestRunsForProduct: updateAllTestRunsForProduct,
-      updateAllTestRunsForDashboard: updateAllTestRunsForDashboard
+      updateAllTestRunsForDashboard: updateAllTestRunsForDashboard,
+      calculateTotalDuration: calculateTotalDuration,
+      calculateDuration: calculateDuration
     };
     return TestRuns;
     function updateTestruns(productName, dashboardName, metricId, updateRequirements, updateBenchmarks) {
@@ -35,13 +38,14 @@ angular.module('events').factory('TestRuns', [
       return $http.get('/running-test/' + productName + '/' + dashboardName);
     }
     function getTestRunById(productName, dashboardName, testRunId) {
-      return $http.get('/testrun/' + productName + '/' + dashboardName + '/' + testRunId);  //.success(function(testRun){
-                                                                                            //
-                                                                                            //    TestRuns.selected = testRun;
-                                                                                            //
-                                                                                            //});
+      return $http.get('/testrun/' + productName + '/' + dashboardName + '/' + testRunId);
     }
 
+    function getRecentTestruns(){
+
+      return $http.get('/recent-testruns');
+
+    }
     function listTestRunsForDashboard(productName, dashboardName, useInBenchmark) {
       return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + useInBenchmark);
     }
@@ -64,6 +68,36 @@ angular.module('events').factory('TestRuns', [
     function updateAllTestRunsForDashboard(productName, dashboardName, newDashboardName){
 
       return $http.get('/update-all-dashboard-testruns/' + productName + '/' + dashboardName + '/' + newDashboardName + '/' );
+    }
+
+
+    function calculateTotalDuration(testRuns){
+
+      var totalDuration = 0;
+
+      _.each(testRuns, function(testRun){
+
+        totalDuration += testRun.duration;
+      })
+
+
+      return(humanReadbleDuration(totalDuration));
+    }
+
+    function calculateDuration (testRun){
+
+      var duration = new Date().getTime() - new Date(testRun.startTimestamp).getTime();
+
+      return(humanReadbleDuration(duration));
+    }
+    function humanReadbleDuration(durationInMs){
+
+      var date = new Date(durationInMs);
+      var readableDate = '';
+      if(date.getUTCDate()-1 > 0) readableDate += date.getUTCDate()-1 + " days, ";
+      if(date.getUTCHours() > 0) readableDate += date.getUTCHours() + " hours, ";
+      readableDate += date.getUTCMinutes() + " minutes";
+      return readableDate;
     }
   }
 ]);

@@ -2,7 +2,16 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Event = mongoose.model('Event'), Testrun = mongoose.model('Testrun'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), testruns = require('./testruns.server.controller.js'), _ = require('lodash');
+var mongoose = require('mongoose'),
+    errorHandler = require('./errors.server.controller'),
+    Event = mongoose.model('Event'),
+    Testrun = mongoose.model('Testrun'),
+    Dashboard = mongoose.model('Dashboard'),
+    Product = mongoose.model('Product'),
+    testruns = require('./testruns.server.controller.js'),
+    _ = require('lodash'),
+    runningTest = require('./running-test.server.controller');
+
 
 exports.updateAllDashboardEvents = function (req, res){
 
@@ -80,11 +89,25 @@ exports.create = function (req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
-      res.jsonp(event);
 
+      if(event.eventDescription === 'start'){
+
+        runningTest.updateRunningTest(event.productName, event.dashboardName, event.testRunId, function(message){
+
+          var response = {};
+          response.event = event;
+          response.message = message;
+
+          res.jsonp(response);
+
+        });
+
+
+      }
     }
   });
 };
+
 /**
  * Show the current Event
  */
