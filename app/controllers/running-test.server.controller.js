@@ -26,7 +26,11 @@ function runningTestForDashboard(req, res){
       console.log(err);
     }else{
 
+      if(runningTest) {
         res.jsonp(runningTest);
+      }else {
+        res.jsonp({});
+      }
 
     }
 
