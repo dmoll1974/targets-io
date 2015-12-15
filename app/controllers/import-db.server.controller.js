@@ -72,6 +72,8 @@ function upload(req, res) {
         event.testRunId = importEvent.testRunId;
         event.eventDescription = eventDesciption;
         event.buildResultKey = importEvent.buildResultKey;
+        event.hookEnabled = importEvent.hookEnabled;
+
         event.save(function (err) {
           if (err)
             console.log(err);

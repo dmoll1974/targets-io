@@ -49,6 +49,7 @@ module.exports.dbExport = function (req, res) {
                     if (!started) {
                         start(res);
                     }
+                    event.hookEnabled = false;
                     res.write(JSON.stringify(event) + ',');
                 }).on('close', function () {
                     res.write('];\n\n')
