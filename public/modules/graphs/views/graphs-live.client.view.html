@@ -45,8 +45,12 @@
         <!--</tab>-->
         <!--</tabset>-->
     </div>
+    <md-input-container>
+        <label>Filter metrics</label>
+        <input ng-model="filterMetrics">
+    </md-input-container>
     <accordion close-others="false">
-        <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value" data-ng-controller="HighchartsLiveController">
+        <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:filterMetrics" data-ng-controller="HighchartsLiveController">
             <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
                 <accordion-heading>
                     <div>{{metric.alias}}</div>
