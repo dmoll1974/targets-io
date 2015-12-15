@@ -58,7 +58,7 @@ function ManageDashboardTagsDirective () {
     //    $scope.tags = Dashboards.selected.tags;
     //    $scope.defaultTag = Dashboards.getDefaultTag(Dashboards.selected.tags);
     //    //setDefault($scope.defaultTag);
-    //    //Dashboards.update().success(function (dashboard) {
+    //    //Dashboards.update(Dashboards.selected).success(function (dashboard) {
     //    //  $scope.tags = dashboard.tags;
     //    //});
     //  }
@@ -66,7 +66,7 @@ function ManageDashboardTagsDirective () {
     $scope.$watch('defaultTag', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         setDefault($scope.defaultTag);
-        Dashboards.update().success(function (dashboard) {
+        Dashboards.update(Dashboards.selected).success(function (dashboard) {
           Dashboards.selected = dashboard;
           $scope.tags = Dashboards.selected.tags;
         });
@@ -106,7 +106,7 @@ function ManageDashboardTagsDirective () {
         }
 
 
-        Dashboards.update().success(function (dashboard) {
+        Dashboards.update(Dashboards.selected).success(function (dashboard) {
           $scope.tags = dashboard.tags;
           Dashboards.selected = dashboard;
 

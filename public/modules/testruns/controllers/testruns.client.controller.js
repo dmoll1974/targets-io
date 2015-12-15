@@ -212,7 +212,7 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.setTestRunAsBaseline = function (baseline) {
       var arrayOfPromises = [];
       Dashboards.selected.baseline = baseline;
-      Dashboards.update().success(function (dashboard) {
+      Dashboards.update(Dashboards.selected).success(function (dashboard) {
         Dashboards.selected = dashboard;
         $scope.dashboard = dashboard;
         var baselineSet = false;

@@ -120,7 +120,7 @@ angular.module('graphs').controller('GraphsController', [
       Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, newTags, function (tagsUpdated) {
         /* if persist tag is checked and tags are updated, update dashboard tags*/
         if (tagsUpdated && persistTag) {
-          Dashboards.update().success(function (dashboard) {
+          Dashboards.update(Dashboards.selected).success(function (dashboard) {
             $scope.dashboard = Dashboards.selected;
             /* Get tags used in metrics */
             //$scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
@@ -138,7 +138,7 @@ angular.module('graphs').controller('GraphsController', [
           updatedTags.push({ text: tag.text });
       });
       Dashboards.selected.tags = updatedTags;
-      Dashboards.update().success(function (dashboard) {
+      Dashboards.update(Dashboards.selected).success(function (dashboard) {
       });
     };
     $scope.openTagsFilterModal = function (size) {

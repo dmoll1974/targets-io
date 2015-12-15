@@ -56,7 +56,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
       Metrics.update($scope.metric).success(function (metric) {
         Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, metric.tags, function (updated) {
           if (updated) {
-            Dashboards.update().success(function (dashboard) {
+            Dashboards.update(Dashboards.selected).success(function (dashboard) {
               $scope.dashboard = Dashboards.selected;
               /* Get tags used in metrics */
               $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
@@ -79,7 +79,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
           Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags, function (tagsUpdated) {
 
             if (tagsUpdated) {
-              Dashboards.update().success(function (dashboard) {
+              Dashboards.update(Dashboards.selected).success(function (dashboard) {
                 $scope.dashboard = Dashboards.selected;
                 /* Get tags used in metrics */
                 $scope.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);

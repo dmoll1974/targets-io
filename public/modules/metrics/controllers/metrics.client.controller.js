@@ -106,7 +106,7 @@ angular.module('metrics').controller('MetricsController', [
       Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags, function (tagsUpdated) {
 
         if (tagsUpdated)
-            Dashboards.update().success(function (dashboard) {
+            Dashboards.update(Dashboards.selected).success(function (dashboard) {
             });
       });
       $scope.metric.productName = $stateParams.productName;
@@ -148,7 +148,7 @@ angular.module('metrics').controller('MetricsController', [
       Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, $scope.metric.tags, function (tagsUpdated) {
 
         if (tagsUpdated)
-          Dashboards.update().success(function (dashboard) {
+          Dashboards.update(Dashboards.selected).success(function (dashboard) {
           });
       });
 

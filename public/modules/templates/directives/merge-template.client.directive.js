@@ -324,7 +324,7 @@ function MergeTemplateDirective () {
               Dashboards.updateTags(Dashboards.selected.productName, Dashboards.selected.dashboardName, metric.tags, function (tagsUpdated) {
 
                   if (tagsUpdated)
-                      Dashboards.update().success(function (dashboard) {
+                      Dashboards.update(Dashboards.selected).success(function (dashboard) {
                       });
               });
 
