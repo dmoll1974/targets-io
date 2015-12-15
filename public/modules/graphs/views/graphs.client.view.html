@@ -11,7 +11,7 @@
                 <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
             </div>
         </div>
-        <md-tabs md-selected="selectedIndex" class="metric-panels">
+        <md-tabs md-selected="selectedIndex" class="metric-panels" style="padding-bottom: 0px;">
             <!--<md-tab ng-click="setSelectedIndex($index)">-->
             <!--<span ng-if="selectedIndex !== 0">TAGS FILTER</span>-->
             <!--<div flex ng-if="selectedIndex === 0" layout="row">-->
@@ -27,16 +27,14 @@
                 <span>{{tag.text}}</span>
             </md-tab>
         </md-tabs>
-        <!--<tabset>-->
-        <!--<tab data-ng-repeat="tag in tags" heading="{{tag.text}}"  data-ng-model="value"  disabled="tag.disabled"  active="isActive(tag.text)" ui-sref="viewGraphs(tag.route)" >-->
-        <!--</tab>-->
-        <!--</tabset>-->
+        <md-input-container>
+            <label>Filter metrics</label>
+            <input ng-model="filterMetrics">
+        </md-input-container>
+
     </div>
     <div gatling-details data-ng-if="gatlingDetails"></div>
-    <md-input-container>
-        <label>Filter metrics</label>
-        <input ng-model="filterMetrics">
-    </md-input-container>
+
     <div data-ng-hide="gatlingDetails">
         <accordion close-others="false">
             <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:filterMetrics" data-ng-controller="HighchartsController">
