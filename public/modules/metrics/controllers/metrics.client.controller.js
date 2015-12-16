@@ -154,9 +154,21 @@ angular.module('metrics').controller('MetricsController', [
 
       $scope.metric.productName = $stateParams.productName;
       $scope.metric.dashboardName = $stateParams.dashboardName;
+
+
+
       Metrics.update($scope.metric).success(function (metric) {
+
+        var updateIndex = Dashboards.selected.metrics.map(function(metric){ metric._id}).indexOf($scope.metric._id);
+        Dashboards.selected.metrics[updateIndex] = $scope.metric;
+
+        Dashboards.update(Dashboards.selected).success(function (dashboard) {
+        });
+
+
         var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
         var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
+
         /* if requirement or benchmark vlaues have changed, update test runs */
         if ((updateRequirements || updateBenchmarks) && Dashboards.selected.useInBenchmark) {
           $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
