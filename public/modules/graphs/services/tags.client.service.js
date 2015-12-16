@@ -35,7 +35,12 @@ angular.module('graphs').factory('Tags', [
                 productName: productName,
                 dashboardName: dashBoardName,
                 tag: tag.text,
-                testRunId: testRunId
+                testRunId: testRunId,
+                metricFilter: null,
+                zoomFrom: null,
+                zoomUntil: null,
+                selectedSeries: null
+
               }
             });
         });

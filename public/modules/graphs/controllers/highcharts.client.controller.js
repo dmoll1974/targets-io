@@ -10,7 +10,8 @@ angular.module('graphs').controller('HighchartsController', [
   'Tags',
   'Events',
   '$document',
-  function ($scope, Graphite, $stateParams, $state, TestRuns, Metrics, Dashboards, Tags, Events, $document) {
+  'Utils',
+  function ($scope, Graphite, $stateParams, $state, TestRuns, Metrics, Dashboards, Tags, Events, $document, Utils) {
     /* Zero copied logic */
     $scope.clipClicked = function () {
       $scope.showUrl = false;
@@ -87,17 +88,22 @@ angular.module('graphs').controller('HighchartsController', [
       }
     };
     /* generate deeplink to share metric graph */
-    $scope.setMetricShareUrl = function (metricId) {
+    $scope.setMetricShareUrl = function (metric) {
 
-      $scope.metricShareUrl = location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag + '/' + metricId;
-      if (TestRuns.zoomFrom || $state.params.selectedSeries) {
-        $scope.metricShareUrl = $scope.metricShareUrl + '?';
-      }
+      $scope.metricShareUrl = location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag +  '?';
+      //if (TestRuns.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
+      //  $scope.metricShareUrl = $scope.metricShareUrl + '?';
+      //}
       if (TestRuns.zoomFrom) {
         $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
       }
       if ($state.params.selectedSeries) {
         $scope.metricShareUrl = $scope.metricShareUrl + '&selectedSeries=' + $state.params.selectedSeries;
+      }
+      if (Utils.metricFilter !== '') {
+        $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(Utils.metricFilter)
+      }else{
+        $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
       }
 
       if ($scope.showUrl) {
@@ -115,33 +121,20 @@ angular.module('graphs').controller('HighchartsController', [
     };
     /* Open accordion by default, except for the "All" tab */
     $scope.$watch('value', function (newVal, oldVal) {
-      if ($stateParams.metricId) {
-        _.each($scope.metrics, function (metric, i) {
-          if (metric._id === $stateParams.metricId)
-            $scope.metrics[i].isOpen = true;
-        });
-      } else {
+
+        if(newVal !== oldVal) {
+
+          Utils.metricFilter = '';
+
+        }
         if (newVal !== 'All') {
           _.each($scope.metrics, function (metric, i) {
             $scope.metrics[i].isOpen = true;
           });
         }
-      }
+
     });
-    $scope.$watch('value', function (newVal, oldVal) {
-      if ($stateParams.metricId) {
-        _.each($scope.metrics, function (metric, i) {
-          if (metric._id === $stateParams.metricId)
-            $scope.metrics[i].isOpen = true;
-        });
-      } else {
-        if (newVal !== 'All') {
-          _.each($scope.metrics, function (metric, i) {
-            $scope.metrics[i].isOpen = true;
-          });
-        }
-      }
-    });
+
     /* If zoom lock is checked, update all graphs when zoom is applied in one */
     $scope.$watch(function (scope) {
       return TestRuns.zoomFrom;

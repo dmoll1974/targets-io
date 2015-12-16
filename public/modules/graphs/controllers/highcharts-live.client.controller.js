@@ -14,7 +14,8 @@ angular.module('graphs').controller('HighchartsLiveController', [
   '$http',
   '$log',
   'Events',
-  function ($scope, Interval, $stateParams, $state, Graphite, TestRuns, Metrics, Dashboards, Tags, $q, $http, $log, Events) {
+  'Utils',
+  function ($scope, Interval, $stateParams, $state, Graphite, TestRuns, Metrics, Dashboards, Tags, $q, $http, $log, Events, Utils) {
     /* Zero copied logic */
     $scope.clipClicked = function () {
       $scope.showUrl = false;
@@ -91,13 +92,30 @@ angular.module('graphs').controller('HighchartsLiveController', [
         });
       }
     };
+
     /* generate deeplink to share metric graph */
-    $scope.setMetricShareUrl = function (metricId) {
+    $scope.setMetricShareUrl = function (metric) {
+
+      $scope.metricShareUrl = location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '?';
+
       if (TestRuns.zoomFrom) {
-        $scope.metricShareUrl = location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.tag + '/' + metricId + '?zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
-      } else {
-        $scope.metricShareUrl = location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.tag + '/' + metricId;
+        $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
       }
+
+      if (Utils.metricFilter !== '') {
+        $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(Utils.metricFilter)
+      }else{
+        $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
+      }
+    /* generate deeplink to share metric graph */
+    //$scope.setMetricShareUrl = function (metricId) {
+    //  if (TestRuns.zoomFrom) {
+    //    $scope.metricShareUrl = location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.tag + '/' + metricId + '?zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
+    //  } else {
+    //    $scope.metricShareUrl = location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.tag + '/' + metricId;
+    //  }
+    //
+    //
       if ($scope.showUrl) {
         switch ($scope.showUrl) {
           case true:
@@ -158,19 +176,20 @@ angular.module('graphs').controller('HighchartsLiveController', [
     });
     /* Open accordion by default, except for the "All" tab */
     $scope.$watch('value', function (newVal, oldVal) {
-      if ($stateParams.metricId) {
-        _.each($scope.metrics, function (metric, i) {
-          if (metric._id === $stateParams.metricId)
-            $scope.metrics[i].isOpen = true;
-        });
-      } else {
-        if (newVal !== 'All') {
-          _.each($scope.metrics, function (metric, i) {
-            $scope.metrics[i].isOpen = true;
-          });
-        }
+
+      if(newVal !==  oldVal) {
+
+        Utils.metricFilter = '';
+
       }
+      if (newVal !== 'All') {
+        _.each($scope.metrics, function (metric, i) {
+          $scope.metrics[i].isOpen = true;
+        });
+      }
+
     });
+
     /* stop data polling when accordion is closed */
     $scope.$watch('metric.isOpen', function (newVal, oldVal) {
       if (newVal !== oldVal && newVal === false)

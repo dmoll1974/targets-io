@@ -37,15 +37,19 @@
 
         <md-tabs md-selected="selectedIndex" class="metric-panels" style="padding-bottom: 0px;">
             <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled" data-ng-model="value" active="isActive(tag.text)"
-                    ng-click="setSelectedIndex($index)" ui-sref="viewLiveGraphs(tag.route)">
+                     ui-sref="viewLiveGraphs(tag.route)">
                 <span>{{tag.text}}</span>
             </md-tab>
         </md-tabs>
 
-        <md-input-container>
-            <label>Filter metrics</label>
-            <input ng-model="metricFilter">
-        </md-input-container>
+        <div layout="row"  flex="35">
+            <md-input-container flex>
+                <label>Filter metrics</label>
+                <input ng-model="metricFilter">
+            </md-input-container>
+            <md-icon ng-if="metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                     data-ng-click="clearMetricFilter()"></md-icon>
+        </div>
     </div>
 
     <accordion close-others="false">
@@ -61,7 +65,7 @@
                                     class="btn btn-xs glyphicon glyphicon-wrench"></span></label>
                             <label title="Edit tags" class="btn default" ng-click="setTags()"><span
                                     class="btn btn-xs glyphicon glyphicon-tag"></span></label>
-                            <label class="btn default" ng-click="setMetricShareUrl(metric._id)"><span
+                            <label class="btn default" ng-click="setMetricShareUrl(metric)"><span
                                     class="btn btn-xs glyphicon glyphicon-share"></span></label>
                         </div>
                         </span>

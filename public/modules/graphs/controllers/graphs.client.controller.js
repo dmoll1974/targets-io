@@ -19,17 +19,46 @@ angular.module('graphs').controller('GraphsController', [
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
-    /* Set product Filter in side menu */
-    SideMenu.productFilter = $stateParams.productName;
-    $scope.$watch('selectedIndex', function (current, old) {
-      Utils.selectedIndex = current;
-    });
     $scope.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
+
     /* Get deeplink zoom params from query string */
     if ($state.params.zoomFrom)
       TestRuns.zoomFrom = $state.params.zoomFrom;
     if ($state.params.zoomUntil)
       TestRuns.zoomUntil = $state.params.zoomUntil;
+
+    if ($state.params.metricFilter) {
+        $scope.metricFilter = $state.params.metricFilter;
+    }else{
+
+      $scope.metricFilter = Utils.metricFilter;
+    }
+    /* watch metricFilter */
+    $scope.$watch('metricFilter', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        Utils.metricFilter = $scope.metricFilter;
+      }
+    });
+
+    $scope.clearMetricFilter = function(){
+
+      $scope.metricFilter = '';
+
+    };
+
+    /* reset metric filter when changing tabs */
+    //$scope.$watch('value', function (newVal, oldVal) {
+    //
+    //    $scope.metricFilter = '';
+    //    Utils.metricFilter = '';
+    //
+    //});
+
+    /* Set product Filter in side menu */
+    SideMenu.productFilter = $stateParams.productName;
+    $scope.$watch('selectedIndex', function (current, old) {
+      Utils.selectedIndex = current;
+    });
 
     /* Get selected series params from query string */
     if ($state.params.selectedSeries)
