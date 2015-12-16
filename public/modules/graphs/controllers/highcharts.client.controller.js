@@ -190,7 +190,7 @@ angular.module('graphs').controller('HighchartsController', [
           },
           redraw: function(){
             /* if selected series is provided, show this series only */
-            if (TestRuns.selectedSeries !== ''){
+            if (TestRuns.selectedSeries && TestRuns.selectedSeries !== ''){
 
               var seriesIndex = this.series.map(function(series) { return series.name; }).indexOf(TestRuns.selectedSeries);
 
