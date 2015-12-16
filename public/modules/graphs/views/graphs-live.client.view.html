@@ -44,12 +44,12 @@
 
         <md-input-container>
             <label>Filter metrics</label>
-            <input ng-model="filterMetrics">
+            <input ng-model="metricFilter">
         </md-input-container>
     </div>
 
     <accordion close-others="false">
-        <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:filterMetrics" data-ng-controller="HighchartsLiveController">
+        <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:metricFilter" data-ng-controller="HighchartsLiveController">
             <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
                 <accordion-heading>
                     <div>{{metric.alias}}</div>
