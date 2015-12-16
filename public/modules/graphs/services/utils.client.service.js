@@ -5,7 +5,8 @@ angular.module('graphs').service('Utils', [function () {
       dynamicSort: dynamicSort,
       dynamicSortMultiple: dynamicSortMultiple,
       dynamicSortTags: dynamicSortTags,
-      selectedIndex: ''
+      selectedIndex: '',
+      metricFilter: ''
     };
     return Utils;
     function dynamicSortTags(sortOrderParam) {
