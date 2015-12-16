@@ -29,7 +29,7 @@
         </md-tabs>
         <md-input-container>
             <label>Filter metrics</label>
-            <input ng-model="filterMetrics">
+            <input ng-model="metricFilter">
         </md-input-container>
 
     </div>
@@ -37,7 +37,7 @@
 
     <div data-ng-hide="gatlingDetails">
         <accordion close-others="false">
-            <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:filterMetrics" data-ng-controller="HighchartsController">
+            <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:metricFilter" data-ng-controller="HighchartsController">
                 <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
                     <accordion-heading>
                         <div>{{metric.alias}}</div>
