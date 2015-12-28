@@ -9,13 +9,36 @@ exports.updateFixedBaselineBenchmark = updateFixedBaselineBenchmark;
 exports.updateBenchmarkResults = updateBenchmarkResults;
 function updateBenchmarkResults(testRun, callback) {
   setBenchmarkResultsFixedBaselineForTestRun(testRun, function (updatedFixedBenchmark) {
-    Testruns.saveTestRun(updatedFixedBenchmark, function (savedFixedBenchmark) {
+    saveTestRunAfterBenchmark(updatedFixedBenchmark, function (savedFixedBenchmark) {
       setBenchmarkResultsPreviousBuildForTestRun(savedFixedBenchmark, function (updatedPreviousBenchmark) {
-        Testruns.saveTestRun(updatedPreviousBenchmark, function (updatedBenchmarksTestRun) {
+        saveTestRunAfterBenchmark(updatedPreviousBenchmark, function (updatedBenchmarksTestRun) {
           callback(updatedBenchmarksTestRun);
         });
       });
     });
+  });
+}
+
+function saveTestRunAfterBenchmark(testRun, callback) {
+  /* Save updated test run */
+  Testrun.findById(testRun._id, function (err, savedTestRun) {
+    if (err)
+      console.log(err);
+    if (!savedTestRun)
+      console.log('Could not load Document');
+    else {
+      savedTestRun.metrics = testRun.metrics;
+      savedTestRun.baseline = testRun.baseline;
+      savedTestRun.benchmarkResultFixedOK = testRun.benchmarkResultFixedOK;
+      savedTestRun.benchmarkResultPreviousOK = testRun.benchmarkResultPreviousOK;
+      savedTestRun.save(function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          callback(savedTestRun);
+        }
+      });
+    }
   });
 }
 function updateFixedBaselineBenchmark(req, res) {

@@ -12,7 +12,7 @@ exports.deleteTestRunById = deleteTestRunById;
 exports.testRunById = testRunById;
 exports.refreshTestrun = refreshTestrun;
 exports.updateTestrunsResults = updateTestrunsResults;
-exports.saveTestRun = saveTestRun;
+//exports.saveTestRunAfterBenchmark = saveTestRunAfterBenchmark;
 exports.updateAllDashboardTestRuns = updateAllDashboardTestRuns;
 exports.updateAllProductTestRuns = updateAllProductTestRuns;
 exports.recentTestRuns = recentTestRuns;
@@ -34,28 +34,7 @@ function recentTestRuns(req, res){
 }
 
 
-function saveTestRun(testRun, callback) {
-  /* Save updated test run */
-  Testrun.findById(testRun._id, function (err, savedTestRun) {
-    if (err)
-      console.log(err);
-    if (!savedTestRun)
-      console.log('Could not load Document');
-    else {
-      savedTestRun.metrics = testRun.metrics;
-      savedTestRun.baseline = testRun.baseline;
-      savedTestRun.benchmarkResultFixedOK = testRun.benchmarkResultFixedOK;
-      savedTestRun.benchmarkResultPreviousOK = testRun.benchmarkResultPreviousOK;
-      savedTestRun.save(function (err) {
-        if (err) {
-          console.log(err);
-        } else {
-          callback(savedTestRun);
-        }
-      });
-    }
-  });
-}
+
 function updateTestrunsResults(req, res) {
   Testrun.find({
     $and: [
@@ -595,6 +574,7 @@ function TempSaveTestruns(testruns,  callback) {
     persistTestrun.start = testrun.start;
     persistTestrun.end = testrun.end;
     persistTestrun.eventIds = testrun.eventIds;
+    persistTestrun.buildResultKey = testrun.buildResultKey;
 
     savedTesruns.push(persistTestrun);
 

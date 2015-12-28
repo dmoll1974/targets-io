@@ -84,24 +84,28 @@ exports.updateAllProductEvents = function (req, res){
 exports.create = function (req, res) {
   var event = new Event(req.body);
   event.user = req.user;
-  event.save(function (err) {
+  event.save(function (err, savedEvent) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
 
-      if(event.eventDescription === 'start'){
+      if(savedEvent.eventDescription === 'start'){
 
-        runningTest.updateRunningTest(event.productName, event.dashboardName, event.testRunId, function(message){
+        runningTest.updateRunningTest(savedEvent.productName, savedEvent.dashboardName, savedEvent.testRunId, function(message){
 
           var response = {};
-          response.event = event;
+          response.event = savedEvent;
           response.message = message;
 
           res.jsonp(response);
 
         });
 
+
+      }else{
+
+        res.jsonp(savedEvent);
 
       }
     }

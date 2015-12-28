@@ -15,10 +15,11 @@ function AddEventDirective () {
   /* @ngInject */
   function AddEventDirectiveController ($scope, $state, Events, $filter, $rootScope, $stateParams) {
 
-    $scope.event = {};
-    $scope.event.eventTimestamp = new Date();
+    $scope.event = Events.selected;
+    $scope.event.eventTimestamp = Events.selected.eventTimestamp ? Events.selected.eventTimestamp : new Date();
     $scope.event.productName = $stateParams.productName;
     $scope.event.dashboardName = $stateParams.dashboardName;
+    $scope.event.testRunId = Events.selected.testRunId ? Events.selected.testRunId : '';
 
     $scope.testRunIds = Events.getTestRunId(Events.list);
     $scope.descriptions = Events.getDescriptions(Events.list);

@@ -174,6 +174,8 @@ angular.module('graphs').controller('HighchartsController', [
               Events.selected.dashboardName = $stateParams.dashboardName;
               Events.selected.eventTimestamp = eventTimestamp;
               Events.selected.testRunId = $stateParams.testRunId;
+              Events.selected.eventDescription = '';
+
               $state.go('createEvent', {
                 productName: $stateParams.productName,
                 dashboardName: $stateParams.dashboardName

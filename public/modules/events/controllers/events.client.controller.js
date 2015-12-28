@@ -62,6 +62,9 @@ angular.module('events').controller('EventsController', [
     // Open update event form
     $scope.addEventForDashboard = function () {
 
+
+      Events.selected = {};
+
       $state.go('createEvent', {
         productName: $stateParams.productName,
         dashboardName: $stateParams.dashboardName
