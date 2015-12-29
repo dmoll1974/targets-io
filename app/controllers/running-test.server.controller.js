@@ -155,57 +155,65 @@ function synchronizeRunningTestRuns () {
 
 function getBaseline(testRun) {
 
-  return new Promise((resolve, reject) =>
+  return new Promise((resolve, reject) => {
 
-      {
     Product.findOne({name: testRun.productName}).exec(function (err, product) {
-      if (err)
-        console.log(err);
-      Dashboard.findOne({
-        $and: [
-          {productId: product._id},
-          {name: testRun.dashboardName}
-        ]
-      }).exec(function (err, dashboard) {
+      if (err) {
+        reject(err);
+      }else {
+        Dashboard.findOne({
+          $and: [
+            {productId: product._id},
+            {name: testRun.dashboardName}
+          ]
+        }).exec(function (err, dashboard) {
 
-        if (err) {
-          console.log(err);
-        } else {
-          /* if baseline has been set for dashboard, return baeline */
-          if (dashboard.baseline) {
-
-            resolve(dashboard.baseline);
-            /* else set current testRunId as baseline and return null */
+          if (err) {
+            reject(err);
           } else {
+            /* if baseline has been set for dashboard, return baeline */
+            if (dashboard.baseline) {
 
-            dashboard.baseline = testRunId;
-            dashboard.save(function (err, updatedDashboard) {
+              resolve(dashboard.baseline);
+              /* else set current testRunId as baseline and return null */
+            } else {
 
-              if (err) {
-                console.log(err);
-              } else {
-                resolve(null);
-              }
-            });
+              dashboard.baseline = testRunId;
+              dashboard.save(function (err, updatedDashboard) {
 
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(null);
+                }
+              });
+
+            }
           }
-        }
-      })
+        })
+      }
     })
 
   })
 }
-function getPreviousBuild(testRun, callback) {
-  var previousBuild;
-  Testruns.find({
-    $and: [
-      { productName: testRun.productName },
-      { dashboardName: testRun.dashboardName }
-    ]
-  }).sort({ end: -1 }).exec(function (err, savedTestRuns) {
-    if (err) {
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    } else {
+function getPreviousBuild(testRun) {
+
+  return new Promise((resolve, reject) => {
+
+
+
+    Testruns.find({
+      $and: [
+        {productName: testRun.productName},
+        {dashboardName: testRun.dashboardName}
+      ]
+    }).sort({end: -1}).exec(function (err, savedTestRuns) {
+      if (err) {
+        reject(err);
+      } else {
+
+        let previousBuild;
+
         _.each(savedTestRuns, function (savedTestrun, i) {
           if (savedTestrun.testRunId === testRun.testRunId) {
             if (i + 1 === savedTestRuns.length) {
@@ -216,8 +224,9 @@ function getPreviousBuild(testRun, callback) {
             }
           }
         });
-        callback(previousBuild);
+        resolve(previousBuild);
 
-    }
-  });
+      }
+    });
+  })
 }
