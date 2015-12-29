@@ -3,7 +3,20 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Event = mongoose.model('Event'), Testrun = mongoose.model('Testrun'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), _ = require('lodash'), graphite = require('./graphite.server.controller'), Utils = require('./utils.server.controller'), Requirements = require('./testruns.requirements.server.controller'), Benchmarks = require('./testruns.benchmarks.server.controller'), Metric = mongoose.model('Metric'), async = require('async');
+var mongoose = require('mongoose'),
+    errorHandler = require('./errors.server.controller'),
+    Event = mongoose.model('Event'),
+    Testrun = mongoose.model('Testrun'),
+    Dashboard = mongoose.model('Dashboard'),
+    Product = mongoose.model('Product'),
+    _ = require('lodash'),
+    graphite = require('./graphite.server.controller'),
+    Utils = require('./utils.server.controller'),
+    Requirements = require('./testruns.requirements.server.controller'),
+    Benchmarks = require('./testruns.benchmarks.server.controller'),
+    Metric = mongoose.model('Metric'),
+    async = require('async');
+
 
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;

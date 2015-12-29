@@ -55,10 +55,17 @@ var TestrunSchema = new Schema({
     expires: config.graphiteRetentionPeriod
   },
   'end': Date,
-  'baseline': String,
+  'baseline' : {
+  type: String,
+  default: null
+  },
   'previousBuild': {
     type: String,
     default: null
+  },
+  'completed': {
+    type: Boolean,
+    default: false
   },
   'meetsRequirement': Boolean,
   'benchmarkResultFixedOK': Boolean,

@@ -11,14 +11,21 @@ var mongoose = require('mongoose'),
  */
 var RunningTestSchema = new mongoose.Schema({
     'testRunId': String,
-    'startTimestamp': {
+    'start': {
         type: Date,
         default: Date.now
+    },
+    'end': {
+        type: Date
     },
     'keepAliveTimestamp': {
         type: Date,
         default: Date.now,
         expires: config.runningTestTimeout
+    },
+    'completed': {
+        type: Boolean,
+        default: false
     },
     'productName': String,
     'dashboardName': String
