@@ -65,40 +65,56 @@ function updateFixedBaselineBenchmark(req, res) {
     });
   });
 }
-function setBenchmarkResultsFixedBaselineForTestRun(testRun, callback) {
-  var benchmarkDone = false;
-  if (testRun.baseline && testRun.baseline !== testRun.testRunId) {
-    Testruns.getTestRunById(testRun.productName, testRun.dashboardName, testRun.baseline, function (fixedBaseline) {
-      if (fixedBaseline) {
-        benchmarkTestRuns(testRun, fixedBaseline, 'benchmarkResultFixedOK', function (updatedTestrun) {
-          callback(updatedTestrun);
+function setBenchmarkResultsFixedBaselineForTestRun(testRun) {
+  return new Promise((resolve, reject) => {
+
+    getBaseline(testRun)
+    .then(function(testRunIncludingFixedBaseline) {
+
+      var benchmarkDone = false;
+      if (testRunIncludingFixedBaseline.baseline && testRunIncludingFixedBaseline.baseline !== testRunIncludingFixedBaseline.testRunId) {
+        Testruns.getTestRunById(testRunIncludingFixedBaseline.productName, testRunIncludingFixedBaseline.dashboardName, testRunIncludingFixedBaseline.baseline, function (fixedBaseline) {
+          if (fixedBaseline) {
+            benchmarkTestRuns(testRunIncludingFixedBaseline, fixedBaseline, 'benchmarkResultFixedOK', function (updatedTestrun) {
+
+              console.log('Set benchmark fixed baseline for:' + updatedTestrun.productName + '-' + updatedTestrun.dashboardName + 'testrunId: ' + updatedTestrun.testRunId);
+              resolve(updatedTestrun);
+            });
+          } else {
+            testRun.benchmarkResultFixedOK = null;
+            resolve(testRun);
+          }
         });
       } else {
         testRun.benchmarkResultFixedOK = null;
-        callback(testRun);
+        resolve(testRun);
       }
     });
-  } else {
-    testRun.benchmarkResultFixedOK = null;
-    callback(testRun);
-  }
+  });
 }
-function setBenchmarkResultsPreviousBuildForTestRun(testRun, callback) {
-  if (testRun.previousBuild) {
-    Testruns.getTestRunById(testRun.productName, testRun.dashboardName, testRun.previousBuild, function (previousBuildBaseline) {
-      if (previousBuildBaseline) {
-        benchmarkTestRuns(testRun, previousBuildBaseline, 'benchmarkResultPreviousOK', function (updatedTestrun) {
-          callback(updatedTestrun);
+function setBenchmarkResultsPreviousBuildForTestRun(testRun) {
+  return new Promise((resolve, reject) => {
+
+    getPreviousBuild(testRun)
+    .then(function(testRunIncludingPreviousBuild){
+      if (testRunIncludingPreviousBuild.previousBuild) {
+        Testruns.getTestRunById(testRunIncludingPreviousBuild.productName, testRunIncludingPreviousBuild.dashboardName, testRunIncludingPreviousBuild.previousBuild, function (previousBuildBaseline) {
+          if (previousBuildBaseline) {
+            benchmarkTestRuns(testRunIncludingPreviousBuild, previousBuildBaseline, 'benchmarkResultPreviousOK', function (updatedTestrun) {
+              console.log('Set benchmark previous build for:' + updatedTestrun.productName + '-' + updatedTestrun.dashboardName + 'testrunId: ' + updatedTestrun.testRunId);
+              resolve(updatedTestrun);
+            });
+          } else {
+            testRun.benchmarkResultPreviousOK = null;
+            resolve(testRun);
+          }
         });
       } else {
         testRun.benchmarkResultPreviousOK = null;
-        callback(testRun);
+        resolve(testRun);
       }
     });
-  } else {
-    testRun.benchmarkResultPreviousOK = null;
-    callback(testRun);
-  }
+  });
 }
 function benchmarkTestRuns(benchmark, baseline, benchmarkType, callback) {
   var benchmarkDone = false;
@@ -204,3 +220,77 @@ function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkVal
   }
   return result;
 }
+
+  let getBaseline = function(testRun) {
+
+    return new Promise((resolve, reject) => {
+
+      Product.findOne({name: testRun.productName}).exec(function (err, product) {
+        if (err) {
+          reject(err);
+        }else {
+          Dashboard.findOne({
+            $and: [
+              {productId: product._id},
+              {name: testRun.dashboardName}
+            ]
+          }).exec(function (err, dashboard) {
+
+            if (err) {
+              reject(err);
+            } else {
+              /* if baseline has been set for dashboard, return baeline */
+              if (dashboard.baseline) {
+
+                testRun.baseline = dashboard.baseline;
+                resolve(testRun);
+                /* else set current testRunId as baseline and return null */
+              } else {
+
+                dashboard.baseline = testRunId;
+                dashboard.save(function (err, updatedDashboard) {
+
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve(testRun);
+                  }
+                });
+
+              }
+            }
+          })
+        }
+      })
+
+    })
+  }
+
+  let getPreviousBuild = function(testRun) {
+
+    return new Promise((resolve, reject) => {
+
+      Testrun.find({
+        $and: [
+          {productName: testRun.productName},
+          {dashboardName: testRun.dashboardName},
+          {completed: true}
+        ]
+      }).sort({end: -1}).exec(function (err, savedTestRuns) {
+        if (err) {
+          reject(err);
+        } else {
+
+          if(savedTestRuns.length > 0){
+
+            let previousBuild = savedTestRuns[0].testRunId ;
+
+            testRun.previousBuild = previousBuild;
+          }
+
+          resolve(testRun);
+
+        }
+      });
+    })
+  }

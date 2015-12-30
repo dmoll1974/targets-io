@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     fs = require('fs'),
     Event = mongoose.model('Event'),
+    Testrun = mongoose.model('Testrun'),
     Dashboard = mongoose.model('Dashboard'),
     Product = mongoose.model('Product'),
     Metric = mongoose.model('Metric')
@@ -52,10 +53,17 @@ module.exports.dbExport = function (req, res) {
                     event.hookEnabled = false;
                     res.write(JSON.stringify(event) + ',');
                 }).on('close', function () {
-                    res.write('];\n\n')
-                    res.write('var gatlingDetails = [\n')
-
-                    GatlingDetails.find()
+                    res.write('];\n\n');
+                    res.write('var testruns = [\n');
+                    Testrun.find().lean().stream().on('data', function (testrun) {
+                        if (!started) {
+                            start(res);
+                        }
+                        res.write(JSON.stringify(testrun) + ',');
+                    }).on('close', function () {
+                        res.write('];\n\n')
+                        res.write('var gatlingDetails = [\n')
+                        GatlingDetails.find()
                         .lean()
                         .stream()
                         .on('data', function (gatlingDetails) {
@@ -70,6 +78,7 @@ module.exports.dbExport = function (req, res) {
                             res.write('exports.importDashboards = dashboards;');
                             res.write('exports.importMetrics = metrics;');
                             res.write('exports.importEvents = events;');
+                            res.write('exports.importTestruns = Testruns;');
                             res.write('exports.importGatlingDetails = gatlingDetails;');
                             res.end();
                         }).on('error', function (err) {
@@ -78,10 +87,16 @@ module.exports.dbExport = function (req, res) {
                                 msg: 'Failed to get gatlingDetails from db'
                             });
                         });
-                })
-                    .on('error', function (err) {
-                        res.send(500, {err: err, msg: "Failed to get events from db"});
+                    }).on('error', function (err) {
+                        res.send(500, {err: err,
+                            msg: 'Failed to get test runs from db'
+                        });
                     });
+                }).on('error', function (err) {
+                    res.send(500, {err: err,
+                        msg: 'Failed to get events from db'
+                    });
+                });
             }).on('error', function (err) {
                 res.send(500, {
                     err: err,

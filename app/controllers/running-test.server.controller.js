@@ -19,7 +19,6 @@ exports.runningTestForDashboard = runningTestForDashboard;
 
 
 
-
 /* start polling every minute */
 setInterval(synchronizeRunningTestRuns, 60 * 1000);
 
@@ -200,30 +199,23 @@ let saveTestRun = function (runningTest){
 
     });
 
-    console.log('test run initiated');
 
-    /* Add baseline and previous build */
-    getBaseline(testRun)
-        .then(getPreviousBuild)
-        .then(function (updatedTestrun) {
+    testRun.save(function (err, savedTestRun) {
 
-          updatedTestrun.save(function (err, savedTestRun) {
+      if (err) {
+        reject(err);
+      } else {
 
-            if (err) {
-              reject(err);
-            } else {
+        runningTest.remove(function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve('saved test run!');
+          }
+        });
+      }
+    });
 
-              runningTest.remove(function (err) {
-                if (err) {
-                  reject(err);
-                } else {
-                  resolve('saved test run!');
-                }
-              });
-            }
-          });
-        })
-        .catch(errorHandler);
   });
 }
 
@@ -231,77 +223,4 @@ let errorHandler = function (err){
 
   console.log('Error: ' + err);
 
-}
-let getBaseline = function(testRun) {
-
-  return new Promise((resolve, reject) => {
-
-    Product.findOne({name: testRun.productName}).exec(function (err, product) {
-      if (err) {
-        reject(err);
-      }else {
-        Dashboard.findOne({
-          $and: [
-            {productId: product._id},
-            {name: testRun.dashboardName}
-          ]
-        }).exec(function (err, dashboard) {
-
-          if (err) {
-            reject(err);
-          } else {
-            /* if baseline has been set for dashboard, return baeline */
-            if (dashboard.baseline) {
-
-              testRun.baseline = dashboard.baseline;
-              resolve(testRun);
-              /* else set current testRunId as baseline and return null */
-            } else {
-
-              dashboard.baseline = testRunId;
-              dashboard.save(function (err, updatedDashboard) {
-
-                if (err) {
-                  reject(err);
-                } else {
-                  resolve(testRun);
-                }
-              });
-
-            }
-          }
-        })
-      }
-    })
-
-  })
-}
-
-let getPreviousBuild = function(testRun) {
-
-  return new Promise((resolve, reject) => {
-
-    Testrun.find({
-      $and: [
-        {productName: testRun.productName},
-        {dashboardName: testRun.dashboardName},
-        {completed: true}
-      ]
-    }).sort({end: -1}).exec(function (err, savedTestRuns) {
-      if (err) {
-        reject(err);
-      } else {
-
-        if(savedTestRuns.length > 0){
-
-          let previousBuild = savedTestRuns[0].testRunId ;
-
-          testRun.previousBuild = previousBuild;
-        }
-
-        resolve(testRun);
-
-      }
-    });
-  })
 }

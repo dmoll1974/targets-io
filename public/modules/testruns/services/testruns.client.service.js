@@ -16,6 +16,7 @@ angular.module('events').factory('TestRuns', [
       zoomFrom: '',
       zoomUntil: '',
       zoomRange: '',
+      update: update,
       getTestRunById: getTestRunById,
       getRunningTest: getRunningTest,
       refreshTestrun: refreshTestrun,
@@ -41,6 +42,11 @@ angular.module('events').factory('TestRuns', [
       return $http.get('/testrun/' + productName + '/' + dashboardName + '/' + testRunId);
     }
 
+    function update(testRun){
+
+      return $http.put('/testrun/', testRun);
+
+    }
     function getRecentTestruns(){
 
       return $http.get('/recent-testruns');

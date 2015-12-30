@@ -44,10 +44,6 @@ function upload(req, res) {
       }
   });
   /* remove existing collections */
-  Testrun.remove({}, function (err) {
-    if (err)
-      console.log(err);
-    console.log('Testruns removed');
     Event.remove({}, function (err) {
       if (err)
         console.log(err);
@@ -80,7 +76,36 @@ function upload(req, res) {
         });
       });
     });
+
+  Testrun.remove({}, function (err) {
+    if (err)
+      console.log(err);
+    console.log('Testruns removed');
+    _.each(testruns, function (importTestrun) {
+      var testrun = new Testrun();
+
+      testrun.start = importTestrun.end;
+      testrun.end = importTestrun.end;
+      testrun.productName = importTestrun.productName;
+      testrun.dashboardName = importTestrun.dashboardName;
+      testrun.testRunId = importTestrun.testRunId;
+      testrun.buildResultKey = importTestrun.buildResultKey;
+      testrun.baseline = importTestrun.baseline;
+      testrun.previousBuild = importTestrun.previousBuild;
+      testrun.completed = true;
+      testrun.meetsRequirement = importTestrun.meetsRequirement;
+      testrun.benchmarkResultFixedOK = importTestrun.benchmarkResultFixedOK;
+      testrun.benchmarkResultPreviousOK = importTestrun.benchmarkResultPreviousOK;
+      testrun.metrics = importTestrun.metrics;
+
+
+      testrun.save(function (err) {
+        if (err)
+          console.log(err);
+      });
+    });
   });
+
   Metric.remove({}, function (err) {
     if (err)
       console.log(err);

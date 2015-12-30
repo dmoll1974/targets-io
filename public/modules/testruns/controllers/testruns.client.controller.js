@@ -16,6 +16,9 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
+    /* By default, show completed test runs only */
+        $scope.completedTestRunsOnly = true;
+
     /* refresh test runs every 30 seconds */
 
 
@@ -52,6 +55,18 @@ angular.module('testruns').controller('TestrunsController', [
         $scope.error = errorResponse.data.message;
       });
 
+    }
+
+    $scope.markAsComplete = function(testRun){
+
+      testRun.completed = true;
+      TestRuns.update(testRun).success(function(numUpdated){
+
+         if(numUpdated > 0){
+           let updatedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
+           $scope.testRuns[updatedTestRunIndex] = testRun;
+         }
+      });
     }
 
     $scope.$watch('allTestRunsSelected', function (newVal, oldVal) {

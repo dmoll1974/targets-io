@@ -7,6 +7,7 @@ module.exports = function (app) {
   app.route('/testruns-dashboard/:productName/:dashboardName/:useInBenchmark').get(testruns.testRunsForDashboard);
   app.route('/testruns-product/:productName').get(testruns.testRunsForProduct);
   app.route('/recent-testruns').get(testruns.recentTestRuns);
+  app.route('/testrun').put(testruns.update);
 
   app.route('/testrun/:productName/:dashboardName/:testRunId')
       .get(testruns.testRunById)

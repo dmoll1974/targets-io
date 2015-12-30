@@ -28,36 +28,43 @@ function updateRequirementResults(testRun, callback) {
     });
   });
 }
-function setRequirementResultsForTestRun(testRun, callback) {
-  var requirementsSet = false;
-  var updatedMetrics = [];
-  _.each(testRun.metrics, function (metric, i) {
-    /* if requirement is set for metric, check requirements*/
-    if (metric.requirementValue) {
-      requirementsSet = true;
-      metric.targets = setTargetRequirementResults(metric.targets, metric.requirementOperator, metric.requirementValue);
-      metric.meetsRequirement = setMetricRequirementResults(metric.targets);
-    }
-    updatedMetrics.push({
-      _id: metric._id,
-      tags: metric.tags,
-      alias: metric.alias,
-      type: metric.type,
-      meetsRequirement: metric.meetsRequirement,
-      requirementOperator: metric.requirementOperator,
-      requirementValue: metric.requirementValue,
-      benchmarkOperator: metric.benchmarkOperator,
-      benchmarkValue: metric.benchmarkValue,
-      targets: metric.targets
+function setRequirementResultsForTestRun(testRun) {
+
+  return new Promise((resolve, reject) => {
+
+    var requirementsSet = false;
+    var updatedMetrics = [];
+    _.each(testRun.metrics, function (metric, i) {
+      /* if requirement is set for metric, check requirements*/
+      if (metric.requirementValue) {
+        requirementsSet = true;
+        metric.targets = setTargetRequirementResults(metric.targets, metric.requirementOperator, metric.requirementValue);
+        metric.meetsRequirement = setMetricRequirementResults(metric.targets);
+      }
+      updatedMetrics.push({
+        _id: metric._id,
+        tags: metric.tags,
+        alias: metric.alias,
+        type: metric.type,
+        meetsRequirement: metric.meetsRequirement,
+        requirementOperator: metric.requirementOperator,
+        requirementValue: metric.requirementValue,
+        benchmarkOperator: metric.benchmarkOperator,
+        benchmarkValue: metric.benchmarkValue,
+        targets: metric.targets
+      });
     });
+    testRun.metrics = updatedMetrics;
+    if (requirementsSet)
+      testRun.meetsRequirement = setTestrunRequirementResults(testRun.metrics);
+    else
+      testRun.meetsRequirement = null;
+
+    console.log('Set requirements for:' + testRun.productName + '-' + testRun.dashboardName + 'testrunId: ' + testRun.testRunId);
+    resolve(testRun);
   });
-  testRun.metrics = updatedMetrics;
-  if (requirementsSet)
-    testRun.meetsRequirement = setTestrunRequirementResults(testRun.metrics);
-  else
-    testRun.meetsRequirement = null;
-  callback(testRun);
 }
+
 function setTestrunRequirementResults(metrics) {
   var meetsRequirement = true;
   _.each(metrics, function (metric) {

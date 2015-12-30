@@ -2,6 +2,9 @@
 <div data-ng-controller="TestrunsController">
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div layout="column">
+        <md-checkbox ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
+            Show completed test runs only
+        </md-checkbox>
         <div layout="row">
             <div flex="90"></div>
             <div flex="10">
@@ -28,7 +31,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="testRun in testRuns | orderBy:'end':true"
+            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' }"
                 ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true }">
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.testRunId}}</td>
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
@@ -67,7 +70,7 @@
                                     Refresh test run
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item data-ng-if="showBenchmarks && testRun.testRunId !== dashboard.baseline">
+                            <md-menu-item data-ng-if="showBenchmarks && testRun.testRunId !== dashboard.baseline && testRun.completed === true">
                                 <md-button data-ng-click="setTestRunAsBaseline(testRun.testRunId)">
                                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
                                     Set as baseline
@@ -77,6 +80,12 @@
                                 <md-button data-ng-click="go(testRun.buildResultKey)">
                                     <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
                                     View in CI server
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item data-ng-if="testRun.completed === false">
+                                <md-button data-ng-click="markAsComplete(testRun)">
+                                    <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
+                                    Mark test run as complete
                                 </md-button>
                             </md-menu-item>
                             <md-menu-divider></md-menu-divider>

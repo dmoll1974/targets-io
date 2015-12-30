@@ -29,6 +29,27 @@ exports.updateTestrunsResults = updateTestrunsResults;
 exports.updateAllDashboardTestRuns = updateAllDashboardTestRuns;
 exports.updateAllProductTestRuns = updateAllProductTestRuns;
 exports.recentTestRuns = recentTestRuns;
+exports.update = update;
+
+/**
+ * Update a Dashboard
+ */
+function update (req, res) {
+  let testRun = new Testrun(req.body);
+
+  Testrun.update({$and:[
+    {productName: req.body.productName},
+    {dashboardName: req.body.dashboardName},
+    {testRunId: req.body.testRunId}
+  ]}, testRun, function (err, testRun) {
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
+      res.jsonp(testRun);
+    }
+  });
+};
+
 
 function recentTestRuns(req, res){
 
@@ -353,9 +374,12 @@ function refreshTestrun(req, res) {
   }).exec(function (err, testRun) {
     if (err)
       console.log(err);
-    benchmarkAndPersistTestRunById(req.params.productName, req.params.dashboardName, testRun, function (persistedTestrun) {
-      res.jsonp(persistedTestrun);
+    benchmarkAndPersistTestRunById(testRun)
+    .then(function(updatedTestRun){
+      res.jsonp(updatedTestRun);
     });
+
+
   });
 }
 exports.getTestRunById = function (productName, dashboardName, testRunId, callback) {
@@ -397,116 +421,82 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
     }
   });
 };
-function benchmarkAndPersistTestRunById(productName, dashboardName, testRun, callback) {
-  Testrun.findOne({ testRunId: testRun.testRunId }).exec(function (err, savedTestrun) {
-    if (err) {
-      console.log(err);
-    } else {
-      if (savedTestrun) {
-        savedTestrun.remove(function (err) {
-          if (err) {
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-          } else {
-            console.log('removed testrun: ' + savedTestrun.testRunId);
-            getDataForTestrun(productName, dashboardName, testRun, function (metrics) {
-              if (metrics)
-                console.log('Data retrieved for:' + productName + '-' + dashboardName);
-              saveTestrun(testRun, metrics, function (savedTestrun) {
-                if (savedTestrun)
-                  console.log('Testrun saved retrieved for:' + productName + '-' + dashboardName + 'testrunId: ' + savedTestrun.testRunId);
-                Requirements.setRequirementResultsForTestRun(savedTestrun, function (requirementsTestrun) {
-                  if (requirementsTestrun)
-                    console.log('Requirements set for:' + productName + '-' + dashboardName + 'testrunId: ' + requirementsTestrun.testRunId);
-                  Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviousBuildTestrun) {
-                    if (benchmarkPreviousBuildTestrun)
-                      console.log('Benchmark previous build done for:' + productName + '-' + dashboardName + 'testrunId: ' + benchmarkPreviousBuildTestrun.testRunId);
-                    Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviousBuildTestrun, function (benchmarkFixedBaselineTestrun) {
-                      if (benchmarkFixedBaselineTestrun)
-                        console.log('Benchmark fixed baseline done for:' + productName + '-' + dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
-                      /* Save updated test run */
-                      benchmarkFixedBaselineTestrun.save(function (err) {
-                        if (err) {
-                          console.log('error');
-                        } else {
-                          console.log('Complete testrun saved for:' + benchmarkFixedBaselineTestrun.productName + '-' + benchmarkFixedBaselineTestrun.dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
-                          callback(benchmarkFixedBaselineTestrun);
-                        }
-                      });  //Testrun.findById(benchmarkFixedBaselineTestrun._id, function(err, savedTestRun) {
-                           //    if (err) console.log(err);
-                           //    if (!savedTestRun)
-                           //        console.log('Could not load Document');
-                           //    else {
-                           //
-                           //        savedTestRun = benchmarkFixedBaselineTestrun;
-                           //
-                           //        savedTestRun.save(function(err) {
-                           //            if (err) {
-                           //                console.log('error')
-                           //            }else {
-                           //                console.log('Complete testrun saved for:' + productName + '-' + dashboardName + 'testrunId: ' + savedTestRun.testRunId);
-                           //                callback(savedTestRun);
-                           //            }
-                           //        });
-                           //    }
-                           //});
-                    });
-                  });
-                });
-              });
-            });
-          }
-        });
+
+let removeTestRun = function(testRun){
+
+  return new Promise((resolve, reject) => {
+
+    Testrun.findOne({$and:[
+      {productName: testRun.productName},
+      {dashboardName: testRun.dashboardName},
+      {testRunId: testRun.testRunId}
+    ]}).exec(function(err, savedTestRun){
+      if (err) {
+        reject(err);
       } else {
-        getDataForTestrun(productName, dashboardName, testRun, function (metrics) {
-          if (metrics)
-            console.log('Data retrieved for:' + productName + '-' + dashboardName);
-          saveTestrun(testRun, metrics, function (savedTestrun) {
-            if (savedTestrun)
-              console.log('Testrun saved for: ' + productName + '-' + dashboardName + 'testrunId: ' + savedTestrun.testRunId);
-            Requirements.setRequirementResultsForTestRun(savedTestrun, function (requirementsTestrun) {
-              if (requirementsTestrun)
-                console.log('Requirements set for: ' + productName + '-' + dashboardName + 'testrunId: ' + requirementsTestrun.testRunId);
-              Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviousBuildTestrun) {
-                if (benchmarkPreviousBuildTestrun)
-                  console.log('Benchmark previous build done for: ' + productName + '-' + dashboardName + 'testrunId: ' + benchmarkPreviousBuildTestrun.testRunId);
-                Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviousBuildTestrun, function (benchmarkFixedBaselineTestrun) {
-                  if (benchmarkFixedBaselineTestrun)
-                    console.log('Benchmark fixed baseline done for: ' + productName + '-' + dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
-                  /* Save updated test run */
-                  Testrun.findById(benchmarkFixedBaselineTestrun._id, function (err, savedTestRun) {
-                    if (err)
-                      console.log(err);
-                    if (!savedTestRun)
-                      console.log('Could not load Document');
-                    else {
-                      savedTestRun = benchmarkFixedBaselineTestrun;
-                      savedTestRun.save(function (err) {
-                        if (err) {
-                          console.log('error');
-                        } else {
-                          console.log('Complete testrun saved for:' + productName + '-' + dashboardName + 'testrunId: ' + savedTestRun.testRunId);
-                          callback(savedTestRun);
-                        }
-                      });
-                    }
-                  });
-                });
-              });
-            });
+        /* if test run already exists in db, remove it*/
+        if (savedTestRun){
+
+          savedTestrun.remove(function (err) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(saveTestRun);
+            }
+
           });
-        });
+
+        }else{
+
+          resolve(saveTestRun);
+        }
+
       }
-    }
+
+    });
+ });
+}
+
+function benchmarkAndPersistTestRunById(testRun) {
+
+  return new Promise((resolve, reject) => {
+
+    removeTestRun(testRun)
+    .then(getDataForTestrun)
+    .then(Requirements.setRequirementResultsForTestRun)
+    .then(Benchmarks.setBenchmarkResultsPreviousBuildForTestRun)
+    .then(Benchmarks.setBenchmarkResultsFixedBaselineForTestRun)
+    .then(function(benchmarkedTestRun){
+
+      benchmarkedTestRun.save(function(err, savedTestRun) {
+        if (err) {
+          reject(err);
+        } else {
+          console.log('Complete testrun saved for:' + saveTestRun.productName + '-' + saveTestRun.dashboardName + 'testrunId: ' + saveTestRun.testRunId);
+          resolve(saveTestRun);
+        }
+      });
+
+    }).catch(testRunErrorHandler);
   });
 }
-function getDataForTestrun(productName, dashboardName, testRun, callback) {
-  Product.findOne({ name: productName }).exec(function (err, product) {
+
+let testRunErrorHandler = function(err){
+
+  console.log('Error in test run chain: ' + err);
+}
+
+function getDataForTestrun(testRun) {
+
+  return new Promise((resolve, reject) => {
+
+    Product.findOne({ name: testRun.productName }).exec(function (err, product) {
     if (err)
       console.log(err);
     Dashboard.findOne({
       $and: [
         { productId: product._id },
-        { name: dashboardName }
+        { name: testRun.dashboardName }
       ]
     }).populate('metrics').exec(function (err, dashboard) {
       if (err)
@@ -552,12 +542,30 @@ function getDataForTestrun(productName, dashboardName, testRun, callback) {
           callbackMetric();
         });
       }, function (err) {
-        if (err)
-          return next(err);
-        callback(metrics);
+        if (err) {
+          reject(err);
+        }else {
+          /* save metrics to test run */
+
+          Testrun.update({
+            $and: [
+              {productName: testRun.productName},
+              {dashboardName: testRun.dashboardName},
+              {testRunId: testRun.testRunId}
+            ]
+          }, {metrics: metrics}, function (err, testRun) {
+            if (err) {
+              reject(err);
+            } else {
+              console.log('Retrieved data for:' + testRun.productName + '-' + testRun.dashboardName + 'testrunId: ' + testRun.testRunId);
+              resolve(testRun);
+            }
+          });
+        }
       });
     });
   });
+ });
 }
 function calculateAverage(datapoints) {
   var count = 0;
