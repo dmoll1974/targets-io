@@ -84,7 +84,7 @@ function upload(req, res) {
     _.each(testruns, function (importTestrun) {
       var testrun = new Testrun();
 
-      testrun.start = importTestrun.end;
+      testrun.start = importTestrun.start;
       testrun.end = importTestrun.end;
       testrun.productName = importTestrun.productName;
       testrun.dashboardName = importTestrun.dashboardName;
