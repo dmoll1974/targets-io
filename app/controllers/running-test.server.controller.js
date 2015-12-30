@@ -11,7 +11,7 @@ var Dashboard = mongoose.model('Dashboard');
 var Product = mongoose.model('Product');
 
 
-exports.keepAlive = keepAlive;
+exports.runningTest = runningTest;
 exports.updateRunningTest = updateRunningTest;
 exports.synchronizeEvents = synchronizeRunningTestRuns;
 exports.getRunningTests = getRunningTests;
@@ -20,7 +20,7 @@ exports.runningTestForDashboard = runningTestForDashboard;
 
 
 
-/* start polling */
+/* start polling every minute */
 setInterval(synchronizeRunningTestRuns, 60 * 1000);
 
 function runningTestForDashboard(req, res){
@@ -56,30 +56,81 @@ function getRunningTests(req, res){
   });
 }
 
-function keepAlive(req, res){
+function runningTest(req, res){
 
-  updateRunningTest(req.params.product, req.params.dashboard, req.params.testRunId, function(message){
 
-      res.jsonp(message);
+  if(req.params.command === 'end'){
 
-  });
+    RunningTest.findOne({$and:[
+      {productName: req.params.product},
+      {dashboardName: req.params.dashboard},
+      {testRunId: req.params.testRunId}
+    ]}).exec(function(err, runningTest){
+
+      if(runningTest){
+        /* mark test run as completed */
+        runningTest.completed = true;
+        /* set test run end time*/
+        runningTest.end = new Date().getTime();
+        /* Save test run*/
+        saveTestRun(runningTest)
+            .then(function(message){
+              res.jsonp(message);
+            });
+      }else{
+
+        return res.status(400).send({ message: 'No running test found for this test run ID!' });
+
+      }
+    })
+  }else {
+    /* first check if test run exists for dashboard */
+
+
+    Testrun.findOne({
+      $and: [
+        {productName: req.params.product},
+        {dashboardName: req.params.dashboard},
+        {testRunId: req.params.testRunId}
+      ]
+    }).exec(function (err, testRun) {
+
+      if (testRun) {
+
+        return res.status(400).send({message: 'testRunId already exists for dashboard!'});
+
+      } else {
+
+        updateRunningTest(req.params.product, req.params.dashboard, req.params.testRunId, function (message) {
+
+          res.jsonp(message);
+
+        });
+      }
+
+    });
+  }
+
 }
 
-function updateRunningTest(productName, dashboardName, testRunId, callback) {
+function updateRunningTest(productName, dashboardName, testRunId,  callback) {
 
   var newRunningTest;
   var dateNow = new Date().getTime();
+
 
   RunningTest.findOne({$and:[{productName: productName}, {dashboardName: dashboardName}, {testRunId: testRunId}]}).exec(function(err, runningTest){
 
     /* if entry exists just update the keep alive timestamp */
     if(runningTest){
 
+
       runningTest.keepAliveTimestamp = dateNow;
       runningTest.end = dateNow + 60 * 1000;
-
+      runningTest.new = false;
       runningTest.save(function(err, runnigTestSaved){
 
+          callback('running test updated!');
       });
 
     /* if entry does not exist, create new one */
@@ -95,57 +146,37 @@ function updateRunningTest(productName, dashboardName, testRunId, callback) {
 
       newRunningTest.save(function(err, newRunningTest){
 
+        callback('running test created!');
       });
     }
   });
 }
 
-/* create end event when running test is removed */
 function synchronizeRunningTestRuns () {
 
 
   var dateNow = new Date().getTime();
 
 
-  /* Get all running tests */
+  /* Get  running tests */
 
   RunningTest.find().exec(function (err, runningTests) {
 
-          _.each(runningTests, function (runningTest) {
+    console.log('checking running tests');
+
+    _.each(runningTests, function (runningTest) {
 
             /* if keep alive is older than 1 minute, save running test in test run collection and remove from running tests collection */
-            if (dateNow - runningTest.keepAliveTimeStamp > 61 * 1000){
+            if (dateNow - runningTest.keepAliveTimestamp.getTime() > 61 * 1000){
 
-              runningTest.remove(function(err){
+              /* mark test as not completed */
+              runningTest.completed = false;
 
-                var testRun = new Testrun({
-
-                  productName: runningTest.productName ,
-                  dashboardName: runningTest.dashboardName,
-                  testRunId: runningTest.testRunId,
-                  start: runningTest.start ,
-                  end: runningTest.end
-
-                });
-
-                /* Add baseline and previous build */
-                getBaseline(testRun, function(updatedTestrun){
-
-                  updatedTestrun.save(function(err, savedTestRun){
-
-                    if(err){
-                      console.log(err);
-                    }else{
-                      console.log(savedTestRun);
-                    }
-                  })
-
-
-                });
-
-
-
+              saveTestRun(runningTest)
+              .then(function(message){
+                console.log(message);
               });
+
             }
 
           });
@@ -153,7 +184,55 @@ function synchronizeRunningTestRuns () {
   });
 }
 
-function getBaseline(testRun) {
+
+let saveTestRun = function (runningTest){
+
+  return new Promise((resolve, reject) => {
+
+    let testRun = new Testrun({
+
+      productName: runningTest.productName,
+      dashboardName: runningTest.dashboardName,
+      testRunId: runningTest.testRunId,
+      start: runningTest.start,
+      end: runningTest.end,
+      completed: runningTest.end
+
+    });
+
+    console.log('test run initiated');
+
+    /* Add baseline and previous build */
+    getBaseline(testRun)
+        .then(getPreviousBuild)
+        .then(function (updatedTestrun) {
+
+          updatedTestrun.save(function (err, savedTestRun) {
+
+            if (err) {
+              reject(err);
+            } else {
+
+              runningTest.remove(function (err) {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve('saved test run!');
+                }
+              });
+            }
+          });
+        })
+        .catch(errorHandler);
+  });
+}
+
+let errorHandler = function (err){
+
+  console.log('Error: ' + err);
+
+}
+let getBaseline = function(testRun) {
 
   return new Promise((resolve, reject) => {
 
@@ -174,7 +253,8 @@ function getBaseline(testRun) {
             /* if baseline has been set for dashboard, return baeline */
             if (dashboard.baseline) {
 
-              resolve(dashboard.baseline);
+              testRun.baseline = dashboard.baseline;
+              resolve(testRun);
               /* else set current testRunId as baseline and return null */
             } else {
 
@@ -184,7 +264,7 @@ function getBaseline(testRun) {
                 if (err) {
                   reject(err);
                 } else {
-                  resolve(null);
+                  resolve(testRun);
                 }
               });
 
@@ -196,35 +276,30 @@ function getBaseline(testRun) {
 
   })
 }
-function getPreviousBuild(testRun) {
+
+let getPreviousBuild = function(testRun) {
 
   return new Promise((resolve, reject) => {
 
-
-
-    Testruns.find({
+    Testrun.find({
       $and: [
         {productName: testRun.productName},
-        {dashboardName: testRun.dashboardName}
+        {dashboardName: testRun.dashboardName},
+        {completed: true}
       ]
     }).sort({end: -1}).exec(function (err, savedTestRuns) {
       if (err) {
         reject(err);
       } else {
 
-        let previousBuild;
+        if(savedTestRuns.length > 0){
 
-        _.each(savedTestRuns, function (savedTestrun, i) {
-          if (savedTestrun.testRunId === testRun.testRunId) {
-            if (i + 1 === savedTestRuns.length) {
-              return null;
-            } else {
-              previousBuild = savedTestRuns[i + 1].testRunId;
-              return previousBuild;
-            }
-          }
-        });
-        resolve(previousBuild);
+          let previousBuild = savedTestRuns[0].testRunId ;
+
+          testRun.previousBuild = previousBuild;
+        }
+
+        resolve(testRun);
 
       }
     });

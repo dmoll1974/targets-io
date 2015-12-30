@@ -20,8 +20,7 @@ var RunningTestSchema = new mongoose.Schema({
     },
     'keepAliveTimestamp': {
         type: Date,
-        default: Date.now,
-        expires: config.runningTestTimeout
+        default: Date.now
     },
     'completed': {
         type: Boolean,
