@@ -160,6 +160,7 @@ function upload(req, res) {
                     var newMetric = new Metric();
                     var tags = [];
                     tags.push({ text: importDashboardMetric.tag });
+                    newMetric._id = importDashboardMetric._id;
                     newMetric.dashboardId = newDashboard._id;
                     newMetric.dashboardName = newDashboard.name;
                     newMetric.productName = newProduct.name;

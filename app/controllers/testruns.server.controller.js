@@ -80,32 +80,39 @@ function updateTestrunsResults(req, res) {
       console.log(err);
     } else {
       async.forEachLimit(testRuns, 1, function (testRun, callback) {
-        updateMetricInTestrun(req.params.metricId, testRun, function (testRunWithUpdatedMetrics) {
-          if (req.params.updateRequirements === 'true' && req.params.updateBenchmarks === 'true') {
-            Requirements.updateRequirementResults(testRunWithUpdatedMetrics, function (updatedRequirementsTestrun) {
-              Benchmarks.updateBenchmarkResults(updatedRequirementsTestrun, function (updatedBenchmarkTestrun) {
-                console.log('Updated requiremenst and benchmarks for: ' + updatedBenchmarkTestrun.testRunId);
-                callback();
+          updateMetricInTestrun(req.params.metricId, testRun)
+          .then(function(testRun){
+            if (req.params.updateRequirements === 'true'){
+              Requirements.updateRequirementResults(testRun)
+              .then(function (requirementsTestRun){
+                if(req.params.updateBenchmarks === 'true'){
+                  Benchmarks.updateBenchmarkResults(requirementsTestRun)
+                  .then(function(){
+                    callback();
+                  });
+                }else{
+
+                  callback();
+                }
+
               });
-            });
-          } else {
-            if (req.params.updateRequirements === 'true' && req.params.updateBenchmarks === 'false') {
-              Requirements.updateRequirementResults(testRunWithUpdatedMetrics, function (updatedTestrun) {
-                console.log('Updated requirememts for: ' + updatedTestrun.testRunId);
-                callback();
-              });
+            }else{
+
+              if(req.params.updateBenchmarks === 'true'){
+                Benchmarks.updateBenchmarkResults(testRun)
+                .then(function(){
+                  callback();
+                });
+              }
             }
-            if (req.params.updateRequirements === 'false' && req.params.updateBenchmarks === 'true') {
-              Benchmarks.updateBenchmarkResults(testRunWithUpdatedMetrics, function (updatedTestrun) {
-                console.log('Updated benchmarks for: ' + updatedTestrun.testRunId);
-                callback();
-              });
-            }
-          }
-        });
+          });
+
+
       }, function (err) {
         if (err)
           console.log(err);
+        /* return updated test runs */
+
         Testrun.find({
           $and: [
             { productName: req.params.productName },
@@ -122,37 +129,43 @@ function updateTestrunsResults(req, res) {
     }
   });
 }
-function updateMetricInTestrun(metricId, testRun, callback) {
-  var updatedMetrics = [];
-  Metric.findOne({ _id: metricId }).exec(function (err, dashboardMetric) {
-    if (err)
-      console.log(err);
-    _.each(testRun.metrics, function (testrunMetric) {
-      if (testrunMetric.alias === dashboardMetric.alias) {
-        testrunMetric.requirementOperator = dashboardMetric.requirementOperator;
-        testrunMetric.requirementValue = dashboardMetric.requirementValue;
-        testrunMetric.benchmarkOperator = dashboardMetric.benchmarkOperator;
-        testrunMetric.benchmarkValue = dashboardMetric.benchmarkValue;
-      }
-      updatedMetrics.push(testrunMetric);
-    });
-    /* Save updated test run */
-    Testrun.findById(testRun._id, function (err, savedTestRun) {
-      if (err)
-        console.log(err);
-      if (!savedTestRun)
-        console.log('Could not load Document');
-      else {
-        savedTestRun.metrics = updatedMetrics;
-        savedTestRun.save(function (err) {
-          if (err) {
-            console.log(err);
-          } else {
-            callback(savedTestRun);
+function  updateMetricInTestrun(metricId, testRun) {
+
+  return new Promise((resolve, reject) => {
+
+      var updatedMetrics = [];
+      Metric.findOne({ _id: metricId }).exec(function (err, dashboardMetric) {
+        if (err)
+          console.log(err);
+        _.each(testRun.metrics, function (testrunMetric) {
+          if (testrunMetric.alias === dashboardMetric.alias) {
+            testrunMetric.requirementOperator = dashboardMetric.requirementOperator;
+            testrunMetric.requirementValue = dashboardMetric.requirementValue;
+            testrunMetric.benchmarkOperator = dashboardMetric.benchmarkOperator;
+            testrunMetric.benchmarkValue = dashboardMetric.benchmarkValue;
           }
+          updatedMetrics.push(testrunMetric);
         });
-      }
-    });
+        /* Save updated test run */
+
+        Testrun.findOneAndUpdate({
+              $and: [
+                {productName: testRun.productName},
+                {dashboardName: testRun.dashboardName},
+                {testRunId: testRun.testRunId}
+              ]
+            }, {metrics: updatedMetrics}
+            , {upsert: true}, function (err, savedTestRun) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(savedTestRun);
+              }
+
+            });
+
+
+      });
   });
 }
 function deleteTestRunById(req, res) {
@@ -426,50 +439,22 @@ let removeAndSaveTestRun = function(testRun){
 
   return new Promise((resolve, reject) => {
 
-    Testrun.findOne({$and:[
+    Testrun.findOneAndUpdate({$and:[
       {productName: testRun.productName},
       {dashboardName: testRun.dashboardName},
       {testRunId: testRun.testRunId}
-    ]}).exec(function(err, savedTestRun){
+    ]}, {metrics: testRun.metrics,
+        meetsRequirement: testRun.meetsRequirement,
+        benchmarkResultFixedOK: testRun.benchmarkResultFixedOK,
+        benchmarkResultPreviousOK: testRun.benchmarkResultPreviousOK,
+        baseline: testRun.baseline,
+        previousBuild: testRun.previousBuild}
+        , {upsert:true}, function(err, savedTestRun){
       if (err) {
         reject(err);
       } else {
-        /* if test run already exists in db, remove it*/
-        if (savedTestRun){
 
-          savedTestRun.remove(function (err) {
-            if (err) {
-              reject(err);
-            } else {
-
-              testRun.save(function(err, completedTestrun){
-
-                  if (err) {
-                    reject(err);
-                  } else {
-                    console.log('Complete testrun saved for: ' + completedTestrun.productName + '-' + completedTestrun.dashboardName + ' testrunId: ' + completedTestrun.testRunId);
-                    resolve(completedTestrun);
-                  }
-
-                });
-            }
-
-          });
-
-        }else{
-
-          testRun.save(function(err, completedTestrun){
-
-            if (err) {
-              reject(err);
-            } else {
-              console.log('Complete testrun saved for: ' + completedTestrun.productName + '-' + completedTestrun.dashboardName + ' testrunId: ' + completedTestrun.testRunId);
-              resolve(completedTestrun);
-            }
-
-          });
-        }
-
+        resolve(savedTestRun);
       }
 
     });

@@ -7,14 +7,30 @@ exports.setBenchmarkResultsPreviousBuildForTestRun = setBenchmarkResultsPrevious
 exports.setBenchmarkResultsFixedBaselineForTestRun = setBenchmarkResultsFixedBaselineForTestRun;
 exports.updateFixedBaselineBenchmark = updateFixedBaselineBenchmark;
 exports.updateBenchmarkResults = updateBenchmarkResults;
-function updateBenchmarkResults(testRun, callback) {
-  setBenchmarkResultsFixedBaselineForTestRun(testRun, function (updatedFixedBenchmark) {
-    saveTestRunAfterBenchmark(updatedFixedBenchmark, function (savedFixedBenchmark) {
-      setBenchmarkResultsPreviousBuildForTestRun(savedFixedBenchmark, function (updatedPreviousBenchmark) {
-        saveTestRunAfterBenchmark(updatedPreviousBenchmark, function (updatedBenchmarksTestRun) {
-          callback(updatedBenchmarksTestRun);
-        });
-      });
+function updateBenchmarkResults(testRun) {
+
+  return new Promise((resolve, reject) => {
+
+    setBenchmarkResultsFixedBaselineForTestRun(testRun)
+    .then(setBenchmarkResultsPreviousBuildForTestRun)
+    .then(function (updatedTestRun) {
+      /* Save updated test run */
+
+      Testrun.findOneAndUpdate({
+            $and: [
+              {productName: updatedTestRun.productName},
+              {dashboardName: updatedTestRun.dashboardName},
+              {testRunId: updatedTestRun.testRunId}
+            ]
+          }, {benchchmarkResultFixedOK: updatedTestRun.benchmarkResultFixedOK}
+          , {upsert: true}, function (err, savedTestRun) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(savedTestRun);
+            }
+
+          });
     });
   });
 }
@@ -43,27 +59,24 @@ function saveTestRunAfterBenchmark(testRun, callback) {
 }
 function updateFixedBaselineBenchmark(req, res) {
   var testRunToUpdate = new Testrun(req.body);
-  setBenchmarkResultsFixedBaselineForTestRun(testRunToUpdate, function (updatedBenchmark) {
+  setBenchmarkResultsFixedBaselineForTestRun(testRunToUpdate)
+  .then(function (updatedBenchmark) {
     /* Save updated test run */
-    Testrun.findById(updatedBenchmark._id, function (err, savedTestRun) {
-      if (err)
-        console.log(err);
-      if (!savedTestRun)
-        console.log('Could not load Document');
-      else {
-        savedTestRun.metrics = updatedBenchmark.metrics;
-        savedTestRun.baseline = updatedBenchmark.baseline;
-        savedTestRun.benchmarkResultFixedOK = updatedBenchmark.benchmarkResultFixedOK;
-        savedTestRun.save(function (err) {
+
+    Testrun.findOneAndUpdate({$and:[
+          {productName: testRunToUpdate.productName},
+          {dashboardName: testRunToUpdate.dashboardName},
+          {testRunId: testRunToUpdate.testRunId}
+        ]}, {benchchmarkResultFixedOK: testRun.benchmarkResultFixedOK}
+        , {upsert:true}, function(err, savedTestRun){
           if (err) {
             console.log(err);
           } else {
             res.jsonp(savedTestRun);
           }
+
         });
-      }
-    });
-  });
+   });
 }
 function setBenchmarkResultsFixedBaselineForTestRun(testRun) {
   return new Promise((resolve, reject) => {

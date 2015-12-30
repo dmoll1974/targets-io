@@ -5,26 +5,29 @@
 var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Event = mongoose.model('Event'), Testrun = mongoose.model('Testrun'), Dashboard = mongoose.model('Dashboard'), Metric = mongoose.model('Metric'), Product = mongoose.model('Product'), _ = require('lodash'), graphite = require('./graphite.server.controller'), Utils = require('./utils.server.controller'), async = require('async');
 exports.setRequirementResultsForTestRun = setRequirementResultsForTestRun;
 exports.updateRequirementResults = updateRequirementResults;
-function updateRequirementResults(testRun, callback) {
-  setRequirementResultsForTestRun(testRun, function (updatedTestRun) {
-    /* Save updated test run */
-    Testrun.findById(testRun._id, function (err, savedTestRun) {
-      if (err)
-        console.log(err);
-      if (!savedTestRun)
-        console.log('Could not load Document');
-      else {
-        savedTestRun.metrics = testRun.metrics;
-        savedTestRun.meetsRequirement = testRun.meetsRequirement;
-        savedTestRun.save(function (err) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('test run saved: ' + savedTestRun.testRunId);
-            callback(savedTestRun);
-          }
-        });
-      }
+function updateRequirementResults(testRun) {
+
+  return new Promise((resolve, reject) => {
+
+    setRequirementResultsForTestRun(testRun)
+    .then(function (updatedTestRun) {
+      /* Save updated test run */
+
+      Testrun.findOneAndUpdate({
+            $and: [
+              {productName: updatedTestRun.productName},
+              {dashboardName: updatedTestRun.dashboardName},
+              {testRunId: updatedTestRun.testRunId}
+            ]
+          }, {benchchmarkResultFixedOK: updatedTestRun.benchmarkResultFixedOK}
+          , {upsert: true}, function (err, savedTestRun) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(savedTestRun);
+            }
+
+          });
     });
   });
 }
