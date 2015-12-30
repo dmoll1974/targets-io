@@ -195,7 +195,7 @@ let saveTestRun = function (runningTest){
       testRunId: runningTest.testRunId,
       start: runningTest.start,
       end: runningTest.end,
-      completed: runningTest.end
+      completed: runningTest.completed
 
     });
 

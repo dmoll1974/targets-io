@@ -67,6 +67,7 @@ var TestrunSchema = new Schema({
     type: Boolean,
     default: true
   },
+  'humanReadableDuration': String,
   'meetsRequirement': Boolean,
   'benchmarkResultFixedOK': Boolean,
   'benchmarkResultPreviousOK': Boolean,

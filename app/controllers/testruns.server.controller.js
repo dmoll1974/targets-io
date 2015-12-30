@@ -56,13 +56,16 @@ function recentTestRuns(req, res){
   /* Get all test runs from the last 24 hours*/
   var pastDay = new Date() - 1000 * 60 * 60 * 24;
 
-  Event.find({eventTimestamp: {$gte: pastDay}}).exec(function (err, events) {
+  Testrun.find({end: {$gte: pastDay}}).exec(function (err, testRuns) {
 
-    createTestRunSummaryFromEvents(events, function(recentTestRuns){
+    _.each(testRuns, function(testRun, i){
 
-      res.jsonp(recentTestRuns);
+      testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
 
-    }) ;
+    });
+
+      res.jsonp(testRuns);
+
 
   });
 }
@@ -193,13 +196,19 @@ function deleteTestRunById(req, res) {
  * select test runs for product
  */
 function testRunsForProduct(req, res) {
-  Event.find({productName: req.params.productName}).sort({eventTimestamp: 1}).exec(function (err, events) {
+  Testrun.find({productName: req.params.productName}).sort({eventTimestamp: 1}).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
-      createTestRunSummaryFromEvents(events, function (testRunSummary) {
-        res.jsonp(testRunSummary);
+
+      _.each(testRuns, function(testRun, i){
+
+        testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+
       });
+
+      res.jsonp(testRuns);
+
     }
   });
 }
