@@ -11,11 +11,11 @@ var mongoose = require('mongoose'),
     Memcached = require('memcached'),
     md5 = require('MD5');
 /* Memcached config */
+Memcached.config.poolSize = 25;
 Memcached.config.timeout = 100;
 Memcached.config.retries = 3;
 Memcached.config.reconnect = 1000;
 Memcached.config.maxValue = 10480000;
-Memcached.config.poolSize = 1024;
 exports.getGraphiteData = getGraphiteData;
 exports.flushMemcachedKey = flushMemcachedKey;
 exports.createMemcachedKey = createMemcachedKey;
