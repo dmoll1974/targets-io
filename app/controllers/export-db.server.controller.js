@@ -78,7 +78,7 @@ module.exports.dbExport = function (req, res) {
                             res.write('exports.importDashboards = dashboards;');
                             res.write('exports.importMetrics = metrics;');
                             res.write('exports.importEvents = events;');
-                            res.write('exports.importTestruns = Testruns;');
+                            res.write('exports.importTestruns = testruns;');
                             res.write('exports.importGatlingDetails = gatlingDetails;');
                             res.end();
                         }).on('error', function (err) {
