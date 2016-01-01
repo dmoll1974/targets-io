@@ -2,7 +2,18 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Event = mongoose.model('Event'), Testrun = mongoose.model('Testrun'), Dashboard = mongoose.model('Dashboard'), Metric = mongoose.model('Metric'), Product = mongoose.model('Product'), _ = require('lodash'), graphite = require('./graphite.server.controller'), Utils = require('./utils.server.controller'), async = require('async');
+var mongoose = require('mongoose'),
+    errorHandler = require('./errors.server.controller'),
+    Event = mongoose.model('Event'),
+    Testrun = mongoose.model('Testrun'),
+    Dashboard = mongoose.model('Dashboard'),
+    Metric = mongoose.model('Metric'),
+    Product = mongoose.model('Product'),
+    _ = require('lodash'),
+    graphite = require('./graphite.server.controller'),
+    Utils = require('./utils.server.controller'),
+    async = require('async');
+
 exports.setRequirementResultsForTestRun = setRequirementResultsForTestRun;
 exports.updateRequirementResults = updateRequirementResults;
 function updateRequirementResults(testRun) {

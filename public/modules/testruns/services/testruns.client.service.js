@@ -17,6 +17,7 @@ angular.module('events').factory('TestRuns', [
       zoomUntil: '',
       zoomRange: '',
       update: update,
+      addTestRun: addTestRun,
       getTestRunById: getTestRunById,
       getRunningTest: getRunningTest,
       refreshTestrun: refreshTestrun,
@@ -29,6 +30,10 @@ angular.module('events').factory('TestRuns', [
       calculateDuration: calculateDuration
     };
     return TestRuns;
+
+    function addTestRun(testRun){
+      return $http.post('/add-testrun', testRun);
+    }
     function updateTestruns(productName, dashboardName, metricId, updateRequirements, updateBenchmarks) {
       return $http.get('/update-testruns-results/' + productName + '/' + dashboardName + '/' + metricId + '/' + updateRequirements + '/' + updateBenchmarks);
     }
@@ -52,8 +57,8 @@ angular.module('events').factory('TestRuns', [
       return $http.get('/recent-testruns');
 
     }
-    function listTestRunsForDashboard(productName, dashboardName, useInBenchmark) {
-      return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + useInBenchmark);
+    function listTestRunsForDashboard(productName, dashboardName) {
+      return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName);
     }
     listTestRunsForProduct
     function listTestRunsForProduct(productName) {

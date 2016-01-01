@@ -1,0 +1,91 @@
+<section>
+    <div class="page-header">
+        <h1>Add Test Run</h1>
+    </div>
+    <!--<div class="col-md-12">-->
+    <form name="testrunForm">
+        <div layout="column">
+            <div layout="column">
+                <div layout="row">
+                    <md-input-container
+                            md-is-error="testrunForm.start.$invalid && (testrunForm.$submitted || testrunForm.start.$dirty)"
+                            flex>
+                        <label>start</label>
+                        <input name="start" type="text" ng-model="testrun.start" required/>
+                        <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss"
+                               ng-model="testrun.start" is-open="isOpenStart"/>
+
+                        <div ng-messages="testrunForm.start.$error"
+                             ng-if="testrunForm.$submitted || testrunForm.start.$touched">
+                            <div ng-message="required">Start is required.</div>
+                        </div>
+                    </md-input-container>
+                    <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
+                             data-ng-click="openCalendar($event, 'start')"></md-icon>
+                </div>
+                <div layout="row">
+                    <md-input-container
+                            md-is-error="testrunForm.end.$invalid && (testrunForm.$submitted || testrunForm.end.$dirty)"
+                            flex>
+                        <label>end</label>
+                        <input name="end" type="text" ng-model="testrun.end" required/>
+                        <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss"
+                               ng-model="testrun.end" is-open="isOpenEnd"/>
+
+                        <div ng-messages="testrunForm.end.$error"
+                             ng-if="testrunForm.$submitted || testrunForm.end.$touched">
+                            <div ng-message="required">Start is required.</div>
+                        </div>
+                    </md-input-container>
+                    <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
+                             data-ng-click="openCalendar($event, 'end')"></md-icon>
+                </div>
+                <md-input-container
+                        md-is-error="testrunForm.testrunProductName.$invalid && (testrunForm.$submitted || testrunForm.testrunProductName.$dirty)"
+                        flex>
+                    <label>Product</label>
+                    <input name="testrunProductName" ng-model="testrun.productName" required>
+
+                    <div ng-messages="testrunForm.testrunProductName.$error"
+                         ng-if="testrunForm.$submitted || testrunForm.testrunProductName.$touched">
+                        <div ng-message="required">Product name is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container
+                        md-is-error="testrunForm.testrunDashboardName.$invalid && (testrunForm.$submitted || testrunForm.testrunDashboardName.$dirty)"
+                        flex>
+                    <label>Dashboard</label>
+                    <input name="testrunDashboardName" ng-model="testrun.dashboardName" required>
+
+                    <div ng-messages="testrunForm.testrunDashboardName.$error"
+                         ng-if="testrunForm.$submitted || testrunForm.testrunDashboardName.$touched">
+                        <div ng-message="required">Dashboard name is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container
+                        md-is-error="testrunForm.testRunId.$invalid && (testrunForm.$submitted || testrunForm.testRunId.$dirty)"
+                        flex>
+                    <label>Testrun ID</label>
+                    <input name="testRunId" ng-model="testrun.testRunId"
+                           typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8"
+                           record-availability-validator="/testrun/{{testrun.productName}}/{{testrun.dashboardName}}" required>
+
+                    <div ng-messages="testrunForm.testRunId.$error"
+                         ng-if="testrunForm.$submitted || testrunForm.testRunId.$touched">
+                        <div ng-message="required">Test run ID is required.</div>
+                        <div ng-message="recordAvailable">Test Run ID already exists for this dashboard</div>
+                        <div ng-message="server">{{error}}</div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex>
+                    <label>CI Build result URL</label>
+                    <input ng-model="testrun.buildResultkey">
+                </md-input-container>
+                <div layout="row">
+                    <md-button md-no-ink class="md-primary" data-ng-click="create()">Submit</md-button>
+                    <md-button data-ng-click="cancel()">Cancel</md-button>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>

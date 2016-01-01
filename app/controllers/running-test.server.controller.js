@@ -9,9 +9,10 @@ var Event = mongoose.model('Event');
 var Testrun = mongoose.model('Testrun');
 var Dashboard = mongoose.model('Dashboard');
 var Product = mongoose.model('Product');
+var testRuns = require('./testruns.server.controller');
 
 
-exports.runningTest = runningTest;
+    exports.runningTest = runningTest;
 exports.updateRunningTest = updateRunningTest;
 exports.synchronizeEvents = synchronizeRunningTestRuns;
 exports.getRunningTests = getRunningTests;
@@ -73,9 +74,10 @@ function runningTest(req, res){
         runningTest.end = new Date().getTime();
         /* Save test run*/
         saveTestRun(runningTest)
-            .then(function(message){
-              res.jsonp(message);
-            });
+          .then(testRuns.benchmarkAndPersistTestRunById)
+          .then(function(testRun){
+            res.jsonp(testRun);
+          });
       }else{
 
         return res.status(400).send({ message: 'No running test found for this test run ID!' });
@@ -100,7 +102,8 @@ function runningTest(req, res){
 
       } else {
 
-        updateRunningTest(req.params.product, req.params.dashboard, req.params.testRunId, function (message) {
+        updateRunningTest(req.params.product, req.params.dashboard, req.params.testRunId)
+        .then(function (message) {
 
           res.jsonp(message);
 
@@ -114,40 +117,43 @@ function runningTest(req, res){
 
 function updateRunningTest(productName, dashboardName, testRunId,  callback) {
 
-  var newRunningTest;
-  var dateNow = new Date().getTime();
+  return new Promise((resolve, reject) => {
+
+    let newRunningTest;
+    let dateNow = new Date().getTime();
 
 
-  RunningTest.findOne({$and:[{productName: productName}, {dashboardName: dashboardName}, {testRunId: testRunId}]}).exec(function(err, runningTest){
+    RunningTest.findOne({$and:[{productName: productName}, {dashboardName: dashboardName}, {testRunId: testRunId}]}).exec(function(err, runningTest){
 
-    /* if entry exists just update the keep alive timestamp */
-    if(runningTest){
+      /* if entry exists just update the keep alive timestamp */
+      if(runningTest){
 
 
-      runningTest.keepAliveTimestamp = dateNow;
-      runningTest.end = dateNow + 60 * 1000;
-      runningTest.new = false;
-      runningTest.save(function(err, runnigTestSaved){
+        runningTest.keepAliveTimestamp = dateNow;
+        runningTest.end = dateNow + 60 * 1000;
+        runningTest.new = false;
+        runningTest.save(function(err, runnigTestSaved){
 
-          callback('running test updated!');
-      });
+            resolve('running test updated!');
+        });
 
-    /* if entry does not exist, create new one */
-    }else{
+      /* if entry does not exist, create new one */
+      }else{
 
-      newRunningTest = new RunningTest({
-        testRunId: testRunId,
-        productName: productName,
-        dashboardName: dashboardName,
-        keepAliveTimestamp: dateNow,
-        end: dateNow + 60 * 1000
-      });
+        newRunningTest = new RunningTest({
+          testRunId: testRunId,
+          productName: productName,
+          dashboardName: dashboardName,
+          keepAliveTimestamp: dateNow,
+          end: dateNow + 60 * 1000
+        });
 
-      newRunningTest.save(function(err, newRunningTest){
+        newRunningTest.save(function(err, newRunningTest){
 
-        callback('running test created!');
-      });
-    }
+          resolve('running test created!');
+        });
+      }
+    });
   });
 }
 
@@ -210,7 +216,7 @@ let saveTestRun = function (runningTest){
           if (err) {
             reject(err);
           } else {
-            resolve('saved test run!');
+            resolve(savedTestRun);
           }
         });
       }

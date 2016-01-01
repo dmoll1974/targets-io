@@ -97,7 +97,7 @@
             }
                 $timeout(function(){
 
-                  TestRuns.listTestRunsForDashboard(Dashboards.selected.productName, Dashboards.selected.name, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+                  TestRuns.listTestRunsForDashboard(Dashboards.selected.productName, Dashboards.selected.name).success(function (testRuns) {
 
 
                     TestRuns.list = testRuns;

@@ -17,6 +17,7 @@
                 <th>Test run ID</th>
                 <th>Start</th>
                 <th>End</th>
+                <th>Duration</th>
                 <th data-ng-if="showBenchmarks">Requirements</th>
                 <th data-ng-if="showBenchmarks">Previous Build</th>
                 <th data-ng-if="showBenchmarks">Fixed Baseline</th>
@@ -38,6 +39,7 @@
                 </td>
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
+                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.humanReadableDuration}}</td>
                 <td data-ng-if="showBenchmarks" header-class="text-center" class="text-center pointer"
                     data-ng-click="testRunRequirements($index)"><span
                         ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>

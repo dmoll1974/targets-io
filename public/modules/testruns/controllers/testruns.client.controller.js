@@ -23,7 +23,7 @@ angular.module('testruns').controller('TestrunsController', [
 
 
     var testRunPolling = function(){
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
 
         $scope.testRuns= [];
         $scope.testRuns= testRuns;
@@ -46,7 +46,7 @@ angular.module('testruns').controller('TestrunsController', [
 
       $scope.loading = true;
 
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
 
         TestRuns.list = testRuns;
         $scope.loading = false;
@@ -150,7 +150,7 @@ angular.module('testruns').controller('TestrunsController', [
         $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
         $scope.dashboard = Dashboards.selected;
         $scope.loading = true;
-        TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+        TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
 
           TestRuns.list = testRuns;
           $scope.loading = false;
@@ -252,7 +252,7 @@ angular.module('testruns').controller('TestrunsController', [
         $q.all(arrayOfPromises).then(function (results) {
           /* refresh test runs*/
           setTimeout(function () {
-            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
+            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
               TestRuns.list = testRuns;
             }, function (errorResponse) {
               $scope.error = errorResponse.data.message;

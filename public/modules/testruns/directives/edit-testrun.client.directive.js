@@ -1,25 +1,21 @@
 'use strict';
 
-angular.module('templates').directive('addEvent', AddEventDirective);
+angular.module('templates').directive('editEvent', EditEventDirective);
 
-function AddEventDirective () {
+function EditEventDirective () {
 
   var directive = {
     restrict: 'EA',
-    templateUrl: 'modules/events/directives/add-event.client.view.html',
-    controller: AddEventDirectiveController
+    templateUrl: 'modules/events/directives/edit-event.client.view.html',
+    controller: EditEventDirectiveController
   };
 
   return directive;
 
   /* @ngInject */
-  function AddEventDirectiveController ($scope, $state, Events, $filter, $rootScope, $stateParams) {
+  function EditEventDirectiveController ($scope, $state, Events, $filter, $rootScope) {
 
     $scope.event = Events.selected;
-    $scope.event.eventTimestamp = Events.selected.eventTimestamp ? Events.selected.eventTimestamp : new Date();
-    $scope.event.productName = $stateParams.productName;
-    $scope.event.dashboardName = $stateParams.dashboardName;
-    $scope.event.testRunId = Events.selected.testRunId ? Events.selected.testRunId : '';
 
     $scope.testRunIds = Events.getTestRunId(Events.list);
     $scope.descriptions = Events.getDescriptions(Events.list);
@@ -34,19 +30,13 @@ function AddEventDirective () {
     }, true);
 
 
-    $scope.isOpen = false;
-    $scope.openCalendar = function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      $scope.isOpen = true;
-    };
-
-
-    // Create new Event
-    $scope.create = function () {
-      Events.create($scope.event).then(function (event) {
+    // Update Event
+    $scope.update = function () {
+      Events.update(Events.selected).then(function (event) {
         Events.selected = {};
-
+        /* reset form*/
+        $scope.eventForm.$setPristine();
+        /* return to previous state */
         if ($rootScope.previousStateParams)
           $state.go($rootScope.previousState, $rootScope.previousStateParams);
         else
@@ -56,7 +46,6 @@ function AddEventDirective () {
         $scope.eventForm.eventDescription.$setValidity('server', false);
       });
     };
-
     $scope.cancel = function () {
       Events.selected = {};
       /* reset form*/

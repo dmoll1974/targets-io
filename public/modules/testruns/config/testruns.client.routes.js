@@ -16,6 +16,9 @@ angular.module('testruns').config([
     }).state('benchmarkFixedBaselineTestRun', {
       url: '/benchmark-fixed-baseline/:productName/:dashboardName/:testRunId/:benchmarkResult',
       template: '<benchmark-fixed-baseline></benchmark-fixed-baseline>'
-    });
+    }).state('addTestRun', {
+      url: '/add-testrun/:productName/:dashboardName',
+      template: '<add-testrun></add-testrun>'
+    });;
   }
 ]);

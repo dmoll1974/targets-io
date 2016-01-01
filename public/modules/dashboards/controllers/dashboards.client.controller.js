@@ -36,6 +36,12 @@ angular.module('dashboards').controller('DashboardsController', [
 
     }
 
+    $scope.addTestRun = function (){
+
+      $state.go('addTestRun',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});
+
+    }
+
     $scope.manageTags = function(){
 
       $state.go('manageDashboardTags',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});

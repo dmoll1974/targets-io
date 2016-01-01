@@ -30,6 +30,26 @@ exports.updateAllDashboardTestRuns = updateAllDashboardTestRuns;
 exports.updateAllProductTestRuns = updateAllProductTestRuns;
 exports.recentTestRuns = recentTestRuns;
 exports.update = update;
+exports.addTestRun = addTestRun;
+
+function addTestRun(req, res){
+
+  let testRun = new Testrun(req.body);
+
+  testRun.save(function(err, testRun){
+
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
+
+      benchmarkAndPersistTestRunById(testRun)
+      .then(function(testRun){
+        res.jsonp(testRun);
+      });
+    }
+
+  });
+}
 
 /**
  * Update a Dashboard
@@ -262,32 +282,15 @@ function testRunsForDashboard(req, res) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
-      if (testRuns.length > 0) {
-        res.jsonp(testRuns);
-      } else {
-        Event.find({
-          $and: [
-            { productName: req.params.productName },
-            { dashboardName: req.params.dashboardName }
-          ]
-        }).sort({ eventTimestamp: 1 }).exec(function (err, events) {
-          if (err) {
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-          } else {
-            createTestrunFromEvents(req.params.productName, req.params.dashboardName, events, function (eventsTestruns) {
-              /* if benchmarking is not enabled, no need to persist the test runs! */
-              if (req.params.useInBenchmark === 'false') {
-                res.jsonp(eventsTestruns.reverse());
-              } else {
-                /* persist test runs that have not yet been persisted */
-                TempSaveTestruns(eventsTestruns, function (persistedTestRuns) {
-                  res.jsonp(persistedTestRuns);
-                });
-              }
-            });
-          }
-        });
-      }
+
+      _.each(testRuns, function(testRun, i){
+
+        testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+
+      });
+
+      res.jsonp(testRuns);
+
     }
   });
   function persistTestrunsFromEvents(testRuns, testRunsFromEvents, callback) {
@@ -367,21 +370,7 @@ function testRunById(req, res) {
         //res.setHeader('Last-Modified', (new Date()).toUTCString()); //to prevent http 304's
         res.jsonp(testRunEpoch);
       } else {
-        Event.find({
-          $and: [
-            { productName: req.params.productName },
-            { dashboardName: req.params.dashboardName },
-            { testRunId: req.params.testRunId }
-          ]
-        }).sort('-end').exec(function (err, events) {
-          if (err) {
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-          } else {
-            createTestrunFromEvents(req.params.productName, req.params.dashboardName, events, function (eventsTestruns) {
-              res.jsonp(eventsTestruns[0]);
-            });
-          }
-        });
+        return res.status(404).send({ message: 'No test run with id ' + req.params.testRunId + 'has been found for this dashboard' });
       }
     }
   });
