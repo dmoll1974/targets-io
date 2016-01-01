@@ -19,6 +19,9 @@ angular.module('testruns').config([
     }).state('addTestRun', {
       url: '/add-testrun/:productName/:dashboardName',
       template: '<add-testrun></add-testrun>'
-    });;
+    }).state('editTestRun', {
+      url: '/edit-testrun/:productName/:dashboardName/:testRunId',
+      template: '<edit-testrun></edit-testrun>'
+    });
   }
 ]);

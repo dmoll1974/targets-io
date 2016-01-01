@@ -1,55 +1,78 @@
 'use strict';
 
-angular.module('templates').directive('editEvent', EditEventDirective);
+angular.module('templates').directive('editTestrun', EditTestrunDirective);
 
-function EditEventDirective () {
+function EditTestrunDirective () {
 
   var directive = {
     restrict: 'EA',
-    templateUrl: 'modules/events/directives/edit-event.client.view.html',
-    controller: EditEventDirectiveController
+    templateUrl: 'modules/testruns/directives/edit-testrun.client.view.html',
+    controller: EditTestrunDirectiveController
   };
 
   return directive;
 
   /* @ngInject */
-  function EditEventDirectiveController ($scope, $state, Events, $filter, $rootScope) {
+  function EditTestrunDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams) {
 
-    $scope.event = Events.selected;
+    $scope.testrun = TestRuns.selected;
 
-    $scope.testRunIds = Events.getTestRunId(Events.list);
-    $scope.descriptions = Events.getDescriptions(Events.list);
+    $scope.testRunIds = [];
+
+    _.each(TestRuns.list, function(testRun){
+
+      $scope.testRunIds.push(testRun.testRunId);
+
+    });
 
 
-    $scope.$watch('event.productName', function (val) {
-      $scope.event.productName = $filter('uppercase')(val);
+    $scope.$watch('testrun.productName', function (val) {
+      $scope.testrun.productName = $filter('uppercase')(val);
     }, true);
 
-    $scope.$watch('event.dashboardName', function (val) {
-      $scope.event.dashboardName = $filter('uppercase')(val);
+    $scope.$watch('testrun.dashboardName', function (val) {
+      $scope.testrun.dashboardName = $filter('uppercase')(val);
     }, true);
 
+    $scope.$watch('testrun.testRunId', function (val) {
+      $scope.testrun.testRunId = $filter('uppercase')(val);
+    }, true);
 
-    // Update Event
+    $scope.isOpenStart = false;
+    $scope.isOpenEnd = false;
+
+    $scope.openCalendar = function (e, input) {
+      e.preventDefault();
+      e.stopPropagation();
+      switch(input){
+        case 'start':
+          $scope.isOpenStart = true;
+          break;
+        case 'end':
+          $scope.isOpenEnd = true;
+          break;
+
+      }
+    };
+
+
+    // Create new Testrun
     $scope.update = function () {
-      Events.update(Events.selected).then(function (event) {
-        Events.selected = {};
-        /* reset form*/
-        $scope.eventForm.$setPristine();
-        /* return to previous state */
+      TestRuns.update($scope.testrun).then(function (testrun) {
+
         if ($rootScope.previousStateParams)
           $state.go($rootScope.previousState, $rootScope.previousStateParams);
         else
           $state.go($rootScope.previousState);
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
-        $scope.eventForm.eventDescription.$setValidity('server', false);
+        $scope.testrunForm.testRunId.$setValidity('server', false);
       });
     };
+
     $scope.cancel = function () {
-      Events.selected = {};
       /* reset form*/
-      $scope.eventForm.$setPristine();
+      $scope.testrunForm.$setPristine();
       if ($rootScope.previousStateParams)
         $state.go($rootScope.previousState, $rootScope.previousStateParams);
       else

@@ -92,6 +92,12 @@
                             </md-menu-item>
                             <md-menu-divider></md-menu-divider>
                             <md-menu-item>
+                                <md-button  data-ng-click="editTestRun(testRun)">
+                                    <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
+                                    Edit test run
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
                                 <md-button class="danger" data-ng-click="openDeleteTestRunModal('', $index)">
                                     <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"></md-icon>
                                     Delete test run

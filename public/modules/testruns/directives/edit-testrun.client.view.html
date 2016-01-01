@@ -1,79 +1,85 @@
 <section>
     <div class="page-header">
-        <h1>Edit Event</h1>
+        <h1>Edit Test Run</h1>
     </div>
     <!--<div class="col-md-12">-->
-    <form name="eventForm">
+    <form name="testrunForm">
         <div layout="column">
             <div layout="column">
                 <div layout="row">
                     <md-input-container
-                            md-is-error="eventForm.eventTimestamp.$invalid && (eventForm.$submitted || eventForm.eventTimestamp.$dirty)"
+                            md-is-error="testrunForm.start.$invalid && (testrunForm.$submitted || testrunForm.start.$dirty)"
                             flex>
-                        <label>Timestamp</label>
-                        <input name="eventTimestamp" type="text" ng-model="event.eventTimestamp" required/>
+                        <label>start</label>
+                        <input name="start" type="text" ng-model="testrun.start" required/>
                         <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss"
-                               ng-model="event.eventTimestamp" is-open="isOpen"/>
+                               ng-model="testrun.start" is-open="isOpenStart"/>
 
-                        <div ng-messages="eventForm.eventTimestamp.$error"
-                             ng-if="eventForm.$submitted || eventForm.productName.$touched">
-                            <div ng-message="required">Timestamp is required.</div>
+                        <div ng-messages="testrunForm.start.$error"
+                             ng-if="testrunForm.$submitted || testrunForm.start.$touched">
+                            <div ng-message="required">Start is required.</div>
                         </div>
                     </md-input-container>
                     <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
-                             data-ng-click="openCalendar($event)"></md-icon>
+                             data-ng-click="openCalendar($event, 'start')"></md-icon>
+                </div>
+                <div layout="row">
+                    <md-input-container
+                            md-is-error="testrunForm.end.$invalid && (testrunForm.$submitted || testrunForm.end.$dirty)"
+                            flex>
+                        <label>end</label>
+                        <input name="end" type="text" ng-model="testrun.end" required/>
+                        <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss"
+                               ng-model="testrun.end" is-open="isOpenEnd"/>
+
+                        <div ng-messages="testrunForm.end.$error"
+                             ng-if="testrunForm.$submitted || testrunForm.end.$touched">
+                            <div ng-message="required">Start is required.</div>
+                        </div>
+                    </md-input-container>
+                    <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
+                             data-ng-click="openCalendar($event, 'end')"></md-icon>
                 </div>
                 <md-input-container
-                        md-is-error="eventForm.eventProductName.$invalid && (eventForm.$submitted || eventForm.eventProductName.$dirty)"
+                        md-is-error="testrunForm.testrunProductName.$invalid && (testrunForm.$submitted || testrunForm.testrunProductName.$dirty)"
                         flex>
                     <label>Product</label>
-                    <input name="eventProductName" ng-model="event.productName" required>
+                    <input name="testrunProductName" ng-model="testrun.productName" required>
 
-                    <div ng-messages="eventForm.eventProductName.$error"
-                         ng-if="eventForm.$submitted || eventForm.eventProductName.$touched">
+                    <div ng-messages="testrunForm.testrunProductName.$error"
+                         ng-if="testrunForm.$submitted || testrunForm.testrunProductName.$touched">
                         <div ng-message="required">Product name is required.</div>
                     </div>
                 </md-input-container>
                 <md-input-container
-                        md-is-error="eventForm.eventDashboardName.$invalid && (eventForm.$submitted || eventForm.eventDashboardName.$dirty)"
+                        md-is-error="testrunForm.testrunDashboardName.$invalid && (testrunForm.$submitted || testrunForm.testrunDashboardName.$dirty)"
                         flex>
                     <label>Dashboard</label>
-                    <input name="eventDashboardName" ng-model="event.dashboardName" required>
+                    <input name="testrunDashboardName" ng-model="testrun.dashboardName" required>
 
-                    <div ng-messages="eventForm.eventDashboardName.$error"
-                         ng-if="eventForm.$submitted || eventForm.eventDashboardName.$touched">
+                    <div ng-messages="testrunForm.testrunDashboardName.$error"
+                         ng-if="testrunForm.$submitted || testrunForm.testrunDashboardName.$touched">
                         <div ng-message="required">Dashboard name is required.</div>
                     </div>
                 </md-input-container>
                 <md-input-container
-                        md-is-error="eventForm.eventTestRunId.$invalid && (eventForm.$submitted || eventForm.eventTestRunId.$dirty)"
+                        md-is-error="testrunForm.testRunId.$invalid && (testrunForm.$submitted || testrunForm.testRunId.$dirty)"
                         flex>
                     <label>Testrun ID</label>
-                    <input name="eventTestRunId" ng-model="event.testRunId"
-                           typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8" required>
+                    <input name="testRunId" ng-model="testrun.testRunId"
+                           typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8"
+                           record-availability-validator="/testrun/{{testrun.productName}}/{{testrun.dashboardName}}" required>
 
-                    <div ng-messages="eventForm.eventTestRunId.$error"
-                         ng-if="eventForm.$submitted || eventForm.eventTestRunId.$touched">
+                    <div ng-messages="testrunForm.testRunId.$error"
+                         ng-if="testrunForm.$submitted || testrunForm.testRunId.$touched">
                         <div ng-message="required">Test run ID is required.</div>
-                    </div>
-                </md-input-container>
-                <md-input-container
-                        md-is-error="eventForm.eventDescription.$invalid && (eventForm.$submitted || eventForm.eventDescription.$dirty)"
-                        flex>
-                    <label>Description</label>
-                    <input name="eventDescription" ng-model="event.eventDescription"
-                           typeahead="description for description in descriptions | filter:$viewValue | limitTo:8"
-                           required>
-
-                    <div ng-messages="eventForm.eventDescription.$error"
-                         ng-if="eventForm.$submitted || eventForm.eventDescription.$touched">
-                        <div ng-message="required">Description is required.</div>
+                        <div ng-message="recordAvailable">Test Run ID already exists for this dashboard</div>
                         <div ng-message="server">{{error}}</div>
                     </div>
                 </md-input-container>
-                <md-input-container flex ng-if="event.eventDescription === 'start' || event.eventDescription === 'end'">
+                <md-input-container flex>
                     <label>CI Build result URL</label>
-                    <input ng-model="event.buildResultKey">
+                    <input ng-model="testrun.buildResultkey">
                 </md-input-container>
                 <div layout="row">
                     <md-button md-no-ink class="md-primary" data-ng-click="update()">Submit</md-button>

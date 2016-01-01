@@ -57,6 +57,13 @@ angular.module('testruns').controller('TestrunsController', [
 
     }
 
+    $scope.editTestRun = function (testRun){
+
+      TestRuns.selected = testRun;
+      $state.go('editTestRun',{productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId});
+
+    }
+
     $scope.markAsComplete = function(testRun){
 
       testRun.completed = true;
@@ -316,33 +323,23 @@ angular.module('testruns').controller('TestrunsController', [
       });
       modalInstance.result.then(function (selectedIndex) {
 
-          var deleteEventsArrayOfPromises = [];
-          var deleteTestRunsArrayOfPromises = [];
-          var i;
-          for(i = $scope.testRuns.length -1; i > -1 ; i--){
+        var deleteTestRunsArrayOfPromises = [];
+        var i;
+        for (i = $scope.testRuns.length - 1; i > -1; i--) {
 
-            if($scope.testRuns[i].selected === true){
-              deleteEventsArrayOfPromises.push([Events.delete($scope.testRuns[i].eventIds[0]), Events.delete($scope.testRuns[i].eventIds[1])]);
-              deleteTestRunsArrayOfPromises.push(TestRuns.delete($scope.productName, $scope.dashboardName, $scope.testRuns[i].testRunId));
-              $scope.testRunSelected = false;
-              $scope.testRuns[i].selected = false;
-              $scope.testRuns.splice(i,1);
-            }
-
+          if ($scope.testRuns[i].selected === true) {
+            deleteTestRunsArrayOfPromises.push(TestRuns.delete($scope.productName, $scope.dashboardName, $scope.testRuns[i].testRunId));
+            $scope.testRunSelected = false;
+            $scope.testRuns[i].selected = false;
+            $scope.testRuns.splice(i, 1);
           }
 
+        }
 
-          $q.all(deleteEventsArrayOfPromises)
-          .then($q.all(deleteTestRunsArrayOfPromises))
-          .then(function (testRuns){
 
-            /* refresh Events */
-            Events.listEventsForDashboard($scope.productName, $scope.dashboardName).success(function (events) {
-              Events.list = events;
-            }, function (errorResponse) {
-              $scope.error = errorResponse.data.message;
-            });
-          });
+        $q.all(deleteTestRunsArrayOfPromises)
+        .then(function () {
+        });
 
       }, function () {
       });
