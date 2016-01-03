@@ -115,7 +115,7 @@ function runningTest(req, res){
 
 }
 
-function updateRunningTest(productName, dashboardName, testRunId,  callback) {
+function updateRunningTest(productName, dashboardName, testRunId) {
 
   return new Promise((resolve, reject) => {
 

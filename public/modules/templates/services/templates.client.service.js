@@ -12,6 +12,7 @@ angular.module('events').factory('Templates', [
       variable: {},
       metricClone: {},
       templateClone: {},
+      mergeData: [],
       getAll: getAll,
       get: getFn,
       //delete: deleteFn,

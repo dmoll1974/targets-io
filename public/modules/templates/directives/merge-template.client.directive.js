@@ -15,13 +15,25 @@ function MergeTemplateDirective () {
   /* @ngInject */
   function MergeTemplateDirectiveController ($scope, $rootScope, $state, $timeout, Templates, Dashboards, Metrics, Graphite) {
 
+
+
+
       $scope.template = Templates.selected;
 
       _.each($scope.template.variables, function(variable, index){
 
           $scope.template.variables[index].values = [];
-          $scope.template.variables[index].values.push('');
 
+          _.each(Templates.mergeData, function(mergeData){
+
+              if(variable.name === mergeData.variable) {
+                  $scope.template.variables[index].values.push(mergeData.value);
+              }
+          })
+
+          if($scope.template.variables[index].values.length === 0) {
+              $scope.template.variables[index].values.push('');
+          }
       })
 
 
@@ -173,6 +185,10 @@ function MergeTemplateDirective () {
                   regExp = new RegExp('\\$' + variable.name, 'g');
                   variableArray[index].replaceItems.push({placeholder: regExp, replace: value});
 
+                  /* add variable values to Template service for later re use*/
+
+                  Templates.mergeData.push({variable: variable.name, value: value});
+
               })
 
           });
@@ -312,6 +328,8 @@ function MergeTemplateDirective () {
       }
 
       $scope.merge = function() {
+
+
 
           var productName = Dashboards.selected.productName;
           var dashboardName = Dashboards.selected.name;
