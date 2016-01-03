@@ -9,8 +9,9 @@ var mongoose = require('mongoose'),
     Testrun = mongoose.model('Testrun'),
     Dashboard = mongoose.model('Dashboard'),
     Product = mongoose.model('Product'),
-    Metric = mongoose.model('Metric')
-    GatlingDetails = mongoose.model('GatlingDetails');
+    Metric = mongoose.model('Metric'),
+    GatlingDetails = mongoose.model('GatlingDetails'),
+    Template = mongoose.model('Template');
 
 var wstream = fs.createWriteStream('myOutput.txt');
 module.exports.dbExport = function (req, res) {
@@ -61,30 +62,44 @@ module.exports.dbExport = function (req, res) {
                         }
                         res.write(JSON.stringify(testrun) + ',');
                     }).on('close', function () {
-                        res.write('];\n\n')
-                        res.write('var gatlingDetails = [\n')
-                        GatlingDetails.find()
-                        .lean()
-                        .stream()
-                        .on('data', function (gatlingDetails) {
+                        res.write('];\n\n');
+                        res.write('var templates = [\n');
+                        Template.find().lean().stream().on('data', function (testrun) {
                             if (!started) {
                                 start(res);
                             }
-                            res.write(JSON.stringify(gatlingDetails) + ',');
-                        })
-                        .on('close', function () {
-                            res.write('];');
-                            res.write('exports.importProducts = products;');
-                            res.write('exports.importDashboards = dashboards;');
-                            res.write('exports.importMetrics = metrics;');
-                            res.write('exports.importEvents = events;');
-                            res.write('exports.importTestruns = testruns;');
-                            res.write('exports.importGatlingDetails = gatlingDetails;');
-                            res.end();
+                            res.write(JSON.stringify(testrun) + ',');
+                        }).on('close', function () {
+                            res.write('];\n\n')
+                            res.write('var gatlingDetails = [\n')
+                            GatlingDetails.find()
+                            .lean()
+                            .stream()
+                            .on('data', function (gatlingDetails) {
+                                if (!started) {
+                                    start(res);
+                                }
+                                res.write(JSON.stringify(gatlingDetails) + ',');
+                            })
+                            .on('close', function () {
+                                res.write('];');
+                                res.write('exports.importProducts = products;');
+                                res.write('exports.importDashboards = dashboards;');
+                                res.write('exports.importMetrics = metrics;');
+                                res.write('exports.importEvents = events;');
+                                res.write('exports.importTestruns = testruns;');
+                                res.write('exports.importTemplates = templates;');
+                                res.write('exports.importGatlingDetails = gatlingDetails;');
+                                res.end();
+                            }).on('error', function (err) {
+                                res.send(500, {
+                                    err: err,
+                                    msg: 'Failed to get gatlingDetails from db'
+                                });
+                            });
                         }).on('error', function (err) {
-                            res.send(500, {
-                                err: err,
-                                msg: 'Failed to get gatlingDetails from db'
+                            res.send(500, {err: err,
+                                msg: 'Failed to get templates from db'
                             });
                         });
                     }).on('error', function (err) {

@@ -11,7 +11,8 @@ var mongoose = require('mongoose'),
     Metric = mongoose.model('Metric'),
     Testrun = mongoose.model('Testrun'),
     GatlingDetails = mongoose.model('GatlingDetails'),
-    async = require('async');
+    async = require('async'),
+    Template = mongoose.model('Template');
 
 function upload(req, res) {
   console.log(req.files.file.path);
@@ -22,6 +23,23 @@ function upload(req, res) {
       console.log(err);
   }
 
+  /* Remove existing Templates*/
+
+  Template.remove({}, function (err) {
+    if (err)
+      console.log(err);
+    console.log('Template removed');
+    if(templates) {
+      _.each(templates, function (importTemplate) {
+
+        var templatesDoc = new Template(importTemplate);
+
+        templatesDoc.save(function (err) {
+        });
+
+      });
+    }
+  });
 
   /* Remove existing Gatling Details*/
 
