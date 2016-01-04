@@ -463,7 +463,8 @@ function benchmarkAndPersistTestRunById(testRun) {
 
   return new Promise((resolve, reject) => {
 
-    getDataForTestrun(testRun)
+    flushMemcachedForTestRun(testRun)
+    .then(getDataForTestrun)
     .then(Requirements.setRequirementResultsForTestRun)
     .then(Benchmarks.setBenchmarkResultsPreviousBuildForTestRun)
     .then(Benchmarks.setBenchmarkResultsFixedBaselineForTestRun)
@@ -479,6 +480,47 @@ let testRunErrorHandler = function(err){
 
   console.log('Error in test run chain: ' + err.stack);
 }
+
+
+function flushMemcachedForTestRun(testRun, callback){
+
+  return new Promise((resolve, reject) => {
+
+    Product.findOne({ name: testRun.productName}).exec(function(err, product){
+
+    if(err){
+      reject(err);
+    }else{
+
+      Dashboard.findOne({$and:[{name: testRun.dashboardName}, {productId: product._id}]})
+          .populate({path: 'metrics', options: { sort: { tag: 1, alias: 1 } } })
+          .exec(function (err, dashboard) {
+            if (err){
+              reject(err);
+            }else{
+
+              _.each(dashboard.toObject().metrics, function(metric){
+
+                _.each(metric.targets, function(target){
+
+                  graphite.flushMemcachedKey(graphite.createMemcachedKey(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target), function(){
+
+                    });
+                });
+
+              });
+
+            resolve(testRun);
+            }
+
+      });
+
+      }
+    });
+  })
+
+}
+
 
 function getDataForTestrun(testRun) {
 
