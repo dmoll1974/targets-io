@@ -1,5 +1,6 @@
-<div layout="column">
-    <h1>Running test runs</h1>
+<div layout="column" ng-if="runningTests.length > 0">
+    <md-progress-linear ng-if="runningTest.length > 0" md-mode="indeterminate"></md-progress-linear>
+    <h3>Running</h3>
     <table class="table">
         <thead>
         <tr>
@@ -43,5 +44,8 @@
         </tr>
         </tbody>
     </table>
+    <md-progress-linear ng-if="runningTests.length > 0" md-mode="indeterminate"></md-progress-linear>
+    <md-divider></md-divider>
+
 
 </div>

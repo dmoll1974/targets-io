@@ -19,14 +19,38 @@ angular.module('testruns').controller('TestrunsController', [
     /* By default, show completed test runs only */
         $scope.completedTestRunsOnly = true;
 
-    /* refresh test runs every 30 seconds */
+    /* refresh test runs every 15 seconds */
 
 
     var testRunPolling = function(){
       TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
 
-        $scope.testRuns= [];
-        $scope.testRuns= testRuns;
+
+
+        TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function (runningTest) {
+          if (Object.keys(runningTest).length !== 0) {
+
+            $scope.testRuns= [];
+
+            $scope.runningTest = runningTest;
+            $scope.runningTest.humanReadableDuration = TestRuns.calculateDuration(runningTest);
+            $scope.runningTest.completed = true;
+            $scope.runningTest.end = 'Running ...';
+            $scope.runningTest.meetsRequirement = null;
+            $scope.runningTest.benchmarkResultPreviousOK = null;
+            $scope.runningTest.benchmarkResultFixedOK = null;
+
+            testRuns.unshift($scope.runningTest);
+
+
+          }else{
+
+            $scope.runningTest = null;
+          }
+
+          $scope.testRuns= testRuns;
+
+        });
 
 
       }, function (errorResponse) {
@@ -36,11 +60,29 @@ angular.module('testruns').controller('TestrunsController', [
     };
 
     testRunPolling();
-    var polling = $interval(testRunPolling, 30000);
+    var polling = $interval(testRunPolling, 15000);
 
     /* only get test runs from db when neccessary */
     if (TestRuns.list.length > 0){
       $scope.testRuns = TestRuns.list;
+
+      TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function (runningTest) {
+        if (Object.keys(runningTest).length !== 0) {
+
+          $scope.runningTest = runningTest;
+          $scope.runningTest.humanReadableDuration = TestRuns.calculateDuration(runningTest);
+          $scope.runningTest.completed = true;
+          $scope.runningTest.end = 'Running ...';
+          $scope.runningTest.meetsRequirement = null;
+          $scope.runningTest.benchmarkResultPreviousOK = null;
+          $scope.runningTest.benchmarkResultFixedOK = null;
+
+          $scope.testRuns.unshift($scope.runningTest);
+
+        }
+
+      });
+
 
     }else{
 
@@ -49,7 +91,28 @@ angular.module('testruns').controller('TestrunsController', [
       TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
 
         TestRuns.list = testRuns;
-        $scope.loading = false;
+
+        TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function (runningTest) {
+          if (Object.keys(runningTest).length !== 0) {
+
+
+            $scope.runningTest = runningTest;
+            $scope.runningTest.humanReadableDuration = TestRuns.calculateDuration(runningTest);
+            $scope.runningTest.completed = true;
+            $scope.runningTest.end = 'Running ...';
+            $scope.runningTest.meetsRequirement = null;
+            $scope.runningTest.benchmarkResultPreviousOK = null;
+            $scope.runningTest.benchmarkResultFixedOK = null;
+
+            $scope.testRuns.unshift($scope.runningTest);
+
+          }
+
+          $scope.loading = false;
+
+        });
+
+
 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;

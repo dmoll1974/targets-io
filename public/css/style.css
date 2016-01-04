@@ -11521,3 +11521,8 @@ button.toast-close-button {
 
     background: rgba(158,158,158,0.2)
 }
+
+.running-test{
+
+    color: rgb(33,150,243);
+}

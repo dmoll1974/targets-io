@@ -2,15 +2,19 @@
 <div data-ng-controller="TestrunsController">
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div layout="column">
-        <md-checkbox ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
-            Show completed test runs only
-        </md-checkbox>
+
         <div layout="row">
             <div flex="90"></div>
             <div flex="10">
                 <md-button ng-if="testRunSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >Delete selected</md-button>
             </div>
         </div>
+        <!--<running-tests></running-tests>-->
+
+        <md-checkbox ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
+            Show completed test runs only
+        </md-checkbox>
+
         <table class="table">
             <thead>
             <tr>
@@ -32,9 +36,10 @@
             </tr>
             </thead>
             <tbody>
+            <md-progress-linear ng-if="runningTest" md-mode="indeterminate"></md-progress-linear>
             <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' }"
-                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true }">
-                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.testRunId}}</td>
+                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index === 0)}" >
+                <td class="pointer" data-ng-click="testRunDetails($index)" >{{testRun.testRunId}}</td>
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
                 <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}

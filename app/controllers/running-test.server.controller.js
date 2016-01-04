@@ -20,8 +20,8 @@ exports.runningTestForDashboard = runningTestForDashboard;
 
 
 
-/* start polling every minute */
-setInterval(synchronizeRunningTestRuns, 60 * 1000);
+/* start polling every 15 seconds */
+setInterval(synchronizeRunningTestRuns, 15 * 1000);
 
 function runningTestForDashboard(req, res){
 
@@ -130,7 +130,7 @@ function updateRunningTest(productName, dashboardName, testRunId) {
 
 
         runningTest.keepAliveTimestamp = dateNow;
-        runningTest.end = dateNow + 60 * 1000;
+        runningTest.end = dateNow + 15 * 1000;
         runningTest.new = false;
         runningTest.save(function(err, runnigTestSaved){
 
@@ -145,7 +145,7 @@ function updateRunningTest(productName, dashboardName, testRunId) {
           productName: productName,
           dashboardName: dashboardName,
           keepAliveTimestamp: dateNow,
-          end: dateNow + 60 * 1000
+          end: dateNow + 15 * 1000
         });
 
         newRunningTest.save(function(err, newRunningTest){
@@ -171,8 +171,8 @@ function synchronizeRunningTestRuns () {
 
     _.each(runningTests, function (runningTest) {
 
-            /* if keep alive is older than 1 minute, save running test in test run collection and remove from running tests collection */
-            if (dateNow - runningTest.keepAliveTimestamp.getTime() > 61 * 1000){
+            /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
+            if (dateNow - runningTest.keepAliveTimestamp.getTime() > 16 * 1000){
 
               /* mark test as not completed */
               runningTest.completed = false;
