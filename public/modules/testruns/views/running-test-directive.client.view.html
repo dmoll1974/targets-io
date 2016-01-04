@@ -1,8 +1,8 @@
 <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
 
-<div layout="column" ng-if="showDialog">
+<div layout="column" ng-if="showDialog" flex>
 
-    <md-card>
+    <md-card flex>
         <md-toolbar class="md-accent" style="color:white;">
 
             <div class="md-toolbar-tools">
@@ -13,20 +13,18 @@
                     </md-tooltip>
                 </md-button>
 
-                <h4 class="md-flex">RUNNING TEST: {{runningTest.testRunId}} ( for {{runningTest.duration}} )</h4>
+                <h4 class="md-flex">RUNNING TEST</h4>
 
             </div>
         </md-toolbar>
 
         <md-progress-linear md-mode="indeterminate"></md-progress-linear>
-        <div layout="column">
-            <div layout="row">
-                <md-button flex class="md-primary" data-ng-click="openSendEndEventModal('')">Send end event</md-button>
-                <md-button flex class="md-danger" data-ng-click="openDeleteEventModal('')">Delete start event
-                </md-button>
+        <md-card-content>
+            <div layout="column" >
+                <h5 md-padding>{{runningTest.testRunId}}</h5>
+                <h5 md-padding>Started {{runningTest.duration}} ago</h5>
             </div>
-        </div>
-
+        </md-card-content>
 
     </md-card>
 </div>
