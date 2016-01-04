@@ -446,7 +446,8 @@ let removeAndSaveTestRun = function(testRun){
         benchmarkResultFixedOK: testRun.benchmarkResultFixedOK,
         benchmarkResultPreviousOK: testRun.benchmarkResultPreviousOK,
         baseline: testRun.baseline,
-        previousBuild: testRun.previousBuild}
+        previousBuild: testRun.previousBuild,
+        humanReadableDuration: humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime())}
         , {upsert:true}, function(err, savedTestRun){
       if (err) {
         reject(err);

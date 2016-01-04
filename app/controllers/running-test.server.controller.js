@@ -19,10 +19,9 @@ exports.getRunningTests = getRunningTests;
 exports.runningTestForDashboard = runningTestForDashboard;
 
 
-
-/* start polling every 15 seconds */
-setInterval(synchronizeRunningTestRuns, 15 * 1000);
-
+  /* start polling every 15 seconds */
+  //setInterval(synchronizeRunningTestRuns, 15 * 1000);
+//}
 function runningTestForDashboard(req, res){
 
   RunningTest.findOne({$and:[{productName: req.params.productName}, {dashboardName: req.params.dashboardName}]}).exec(function(err, runningTest){
