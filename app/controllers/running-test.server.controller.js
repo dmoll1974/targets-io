@@ -194,18 +194,7 @@ let saveTestRun = function (runningTest){
 
   return new Promise((resolve, reject) => {
 
-    let testRun = new Testrun({
-
-      productName: runningTest.productName,
-      dashboardName: runningTest.dashboardName,
-      testRunId: runningTest.testRunId,
-      start: runningTest.start,
-      end: runningTest.end,
-      completed: runningTest.completed,
-      buildResultKey: runningTest.buildResultKey
-
-    });
-
+    let testRun = new Testrun(runningTest);
 
     testRun.save(function (err, savedTestRun) {
 
