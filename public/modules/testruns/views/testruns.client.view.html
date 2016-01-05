@@ -39,14 +39,14 @@
 
             <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' }"
                 ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index === 0)}" >
-                <td class="pointer" data-ng-click="testRunDetails($index)" >{{testRun.testRunId}}</td>
-                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                <td class="pointer" data-ng-click="testRunDetails(testRun)" >{{testRun.testRunId}}</td>
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
-                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                     <md-progress-linear data-ng-if="runningTest && $index === 0" flex md-mode="indeterminate"></md-progress-linear>
 
                 </td>
-                <td class="pointer" data-ng-click="testRunDetails($index)">{{testRun.humanReadableDuration}}
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.humanReadableDuration}}
                 </td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index === 0)" header-class="text-center" class="text-center pointer"
                     data-ng-click="testRunRequirements($index)"><span
