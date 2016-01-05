@@ -14,4 +14,6 @@ var metrics = [
 
 var events = [];
 var gatlingDetails = [];
-exports.importProducts = products;exports.importDashboards = dashboards;exports.importMetrics = metrics;exports.importEvents = events;exports.importGatlingDetails = gatlingDetails;
+var testruns = [];
+var templates = [];
+exports.importProducts = products;exports.importDashboards = dashboards;exports.importMetrics = metrics;exports.importEvents = events;exports.importGatlingDetails = gatlingDetails;exports.importTestruns = testruns;exports.importTemplates = templates;
