@@ -77,7 +77,6 @@ angular.module('dashboards').controller('DashboardsController', [
       return Dashboards.selected._id;
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        TestRuns.list = [];
         $scope.dashboard = Dashboards.selected;
         $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
         Products.get($stateParams.productName).success(function (product) {
