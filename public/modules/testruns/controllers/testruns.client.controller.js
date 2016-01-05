@@ -256,12 +256,12 @@ angular.module('testruns').controller('TestrunsController', [
     //
     //
     //        };
-    $scope.testRunDetails = function (index) {
-      TestRuns.selected = $scope.testRuns[index];
+    $scope.testRunDetails = function (testRun) {
+      TestRuns.selected = testRun;
       $state.go('viewGraphs', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName,
-        'testRunId': $scope.testRuns[index].testRunId,
+        'testRunId': testRun.testRunId,
         tag: Dashboards.getDefaultTag(Dashboards.selected.tags)
       });
     };
