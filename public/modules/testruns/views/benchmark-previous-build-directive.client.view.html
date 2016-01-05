@@ -39,7 +39,7 @@
                   ui-sref="viewGraphs({productName: target.productName, dashboardName:target.dashboardName, testRunId: target.testRunId, tag: target.tag, metricFilter: target.metric, selectedSeries: target.target})"
                   ng-class="target.benchmarkResultPreviousOK ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
             <span title="Configure metric"
-                  ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName})"
+                  ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})"
                   class="fa-lg fa fa-wrench pull-right"></span>
         </td>
 
