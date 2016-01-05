@@ -135,6 +135,7 @@ angular.module('testruns').controller('TestrunsController', [
          if(numUpdated > 0){
            let updatedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
            $scope.testRuns[updatedTestRunIndex] = testRun;
+           $scope.completedTestRunsOnly = true;
          }
       });
     }
@@ -395,6 +396,7 @@ angular.module('testruns').controller('TestrunsController', [
             $scope.testRunSelected = false;
             $scope.testRuns[i].selected = false;
             $scope.testRuns.splice(i, 1);
+            if(TestRuns.list[i]) TestRuns.list.splice(i, 1);
           }
 
         }

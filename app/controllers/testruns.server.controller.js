@@ -198,7 +198,7 @@ function deleteTestRunById(req, res) {
       { dashboardName: req.params.dashboardName },
       { testRunId: req.params.testRunId }
     ]
-  }).sort('-end').exec(function (err, testRun) {
+  }).exec(function (err, testRun) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
@@ -206,6 +206,8 @@ function deleteTestRunById(req, res) {
         testRun.remove(function (err) {
           if (err) {
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+          }else{
+            res.jsonp({message: 'test run deleted'});
           }
         });
       }
