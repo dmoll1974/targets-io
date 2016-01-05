@@ -260,7 +260,7 @@ function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkVal
                 /* else set current testRunId as baseline and return null */
               } else {
 
-                dashboard.baseline = testRunId;
+                dashboard.baseline = testRun.testRunId;
                 dashboard.save(function (err, updatedDashboard) {
 
                   if (err) {
