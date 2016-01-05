@@ -12,7 +12,7 @@ var Product = mongoose.model('Product');
 var testRuns = require('./testruns.server.controller');
 
 
-    exports.runningTest = runningTest;
+exports.runningTest = runningTest;
 exports.updateRunningTest = updateRunningTest;
 exports.synchronizeEvents = synchronizeRunningTestRuns;
 exports.getRunningTests = getRunningTests;
@@ -201,7 +201,8 @@ let saveTestRun = function (runningTest){
       testRunId: runningTest.testRunId,
       start: runningTest.start,
       end: runningTest.end,
-      completed: runningTest.completed
+      completed: runningTest.completed,
+      buildResultKey: runningTest.buildResultKey
 
     });
 
