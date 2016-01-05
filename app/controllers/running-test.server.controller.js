@@ -58,13 +58,16 @@ function getRunningTests(req, res){
 
 function runningTest(req, res){
 
+  let productName = req.body.productName;
+  let dashboardName = req.body.dashboardName;
+  let testRunId = req.body.testRunId;
 
   if(req.params.command === 'end'){
 
     RunningTest.findOne({$and:[
-      {productName: req.params.product},
-      {dashboardName: req.params.dashboard},
-      {testRunId: req.params.testRunId}
+      {productName: productName},
+      {dashboardName: dashboardName},
+      {testRunId: testRunId}
     ]}).exec(function(err, runningTest){
 
       if(runningTest){
@@ -85,14 +88,14 @@ function runningTest(req, res){
       }
     })
   }else {
-    /* first check if test run exists for dashboard */
 
+    /* first check if test run exists for dashboard */
 
     Testrun.findOne({
       $and: [
-        {productName: req.params.product},
-        {dashboardName: req.params.dashboard},
-        {testRunId: req.params.testRunId}
+        {productName: productName},
+        {dashboardName: dashboardName},
+        {testRunId: testRunId}
       ]
     }).exec(function (err, testRun) {
 
@@ -102,7 +105,7 @@ function runningTest(req, res){
 
       } else {
 
-        updateRunningTest(req.params.product, req.params.dashboard, req.params.testRunId)
+        updateRunningTest(req.body)
         .then(function (message) {
 
           res.jsonp(message);
@@ -115,7 +118,7 @@ function runningTest(req, res){
 
 }
 
-function updateRunningTest(productName, dashboardName, testRunId) {
+function updateRunningTest(runningTest) {
 
   return new Promise((resolve, reject) => {
 
@@ -123,31 +126,28 @@ function updateRunningTest(productName, dashboardName, testRunId) {
     let dateNow = new Date().getTime();
 
 
-    RunningTest.findOne({$and:[{productName: productName}, {dashboardName: dashboardName}, {testRunId: testRunId}]}).exec(function(err, runningTest){
+    RunningTest.findOne({$and:[{productName: runningTest.productName}, {dashboardName: runningTest.dashboardName}, {testRunId: runningTest.testRunId}]}).exec(function(err, storedRunningTest){
 
       /* if entry exists just update the keep alive timestamp */
-      if(runningTest){
+      if(storedRunningTest){
 
 
-        runningTest.keepAliveTimestamp = dateNow;
-        runningTest.end = dateNow + 15 * 1000;
-        runningTest.new = false;
-        runningTest.save(function(err, runnigTestSaved){
+        storedRunningTest.keepAliveTimestamp = dateNow;
+        storedRunningTest.end = dateNow + 15 * 1000;
+        storedRunningTest.save(function(err, runnigTestSaved){
 
             resolve('running test updated!');
         });
 
       /* if entry does not exist, create new one */
+
       }else{
 
-        newRunningTest = new RunningTest({
-          testRunId: testRunId,
-          productName: productName,
-          dashboardName: dashboardName,
-          keepAliveTimestamp: dateNow,
-          end: dateNow + 15 * 1000
-        });
+        newRunningTest = new RunningTest(runningTest);
 
+        /* set timestamps */
+        newRunningTest.keepAliveTimestamp = dateNow;
+        newRunningTest.end = dateNow + 15 * 1000;
         newRunningTest.save(function(err, newRunningTest){
 
           resolve('running test created!');
