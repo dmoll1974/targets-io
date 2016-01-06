@@ -265,6 +265,16 @@ angular.module('testruns').controller('TestrunsController', [
         tag: Dashboards.getDefaultTag(Dashboards.selected.tags)
       });
     };
+
+    $scope.liveGraphs = function(testRun){
+
+      $state.go('viewLiveGraphs', {
+        'productName': $stateParams.productName,
+        'dashboardName': $stateParams.dashboardName,
+        tag: Dashboards.getDefaultTag(Dashboards.selected.tags)
+      });
+    }
+
     $scope.testRunFixedBaselineBenchmark = function (index) {
       TestRuns.selected = $scope.testRuns[index];
       var benchmarkFixedResult = $scope.testRuns[index].benchmarkResultFixedOK ? 'passed' : 'failed';
