@@ -20,22 +20,23 @@ function MergeTemplateDirective () {
 
       $scope.template = Templates.selected;
 
-      _.each($scope.template.variables, function(variable, index){
+      setTimeout(function(){
+          _.each($scope.template.variables, function(variable, index){
 
-          $scope.template.variables[index].values = [];
+              $scope.template.variables[index].values = [];
 
-          _.each(Templates.mergeData, function(mergeData){
+              _.each(Templates.mergeData, function(mergeData){
 
-              if(variable.name === mergeData.variable) {
-                  $scope.template.variables[index].values.push(mergeData.value);
+                  if(variable.name === mergeData.variable) {
+                      $scope.template.variables[index].values.push(mergeData.value);
+                  }
+              })
+
+              if($scope.template.variables[index].values.length === 0) {
+                  $scope.template.variables[index].values.push('');
               }
           })
-
-          if($scope.template.variables[index].values.length === 0) {
-              $scope.template.variables[index].values.push('');
-          }
-      })
-
+      },1);
 
 
       $scope.addValue = function (index) {
@@ -187,7 +188,22 @@ function MergeTemplateDirective () {
 
                   /* add variable values to Template service for later re use*/
 
-                  Templates.mergeData.push({variable: variable.name, value: value});
+                  var mergeDataItem = {};
+                  mergeDataItem.variable = variable.name;
+                  mergeDataItem.value = value;
+
+                  /* check if item already exists */
+                  var exists = false;
+                   _.each(Templates.mergeData, function(existingItem){
+
+                      if(mergeDataItem.variable === existingItem.variable && mergeDataItem.value === existingItem.value){
+                          exists = true;
+                          return;
+                      }
+
+                  });
+
+                  if (exists === false) Templates.mergeData.push(mergeDataItem);
 
               })
 
