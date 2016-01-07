@@ -34,7 +34,7 @@ angular.module('testruns').controller('TestrunsController', [
 
         $scope.testRuns = response.testRuns;
 
-        for (var i = 0; i < $scope.numberOfRunningTests + 1; i++) {
+        for (var i = 0; i < $scope.numberOfRunningTests; i++) {
 
           $scope.testRuns[i].end = 'Running ...';
         }
