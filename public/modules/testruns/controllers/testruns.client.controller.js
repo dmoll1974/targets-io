@@ -41,6 +41,8 @@ angular.module('testruns').controller('TestrunsController', [
 
         TestRuns.list = $scope.testRuns;
 
+        $scope.loading = false;
+
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
@@ -49,19 +51,20 @@ angular.module('testruns').controller('TestrunsController', [
 
     var polling = $interval(testRunPolling, 15000);
 
-    /* only get test runs from db when neccessary */
-    if (TestRuns.list.length > 0) {
+    setTimeout(function(){
+      /* only get test runs from db when neccessary */
+      if (TestRuns.list.length > 0) {
 
-      $scope.testRuns = TestRuns.list;
+        $scope.testRuns = TestRuns.list;
 
-    } else {
+      } else {
 
-      $scope.loading = true;
+        $scope.loading = true;
 
-      testRunPolling();
+        testRunPolling();
 
-    }
-
+      }
+    }, 1);
 
     $scope.editTestRun = function (testRun){
 
