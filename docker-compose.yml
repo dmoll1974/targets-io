@@ -22,6 +22,7 @@ db:
    - "27017:27017"
   volumes:
    - /var/lib/targets-io/mongo:/data/db
+  command: --smallfiles 
   mem_limit: 1000000000
 graphite:
   image: dmoll1974/targets-io-graphite
@@ -59,4 +60,4 @@ jenkins:
    - graphite
    - dropwizard
    - targetsio
-  mem_limit: 1500000000
+  mem_limit: 3000000000
