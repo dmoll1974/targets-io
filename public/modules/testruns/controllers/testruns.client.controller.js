@@ -23,34 +23,10 @@ angular.module('testruns').controller('TestrunsController', [
 
 
     var testRunPolling = function(){
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (response) {
 
-
-
-        TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function (runningTest) {
-          if (Object.keys(runningTest).length !== 0) {
-
-            $scope.testRuns= [];
-
-            $scope.runningTest = runningTest;
-            $scope.runningTest.humanReadableDuration = TestRuns.calculateDuration(runningTest);
-            $scope.runningTest.completed = true;
-            $scope.runningTest.end = 'Running ...';
-            $scope.runningTest.meetsRequirement = null;
-            $scope.runningTest.benchmarkResultPreviousOK = null;
-            $scope.runningTest.benchmarkResultFixedOK = null;
-
-            testRuns.unshift($scope.runningTest);
-
-
-          }else{
-
-            $scope.runningTest = null;
-          }
-
-          $scope.testRuns= testRuns;
-
-        });
+          $scope.runningTest= response.runningTest;
+          $scope.testRuns= response.testRuns;
 
 
       }, function (errorResponse) {
