@@ -32,6 +32,7 @@ angular.module('testruns').controller('TestrunsController', [
         /* Set end value to 'Running' for running test(s)*/
 
 
+        $scope.testRuns = [];
         $scope.testRuns = response.testRuns;
 
         for (var i = 0; i < $scope.numberOfRunningTests; i++) {
@@ -39,9 +40,12 @@ angular.module('testruns').controller('TestrunsController', [
           $scope.testRuns[i].end = 'Running ...';
         }
 
-        TestRuns.list = $scope.testRuns;
-
         $scope.loading = false;
+
+        TestRuns.list = response.testRuns;
+        TestRuns.runningTest = response.runningTest;
+        TestRuns.numberOfRunningTests = response.numberOfRunningTests;
+
 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
@@ -56,8 +60,11 @@ angular.module('testruns').controller('TestrunsController', [
       if (TestRuns.list.length > 0) {
 
         $scope.testRuns = TestRuns.list;
+        $scope.runningTest = (TestRuns.runningTest) ?  TestRuns.runningTest : false;
+        $scope.numberOfRunningTests = (TestRuns.runningTest) ? TestRuns.runningTest : 0;
 
-      } else {
+
+        } else {
 
         $scope.loading = true;
 
@@ -166,25 +173,20 @@ angular.module('testruns').controller('TestrunsController', [
       if (newVal !== oldVal) {
         $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
         $scope.dashboard = Dashboards.selected;
-        $scope.loading = true;
-        TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
 
-          TestRuns.list = testRuns;
-          $scope.loading = false;
-
-        }, function (errorResponse) {
-          $scope.error = errorResponse.data.message;
-        });
+        TestRuns.list = [];
+        TestRuns.runningTest = '';
+        TestRuns.numberOfRunningTests = '';
       }
     });
-    $scope.$watch(function (scope) {
-      return TestRuns.list;
-    }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        $scope.testRuns = [];
-        $scope.testRuns = TestRuns.list;
-      }
-    });
+    //$scope.$watch(function (scope) {
+    //  return TestRuns.list;
+    //}, function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //    $scope.testRuns = [];
+    //    $scope.testRuns = TestRuns.list;
+    //  }
+    //});
     /* List test runs for dashboard */
     //        $scope.listTestRunsForDashboard = function() {
     //

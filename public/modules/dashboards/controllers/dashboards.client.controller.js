@@ -141,9 +141,7 @@ angular.module('dashboards').controller('DashboardsController', [
     }, function (newVal, oldVal) {
       $scope.dashboard = Dashboards.selected;
       SideMenu.productFilter = $stateParams.productName;
-      if(newVal !== oldVal) {
-        TestRuns.list = [];
-      }
+
     });
 
     //$scope.authentication = Authentication;
