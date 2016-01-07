@@ -12,7 +12,9 @@ var mongoose = require('mongoose'),
     Testrun = mongoose.model('Testrun'),
     GatlingDetails = mongoose.model('GatlingDetails'),
     async = require('async'),
-    Template = mongoose.model('Template');
+    Template = mongoose.model('Template'),
+    testRunsModule = require('./testruns.server.controller');
+
 
 function upload(req, res) {
   console.log(req.files.file.path);
@@ -115,6 +117,7 @@ function upload(req, res) {
       testrun.benchmarkResultFixedOK = importTestrun.benchmarkResultFixedOK;
       testrun.benchmarkResultPreviousOK = importTestrun.benchmarkResultPreviousOK;
       testrun.metrics = importTestrun.metrics;
+      testrun.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date(importTestrun.end).getTime() - new Date(importTestrun.start).getTime());
 
 
       testrun.save(function (err) {
