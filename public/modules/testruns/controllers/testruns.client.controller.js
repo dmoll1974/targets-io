@@ -25,8 +25,20 @@ angular.module('testruns').controller('TestrunsController', [
     var testRunPolling = function(){
       TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (response) {
 
-          $scope.runningTest= response.runningTest;
+          $scope.runningTest = response.runningTest;
+
+          $scope.numberOfRunningTests = response.numberOfRunningTests;
+
+          /* Set end value to 'Running' for running test(s)*/
+
+
+
           $scope.testRuns= response.testRuns;
+
+        for(var i=0; i < $scope.numberOfRunningTests + 1; i++){
+
+          $scope.testRuns[i].end = 'Running ...';
+        }
 
 
       }, function (errorResponse) {
@@ -40,25 +52,8 @@ angular.module('testruns').controller('TestrunsController', [
 
     /* only get test runs from db when neccessary */
     if (TestRuns.list.length > 0){
+
       $scope.testRuns = TestRuns.list;
-
-      TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function (runningTest) {
-        if (Object.keys(runningTest).length !== 0) {
-
-          $scope.runningTest = runningTest;
-          $scope.runningTest.humanReadableDuration = TestRuns.calculateDuration(runningTest);
-          $scope.runningTest.completed = true;
-          $scope.runningTest.end = 'Running ...';
-          $scope.runningTest.meetsRequirement = null;
-          $scope.runningTest.benchmarkResultPreviousOK = null;
-          $scope.runningTest.benchmarkResultFixedOK = null;
-
-          $scope.testRuns.unshift($scope.runningTest);
-
-        }
-
-      });
-
 
     }else{
 
@@ -68,25 +63,23 @@ angular.module('testruns').controller('TestrunsController', [
 
         TestRuns.list = testRuns;
 
-        TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function (runningTest) {
-          if (Object.keys(runningTest).length !== 0) {
+        $scope.runningTest = response.runningTest;
+
+        $scope.numberOfRunningTests = response.numberOfRunningTests;
+
+        /* Set end value to 'Running' for running test(s)*/
 
 
-            $scope.runningTest = runningTest;
-            $scope.runningTest.humanReadableDuration = TestRuns.calculateDuration(runningTest);
-            $scope.runningTest.completed = true;
-            $scope.runningTest.end = 'Running ...';
-            $scope.runningTest.meetsRequirement = null;
-            $scope.runningTest.benchmarkResultPreviousOK = null;
-            $scope.runningTest.benchmarkResultFixedOK = null;
 
-            $scope.testRuns.unshift($scope.runningTest);
+        $scope.testRuns= response.testRuns;
 
-          }
+        for(var i=0; i < $scope.numberOfRunningTests + 1; i++){
 
-          $scope.loading = false;
+          $scope.testRuns[i].end = 'Running ...';
+        }
 
-        });
+
+        $scope.loading = false;
 
 
 

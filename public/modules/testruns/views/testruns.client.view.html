@@ -38,32 +38,32 @@
             <tbody>
 
             <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' }"
-                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index === 0)}" >
-                <td class="pointer" data-ng-click="(runningTest && $index === 0) ? liveGraphs(testRun) : testRunDetails(testRun)" >{{testRun.testRunId}}</td>
-                <td class="pointer" data-ng-click="(runningTest && $index === 0) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index < numberOfRunningTests)}" >
+                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)" >{{testRun.testRunId}}</td>
+                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
-                <td class="pointer" data-ng-click="(runningTest && $index === 0) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
-                    <md-progress-linear data-ng-if="runningTest && $index === 0" flex md-mode="indeterminate"></md-progress-linear>
+                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                    <md-progress-linear data-ng-if="runningTest && $index < numberOfRunningTests" flex md-mode="indeterminate"></md-progress-linear>
 
                 </td>
-                <td class="pointer" data-ng-click="(runningTest && $index === 0) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.humanReadableDuration}}
+                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.humanReadableDuration}}
                 </td>
-                <td data-ng-if="showBenchmarks && !(runningTest && $index === 0)" header-class="text-center" class="text-center pointer"
+                <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" class="text-center pointer"
                     data-ng-click="testRunRequirements($index)"><span
                         ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>
                 </td>
-                <td data-ng-if="showBenchmarks && !(runningTest && $index === 0)" header-class="text-center" title="{{testRun.previousBuild}}"
+                <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.previousBuild}}"
                     class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark($index)"><span
                         ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
                 </td>
-                <td data-ng-if="showBenchmarks && !(runningTest && $index === 0)" header-class="text-center" title="{{testRun.baseline}}"
+                <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.baseline}}"
                     class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark($index)"><span
                         ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
                 </td>
-                <td data-ng-if="showBenchmarks && !(runningTest && $index === 0)">
+                <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)">
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="testRun.testRunId === dashboard.baseline"></md-icon>
                 </td>
-                <td data-ng-if="!(runningTest && $index === 0)">
+                <td data-ng-if="!(runningTest && $index < numberOfRunningTests)">
                     <md-menu style="padding-top: 0px; padding-bottom: 0px;">
                         <div aria-label="Open test run menu" class="md-icon-button"
                                    ng-click="openMenu($mdOpenMenu, $event)">
@@ -114,7 +114,7 @@
                         </md-menu-content>
                     </md-menu>
                 </td>
-                <td data-ng-if="!(runningTest && $index === 0)">
+                <td data-ng-if="!(runningTest && $index < numberOfRunningTests)">
                     <md-checkbox md-no-ink aria-label="select test run" ng-model="testRun.selected"  ng-change="setTestRunsSelected(testRun.selected)" style="margin: 0px;">
                     </md-checkbox>
                 </td>

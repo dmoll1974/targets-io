@@ -169,9 +169,7 @@ function synchronizeRunningTestRuns () {
 
               saveTestRun(runningTest)
                   .then(function(){
-                    runningTest.remove(function(err, removedRunningTest){
-                      console.log('removed: ' + removedRunningTest);
-                    });
+
                   });
             }
 
@@ -192,7 +190,8 @@ let saveTestRun = function (runningTest){
       testRunId: runningTest.testRunId,
       start: runningTest.start,
       end: runningTest.end,
-      completed: runningTest.completed
+      completed: runningTest.completed,
+      humanReadableDuration: humanReadbleDuration(runningTest.end.getTime() - runningTest.start.getTime())
 
     });
 
@@ -216,3 +215,12 @@ let saveTestRun = function (runningTest){
   });
 }
 
+function humanReadbleDuration(durationInMs){
+
+  var date = new Date(durationInMs);
+  var readableDate = '';
+  if(date.getUTCDate()-1 > 0) readableDate += date.getUTCDate()-1 + " days, ";
+  if(date.getUTCHours() > 0) readableDate += date.getUTCHours() + " hours, ";
+  readableDate += date.getUTCMinutes() + " minutes";
+  return readableDate;
+}

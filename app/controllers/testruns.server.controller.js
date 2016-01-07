@@ -33,6 +33,7 @@ exports.updateAllProductTestRuns = updateAllProductTestRuns;
 exports.recentTestRuns = recentTestRuns;
 exports.update = update;
 exports.addTestRun = addTestRun;
+exports.humanReadbleDuration = humanReadbleDuration;
 
 function addTestRun(req, res){
 
@@ -279,6 +280,9 @@ function testRunsForProduct(req, res) {
 function testRunsForDashboard(req, res) {
 
   var response = {};
+  response.numberOfRunningTests = 0;
+  response.runningTest = false;
+
 
   Testrun.find({
     $and: [
@@ -290,6 +294,9 @@ function testRunsForDashboard(req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
+
+      response.testRuns = testRuns;
+
     /* Check for running tests */
       RunningTest.find({
         $and: [
@@ -299,34 +306,30 @@ function testRunsForDashboard(req, res) {
       }).exec(function(err, runningTests){
 
         if(err){
-          response.runningTest = false;
-          response.testRuns = testRuns;
           res.jsonp(response);
         }else{
+
 
           /* if running tests are found, put them on top*/
           if(runningTests.length > 0){
 
+            response.runningTest = true;
+
             _.each(runningTests, function(runningTest){
+
+              response.numberOfRunningTests = response.numberOfRunningTests + 1;
+
 
               /* mark temporarily as completed to make it visible in test run list*/
               runningTest.completed = true;
-              testRuns.unshift(runningTest);
+
+              response.testRuns.unshift(runningTest);
 
             })
 
-            response.runningTest = true;
 
           }
 
-          /* create human readable durations */
-          _.each(testRuns, function(testRun, i){
-
-            testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
-
-          });
-
-          response.testRuns = testRuns;
 
           res.jsonp(response);
         }

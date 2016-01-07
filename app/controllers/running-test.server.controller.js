@@ -9,7 +9,7 @@ var Event = mongoose.model('Event');
 var Testrun = mongoose.model('Testrun');
 var Dashboard = mongoose.model('Dashboard');
 var Product = mongoose.model('Product');
-var testRuns = require('./testruns.server.controller');
+var testRunsModule = require('./testruns.server.controller');
 
 
 exports.runningTest = runningTest;
@@ -104,7 +104,7 @@ function runningTest(req, res){
 
       } else {
 
-        updateRunningTest(req.body, req.params.command)
+        updateRunningTest(req.body)
         .then(function (message) {
 
           res.jsonp(message);
@@ -117,7 +117,7 @@ function runningTest(req, res){
 
 }
 
-function updateRunningTest(runningTest, command) {
+function updateRunningTest(runningTest) {
 
   return new Promise((resolve, reject) => {
 
@@ -132,6 +132,8 @@ function updateRunningTest(runningTest, command) {
 
         storedRunningTest.keepAliveTimestamp = dateNow;
         storedRunningTest.end = dateNow + 15 * 1000;
+        storedRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(storedRunningTest.end.getTime() - storedRunningTest.start.getTime());
+
         storedRunningTest.save(function(err, runnigTestSaved){
 
           resolve('running test updated!');
@@ -147,8 +149,9 @@ function updateRunningTest(runningTest, command) {
         /* set timestamps */
         /* if start request, give some additional time to start up */
 
-        newRunningTest.keepAliveTimestamp = (command === 'start') ? dateNow + 60 * 1000 :  dateNow;
+        newRunningTest.keepAliveTimestamp = dateNow + 120 * 1000;
         newRunningTest.end = dateNow + 15 * 1000;
+        newRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(newRunningTest.end.getTime() - newRunningTest.start.getTime())
         newRunningTest.save(function(err, newRunningTest){
 
           resolve('running test created!');

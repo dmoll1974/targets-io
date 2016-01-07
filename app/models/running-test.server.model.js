@@ -28,7 +28,9 @@ var RunningTestSchema = new mongoose.Schema({
     },
     'productName': String,
     'dashboardName': String,
-    'buildResultKey': String
+    'buildResultKey': String,
+    'humanReadableDuration': String
+
 
 });
 
