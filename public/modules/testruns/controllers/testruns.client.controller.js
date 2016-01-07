@@ -17,51 +17,13 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.dashboardName = $stateParams.dashboardName;
 
     /* By default, show completed test runs only */
-        $scope.completedTestRunsOnly = true;
+    $scope.completedTestRunsOnly = true;
 
     /* refresh test runs every 15 seconds */
 
 
-    var testRunPolling = function(){
+    var testRunPolling = function () {
       TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (response) {
-
-          $scope.runningTest = response.runningTest;
-
-          $scope.numberOfRunningTests = response.numberOfRunningTests;
-
-          /* Set end value to 'Running' for running test(s)*/
-
-
-
-          $scope.testRuns= response.testRuns;
-
-        for(var i=0; i < $scope.numberOfRunningTests + 1; i++){
-
-          $scope.testRuns[i].end = 'Running ...';
-        }
-
-
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-
-    };
-
-    testRunPolling();
-    var polling = $interval(testRunPolling, 15000);
-
-    /* only get test runs from db when neccessary */
-    if (TestRuns.list.length > 0){
-
-      $scope.testRuns = TestRuns.list;
-
-    }else{
-
-      $scope.loading = true;
-
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
-
-        TestRuns.list = testRuns;
 
         $scope.runningTest = response.runningTest;
 
@@ -70,24 +32,36 @@ angular.module('testruns').controller('TestrunsController', [
         /* Set end value to 'Running' for running test(s)*/
 
 
+        $scope.testRuns = response.testRuns;
 
-        $scope.testRuns= response.testRuns;
-
-        for(var i=0; i < $scope.numberOfRunningTests + 1; i++){
+        for (var i = 0; i < $scope.numberOfRunningTests + 1; i++) {
 
           $scope.testRuns[i].end = 'Running ...';
         }
 
-
-        $scope.loading = false;
-
-
+        TestRuns.list = $scope.testRuns;
 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
 
+    };
+
+    var polling = $interval(testRunPolling, 15000);
+
+    /* only get test runs from db when neccessary */
+    if (TestRuns.list.length > 0) {
+
+      $scope.testRuns = TestRuns.list;
+
+    } else {
+
+      $scope.loading = true;
+
+      testRunPolling();
+
     }
+
 
     $scope.editTestRun = function (testRun){
 
