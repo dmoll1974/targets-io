@@ -168,10 +168,11 @@ function synchronizeRunningTestRuns () {
               runningTest.completed = false;
 
               saveTestRun(runningTest)
-              .then(function(message){
-                console.log(message);
-              });
-
+                  .then(function(){
+                    runningTest.remove(function(err, removedRunningTest){
+                      console.log('removed: ' + removedRunningTest);
+                    });
+                  });
             }
 
           });
