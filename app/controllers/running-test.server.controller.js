@@ -76,7 +76,7 @@ function runningTest(req, res){
         runningTest.end = new Date().getTime();
         /* Save test run*/
         saveTestRun(runningTest)
-          .then(testRuns.benchmarkAndPersistTestRunById)
+          .then(testRunsModule.benchmarkAndPersistTestRunById)
           .then(function(testRun){
             res.jsonp(testRun);
           });
