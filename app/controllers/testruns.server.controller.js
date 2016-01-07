@@ -15,7 +15,9 @@ var mongoose = require('mongoose'),
     Requirements = require('./testruns.requirements.server.controller'),
     Benchmarks = require('./testruns.benchmarks.server.controller'),
     Metric = mongoose.model('Metric'),
-    async = require('async');
+    async = require('async'),
+    RunningTest = mongoose.model('RunningTest');
+
 
 
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
@@ -275,6 +277,9 @@ function testRunsForProduct(req, res) {
  * select test runs for dashboard
  */
 function testRunsForDashboard(req, res) {
+
+  var response = {};
+
   Testrun.find({
     $and: [
       { productName: req.params.productName },
@@ -285,16 +290,53 @@ function testRunsForDashboard(req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
-      _.each(testRuns, function(testRun, i){
+    /* Check for running tests */
+      RunningTest.find({
+        $and: [
+          { productName: req.params.productName },
+          { dashboardName: req.params.dashboardName }
+        ]
+      }).exec(function(err, runningTests){
 
-        testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+        if(err){
+          response.runningTest = false;
+          response.testRuns = testRuns;
+          res.jsonp(response);
+        }else{
+
+          /* if running tests are found, put them on top*/
+          if(runningTests.length > 0){
+
+            _.each(runningTests, function(runningTest){
+
+              /* mark temporarily as completed to make it visible in test run list*/
+              runningTest.completed = true;
+              testRuns.unshift(runningTest);
+
+            })
+
+            response.runningTest = true;
+
+          }
+
+          /* create human readable durations */
+          _.each(testRuns, function(testRun, i){
+
+            testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+
+          });
+
+          response.testRuns = testRuns;
+
+          res.jsonp(response);
+        }
 
       });
 
-      res.jsonp(testRuns);
 
     }
   });
+
   function persistTestrunsFromEvents(testRuns, testRunsFromEvents, callback) {
     var persistedTestRuns = [];
     var testRunsToBePersisted = [];

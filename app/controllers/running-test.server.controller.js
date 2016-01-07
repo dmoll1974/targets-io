@@ -104,7 +104,7 @@ function runningTest(req, res){
 
       } else {
 
-        updateRunningTest(req.body)
+        updateRunningTest(req.body, req.params.command)
         .then(function (message) {
 
           res.jsonp(message);
@@ -117,7 +117,7 @@ function runningTest(req, res){
 
 }
 
-function updateRunningTest(runningTest) {
+function updateRunningTest(runningTest, command) {
 
   return new Promise((resolve, reject) => {
 
@@ -130,22 +130,24 @@ function updateRunningTest(runningTest) {
       /* if entry exists just update the keep alive timestamp */
       if(storedRunningTest){
 
-
         storedRunningTest.keepAliveTimestamp = dateNow;
         storedRunningTest.end = dateNow + 15 * 1000;
         storedRunningTest.save(function(err, runnigTestSaved){
 
-            resolve('running test updated!');
+          resolve('running test updated!');
         });
 
-      /* if entry does not exist, create new one */
+        /* if entry does not exist, create new one */
 
       }else{
+
 
         newRunningTest = new RunningTest(runningTest);
 
         /* set timestamps */
-        newRunningTest.keepAliveTimestamp = dateNow;
+        /* if start request, give some additional time to start up */
+
+        newRunningTest.keepAliveTimestamp = (command === 'start') ? dateNow + 60 * 1000 :  dateNow;
         newRunningTest.end = dateNow + 15 * 1000;
         newRunningTest.save(function(err, newRunningTest){
 
@@ -177,8 +179,10 @@ function synchronizeRunningTestRuns () {
               runningTest.completed = false;
 
               saveTestRun(runningTest)
-              .then(function(message){
-                console.log(message);
+              .then(function(){
+                runningTest.remove(function(err, removedRunningTest){
+                  console.log('removed: ' + removedRunningTest);
+                });
               });
 
             }
