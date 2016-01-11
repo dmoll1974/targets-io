@@ -37,7 +37,7 @@ angular.module('dashboards').factory('Dashboards', [
           });
 
           if (tagExists === false) {
-            updatedTags.push({ text: tag.text });
+            updatedTags.push({ text: tag.text, default: false });
             updated = true;
           }
         });
