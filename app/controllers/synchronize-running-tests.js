@@ -142,7 +142,7 @@ var Testrun = mongoose.model('Testrun');
 
 
   /* start polling every 15 seconds */
-  setInterval(synchronizeRunningTestRuns, 15 * 1000);
+  setInterval(synchronizeRunningTestRuns, 30 * 1000);
 
 
 
