@@ -29,6 +29,13 @@ function EditEventDirective () {
       $scope.event.dashboardName = $filter('uppercase')(val);
     }, true);
 
+    $scope.isOpen = false;
+    $scope.openCalendar = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $scope.isOpen = true;
+    };
+
 
     // Update Event
     $scope.update = function () {

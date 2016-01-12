@@ -32,7 +32,7 @@ angular.module('graphs').factory('Graphite', [
             Events.selected.dashboardName = dashboardName;
             Events.selected.testRunId = testRunId;
             Events.selected._id = e.point.id;
-            Events.selected.eventTimestamp = e.point.x;
+            Events.selected.eventTimestamp = new Date(e.point.x);
             Events.selected.eventDescription = e.point.text;
             $state.go('editEvent', {
               'productName': productName,
