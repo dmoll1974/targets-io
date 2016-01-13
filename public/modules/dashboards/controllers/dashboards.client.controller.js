@@ -164,6 +164,8 @@ angular.module('dashboards').controller('DashboardsController', [
         Products.fetch().success(function (products) {
           $scope.products = Products.items;
           SideMenu.addProducts(products);
+          /* reset Test runs*/
+          TestRuns.list = [];
           $state.go('viewDashboard', {
             productName: $stateParams.productName,
             dashboardName: response.data.name
