@@ -308,7 +308,7 @@ function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkVal
 
           var updatedTestRun = new Testrun(testRun);
 
-          if(savedTestRuns.length > 0){
+          if(savedTestRuns.length > 1){
 
             updatedTestRun.previousBuild = savedTestRuns[1].testRunId;
           }
