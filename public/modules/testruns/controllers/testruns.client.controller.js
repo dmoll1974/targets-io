@@ -337,35 +337,6 @@ angular.module('testruns').controller('TestrunsController', [
         $scope.error = errorResponse.data.message;
       });
     };
-    $scope.openDeleteTestRunModal = function (size, index) {
-      ConfirmModal.itemType = 'Delete test run ';
-      ConfirmModal.selectedItemId = index;
-      ConfirmModal.selectedItemDescription = $scope.testRuns[index].testRunId;
-      var modalInstance = $modal.open({
-        templateUrl: 'ConfirmDelete.html',
-        controller: 'ModalInstanceController',
-        size: size  //,
-      });
-      modalInstance.result.then(function (selectedIndex) {
-        $q.all([
-          Events.delete($scope.testRuns[selectedIndex].eventIds[0]),
-          Events.delete($scope.testRuns[selectedIndex].eventIds[1])
-        ]).then(TestRuns.delete($scope.productName, $scope.dashboardName, $scope.testRuns[selectedIndex].testRunId))
-          .then(function (results) {
-          /* refresh test runs*/
-          $scope.testRuns.splice(selectedIndex,1);
-          /* refresh Events */
-          Events.listEventsForDashboard($scope.productName, $scope.dashboardName).success(function (events) {
-            Events.list = events;
-            $scope.events = events;
-          }, function (errorResponse) {
-            $scope.error = errorResponse.data.message;
-          });
-
-        });
-      }, function () {
-      });
-    };
 
     $scope.openDeleteSelectedTestRunsModal = function (size) {
       ConfirmModal.itemType = 'Delete ';
@@ -394,6 +365,12 @@ angular.module('testruns').controller('TestrunsController', [
 
         $q.all(deleteTestRunsArrayOfPromises)
         .then(function () {
+
+          /* refresh view */
+
+          testRunPolling();
+
+
         });
 
       }, function () {
