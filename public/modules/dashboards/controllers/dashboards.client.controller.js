@@ -36,6 +36,12 @@ angular.module('dashboards').controller('DashboardsController', [
 
     }
 
+    $scope.clearMetricFilter = function(){
+
+      $scope.filterMetrics = '';
+
+    };
+
     $scope.addTestRun = function (){
 
       $state.go('addTestRun',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});
