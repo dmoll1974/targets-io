@@ -29,11 +29,43 @@ angular.module('testruns').controller('TestrunsController', [
 
         $scope.numberOfRunningTests = response.numberOfRunningTests;
 
-        /* Set end value to 'Running' for running test(s)*/
 
+
+        /* get testRun Id's that might be selected */
+        var selectedTestRunIds = [];
+        var testRunsSelected = false;
+
+        _.each($scope.testRuns, function(testRun){
+
+          if(testRun.selected === true){
+
+            selectedTestRunIds.push(testRun.testRunId);
+            testRunsSelected = true;
+          }
+
+        });
 
         $scope.testRuns = [];
+
         $scope.testRuns = response.testRuns;
+
+        /* set selected testruns if necessary */
+        if (testRunsSelected === true){
+
+          _.each($scope.testRuns, function(testRun){
+
+              _.each(selectedTestRunIds, function(selectedTestRunId){
+
+                  if(testRun.testRunId === selectedTestRunId ){
+
+                    testRun.selected = true;
+                    return;
+                  }
+              });
+
+          });
+        }
+        /* Set end value to 'Running' for running test(s)*/
 
         for (var i = 0; i < $scope.numberOfRunningTests; i++) {
 
