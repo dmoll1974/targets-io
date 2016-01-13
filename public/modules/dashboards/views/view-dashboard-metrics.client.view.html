@@ -37,7 +37,7 @@
                 </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="metric in dashboard.metrics |  filter:filterMetrics" class="hover-row">
+            <tr ng-repeat="metric in filteredMetrics" class="hover-row">
                 <td ng-click="editMetric(metric._id)">
                    {{metric.alias}}
                 </td>

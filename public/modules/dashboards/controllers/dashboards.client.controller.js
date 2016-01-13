@@ -103,9 +103,14 @@ angular.module('dashboards').controller('DashboardsController', [
       $mdOpenMenu(ev);
     };
 
+    $scope.$watch(function () {
+      $scope.filteredMetrics = $scope.$eval("dashboard.metrics | filter:filterMetrics");
+    });
+
+
     $scope.$watch('allMetricsSelected', function (newVal, oldVal) {
         if (newVal !== oldVal) {
-          _.each($scope.dashboard.metrics, function (metric, i) {
+          _.each($scope.filteredMetrics, function (metric, i) {
             metric.selected = newVal;
           });
         }
@@ -341,6 +346,7 @@ angular.module('dashboards').controller('DashboardsController', [
         $q.all(deleteMetricArrayOfPromises)
           .then(Dashboards.get($scope.productName, $scope.dashboardName))
           .then(function (dashboard) {
+                  $scope.allMetricsSelected = false;
                   $scope.dashboard = Dashboards.selected;
           });
 
