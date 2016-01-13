@@ -2,7 +2,18 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Event = mongoose.model('Event'), Testrun = mongoose.model('Testrun'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), _ = require('lodash'), graphite = require('./graphite.server.controller'), Utils = require('./utils.server.controller'), Testruns = require('./testruns.server.controller.js'), async = require('async');
+var mongoose = require('mongoose'),
+    errorHandler = require('./errors.server.controller'),
+    Event = mongoose.model('Event'),
+    Testrun = mongoose.model('Testrun'),
+    Dashboard = mongoose.model('Dashboard'),
+    Product = mongoose.model('Product'),
+    _ = require('lodash'),
+    graphite = require('./graphite.server.controller'),
+    Utils = require('./utils.server.controller'),
+    Testruns = require('./testruns.server.controller.js'),
+    async = require('async');
+
 exports.setBenchmarkResultsPreviousBuildForTestRun = setBenchmarkResultsPreviousBuildForTestRun;
 exports.setBenchmarkResultsFixedBaselineForTestRun = setBenchmarkResultsFixedBaselineForTestRun;
 exports.updateFixedBaselineBenchmark = updateFixedBaselineBenchmark;
@@ -24,7 +35,7 @@ function updateBenchmarkResults(testRun) {
             ]
           }, {benchchmarkResultFixedOK: updatedTestRun.benchmarkResultFixedOK}
           , {upsert: true}, function (err, savedTestRun) {
-            if (err) {
+            if(err !== null) {
               reject(err);
             } else {
               resolve(savedTestRun);
@@ -38,7 +49,7 @@ function updateBenchmarkResults(testRun) {
 function saveTestRunAfterBenchmark(testRun, callback) {
   /* Save updated test run */
   Testrun.findById(testRun._id, function (err, savedTestRun) {
-    if (err)
+    if(err !== null)
       console.log(err);
     if (!savedTestRun)
       console.log('Could not load Document');
@@ -48,7 +59,7 @@ function saveTestRunAfterBenchmark(testRun, callback) {
       savedTestRun.benchmarkResultFixedOK = testRun.benchmarkResultFixedOK;
       savedTestRun.benchmarkResultPreviousOK = testRun.benchmarkResultPreviousOK;
       savedTestRun.save(function (err) {
-        if (err) {
+        if(err !== null) {
           console.log(err);
         } else {
           callback(savedTestRun);
@@ -69,7 +80,7 @@ function updateFixedBaselineBenchmark(req, res) {
           {testRunId: testRunToUpdate.testRunId}
         ]}, {benchchmarkResultFixedOK: testRun.benchmarkResultFixedOK}
         , {upsert:true}, function(err, savedTestRun){
-          if (err) {
+          if(err !== null) {
             console.log(err);
           } else {
             res.jsonp(savedTestRun);
@@ -239,7 +250,7 @@ function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkVal
     return new Promise((resolve, reject) => {
 
       Product.findOne({name: testRun.productName}).exec(function (err, product) {
-        if (err) {
+        if(err !== null) {
           reject(err);
         }else {
           Dashboard.findOne({
@@ -249,7 +260,7 @@ function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkVal
             ]
           }).exec(function (err, dashboard) {
 
-            if (err) {
+            if(err !== null) {
               reject(err);
             } else {
               /* if baseline has been set for dashboard, return baeline */
@@ -263,7 +274,7 @@ function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkVal
                 dashboard.baseline = testRun.testRunId;
                 dashboard.save(function (err, updatedDashboard) {
 
-                  if (err) {
+                  if(err !== null) {
                     reject(err);
                   } else {
                     resolve(testRun);
@@ -283,6 +294,7 @@ function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkVal
 
     return new Promise((resolve, reject) => {
 
+
       Testrun.find({
         $and: [
           {productName: testRun.productName},
@@ -290,18 +302,18 @@ function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkVal
           {completed: true}
         ]
       }).sort({end: -1}).exec(function (err, savedTestRuns) {
-        if (err) {
+        if(err !== null) {
           reject(err);
         } else {
 
+          var updatedTestRun = new Testrun(testRun);
+
           if(savedTestRuns.length > 0){
 
-            let previousBuild = savedTestRuns[0].testRunId ;
-
-            testRun.previousBuild = previousBuild;
+            updatedTestRun.previousBuild = savedTestRuns[1].testRunId;
           }
 
-          resolve(testRun);
+          resolve(updatedTestRun);
 
         }
       });
