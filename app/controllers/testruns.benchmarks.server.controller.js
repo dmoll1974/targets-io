@@ -308,9 +308,11 @@ function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkVal
 
           var updatedTestRun = new Testrun(testRun);
 
+          var index = savedTestRuns.map(function(savedTestRun){return savedTestRun.testRunId}).indexOf(testRun.testRunId);
+
           if(savedTestRuns.length > 1){
 
-            updatedTestRun.previousBuild = savedTestRuns[1].testRunId;
+            updatedTestRun.previousBuild = savedTestRuns[index + 1].testRunId;
           }
 
           resolve(updatedTestRun);
