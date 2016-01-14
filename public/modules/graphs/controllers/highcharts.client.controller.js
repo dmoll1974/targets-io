@@ -90,7 +90,7 @@ angular.module('graphs').controller('HighchartsController', [
     /* generate deeplink to share metric graph */
     $scope.setMetricShareUrl = function (metric) {
 
-      $scope.metricShareUrl = location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag +  '?';
+      $scope.metricShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag +  '?';
       //if (TestRuns.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
       //  $scope.metricShareUrl = $scope.metricShareUrl + '?';
       //}
