@@ -1,10 +1,23 @@
 <div data-ng-controller="HeaderController">
 
     <div layout="row">
-        <div flex="95" class="md-toolbar-tools">
+        <div flex="40" class="md-toolbar-tools">
             <h1>
                 <a ng-href="/#!/">TARGETS-IO</a>
             </h1>
+        </div>
+        <div flex="55" class="md-toolbar-tools">
+            <div layout="row">
+                <h1 ng-if="productName">
+                    {{productName}}
+                </h1>
+                <h1 ng-if="dashboardName">
+                    -
+                </h1>
+                <h1 ng-if="dashboardName">
+                    {{dashboardName}}
+                </h1>
+            </div>
         </div>
         <div flex="5">
             <md-menu class="md-toolbar-tools">

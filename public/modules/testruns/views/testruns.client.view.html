@@ -9,12 +9,9 @@
                 <md-button ng-if="testRunSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >Delete selected</md-button>
             </div>
         </div>
-        <!--<running-tests></running-tests>-->
-
         <md-checkbox ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
             Show completed test runs only
         </md-checkbox>
-
         <table class="table">
             <thead>
             <tr>
@@ -37,7 +34,7 @@
             </thead>
             <tbody>
 
-            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' }"
+            <tr dir-paginate="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } | itemsPerPage: showNumberOfTestRuns" total-items="totalNumberOftestRuns"
                 ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index < numberOfRunningTests)}" >
                 <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)" >{{testRun.testRunId}}</td>
                 <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
@@ -121,6 +118,22 @@
             </tr>
             </tbody>
         </table>
+        <div layout="row" layout-align="end center">
+            <md-input-container>
+                <label>Rows</label>
+                <md-select ng-model="showNumberOfTestRuns">
+                    <md-option ng-repeat="numberOfRowOption in numberOfRowOptions" value="{{numberOfRowOption.value}}">
+                        {{numberOfRowOption.value}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <dir-pagination-controls
+                    max-size="8"
+                    direction-links="true"
+                    boundary-links="true"
+                    on-page-change="nextPage(newPageNumber)" >
+            </dir-pagination-controls>
+        </div>
         <div flex="50" class="container" ng-if="loading">
             <md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>
             <div class="bottom-block">

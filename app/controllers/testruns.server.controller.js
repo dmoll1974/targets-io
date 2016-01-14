@@ -20,6 +20,7 @@ var mongoose = require('mongoose'),
 
 
 
+
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
 exports.testRunsForProduct = testRunsForProduct;
@@ -283,19 +284,40 @@ function testRunsForDashboard(req, res) {
   response.numberOfRunningTests = 0;
   response.runningTest = false;
 
-
-  Testrun.find({
+  var query = {
     $and: [
       { productName: req.params.productName },
       { dashboardName: req.params.dashboardName }
     ]
-  }).sort('-end').exec(function (err, testRuns) {
+  };
+
+
+
+  Testrun.find(query).sort({end: -1 }).exec(function(err, testRuns) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
 
-      response.testRuns = testRuns;
+
+      response.totalNumberOftestRuns = testRuns.length;
+
+      /* Only return paginated test runs */
+
+      let page = req.params.page;
+      let limit = req.params.limit;
+      let paginatedTestRuns = [];
+
+      _.each(testRuns, function(testRun, index){
+
+        if(index >= (page - 1) * (limit)  && index <= (page * limit) - 1){
+
+          paginatedTestRuns.push(testRun);
+        }
+
+      });
+
+      response.testRuns = paginatedTestRuns;
 
     /* Check for running tests */
       RunningTest.find({

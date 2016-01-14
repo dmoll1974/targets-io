@@ -3,12 +3,10 @@
     <div class="page-header">
         <div layout="row">
             <div layout="column">
-                <div layout="column">
-                    <h1 class="md-display-1">{{product.name}}</h1>
-
-                    <h3 class="md-headline">Description: {{product.description}}</h3>
-                    <h4 class="md-headline">Number of test runs: {{numberOfTestRuns}}</h4>
-                    <h4 class="md-headline">Total test duration: {{totalDuration}}</h4>
+                <div style="margin-left:20px;" layout="column">
+                    <h3 class="md-headline">{{product.description}}</h3>
+                    <h4>Number of test runs: {{numberOfTestRuns}}</h4>
+                    <h4>Total test duration: {{totalDuration}}</h4>
                 </div>
                 <div running-test></div>
                 <div layout="row">

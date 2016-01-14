@@ -4,7 +4,7 @@ module.exports = function (app) {
   var benchmarks = require('../../app/controllers/testruns.benchmarks.server.controller');
   var requirements = require('../../app/controllers/testruns.requirements.server.controller');
 
-  app.route('/testruns-dashboard/:productName/:dashboardName').get(testruns.testRunsForDashboard);
+  app.route('/testruns-dashboard/:productName/:dashboardName/:limit/:page').get(testruns.testRunsForDashboard);
   app.route('/testruns-product/:productName').get(testruns.testRunsForProduct);
   app.route('/recent-testruns').get(testruns.recentTestRuns);
   app.route('/testrun').put(testruns.update);

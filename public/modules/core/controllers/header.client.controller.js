@@ -7,7 +7,9 @@ angular.module('core').controller('HeaderController', [
   '$http',
   '$window',
   '$state',
-  function ($scope, Authentication, Menus, $location, $http, $window, $state) {
+  'Dashboards',
+  'Products',
+  function ($scope, Authentication, Menus, $location, $http, $window, $state, Dashboards, Products) {
     $scope.authentication = Authentication;
     $scope.isCollapsed = false;
     $scope.menu = Menus.getMenu('topbar');
@@ -26,6 +28,26 @@ angular.module('core').controller('HeaderController', [
       //	$log.log(url);
       $window.location.href = url;
     };
+
+
+
+    $scope.$watch(function (scope) {
+      return Dashboards.selected.name;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        $scope.dashboardName = Dashboards.selected.name;
+      }
+    });
+
+    $scope.$watch(function (scope) {
+      return Products.selected.name;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        $scope.productName = Products.selected.name;
+        $scope.dashboardName = null;
+      }
+    });
+
 
     $scope.showTemplates = function(){
 

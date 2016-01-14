@@ -57,8 +57,8 @@ angular.module('events').factory('TestRuns', [
       return $http.get('/recent-testruns');
 
     }
-    function listTestRunsForDashboard(productName, dashboardName) {
-      return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName);
+    function listTestRunsForDashboard(productName, dashboardName, limit, page) {
+      return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + limit + '/' + page);
     }
     listTestRunsForProduct
     function listTestRunsForProduct(productName) {
@@ -88,7 +88,7 @@ angular.module('events').factory('TestRuns', [
 
       _.each(testRuns, function(testRun){
 
-        totalDuration += testRun.duration;
+        totalDuration += (new Date(testRun.end).getTime() - new Date(testRun.start).getTime());
       })
 
 

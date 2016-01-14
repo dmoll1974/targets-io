@@ -19,15 +19,34 @@ angular.module('testruns').controller('TestrunsController', [
     /* By default, show completed test runs only */
     $scope.completedTestRunsOnly = true;
 
+
+    $scope.showNumberOfTestRuns = 10;
+    $scope.page = 1;
+
+    $scope.numberOfRowOptions = [
+      {value: 10},
+      {value: 20},
+      {value: 30},
+      {value: 40}
+    ];
+
+    $scope.nextPage = function(page){
+
+      $scope.page = page;
+      testRunPolling();
+
+    }
     /* refresh test runs every 15 seconds */
 
 
     var testRunPolling = function () {
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (response) {
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.showNumberOfTestRuns, $scope.page).success(function (response) {
 
         $scope.runningTest = response.runningTest;
 
         $scope.numberOfRunningTests = response.numberOfRunningTests;
+
+        $scope.totalNumberOftestRuns = response.totalNumberOftestRuns
 
 
 
