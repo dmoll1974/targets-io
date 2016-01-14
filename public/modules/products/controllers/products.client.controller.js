@@ -21,6 +21,18 @@ angular.module('products').controller('ProductsController', [
     /* reset selected dashboard when accessing this page */
     Dashboards.selected = {};
 
+
+    $scope.showNumberOfTestRuns = 20;
+
+    $scope.numberOfRowOptions = [
+      {value: 10},
+      {value: 20},
+      {value: 30},
+      {value: 40}
+    ];
+
+
+
     /* refresh test runs every 30 seconds */
 
 

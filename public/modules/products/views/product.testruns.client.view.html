@@ -13,7 +13,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="testRun in testRuns | orderBy:'end':true" class="hover-row" data-ng-click="testRunDetails(testRun.productName, testRun.dashboardName, testRun.testRunId)">
+                <tr dir-paginate="testRun in testRuns | orderBy:'end':true |  itemsPerPage: showNumberOfTestRuns" class="hover-row" data-ng-click="testRunDetails(testRun.productName, testRun.dashboardName, testRun.testRunId)">
                     <td class="pointer" >{{testRun.dashboardName}}</td>
                     <td class="pointer">{{testRun.testRunId}}</td>
                     <td class="pointer">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
@@ -25,6 +25,21 @@
                 </tr>
             </tbody>
         </table>
+        <div layout="row" layout-align="end center">
+            <md-input-container>
+                <label>Rows</label>
+                <md-select ng-model="showNumberOfTestRuns">
+                    <md-option ng-repeat="numberOfRowOption in numberOfRowOptions" value="{{numberOfRowOption.value}}">
+                        {{numberOfRowOption.value}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <dir-pagination-controls
+                    max-size="8"
+                    direction-links="true"
+                    boundary-links="true">
+             </dir-pagination-controls>
+        </div>
         <div flex="50" class="container" ng-if="loading">
             <md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>
             <div class="bottom-block">
