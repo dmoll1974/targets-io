@@ -22,7 +22,13 @@ angular.module('products').controller('ProductsController', [
     Dashboards.selected = {};
 
 
-    $scope.showNumberOfTestRuns = 20;
+    $scope.showNumberOfTestRuns = 10;
+
+    $scope.$watch('showNumberOfTestRuns', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        testRunPolling();
+      }
+    });
 
     $scope.numberOfRowOptions = [
       {value: 10},

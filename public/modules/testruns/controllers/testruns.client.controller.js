@@ -30,6 +30,12 @@ angular.module('testruns').controller('TestrunsController', [
       {value: 40}
     ];
 
+    $scope.$watch('showNumberOfTestRuns', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        testRunPolling();
+      }
+    });
+
     $scope.nextPage = function(page){
 
       $scope.page = page;

@@ -25,8 +25,8 @@
                 </tr>
             </tbody>
         </table>
-        <div layout="row" layout-align="end center">
-            <md-input-container>
+        <div  layout="row" layout-align="end center">
+            <md-input-container ng-hide="(numberOfTestRuns < showNumberOfTestRuns) && (showNumberOfTestRuns === '10')">
                 <label>Rows</label>
                 <md-select ng-model="showNumberOfTestRuns">
                     <md-option ng-repeat="numberOfRowOption in numberOfRowOptions" value="{{numberOfRowOption.value}}">
