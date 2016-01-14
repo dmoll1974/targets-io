@@ -13,9 +13,13 @@ angular.module('products').controller('ProductsController', [
   'SideMenu',
   'TestRuns',
   'Events',
-  function ($scope, $rootScope, $stateParams, $state, $location, $modal, $interval, Products, ConfirmModal, SideMenu, TestRuns, Events) {
+  'Dashboards',
+  function ($scope, $rootScope, $stateParams, $state, $location, $modal, $interval, Products, ConfirmModal, SideMenu, TestRuns, Events, Dashboards) {
 
     $scope.productName = $stateParams.productName;
+
+    /* reset selected dashboard when accessing this page */
+    Dashboards.selected = {};
 
     /* refresh test runs every 30 seconds */
 

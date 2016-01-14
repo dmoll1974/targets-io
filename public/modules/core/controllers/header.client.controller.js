@@ -44,7 +44,6 @@ angular.module('core').controller('HeaderController', [
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
         $scope.productName = Products.selected.name;
-        $scope.dashboardName = null;
       }
     });
 
