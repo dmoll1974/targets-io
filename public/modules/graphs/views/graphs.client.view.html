@@ -18,24 +18,7 @@
             </md-tab>
         </md-tabs>
         <div layout="row" flex  >
-            <div layout="row" flex="50" layout-align="start center">
-
-                    <label title="Share URL" class="btn default"
-                           ng-click="setViewShareUrl()"><span
-                            class="btn  glyphicon glyphicon-share"></span>
-                    </label>
-                    <input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"
-                                 share-graph-url/>
-                    <button ng-if="showViewUrl && hasFlash()"
-                              tooltip-size="medium" title="Copy graph URL"
-                              tooltip-side="top" clip-copy="viewShareUrl"
-                              clip-click="clipClicked()">Copy
-                    </button>
-
-            </div>
-
-
-            <div flex="50" layout="row" >
+            <div layout="row" flex="50" >
                 <md-input-container flex>
                     <label>Filter metrics</label>
                     <input ng-model="metricFilter">
@@ -44,6 +27,25 @@
                          data-ng-click="clearMetricFilter()">
 
                 </md-icon>
+
+            </div>
+
+
+            <div flex="50" layout="row" layout-align="end center" >
+
+
+                <button ng-if="showViewUrl && hasFlash()"
+                        tooltip-size="medium" title="Copy graph URL"
+                        tooltip-side="top" clip-copy="viewShareUrl"
+                        clip-click="clipClicked()">Copy
+                </button>
+                <input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"
+                       share-graph-url/>
+                <label title="Share view URL" class="btn default"
+                       ng-click="setViewShareUrl('graphs')"><span
+                        class="btn  glyphicon glyphicon-share"></span>
+                </label>
+
             </div>
         </div>
     </div>

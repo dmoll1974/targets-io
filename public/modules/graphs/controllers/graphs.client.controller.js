@@ -71,9 +71,17 @@ angular.module('graphs').controller('GraphsController', [
 
     /* generate deeplink to share view */
 
-    $scope.setViewShareUrl = function () {
+    $scope.setViewShareUrl = function (graphsType) {
 
-      $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag;
+      switch(graphsType){
+
+        case 'graphs':
+          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag;
+          break;
+        case 'graphs-live':
+          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag;
+
+      }
       if (TestRuns.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
         $scope.viewShareUrl = $scope.viewShareUrl + '?';
       }

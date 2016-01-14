@@ -102,11 +102,8 @@ angular.module('graphs').controller('HighchartsLiveController', [
         $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
       }
 
-      if (Utils.metricFilter !== '') {
-        $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(Utils.metricFilter)
-      }else{
-        $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
-      }
+      $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
+
     /* generate deeplink to share metric graph */
     //$scope.setMetricShareUrl = function (metricId) {
     //  if (TestRuns.zoomFrom) {

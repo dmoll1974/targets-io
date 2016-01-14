@@ -100,11 +100,9 @@ angular.module('graphs').controller('HighchartsController', [
       if ($state.params.selectedSeries) {
         $scope.metricShareUrl = $scope.metricShareUrl + '&selectedSeries=' + $state.params.selectedSeries;
       }
-      if (Utils.metricFilter !== '') {
-        $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(Utils.metricFilter)
-      }else{
-        $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
-      }
+
+      $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
+
 
       if ($scope.showUrl) {
         switch ($scope.showUrl) {
