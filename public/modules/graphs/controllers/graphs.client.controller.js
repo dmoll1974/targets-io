@@ -21,6 +21,27 @@ angular.module('graphs').controller('GraphsController', [
 
     $scope.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
 
+    /* Zero copied logic */
+    $scope.clipClicked = function () {
+      $scope.showViewUrl = false;
+    };
+
+    $scope.hasFlash = function () {
+      var hasFlash = false;
+      try {
+        var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+        if (fo) {
+          hasFlash = true;
+          return hasFlash;
+        }
+      } catch (e) {
+        if (navigator.mimeTypes && navigator.mimeTypes['application/x-shockwave-flash'] != undefined && navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin) {
+          hasFlash = true;
+          return hasFlash;
+        }
+      }
+    };
+
     /* Get deeplink zoom params from query string */
     if ($state.params.zoomFrom)
       TestRuns.zoomFrom = $state.params.zoomFrom;
@@ -46,14 +67,39 @@ angular.module('graphs').controller('GraphsController', [
 
     };
 
-    /* reset metric filter when changing tabs */
-    //$scope.$watch('value', function (newVal, oldVal) {
-    //
-    //    $scope.metricFilter = '';
-    //    Utils.metricFilter = '';
-    //
-    //});
+    $scope.showViewUrl = false;
 
+    /* generate deeplink to share view */
+
+    $scope.setViewShareUrl = function () {
+
+      $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag;
+      if (TestRuns.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
+        $scope.viewShareUrl = $scope.viewShareUrl + '?';
+      }
+      if (TestRuns.zoomFrom) {
+        $scope.viewShareUrl = $scope.viewShareUrl + '&zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
+      }
+      if ($state.params.selectedSeries) {
+        $scope.viewShareUrl = $scope.viewShareUrl + '&selectedSeries=' + $state.params.selectedSeries;
+      }
+      if (Utils.metricFilter !== '') {
+        $scope.viewShareUrl = $scope.viewShareUrl + '&metricFilter=' + encodeURIComponent(Utils.metricFilter)
+      }
+
+      if ($scope.showViewUrl) {
+        switch ($scope.showViewUrl) {
+          case true:
+            $scope.showViewUrl = false;
+            break;
+          case false:
+            $scope.showViewUrl = true;
+            break;
+        }
+      } else {
+        $scope.showViewUrl = true;
+      }
+    };
     /* Set product Filter in side menu */
     SideMenu.productFilter = $stateParams.productName;
     $scope.$watch('selectedIndex', function (current, old) {
