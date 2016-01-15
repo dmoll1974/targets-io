@@ -59,19 +59,37 @@ function addTestRun(req, res){
  * Update a Dashboard
  */
 function update (req, res) {
-  let testRun = new Testrun(req.body);
 
-  Testrun.update({$and:[
+  Testrun.findOne({$and:[
     {productName: req.body.productName},
     {dashboardName: req.body.dashboardName},
     {testRunId: req.body.testRunId}
-  ]}, testRun, function (err, testRun) {
+  ]}).exec(function(err, testRun){
+
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    } else {
-      res.jsonp(testRun);
+    } else{
+
+      testRun.start = req.body.start;
+      testRun.end = req.body.end;
+      testRun.buildResultKey = req.body.buildResultKey;
+      testRun.humanReadableDuration = humanReadbleDuration(new Date(req.body.end).getTime() - new Date(req.body.start).getTime());
+
+      testRun.save(function(err, savedTestRun){
+
+        if (err) {
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        } else {
+
+          res.jsonp(savedTestRun);
+
+        }
+      });
     }
-  });
+
+  })
+
+
 };
 
 

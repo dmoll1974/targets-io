@@ -18,7 +18,10 @@ var eventSchema = new mongoose.Schema({
     type: String,
     uppercase: true
   },
-  'testRunId': String,
+  'testRunId': {
+    type: String,
+    uppercase: true
+  },
   'eventDescription': String,
   'eventTimestamp': {
     type: Date,

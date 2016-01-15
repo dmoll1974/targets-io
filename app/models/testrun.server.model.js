@@ -49,7 +49,10 @@ var TestrunSchema = new Schema({
     type: String,
     uppercase: true
   },
-  'testRunId': String,
+  'testRunId': {
+    type: String,
+    uppercase: true
+  },
   'start': {
     type: Date,
     expires: config.graphiteRetentionPeriod

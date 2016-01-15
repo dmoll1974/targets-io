@@ -10,7 +10,10 @@ var mongoose = require('mongoose'),
  * Running test Schema
  */
 var RunningTestSchema = new mongoose.Schema({
-    'testRunId': String,
+    'testRunId': {
+        type: String,
+        uppercase: true
+    },
     'start': {
         type: Date,
         default: Date.now
@@ -26,8 +29,14 @@ var RunningTestSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    'productName': String,
-    'dashboardName': String,
+    'productName': {
+        type: String,
+        uppercase: true
+    },
+    'dashboardName': {
+        type: String,
+        uppercase: true
+    },
     'buildResultKey': String,
     'humanReadableDuration': String
 
