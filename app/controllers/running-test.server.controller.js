@@ -59,7 +59,7 @@ function runningTest(req, res){
 
   let productName = req.body.productName;
   let dashboardName = req.body.dashboardName;
-  let testRunId = req.body.testRunId;
+  let testRunId = req.body.testRunId.toUpperCase();
 
   if(req.params.command === 'end'){
 
@@ -151,7 +151,7 @@ function updateRunningTest(runningTest) {
     let dateNow = new Date().getTime();
 
 
-    RunningTest.findOne({$and:[{productName: runningTest.productName}, {dashboardName: runningTest.dashboardName}, {testRunId: runningTest.testRunId}]}).exec(function(err, storedRunningTest){
+    RunningTest.findOne({$and:[{productName: runningTest.productName}, {dashboardName: runningTest.dashboardName}, {testRunId: runningTest.testRunId.toUpperCase()}]}).exec(function(err, storedRunningTest){
 
       /* if entry exists just update the keep alive timestamp */
       if(storedRunningTest){
