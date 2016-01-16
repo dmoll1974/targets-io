@@ -98,19 +98,45 @@ function runningTest(req, res){
       ]
     }).exec(function (err, testRun) {
 
-      if (testRun) {
+      /* if completed test run is found return error */
+      if (testRun && testRun.completed === true) {
 
         return res.status(400).send({message: 'testRunId already exists for dashboard!'});
 
       } else {
 
-        updateRunningTest(req.body)
-        .then(function (message) {
+        /* if incomplete test run is found, assume the test run was ended due to hiccup in keepalive calls.  */
 
-          res.jsonp(message);
+        if(testRun && testRun.completed === false) {
 
-        });
+          Testrun.remove({
+            $and: [
+              {productName: productName},
+              {dashboardName: dashboardName},
+              {testRunId: testRunId}
+            ]
+          }).exec(function (err, testRun) {
+
+            updateRunningTest(req.body)
+                .then(function (message) {
+
+                  res.jsonp(message);
+
+                });
+          });
+
+        }else {
+
+          updateRunningTest(req.body)
+              .then(function (message) {
+
+                res.jsonp(message);
+
+              });
+        }
       }
+
+
 
     });
   }

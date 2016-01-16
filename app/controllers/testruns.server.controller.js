@@ -72,6 +72,7 @@ function update (req, res) {
 
       testRun.start = req.body.start;
       testRun.end = req.body.end;
+      testRun.completed = req.body.completed;
       testRun.buildResultKey = req.body.buildResultKey;
       testRun.humanReadableDuration = humanReadbleDuration(new Date(req.body.end).getTime() - new Date(req.body.start).getTime());
 
