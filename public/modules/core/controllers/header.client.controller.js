@@ -9,7 +9,8 @@ angular.module('core').controller('HeaderController', [
   '$state',
   'Dashboards',
   'Products',
-  function ($scope, Authentication, Menus, $location, $http, $window, $state, Dashboards, Products) {
+  '$stateParams',
+  function ($scope, Authentication, Menus, $location, $http, $window, $state, Dashboards, Products, $stateParams) {
     $scope.authentication = Authentication;
     $scope.isCollapsed = false;
     $scope.menu = Menus.getMenu('topbar');
@@ -29,7 +30,11 @@ angular.module('core').controller('HeaderController', [
       $window.location.href = url;
     };
 
-
+    /* get productName an dashboardName form $stateParams in case of deeplink */
+    setTimeout(function(){
+      if($stateParams.productName)  $scope.productName = $stateParams.productName;
+      if($stateParams.dashboardName)  $scope.dashboardName = $stateParams.dashboardName;
+    },0);
 
     $scope.$watch(function (scope) {
       return Dashboards.selected.name;
