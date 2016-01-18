@@ -140,13 +140,29 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.markAsComplete = function(testRun){
 
       testRun.completed = true;
-      TestRuns.update(testRun).success(function(numUpdated){
+      TestRuns.update(testRun).success(function(updatedTestRun){
 
-         if(numUpdated > 0){
-           let updatedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
-           $scope.testRuns[updatedTestRunIndex] = testRun;
+         if(updatedTestRun){
+           var updatedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(updatedTestRun._id.toString());
+           $scope.testRuns[updatedTestRunIndex] = updatedTestRun;
            $scope.completedTestRunsOnly = true;
-         }
+
+           $scope.testRuns[updatedTestRunIndex].meetsRequirement = 'pending';
+           $scope.testRuns[updatedTestRunIndex].benchmarkResultPreviousOK = 'pending';
+           $scope.testRuns[updatedTestRunIndex].benchmarkResultFixedOK = 'pending';
+           $scope.testRuns[updatedTestRunIndex].busy = true;
+
+           TestRuns.refreshTestrun($stateParams.productName, $stateParams.dashboardName, $scope.testRuns[updatedTestRunIndex].testRunId).success(function (testRun) {
+             $scope.testRuns[updatedTestRunIndex] = testRun;
+             $scope.testRuns[updatedTestRunIndex].busy = false;  ///* refresh screen*/
+                                                   //setTimeout(function(){
+                                                   //    $state.go($state.current, {}, {reload: true});
+                                                   //},1);
+           }, function (errorResponse) {
+             $scope.error = errorResponse.data.message;
+           });
+         };
+
       });
     }
 
