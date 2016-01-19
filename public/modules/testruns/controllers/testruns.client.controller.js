@@ -246,7 +246,7 @@ angular.module('testruns').controller('TestrunsController', [
       if (newVal !== oldVal) {
         $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
         $scope.dashboard = Dashboards.selected;
-
+        $scope.testRuns = [];
         TestRuns.list = [];
         TestRuns.runningTest = '';
         TestRuns.numberOfRunningTests = '';
