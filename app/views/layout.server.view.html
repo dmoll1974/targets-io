@@ -46,15 +46,15 @@
 <body>
 
 	<div layout="column" flex>
-		<div>
+		<div ng-cloak>
 			<md-toolbar>
 				<div data-ng-include="'/modules/core/views/header.client.view.html'"></div>
 			</md-toolbar>
 		</div>
 		<div layout="row" layout-fill>
-			<div flex="15" data-ng-include="'/modules/core/views/sidebar.client.view.html'" ></div>
-			<div flex="80" class="targetsio-content">
-				<md-content class="md-padding">
+			<div flex="15" data-ng-include="'/modules/core/views/sidebar.client.view.html'" ng-cloak></div>
+			<div flex="80" class="targetsio-content" ng-cloak>
+				<md-content class="md-padding" >
 					{% block content %}{% endblock %}
 				</md-content>
 			</div>
