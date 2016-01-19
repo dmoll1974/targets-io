@@ -471,14 +471,29 @@ function refreshTestrun(req, res) {
       { testRunId: req.params.testRunId }
     ]
   }).exec(function (err, testRun) {
-    if (err)
-      console.log(err);
-    benchmarkAndPersistTestRunById(testRun)
-    .then(function(updatedTestRun){
-      res.jsonp(updatedTestRun);
-    });
+    if (err){
+      return res.status(404).send({ message: 'No test run with id ' + req.params.testRunId + 'has been found for this dashboard' });
+    }else{
 
+      let newTestRun = new Testrun();
 
+      newTestRun.start = testRun.start;
+      newTestRun.end = testRun.end;
+      newTestRun.productName = testRun.productName;
+      newTestRun.dashboardName = testRun.dashboardName;
+      newTestRun.testRunId = testRun.testRunId;
+      newTestRun.completed = testRun.completed;
+      newTestRun.humanReadableDuration = testRun.humanReadableDuration;
+      newTestRun.buildResultKey = testRun.buildResultKey;
+
+      testRun.remove(function(err){
+
+        benchmarkAndPersistTestRunById(newTestRun)
+        .then(function(updatedTestRun){
+          res.jsonp(updatedTestRun);
+        });
+      })
+    }
   });
 }
 exports.getTestRunById = function (productName, dashboardName, testRunId, callback) {
@@ -672,23 +687,12 @@ function getDataForTestrun(testRun) {
         }else {
           /* save metrics to test run */
 
-          Testrun.findOne({
-            $and: [
-              {productName: testRun.productName},
-              {dashboardName: testRun.dashboardName},
-              {testRunId: testRun.testRunId}
-            ]
-          }).exec(function (err, testRunToUpdate) {
-            if (err) {
-              reject(err);
-            } else {
+              console.log('Retrieved data for:' + testRun.productName + '-' + testRun.dashboardName + 'testrunId: ' + testRun.testRunId);
 
-              console.log('Retrieved data for:' + testRunToUpdate.productName + '-' + testRunToUpdate.dashboardName + 'testrunId: ' + testRunToUpdate.testRunId);
-
-              testRunToUpdate.metrics = metrics;
+              testRun.metrics = metrics;
 
 
-              testRunToUpdate.save(function(err, savedTestrun){
+              testRun.save(function(err, savedTestrun){
 
                 if (err) {
                   reject(err);
@@ -699,9 +703,7 @@ function getDataForTestrun(testRun) {
                 }
 
               });
-            }
-          });
-        }
+       }
       });
     });
   });

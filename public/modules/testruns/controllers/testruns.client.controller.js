@@ -363,17 +363,17 @@ angular.module('testruns').controller('TestrunsController', [
         });
       });
     };
-    $scope.refreshTestrun = function (index) {
-      $scope.testRuns[index].meetsRequirement = 'pending';
-      $scope.testRuns[index].benchmarkResultPreviousOK = 'pending';
-      $scope.testRuns[index].benchmarkResultFixedOK = 'pending';
-      $scope.testRuns[index].busy = true;
-      TestRuns.refreshTestrun($stateParams.productName, $stateParams.dashboardName, $scope.testRuns[index].testRunId).success(function (testRun) {
-        $scope.testRuns[index] = testRun;
-        $scope.testRuns[index].busy = false;  ///* refresh screen*/
-                                              //setTimeout(function(){
-                                              //    $state.go($state.current, {}, {reload: true});
-                                              //},1);
+    $scope.refreshTestrun = function (testRun) {
+
+      var selectedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
+
+      $scope.testRuns[selectedTestRunIndex].meetsRequirement = 'pending';
+      $scope.testRuns[selectedTestRunIndex].benchmarkResultPreviousOK = 'pending';
+      $scope.testRuns[selectedTestRunIndex].benchmarkResultFixedOK = 'pending';
+      $scope.testRuns[selectedTestRunIndex].busy = true;
+      TestRuns.refreshTestrun($stateParams.productName, $stateParams.dashboardName, $scope.testRuns[selectedTestRunIndex].testRunId).success(function (testRun) {
+        $scope.testRuns[selectedTestRunIndex] = testRun;
+        $scope.testRuns[selectedTestRunIndex].busy = false;
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
