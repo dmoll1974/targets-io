@@ -73,7 +73,7 @@ function update (req, res) {
       testRun.start = req.body.start;
       testRun.end = req.body.end;
       testRun.completed = req.body.completed;
-      testRun.buildResultsUrl  = req.body.buildResultsUrl ;
+      testRun.buildResultsUrl = req.body.buildResultsUrl;
       testRun.humanReadableDuration = humanReadbleDuration(new Date(req.body.end).getTime() - new Date(req.body.start).getTime());
 
       testRun.save(function(err, savedTestRun){
@@ -484,7 +484,7 @@ function refreshTestrun(req, res) {
       newTestRun.testRunId = testRun.testRunId;
       newTestRun.completed = testRun.completed;
       newTestRun.humanReadableDuration = testRun.humanReadableDuration;
-      newTestRun.buildResultsUrl  = testRun.buildResultsUrl ;
+      newTestRun.buildResultsUrl = testRun.buildResultsUrl;
 
       testRun.remove(function(err){
 
@@ -737,7 +737,7 @@ function TempSaveTestruns(testruns,  callback) {
     persistTestrun.start = testrun.start;
     persistTestrun.end = testrun.end;
     persistTestrun.eventIds = testrun.eventIds;
-    persistTestrun.buildResultsUrl  = testrun.buildResultsUrl ;
+    persistTestrun.buildResultsUrl = testrun.buildResultsUrl;
 
     savedTesruns.push(persistTestrun);
 
@@ -767,7 +767,7 @@ function saveTestrun(testrun, metrics, callback) {
     persistTestrun.end = testrun.end;
     persistTestrun.baseline = testrun.baseline;
     persistTestrun.previousBuild = previousBuild;
-    persistTestrun.buildResultsUrl  = testrun.buildResultsUrl ;
+    persistTestrun.buildResultsUrl = testrun.buildResultsUrl;
     persistTestrun.eventIds = testrun.eventIds;
     persistTestrun.metrics = metrics;
     persistTestrun.save(function (err) {
@@ -835,7 +835,7 @@ function createTestrunFromEvents(productName, dashboardName, events, callback) {
                 } else {
                   baseline = dashboardBaseline;
                 }
-                if (events[i].buildResultsUrl ) {
+                if (events[i].buildResultsUrl) {
                   testRuns.push({
                     start: events[i].eventTimestamp,
                     startEpoch: events[i].eventTimestamp.getTime(),
@@ -844,7 +844,7 @@ function createTestrunFromEvents(productName, dashboardName, events, callback) {
                     productName: events[i].productName,
                     dashboardName: events[i].dashboardName,
                     testRunId: events[i].testRunId,
-                    buildResultsUrl : events[i].buildResultsUrl ,
+                    buildResultsUrl: events[i].buildResultsUrl,
                     eventIds: [
                       events[i].id,
                       events[j].id

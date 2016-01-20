@@ -28,7 +28,7 @@ var eventSchema = new mongoose.Schema({
     default: Date.now,
     expires: config.graphiteRetentionPeriod
   },
-  'buildResultsUrl ': { type: String },
+  'buildResultsUrl': { type: String },
   'hookEnabled': {
     type: Boolean,
     required: false,
@@ -83,7 +83,7 @@ eventSchema.post('save', function(event) {
               testRun.dashboardName = event.dashboardName;
               testRun.testRunId = event.testRunId;
               testRun.baseline = dashboard.baseline;
-              testRun.buildResultsUrl  = event.buildResultsUrl ;
+              testRun.buildResultsUrl = event.buildResultsUrl;
               testRun.eventIds.push(startEvent._id, event._id);
 
               testruns.benchmarkAndPersistTestRunById(testRun.productName, testRun.dashboardName, testRun, function (storedTestrun) {

@@ -43,7 +43,7 @@
           // length of data
           getData: function ($defer, params) {
             // ajax request to api
-            GatlingConsoleDetails.getData(TestRuns.selected.buildResultsUrl , false).success(function (response) {
+            GatlingConsoleDetails.getData(TestRuns.selected.buildResultsUrl, false).success(function (response) {
               $timeout(function () {
                 var data = $scope.tabNumber === 0 ? response.data : response.errors;
                 var filteredData = params.filter() ? $filter('filter')(data, params.filter()) : data;

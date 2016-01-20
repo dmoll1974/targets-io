@@ -37,7 +37,7 @@ var RunningTestSchema = new mongoose.Schema({
         type: String,
         uppercase: true
     },
-    'buildResultsUrl ': String,
+    'buildResultsUrl': String,
     'humanReadableDuration': String
 
 
