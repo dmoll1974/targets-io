@@ -87,7 +87,7 @@ function upload(req, res) {
         event.dashboardName = importEvent.dashboardName;
         event.testRunId = importEvent.testRunId;
         event.eventDescription = eventDesciption;
-        event.buildResultKey = importEvent.buildResultKey;
+        event.buildResultsUrl  = importEvent.buildResultsUrl ;
         event.hookEnabled = importEvent.hookEnabled;
 
         event.save(function (err) {
@@ -109,7 +109,7 @@ function upload(req, res) {
       testrun.productName = importTestrun.productName;
       testrun.dashboardName = importTestrun.dashboardName;
       testrun.testRunId = importTestrun.testRunId;
-      testrun.buildResultKey = importTestrun.buildResultKey;
+      testrun.buildResultsUrl  = importTestrun.buildResultsUrl ;
       testrun.baseline = importTestrun.baseline;
       testrun.previousBuild = importTestrun.previousBuild;
       testrun.completed = true;

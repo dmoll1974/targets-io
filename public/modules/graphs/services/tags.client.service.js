@@ -61,7 +61,7 @@ angular.module('graphs').factory('Tags', [
       });
       tags.sort(Utils.dynamicSort('text'));
       //if available, add Gatling-details tab
-      if (TestRuns.selected && TestRuns.selected.buildResultKey) {
+      if (TestRuns.selected && TestRuns.selected.buildResultsUrl ) {
         tags.unshift({
           text: 'Gatling',
           route: {

@@ -73,7 +73,7 @@
                 </md-input-container>
                 <md-input-container flex ng-if="event.eventDescription === 'start' || event.eventDescription === 'end'">
                     <label>CI Build result URL</label>
-                    <input ng-model="event.buildResultKey">
+                    <input ng-model="event.buildResultsUrl ">
                 </md-input-container>
                 <div layout="row">
                     <md-button md-no-ink class="md-primary" data-ng-click="update()">Submit</md-button>
