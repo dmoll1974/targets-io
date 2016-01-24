@@ -232,6 +232,9 @@ angular.module('graphs').controller('HighchartsController', [
         shared: false,
         valueDecimals: 1
       },
+      scrollbar: {
+          enabled : false
+      },
       plotOptions: {
         series: {
           cursor: 'pointer',
