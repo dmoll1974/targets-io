@@ -97,7 +97,9 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback) {
       }
       var consoleArray = body.split('Requests');
       if (consoleArray.length > 1) {
-        var consoleLineArray = consoleArray[consoleArray.length - 1].split(separator);
+        var consoleResultsArray = consoleArray[consoleArray.length - 1].split('Simulation finished');
+
+        var consoleLineArray = consoleResultsArray[0].split(separator);
         //            console.log(body);
         _.each(consoleLineArray, function (consoleLine, i) {
           if (i > 0) {
