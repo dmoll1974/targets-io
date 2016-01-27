@@ -55,7 +55,7 @@ function DygraphDirective ($timeout) {
       updateGraph(from, until, $scope.metric.targets, function (dygraphData) {
 
         $scope.opts = {
-          //axes: axes,
+          //labelsDiv: 'highlight-legend',
           labels: dygraphData.labels,
           axisLabelFontSize : 12,
           //yLabelHeight: 12,
@@ -71,11 +71,19 @@ function DygraphDirective ($timeout) {
           legend: 'never',
           includeZero: true,
           valueRange: [0,dygraphData.maxValue ],
+          highlightCircleSize: 0,
           highlightSeriesOpts: {
             strokeWidth: 2
           },
           highlightCallback: highLightLegend,
-          unhighlightCallback: unHighLightLegend
+          unhighlightCallback: unHighLightLegend,
+          //ticker: Dygraph.dateTicker,
+          axes: {
+            x: {
+              axisLabelFormatter: Dygraph.dateAxisLabelFormatter,
+              valueFormatter: Dygraph.dateString_
+            }
+          }
 
           //yRangePad: 10,
           //labelsDivWidth: "100%"//,
@@ -110,6 +118,7 @@ function DygraphDirective ($timeout) {
        var hightLightedIndex = $scope.metric.legendData.map(function(legendItem){
          return legendItem.name;
        }).indexOf(seriesName);
+
 
       $scope.$apply(function () {
         _.each($scope.metric.legendData, function(legendItem, i){

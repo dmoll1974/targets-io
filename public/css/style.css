@@ -14257,8 +14257,8 @@ button.toast-close-button {
 }
 
 .datagrid table tbody .legend-highlighted td {
-    background: rgba(255,110,64,0.87);
-    color: white;
+    background: rgba(158, 158, 158, 0.2);
+    color: black;
 }
 
 .datagrid table tbody td:first-child {
@@ -14267,4 +14267,13 @@ button.toast-close-button {
 
 .datagrid table tbody tr:last-child td {
     /*border-bottom: none;*/
+}
+
+.dygraph-legend > span { display: none; }
+.dygraph-legend > span.highlight { display: inline-flex; }
+
+.dygraph-legend {
+    /*background-color: rgba(200, 200, 255, 0.75) !important;*/
+    padding: 4px;
+    width: 100%;
 }

@@ -1,50 +1,53 @@
 <div flex class="dygraph-div"  style="width:100%; margin-top: 20px;"></div>
-<div class="datagrid" style="margin-top: 20px; margin-left: 40px; width:50%;">
-    <table>
-        <thead>
-        <tr>
-            <th>
-                <input type="checkbox" ng-model="selectAll" ng-change="setAllSeriesSelected(selectAll)">
-            </th>
-            <th>
+<!--<div layout="row">-->
+    <div class="datagrid" style="margin-top: 20px; margin-left: 40px; width:60%;">
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" ng-model="selectAll" ng-change="setAllSeriesSelected(selectAll)">
+                </th>
+                <th>
 
-            </th>
-            <th>
-                Metric
-            </th>
-            <th>
-                Min
-            </th>
-            <th>
-                Max
-            </th>
-            <th>
-                Avg
-            </th>
+                </th>
+                <th>
+                    Metric
+                </th>
+                <th>
+                    Min
+                </th>
+                <th>
+                    Max
+                </th>
+                <th>
+                    Avg
+                </th>
 
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="legendItem in metric.legendData" ng-if="legendItem.numberOfValidDatapoints > 0" class="hover-row" ng-mousemove="highlightSeries(legendItem.name)" ng-class="{'legend-highlighted': (legendItem.highlighted === true)}">
-            <td>
-                <input type="checkbox" ng-model="legendItem.visible" ng-change="updateSelectedSeries()">
-            </td>
-            <td>
-                <i class="fa fa-circle" ng-style="{color: legendItem.color}"></i>
-            </td>
-            <td>
-                {{legendItem.name}}
-            </td>
-            <td>
-                {{legendItem.min}}
-            </td>
-            <td>
-                {{legendItem.max}}
-            </td>
-            <td>
-                {{legendItem.avg}}
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="legendItem in metric.legendData" ng-if="legendItem.numberOfValidDatapoints > 0" class="hover-row" ng-mousemove="highlightSeries(legendItem.name)" ng-class="{'legend-highlighted': (legendItem.highlighted === true)}">
+                <td>
+                    <input type="checkbox" ng-model="legendItem.visible" ng-change="updateSelectedSeries()">
+                </td>
+                <td>
+                    <i class="fa fa-circle" ng-style="{color: legendItem.color}"></i>
+                </td>
+                <td>
+                    {{legendItem.name}}
+                </td>
+                <td>
+                    {{legendItem.min}}
+                </td>
+                <td>
+                    {{legendItem.max}}
+                </td>
+                <td>
+                    {{legendItem.avg}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--<div id="highlight-legend" class="dygraph-legend"></div>-->
+<!--</div>-->
