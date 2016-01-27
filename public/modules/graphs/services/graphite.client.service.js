@@ -20,47 +20,27 @@ angular.module('graphs').factory('Graphite', [
     }
 
     function addFlagData(series, events, productName, dashboardName, testRunId) {
-      var flags = {
-        'type': 'flags',
-        //"onSeries": series,
-        showInLegend: false,
-        'shape': 'squarepin',
-        'events': {
-          'click': function (e) {
-            Events.selected = {};
-            Events.selected.productName = productName;
-            Events.selected.dashboardName = dashboardName;
-            Events.selected.testRunId = testRunId;
-            Events.selected._id = e.point.id;
-            Events.selected.eventTimestamp = new Date(e.point.x);
-            Events.selected.eventDescription = e.point.text;
-            $state.go('editEvent', {
-              'productName': productName,
-              'dashboardName': dashboardName,
-              'eventId': e.point.id
-            });
-          }
-        }
-      };
-      var flagsData = [];
+
+      var annotations = [];
       var sortedEvents = events.sort(Utils.dynamicSort('eventTimestamp'));
       var eventDescriptionPattern = new RegExp(/^([0-9]+)/);
       var eventIndex = 1;
       _.each(sortedEvents, function (event, i) {
         if (event.eventDescription !== 'start' && event.eventDescription !== 'end') {
-          var epochTimestamp = new Date(event.eventTimestamp).getTime();
+          var timestamp = new Date(event.eventTimestamp).getTime();
           var eventTitle = eventDescriptionPattern.test(event.eventDescription) ? event.eventDescription.match(eventDescriptionPattern)[1] : eventIndex;
-          flagsData.push({
-            x: epochTimestamp,
-            title: eventTitle,
+          annotations.push({
+            series: series.labels[1],
+            x: timestamp,
+            shortText: eventTitle,
             text: event.eventDescription,
-            id: event._id
+            attachAtBottom: true
+
           });
           eventIndex++;
         }
       });
-      flags.data = flagsData;
-      series.push(flags);
+      series.annotations  = annotations;
       return series;
     }
 
@@ -175,8 +155,12 @@ angular.module('graphs').factory('Graphite', [
       completeDygraphData.data = dygraphData;
       completeDygraphData.labels = graphLabels;
 
+      /* now add annotations from events */
+
+
       return completeDygraphData;
     }
+
 
     function  addToTotals(seriesTotal, datapoint){
       var updatedTotal = {};
@@ -196,54 +180,7 @@ angular.module('graphs').factory('Graphite', [
       return updatedTotal;
     }
 
-    function  calculateAvg(seriesAvg, datapoint, datapointIndex){
-      var updatedAvg = {};
 
-      if(datapoint !== null) {
-        if(datapointIndex !== 0){
-
-          updatedAvg.numberOfValidDatapoints = seriesAvg.numberOfValidDatapoints + 1;
-          updatedAvg.value = (seriesAvg.value + datapoint) / updatedAvg.numberOfValidDatapoints;
-        }else {
-
-          updatedAvg.numberOfValidDatapoints = 1;
-          updatedAvg.value = datapoint;
-
-        }
-
-
-      }else{
-
-        updatedAvg.numberOfValidDatapoints = seriesAvg.numberOfValidDatapoints;
-        updatedAvg.value = seriesAvg.value;
-
-      }
-
-      return updatedAvg;
-    }
-
-    function createChartSeries(graphiteData) {
-      var series = [];
-      for (var j = 0; j < graphiteData.length; j++) {
-        var data = [];
-        for (var i = 0; i < graphiteData[j].datapoints.length; i++) {
-          if (graphiteData[j].datapoints[i][0] !== null) {
-            data.push([
-              graphiteData[j].datapoints[i][1] * 1000,
-              graphiteData[j].datapoints[i][0]
-            ]);
-          }
-        }
-        if (data.length > 0) {
-          series.push({
-            name: graphiteData[j].target,
-            data: data,
-            tooltip: {yDecimals: 0}
-          });
-        }
-      }
-      return series;
-    }
 
     function getData(from, until, targets, maxDataPoints) {
       var urlEncodedTargetUrl = '';

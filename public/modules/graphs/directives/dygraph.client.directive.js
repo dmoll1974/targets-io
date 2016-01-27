@@ -21,6 +21,21 @@ function DygraphDirective ($timeout) {
         if (newVal !== oldVal && newVal !== true) {
           scope.graph = new Dygraph(elem.children()[0], scope.data, scope.opts);
 
+          //scope.graph.updateOptions({
+          //  underlayCallback: function(canvas, area, g) {
+          //    var bottom_left = g.toDomCoords(scope.metric.annotations[0].x, -20);
+          //    var top_right = g.toDomCoords(scope.metric.annotations[0].x + 1, +20);
+          //
+          //    var left = bottom_left[0];
+          //    var right = top_right[0];
+          //
+          //    canvas.fillStyle = "rgba(255, 255, 102, 1.0)";
+          //    canvas.fillRect(left, area.y, right - left, area.h);
+          //  }
+          //})
+
+          scope.graph.ready(function() {
+            // This is called when data.csv comes back and the chart draws.
             var colors = scope.graph.getColors();
 
             _.each(scope.metric.legendData, function(legendItem, i){
@@ -33,6 +48,19 @@ function DygraphDirective ($timeout) {
 
             })
 
+
+            var annotations = scope.graph.annotations();
+
+            _.each(scope.metric.annotations, function(annotationFromEvent){
+
+              annotations.push(annotationFromEvent);
+
+            })
+            scope.graph.setAnnotations(annotations);
+
+
+          });
+
         }
       })
 
@@ -43,9 +71,11 @@ function DygraphDirective ($timeout) {
   return directive;
 
   /* @ngInject */
-  function DygraphController($scope, $stateParams, $rootScope, $timeout, TestRuns, Graphite) {
+  function DygraphController($scope, $state, $stateParams, $rootScope, $timeout, TestRuns, Graphite, Events) {
 
     $scope.selectAll = true;
+
+    var clickDetected = false;
 
     TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
       TestRuns.selected = testRun;
@@ -83,7 +113,46 @@ function DygraphDirective ($timeout) {
               axisLabelFormatter: Dygraph.dateAxisLabelFormatter,
               valueFormatter: Dygraph.dateString_
             }
+          },
+          underlayCallback: function(canvas, area, g) {
+
+            _.each($scope.metric.annotations, function(annotation){
+              var bottom_left = g.toDomCoords(annotation.x, -20);
+              var top_right = g.toDomCoords(annotation.x + 10000, +20);
+
+              var left = bottom_left[0];
+              var right = top_right[0];
+
+              canvas.fillStyle = "#FF5722";
+              canvas.fillRect(left, area.y, right - left, area.h);
+            })
+          },
+          clickCallback: function(e, x, points){
+
+            if(clickDetected) {
+
+              clickDetected = false;
+              var eventTimestamp = x;
+              Events.selected.productName = $stateParams.productName;
+              Events.selected.dashboardName = $stateParams.dashboardName;
+              Events.selected.eventTimestamp = eventTimestamp;
+              Events.selected.testRunId = $stateParams.testRunId;
+              Events.selected.eventDescription = '';
+
+              $state.go('createEvent', {
+                productName: $stateParams.productName,
+                dashboardName: $stateParams.dashboardName
+              });
+
+
+            } else {
+              clickDetected = true;
+              setTimeout(function() {
+                clickDetected = false;
+              }, 500);
+            }
           }
+
 
           //yRangePad: 10,
           //labelsDivWidth: "100%"//,
@@ -100,9 +169,35 @@ function DygraphDirective ($timeout) {
 
         $scope.data = dygraphData.data;
         $scope.metric.legendData = dygraphData.legendData;
+
+        /* synchronyze anotations with datapoints */
+
+        _.each(dygraphData.annotations, function(annotation){
+
+          annotation = synchronizeWithDataPoint(annotation);
+        })
+
+
+        $scope.metric.annotations = dygraphData.annotations;
         $scope.loading = false;
       });
     });
+
+    function synchronizeWithDataPoint (annotationFromEvent){
+
+      var synchronizedAnnotationTimestamp = annotationFromEvent ;
+
+      for(var i=0;i < $scope.data.length; i++){
+
+        if(new Date($scope.data[i][0]).getTime() > annotationFromEvent.x){
+
+          synchronizedAnnotationTimestamp.x = new Date($scope.data[i][0]).getTime();
+          break;
+        }
+      }
+
+      return synchronizedAnnotationTimestamp;
+    }
 
     var unHighLightLegend = function(event){
 
@@ -142,7 +237,7 @@ function DygraphDirective ($timeout) {
 
     function updateGraph(from, until, targets, callback) {
       Graphite.getData(from, until, targets, 900).then(function (series) {
-        if (series.length > 0) {
+        if (series.data.length > 0) {
           Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
             callback(seriesEvents);
           });

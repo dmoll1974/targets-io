@@ -14231,7 +14231,7 @@ button.toast-close-button {
 }
 
 .datagrid table td, .datagrid table th {
-    padding: 3px 10px;
+    padding: 1px 5px;
 }
 
 .datagrid table thead th {
