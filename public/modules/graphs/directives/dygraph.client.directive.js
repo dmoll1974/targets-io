@@ -21,18 +21,6 @@ function DygraphDirective ($timeout) {
         if (newVal !== oldVal && newVal !== true) {
           scope.graph = new Dygraph(elem.children()[0], scope.data, scope.opts);
 
-          //scope.graph.updateOptions({
-          //  underlayCallback: function(canvas, area, g) {
-          //    var bottom_left = g.toDomCoords(scope.metric.annotations[0].x, -20);
-          //    var top_right = g.toDomCoords(scope.metric.annotations[0].x + 1, +20);
-          //
-          //    var left = bottom_left[0];
-          //    var right = top_right[0];
-          //
-          //    canvas.fillStyle = "rgba(255, 255, 102, 1.0)";
-          //    canvas.fillRect(left, area.y, right - left, area.h);
-          //  }
-          //})
 
           scope.graph.ready(function() {
             // This is called when data.csv comes back and the chart draws.
