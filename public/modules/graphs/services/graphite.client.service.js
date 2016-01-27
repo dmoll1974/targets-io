@@ -138,8 +138,10 @@ angular.module('graphs').factory('Graphite', [
           min: Math.round(seriesMin * 100) /100 ,
           max: Math.round(seriesMax * 100) /100 ,
           avg: Math.round((seriesTotal.value / seriesTotal.numberOfValidDatapoints)  * 100) /100,
-          visible: false
+          visible: true,
+          numberOfValidDatapoints: seriesTotal.numberOfValidDatapoints
         })
+
         seriesTotal.value = 0;
         seriesTotal.numberOfValidDatapoints = 0;
         seriesMin = null;

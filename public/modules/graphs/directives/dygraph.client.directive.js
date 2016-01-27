@@ -19,21 +19,24 @@ function DygraphDirective ($timeout) {
 
       scope.$watch('loading', function (newVal, oldVal) {
         if (newVal !== oldVal && newVal !== true) {
-          var graph = new Dygraph(elem.children()[0], scope.data, scope.opts);
+          scope.graph = new Dygraph(elem.children()[0], scope.data, scope.opts);
+
+            var colors = scope.graph.getColors();
+
+            _.each(scope.metric.legendData, function(legendItem, i){
+
+              if(scope.metric.legendData[i].numberOfValidDatapoints > 0 ){
+
+                scope.metric.legendData[i].color = colors[i];
+
+              }
+
+            })
+
         }
       })
 
-      scope.$watch('metric.legendData', function (newVal, oldVal) {
-        if (newVal !== oldVal) {
 
-          var graph = new Dygraph(elem.children()[0], scope.data, scope.opts);
-
-          _.each(scope.metric.legendData, function(legendItem){
-            graph.setVisibility(legendItem.id, legendItem.visible);
-          })
-
-        }
-      })
     }
   };
 
@@ -41,6 +44,8 @@ function DygraphDirective ($timeout) {
 
   /* @ngInject */
   function DygraphController($scope, $stateParams, $rootScope, $timeout, TestRuns, Graphite) {
+
+    $scope.selectAll = true;
 
     TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
       TestRuns.selected = testRun;
@@ -52,6 +57,8 @@ function DygraphDirective ($timeout) {
         $scope.opts = {
           //axes: axes,
           labels: dygraphData.labels,
+          axisLabelFontSize : 12,
+          //yLabelHeight: 12,
           //customBars: expectMinMax,
           //showRangeSelector: true,
           //interactionModel: Dygraph.Interaction.defaultModel,
@@ -64,8 +71,14 @@ function DygraphDirective ($timeout) {
           legend: 'never',
           includeZero: true,
           valueRange: [0,dygraphData.maxValue ],
+          highlightSeriesOpts: {
+            strokeWidth: 2
+          },
+          highlightCallback: highLightLegend,
+          unhighlightCallback: unHighLightLegend
+
           //yRangePad: 10,
-          labelsDivWidth: "100%"//,
+          //labelsDivWidth: "100%"//,
           //axes : {
           //  x : {
           //    valueFormatter: Dygraph.dateString_,
@@ -83,6 +96,41 @@ function DygraphDirective ($timeout) {
       });
     });
 
+    var unHighLightLegend = function(event){
+
+      $scope.$apply(function () {
+        _.each($scope.metric.legendData, function(legendItem, i){
+
+            $scope.metric.legendData[i].highlighted = false;
+        })
+      });
+    }
+    var highLightLegend = function(event, x, points, row, seriesName){
+
+       var hightLightedIndex = $scope.metric.legendData.map(function(legendItem){
+         return legendItem.name;
+       }).indexOf(seriesName);
+
+      $scope.$apply(function () {
+        _.each($scope.metric.legendData, function(legendItem, i){
+
+         if(i === hightLightedIndex){
+
+           $scope.metric.legendData[i].highlighted = true;
+
+         }else{
+
+           $scope.metric.legendData[i].highlighted = false;
+         }
+       })
+      });
+    }
+
+    $scope.highlightSeries = function(seriesName){
+
+      $scope.graph.setSelection(false, seriesName)
+    }
+
     function updateGraph(from, until, targets, callback) {
       Graphite.getData(from, until, targets, 900).then(function (series) {
         if (series.length > 0) {
@@ -94,6 +142,41 @@ function DygraphDirective ($timeout) {
         }
       });
     }
+
+
+
+    $scope.updateSelectedSeries = function() {
+
+
+      _.each($scope.metric.legendData, function(legendItem, i){
+
+            $scope.graph.setVisibility(legendItem.id, legendItem.visible);
+
+      })
+
+    }
+
+    $scope.setAllSeriesSelected = function(setAllSeriesTo){
+
+      _.each($scope.metric.legendData, function(legendItem, i){
+
+        legendItem.visible = setAllSeriesTo;
+
+        $scope.graph.setVisibility(legendItem.id, legendItem.visible);
+      })
+    };
+    //$scope.$watch('selectAll', function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //
+    //    _.each($scope.metric.legendData, function(legendItem, i){
+    //
+    //      legendItem.visible = newVal;
+    //
+    //    })
+    //
+    //  }
+    //})
+
 
   };
 

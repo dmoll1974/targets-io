@@ -14256,9 +14256,9 @@ button.toast-close-button {
     font-weight: normal;
 }
 
-.datagrid table tbody .alt td {
-    background: #F4CE53;
-    color: #0A0806;
+.datagrid table tbody .legend-highlighted td {
+    background: rgba(255,110,64,0.87);
+    color: white;
 }
 
 .datagrid table tbody td:first-child {
