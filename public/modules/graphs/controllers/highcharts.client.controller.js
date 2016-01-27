@@ -157,6 +157,8 @@ angular.module('graphs').controller('HighchartsController', [
 
     var clickDetected = false;
 
+
+
     var defaultChartConfig = {
       chart: {
         type: 'line',
@@ -342,49 +344,59 @@ angular.module('graphs').controller('HighchartsController', [
       }
     };
     $scope.initConfig = function (metric, index) {
-      $scope.graphSelector = '#chart-' + index;
-      $scope.config = angular.extend(defaultChartConfig);
-      $scope.config.title.text = metric.alias;
-      if (!metric.requirementValue)
-        $scope.config.yAxis.plotLines = [];
-      //$scope.config.chart.renderTo = 'chart-' + index;
-      setTimeout(function () {
-        angular.element($scope.graphSelector).highcharts('StockChart', $scope.config);
-        var chart = angular.element($scope.graphSelector).highcharts();
-        chart.showLoading('Loading data ...');
-        /* Set the TestRuns.selected based on $stateParams*/
-        TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
-          TestRuns.selected = testRun;
-          var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
-          var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
-          updateGraph(from, until, metric.targets, function (series) {
-            while (chart.series.length > 0) {
-              chart.series[0].remove(false);  //deletes all series
-            }
-            chart.hideLoading();
-            _.each(series, function (serie) {
-              chart.addSeries(serie, false);
-            });
-            if (series.length > 0) {
-              /* draw xAxis plotlines for events*/
-              if (series[series.length - 1].type) {
-                _.each(series[series.length - 1].data, function (flag) {
-                  chart.options.xAxis[0].plotLines.push({
-                    value: flag.x,
-                    width: 1,
-                    color: 'blue',
-                    dashStyle: 'dash'
-                  });
-                });
-              }
-            } else {
-              chart.showLoading('No data to display');
-            }
-            chart.redraw();
-          });
-        });
-      }, 100);
+      //$scope.graphSelector = '#chart-' + index;
+      ////$scope.config = angular.extend(graphCfg);
+      ////$scope.config.title.text = metric.alias;
+      ////if (!metric.requirementValue)
+      ////  $scope.config.yAxis.plotLines = [];
+      ////$scope.config.chart.renderTo = 'chart-' + index;
+      ////setTimeout(function () {
+      //  //angular.element($scope.graphSelector).highcharts('StockChart', $scope.config);
+      //  //var chart = angular.element($scope.graphSelector).highcharts();
+      //
+      //  //chart.showLoading('Loading data ...');
+      //  /* Set the TestRuns.selected based on $stateParams*/
+      //  TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+      //    TestRuns.selected = testRun;
+      //    var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
+      //    var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
+      //    updateGraph(from, until, metric.targets, function (dygraphData) {
+      //
+      //      $scope.metric.opts = {
+      //        //axes: axes,
+      //        labels: dygraphData.labels,
+      //        //customBars: expectMinMax,
+      //        //showRangeSelector: true,
+      //        //interactionModel: Dygraph.Interaction.defaultModel,
+      //        //clickCallback: $.proxy(this._onDyClickCallback, this),
+      //        //connectSeparatedPoints: true,
+      //        //dateWindow: [detailStartDateTm.getTime(), detailEndDateTm.getTime()],
+      //        //drawCallback: $.proxy(this._onDyDrawCallback, this),
+      //        //zoomCallback: $.proxy(this._onDyZoomCallback, this),
+      //        //digitsAfterDecimal: 2,
+      //        legend: 'never',
+      //        includeZero: true,
+      //        valueRange: [0,dygraphData.maxValue ],
+      //        //yRangePad: 10,
+      //        labelsDivWidth: "100%"//,
+      //        //axes : {
+      //        //  x : {
+      //        //    valueFormatter: Dygraph.dateString_,
+      //        //    ticker: Dygraph.dateTicker
+      //        //    //xValueParser: function(x) { return parseInt(x); }
+      //        //  }
+      //        //},
+      //        //xValueParser: function(x) { return parseInt(x); },
+      //
+      //      };
+      //
+      //      $scope.metric.data = dygraphData.data;
+      //      $scope.metric.legendData = dygraphData.legendData;
+      //   });
+      //  });
+
     };
+
     function updateGraph(from, until, targets, callback) {
       Graphite.getData(from, until, targets, 900).then(function (series) {
         if (series.length > 0) {
