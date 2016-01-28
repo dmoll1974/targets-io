@@ -58,7 +58,7 @@
                     <accordion-heading>
                         <div>{{metric.alias}}</div>
                     </accordion-heading>
-                    <div data-ng-init="initConfig(metric, $index)" ng-if="metric.isOpen">
+                    <div  ng-if="metric.isOpen">
                         <span>
                             <div class="btn-group">
                                 <label title="Edit metric" class="btn default" ng-click="editMetric(metric._id)"><span

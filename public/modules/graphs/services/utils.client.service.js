@@ -6,7 +6,13 @@ angular.module('graphs').service('Utils', [function () {
       dynamicSortMultiple: dynamicSortMultiple,
       dynamicSortTags: dynamicSortTags,
       selectedIndex: '',
-      metricFilter: ''
+      metricFilter: '',
+      zoomLock: true,
+      graphType: '',
+      zoomRange: '',
+      zoomFrom: '',
+      zoomUntil: ''
+
     };
     return Utils;
     function dynamicSortTags(sortOrderParam) {

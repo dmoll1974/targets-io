@@ -44,9 +44,9 @@ angular.module('graphs').controller('GraphsController', [
 
     /* Get deeplink zoom params from query string */
     if ($state.params.zoomFrom)
-      TestRuns.zoomFrom = $state.params.zoomFrom;
+      Utils.zoomFrom = $state.params.zoomFrom;
     if ($state.params.zoomUntil)
-      TestRuns.zoomUntil = $state.params.zoomUntil;
+      Utils.zoomUntil = $state.params.zoomUntil;
 
     if ($state.params.metricFilter) {
         $scope.metricFilter = $state.params.metricFilter;
@@ -82,11 +82,11 @@ angular.module('graphs').controller('GraphsController', [
           $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag;
 
       }
-      if (TestRuns.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
+      if (Utils.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
         $scope.viewShareUrl = $scope.viewShareUrl + '?';
       }
-      if (TestRuns.zoomFrom) {
-        $scope.viewShareUrl = $scope.viewShareUrl + '&zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
+      if (Utils.zoomFrom) {
+        $scope.viewShareUrl = $scope.viewShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
       }
       if ($state.params.selectedSeries) {
         $scope.viewShareUrl = $scope.viewShareUrl + '&selectedSeries=' + $state.params.selectedSeries;
@@ -122,8 +122,8 @@ angular.module('graphs').controller('GraphsController', [
     /* reset zoom*/
     $scope.resetZoom = function () {
       /*reset zoom*/
-      TestRuns.zoomFrom = '';
-      TestRuns.zoomUntil = '';
+      Utils.zoomFrom = '';
+      Utils.zoomUntil = '';
       $state.go($state.current, {}, { reload: true });
     };
     /* Zoom lock enabled by default */
@@ -132,7 +132,7 @@ angular.module('graphs').controller('GraphsController', [
     /* watch metricFilter */
     $scope.$watch('zoomLock', function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        TestRuns.zoomLock = newVal;
+        Utils.zoomLock = newVal;
       }
     });
 
@@ -173,7 +173,10 @@ angular.module('graphs').controller('GraphsController', [
       return metrics;
     }
     /* default zoom range for live graphs is -10m */
-    $scope.zoomRange = TestRuns.zoomRange !== '' ? TestRuns.zoomRange : '-10min';
+    $scope.zoomRange = Utils.zoomRange !== '' ? Utils.zoomRange : '-10min';
+
+    Utils.zoomRange = $scope.zoomRange;
+    
     /* Set active tab */
     $scope.isActive = function (tag) {
       return $scope.value === tag;

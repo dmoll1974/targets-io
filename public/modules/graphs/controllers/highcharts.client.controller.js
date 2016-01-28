@@ -32,8 +32,10 @@ angular.module('graphs').controller('HighchartsController', [
       }
     };
 
-    /* set zoomLock */
-    $scope.zoomLock =  TestRuns.zoomLock;
+
+
+    /* set graphType */
+    Utils.graphType =  'testrun';
 
     /* set Tags form graph */
     $scope.setTags = function () {
@@ -95,11 +97,11 @@ angular.module('graphs').controller('HighchartsController', [
     $scope.setMetricShareUrl = function (metric) {
 
       $scope.metricShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag +  '?';
-      //if (TestRuns.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
+      //if (Utils.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
       //  $scope.metricShareUrl = $scope.metricShareUrl + '?';
       //}
-      if (TestRuns.zoomFrom) {
-        $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
+      if (Utils.zoomFrom) {
+        $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
       }
       if ($state.params.selectedSeries) {
         $scope.metricShareUrl = $scope.metricShareUrl + '&selectedSeries=' + $state.params.selectedSeries;
@@ -139,17 +141,17 @@ angular.module('graphs').controller('HighchartsController', [
 
     /* If zoom lock is checked, update all graphs when zoom is applied in one */
     //$scope.$watch(function (scope) {
-    //  return TestRuns.zoomFrom;
+    //  return Utils.zoomFrom;
     //}, function (newVal, oldVal) {
     //  if (newVal !== oldVal) {
-    //    var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
-    //    var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
+    //    var from = Utils.zoomFrom ? Utils.zoomFrom : TestRuns.selected.startEpoch;
+    //    var until = Utils.zoomUntil ? Utils.zoomUntil : TestRuns.selected.endEpoch;
     //    var chart = angular.element($scope.graphSelector).highcharts();
     //    while (chart.series.length > 0) {
     //      chart.series[0].remove(false);  //deletes all series
     //    }
     //    chart.showLoading('Loading data ...');
-    //    updateGraph(TestRuns.zoomFrom, TestRuns.zoomUntil, $scope.metric.targets, function (series) {
+    //    updateGraph(Utils.zoomFrom, Utils.zoomUntil, $scope.metric.targets, function (series) {
     //      chart.hideLoading();
     //      _.each(series, function (serie) {
     //        chart.addSeries(serie, false);
@@ -308,8 +310,8 @@ angular.module('graphs').controller('HighchartsController', [
             var until = typeof e.min == 'undefined' && typeof e.max == 'undefined' ? TestRuns.selected.endEpoch : Math.round(e.max);
             /* If zoom lock is checked, set zoom timestamps in TestRuns service */
             if ($scope.zoomLock === true) {
-              TestRuns.zoomFrom = from;
-              TestRuns.zoomUntil = until;
+              Utils.zoomFrom = from;
+              Utils.zoomUntil = until;
               $scope.$apply();
             } else {
               var chart = angular.element($scope.graphSelector).highcharts();
@@ -362,8 +364,8 @@ angular.module('graphs').controller('HighchartsController', [
       //  /* Set the TestRuns.selected based on $stateParams*/
       //  TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
       //    TestRuns.selected = testRun;
-      //    var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
-      //    var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
+      //    var from = Utils.zoomFrom ? Utils.zoomFrom : TestRuns.selected.startEpoch;
+      //    var until = Utils.zoomUntil ? Utils.zoomUntil : TestRuns.selected.endEpoch;
       //    updateGraph(from, until, metric.targets, function (dygraphData) {
       //
       //      $scope.metric.opts = {

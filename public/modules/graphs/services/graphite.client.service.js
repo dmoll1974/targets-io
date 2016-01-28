@@ -69,6 +69,7 @@ angular.module('graphs').factory('Graphite', [
       var seriesMax = 0;
 
       var graphMaxValue = 0;
+      var graphNumberOfValidDatapoints = 0;
 
       var completeDygraphData = {};
       var graphiteData = new Object();
@@ -122,6 +123,7 @@ angular.module('graphs').factory('Graphite', [
           numberOfValidDatapoints: seriesTotal.numberOfValidDatapoints
         })
 
+        graphNumberOfValidDatapoints = graphNumberOfValidDatapoints + seriesTotal.numberOfValidDatapoints;
         seriesTotal.value = 0;
         seriesTotal.numberOfValidDatapoints = 0;
         seriesMin = null;
@@ -152,6 +154,7 @@ angular.module('graphs').factory('Graphite', [
 
       completeDygraphData.legendData = legendData;
       completeDygraphData.maxValue = graphMaxValue;
+      completeDygraphData.graphNumberOfValidDatapoints = graphNumberOfValidDatapoints;
       completeDygraphData.data = dygraphData;
       completeDygraphData.labels = graphLabels;
 
