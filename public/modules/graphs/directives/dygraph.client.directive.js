@@ -70,6 +70,7 @@ function DygraphDirective ($timeout) {
       var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
       var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
       $scope.loading = true;
+
       updateGraph(from, until, $scope.metric.targets, function (dygraphData) {
 
         $scope.opts = {
@@ -239,12 +240,20 @@ function DygraphDirective ($timeout) {
 
     $scope.updateSelectedSeries = function() {
 
+      /* show / hide selected series in legend */
 
       _.each($scope.metric.legendData, function(legendItem, i){
 
             $scope.graph.setVisibility(legendItem.id, legendItem.visible);
 
       })
+
+      /* set y-axis range to highest of the selected series */
+
+      var maxValue = getMaximumOfSelectedSeries($scope.metric.legendData);
+      $scope.graph.updateOptions({
+        valueRange: [0,maxValue ]
+      });
 
     }
 
@@ -256,19 +265,27 @@ function DygraphDirective ($timeout) {
 
         $scope.graph.setVisibility(legendItem.id, legendItem.visible);
       })
-    };
-    //$scope.$watch('selectAll', function (newVal, oldVal) {
-    //  if (newVal !== oldVal) {
-    //
-    //    _.each($scope.metric.legendData, function(legendItem, i){
-    //
-    //      legendItem.visible = newVal;
-    //
-    //    })
-    //
-    //  }
-    //})
 
+      /* set y-axis range to highest of the selected series */
+
+      var maxValue = getMaximumOfSelectedSeries($scope.metric.legendData);
+      $scope.graph.updateOptions({
+        valueRange: [0,maxValue ]
+      });
+
+    };
+
+    function getMaximumOfSelectedSeries(legendData){
+
+      var maxValue = 0;
+
+      _.each(legendData, function(legendItem){
+
+        if(legendItem.visible === true && legendItem.max > maxValue ) maxValue = legendItem.max;
+      })
+
+      return maxValue;
+    }
 
   };
 
