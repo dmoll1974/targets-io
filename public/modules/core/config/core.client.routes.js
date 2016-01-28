@@ -12,7 +12,7 @@ angular.module('core', ['dashboards']).config([
       templateUrl: 'modules/core/views/home.client.view.html'
     })
     .state('gettingStarted', {
-      url: '/',
+      url: '/getting-started',
       templateUrl: 'modules/core/views/getting-started.client.view.html'
     });
   }
