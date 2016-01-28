@@ -23,7 +23,16 @@ function DygraphDirective ($timeout) {
 
 
           scope.graph.ready(function() {
-            // This is called when data.csv comes back and the chart draws.
+
+
+            /* set y-axis range to highest of the selected series */
+
+            var maxValue = getMaximumOfSelectedSeries(scope.metric.legendData);
+            scope.graph.updateOptions({
+              valueRange: [0, maxValue]
+            });
+
+            /* add colors to legend */
             var colors = scope.graph.getColors();
 
             _.each(scope.metric.legendData, function(legendItem, i){
@@ -36,7 +45,7 @@ function DygraphDirective ($timeout) {
 
             })
 
-
+            /* add annotation to graph */
             var annotations = scope.graph.annotations();
 
             _.each(scope.metric.annotations, function(annotationFromEvent){
@@ -52,6 +61,17 @@ function DygraphDirective ($timeout) {
         }
       })
 
+      function getMaximumOfSelectedSeries(legendData){
+
+        var maxValue = 0;
+
+        _.each(legendData, function(legendItem){
+
+          if(legendItem.visible === true && legendItem.max > maxValue ) maxValue = legendItem.max;
+        })
+
+        return maxValue;
+      }
 
     }
   };
