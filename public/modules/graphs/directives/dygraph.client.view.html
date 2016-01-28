@@ -1,6 +1,6 @@
 <div flex class="dygraph-div"  style="width:100%; margin-top: 20px;"></div>
-<!--<div layout="row">-->
-    <div class="datagrid" style="margin-top: 20px; margin-left: 40px; width:60%;">
+<div layout="row" layout-align="space-between start">
+    <div  class="datagrid" style="margin-top: 20px; margin-left: 40px; ">
         <table>
             <thead>
             <tr>
@@ -49,5 +49,38 @@
             </tbody>
         </table>
     </div>
-    <!--<div id="highlight-legend" class="dygraph-legend"></div>-->
-<!--</div>-->
+    <div    class="datagrid" ng-if="metric.annotations.length > 0" style="margin-top: 20px; margin-left: 40px; ">
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    Event
+                </th>
+                <th>
+                    Timestamp
+                </th>
+                <th>
+                    Description
+                </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="annotation in metric.annotations">
+
+                <td>
+                    {{annotation.shortText}}
+                </td>
+                <td>
+                    {{annotation.x | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                </td>
+                <td>
+                    {{annotation.text}}
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

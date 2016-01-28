@@ -143,10 +143,11 @@ function DygraphDirective ($timeout) {
               }
             },
             underlayCallback: function (canvas, area, g) {
-
+              /* get full range of graph to determine width of underlay */
+              var xAxisRange = new Date($scope.data[$scope.data.length -1][0]).getTime() - new Date($scope.data[0][0]).getTime() ;
               _.each($scope.metric.annotations, function (annotation) {
                 var bottom_left = g.toDomCoords(annotation.x, -20);
-                var top_right = g.toDomCoords(annotation.x + 10000, +20);
+                var top_right = g.toDomCoords(annotation.x + (xAxisRange / 800), +20);
 
                 var left = bottom_left[0];
                 var right = top_right[0];
