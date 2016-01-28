@@ -16,6 +16,7 @@ angular.module('events').factory('TestRuns', [
       zoomFrom: '',
       zoomUntil: '',
       zoomRange: '',
+      zoomLock: true,
       update: update,
       addTestRun: addTestRun,
       getTestRunById: getTestRunById,

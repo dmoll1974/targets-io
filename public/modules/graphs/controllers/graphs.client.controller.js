@@ -128,6 +128,15 @@ angular.module('graphs').controller('GraphsController', [
     };
     /* Zoom lock enabled by default */
     $scope.zoomLock = true;
+
+    /* watch metricFilter */
+    $scope.$watch('zoomLock', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        TestRuns.zoomLock = newVal;
+      }
+    });
+
+
     $scope.init = function () {
       /* use local time in graphs */
       Highcharts.setOptions({ global: { useUTC: false } });

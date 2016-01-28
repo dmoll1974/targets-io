@@ -9,7 +9,7 @@ function DygraphDirective ($timeout) {
 
     restrict: 'E',
     scope: {
-      metric: '='
+      metric: '=',
      },
     //template: '<div flex class="dygraph-div"  style="width:100%;"><legend legend="legend" style="margin-top: 20px; margin-left: 30px;"></legend>',
     templateUrl: 'modules/graphs/directives/dygraph.client.view.html',
@@ -65,111 +65,150 @@ function DygraphDirective ($timeout) {
 
     var clickDetected = false;
 
-    TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
-      TestRuns.selected = testRun;
-      var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
-      var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
-      $scope.loading = true;
+    /* set zoomLock */
 
-      updateGraph(from, until, $scope.metric.targets, function (dygraphData) {
+    $scope.zoomLock =  TestRuns.zoomLock;
 
-        $scope.opts = {
-          //labelsDiv: 'highlight-legend',
-          labels: dygraphData.labels,
-          axisLabelFontSize : 12,
-          //yLabelHeight: 12,
-          //customBars: expectMinMax,
-          //showRangeSelector: true,
-          //interactionModel: Dygraph.Interaction.defaultModel,
-          //clickCallback: $.proxy(this._onDyClickCallback, this),
-          //connectSeparatedPoints: true,
-          //dateWindow: [detailStartDateTm.getTime(), detailEndDateTm.getTime()],
-          //drawCallback: $.proxy(this._onDyDrawCallback, this),
-          //zoomCallback: $.proxy(this._onDyZoomCallback, this),
-          //digitsAfterDecimal: 2,
-          legend: 'never',
-          includeZero: true,
-          valueRange: [0,dygraphData.maxValue ],
-          highlightCircleSize: 0,
-          highlightSeriesOpts: {
-            strokeWidth: 2
-          },
-          highlightCallback: highLightLegend,
-          unhighlightCallback: unHighLightLegend,
-          //ticker: Dygraph.dateTicker,
-          axes: {
-            x: {
-              axisLabelFormatter: Dygraph.dateAxisLabelFormatter,
-              valueFormatter: Dygraph.dateString_
-            }
-          },
-          underlayCallback: function(canvas, area, g) {
+    /* watch zoomLock */
 
-            _.each($scope.metric.annotations, function(annotation){
-              var bottom_left = g.toDomCoords(annotation.x, -20);
-              var top_right = g.toDomCoords(annotation.x + 10000, +20);
+    $scope.$watch(function (scope) {
+      return TestRuns.zoomLock;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
 
-              var left = bottom_left[0];
-              var right = top_right[0];
-
-              canvas.fillStyle = "#FF5722";
-              canvas.fillRect(left, area.y, right - left, area.h);
-            })
-          },
-          clickCallback: function(e, x, points){
-
-            if(clickDetected) {
-
-              clickDetected = false;
-              var eventTimestamp = x;
-              Events.selected.productName = $stateParams.productName;
-              Events.selected.dashboardName = $stateParams.dashboardName;
-              Events.selected.eventTimestamp = eventTimestamp;
-              Events.selected.testRunId = $stateParams.testRunId;
-              Events.selected.eventDescription = '';
-
-              $state.go('createEvent', {
-                productName: $stateParams.productName,
-                dashboardName: $stateParams.dashboardName
-              });
+        $scope.zoomLock =  TestRuns.zoomLock;
+      }
+    });
 
 
-            } else {
-              clickDetected = true;
-              setTimeout(function() {
+    drawDypraph();
+
+    function drawDypraph()  {
+      TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+        TestRuns.selected = testRun;
+        var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
+        var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
+        $scope.loading = true;
+
+        updateGraph(from, until, $scope.metric.targets, function (dygraphData) {
+
+          $scope.opts = {
+            //labelsDiv: 'highlight-legend',
+            labels: dygraphData.labels,
+            axisLabelFontSize: 12,
+            //yLabelHeight: 12,
+            //customBars: expectMinMax,
+            //showRangeSelector: true,
+            //interactionModel: Dygraph.Interaction.defaultModel,
+            //clickCallback: $.proxy(this._onDyClickCallback, this),
+            //connectSeparatedPoints: true,
+            //dateWindow: [detailStartDateTm.getTime(), detailEndDateTm.getTime()],
+            //drawCallback: $.proxy(this._onDyDrawCallback, this),
+
+            //digitsAfterDecimal: 2,
+            legend: 'never',
+            includeZero: true,
+            valueRange: [0, dygraphData.maxValue],
+            highlightCircleSize: 0,
+            highlightSeriesOpts: {
+              strokeWidth: 2
+            },
+            highlightCallback: highLightLegend,
+            unhighlightCallback: unHighLightLegend,
+            //ticker: Dygraph.dateTicker,
+            axes: {
+              x: {
+                axisLabelFormatter: Dygraph.dateAxisLabelFormatter,
+                valueFormatter: Dygraph.dateString_
+              }
+            },
+            underlayCallback: function (canvas, area, g) {
+
+              _.each($scope.metric.annotations, function (annotation) {
+                var bottom_left = g.toDomCoords(annotation.x, -20);
+                var top_right = g.toDomCoords(annotation.x + 10000, +20);
+
+                var left = bottom_left[0];
+                var right = top_right[0];
+
+                canvas.fillStyle = "#FF5722";
+                canvas.fillRect(left, area.y, right - left, area.h);
+              })
+            },
+            clickCallback: function (e, x, points) {
+
+              if (clickDetected) {
+
                 clickDetected = false;
-              }, 500);
-            }
-          }
+                var eventTimestamp = x;
+                Events.selected.productName = $stateParams.productName;
+                Events.selected.dashboardName = $stateParams.dashboardName;
+                Events.selected.eventTimestamp = eventTimestamp;
+                Events.selected.testRunId = $stateParams.testRunId;
+                Events.selected.eventDescription = '';
+
+                $state.go('createEvent', {
+                  productName: $stateParams.productName,
+                  dashboardName: $stateParams.dashboardName
+                });
 
 
-          //yRangePad: 10,
-          //labelsDivWidth: "100%"//,
-          //axes : {
-          //  x : {
-          //    valueFormatter: Dygraph.dateString_,
-          //    ticker: Dygraph.dateTicker
-          //    //xValueParser: function(x) { return parseInt(x); }
-          //  }
-          //},
-          //xValueParser: function(x) { return parseInt(x); },
-
-        };
-
-        $scope.data = dygraphData.data;
-        $scope.metric.legendData = dygraphData.legendData;
-
-        /* synchronyze anotations with datapoints */
-
-        _.each(dygraphData.annotations, function(annotation){
-
-          annotation = synchronizeWithDataPoint(annotation);
-        })
+              } else {
+                clickDetected = true;
+                setTimeout(function () {
+                  clickDetected = false;
+                }, 500);
+              }
+            },
+            zoomCallback: zoomGraph
 
 
-        $scope.metric.annotations = dygraphData.annotations;
-        $scope.loading = false;
+            //yRangePad: 10,
+            //labelsDivWidth: "100%"//,
+            //axes : {
+            //  x : {
+            //    valueFormatter: Dygraph.dateString_,
+            //    ticker: Dygraph.dateTicker
+            //    //xValueParser: function(x) { return parseInt(x); }
+            //  }
+            //},
+            //xValueParser: function(x) { return parseInt(x); },
+
+          };
+
+          $scope.data = dygraphData.data;
+          $scope.metric.legendData = dygraphData.legendData;
+
+          /* synchronyze anotations with datapoints */
+
+          _.each(dygraphData.annotations, function (annotation) {
+
+            annotation = synchronizeWithDataPoint(annotation);
+          })
+
+
+          $scope.metric.annotations = dygraphData.annotations;
+          $scope.loading = false;
+        });
       });
+    }
+
+    function zoomGraph(minDate, maxDate, yRange){
+
+      TestRuns.zoomFrom = Math.round(minDate);
+      TestRuns.zoomUntil= Math.round(maxDate);
+       drawDypraph();
+    }
+
+    /* If zoom lock is checked, update all graphs when zoom is applied in one */
+    $scope.$watch(function (scope) {
+      return TestRuns.zoomFrom;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal && $scope.zoomLock === true) {
+
+        drawDypraph();
+
+      }
     });
 
     function synchronizeWithDataPoint (annotationFromEvent){

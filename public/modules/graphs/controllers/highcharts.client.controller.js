@@ -31,6 +31,10 @@ angular.module('graphs').controller('HighchartsController', [
         }
       }
     };
+
+    /* set zoomLock */
+    $scope.zoomLock =  TestRuns.zoomLock;
+
     /* set Tags form graph */
     $scope.setTags = function () {
       if ($scope.showTags) {
@@ -134,26 +138,26 @@ angular.module('graphs').controller('HighchartsController', [
     });
 
     /* If zoom lock is checked, update all graphs when zoom is applied in one */
-    $scope.$watch(function (scope) {
-      return TestRuns.zoomFrom;
-    }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
-        var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
-        var chart = angular.element($scope.graphSelector).highcharts();
-        while (chart.series.length > 0) {
-          chart.series[0].remove(false);  //deletes all series
-        }
-        chart.showLoading('Loading data ...');
-        updateGraph(TestRuns.zoomFrom, TestRuns.zoomUntil, $scope.metric.targets, function (series) {
-          chart.hideLoading();
-          _.each(series, function (serie) {
-            chart.addSeries(serie, false);
-          });
-          chart.redraw();
-        });
-      }
-    });
+    //$scope.$watch(function (scope) {
+    //  return TestRuns.zoomFrom;
+    //}, function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //    var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
+    //    var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
+    //    var chart = angular.element($scope.graphSelector).highcharts();
+    //    while (chart.series.length > 0) {
+    //      chart.series[0].remove(false);  //deletes all series
+    //    }
+    //    chart.showLoading('Loading data ...');
+    //    updateGraph(TestRuns.zoomFrom, TestRuns.zoomUntil, $scope.metric.targets, function (series) {
+    //      chart.hideLoading();
+    //      _.each(series, function (serie) {
+    //        chart.addSeries(serie, false);
+    //      });
+    //      chart.redraw();
+    //    });
+    //  }
+    //});
 
     var clickDetected = false;
 
