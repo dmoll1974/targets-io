@@ -3,7 +3,7 @@
 angular.module('graphs').directive('dygraph', DygraphDirective);
 
 /* @ngInject */
-function DygraphDirective ($timeout, Interval) {
+function DygraphDirective ($timeout, Interval, TestRuns) {
 
   var directive = {
 
@@ -34,14 +34,6 @@ function DygraphDirective ($timeout, Interval) {
             }
           }
 
-          /* if no data (due to error), set title to error message */
-
-          //if(!scope.data){
-          //
-          //  scope.data = [0,0];
-          //  scope.opts.title = 'Ouch something went wrong, double check your Graphite query';
-          //
-          //}
 
 
 
@@ -50,8 +42,18 @@ function DygraphDirective ($timeout, Interval) {
 
           scope.graph.ready(function() {
 
+            /* if selected series is provided, show this series only */
+            if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === scope.metric.alias) {
 
+              /* show / hide selected series in legend */
 
+              _.each(scope.metric.legendData, function (legendItem, i) {
+
+                scope.graph.setVisibility(legendItem.id, legendItem.visible);
+
+              })
+
+            }
             /* set y-axis range to highest of the selected series */
 
             var maxValue = getMaximumOfSelectedSeries(scope.metric.legendData);
@@ -137,7 +139,10 @@ function DygraphDirective ($timeout, Interval) {
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
 
+        Interval.clearAll();
         $scope.zoomRange =  Utils.zoomRange;
+        $scope.loading = true;
+        drawDypraph($scope.graphType);
       }
     });
 
@@ -147,6 +152,7 @@ function DygraphDirective ($timeout, Interval) {
     }, function (newVal, oldVal) {
       if (newVal !== oldVal && $scope.zoomLock === true) {
 
+        $scope.loading = true;
         drawDypraph($scope.graphType);
 
       }
@@ -155,6 +161,7 @@ function DygraphDirective ($timeout, Interval) {
     setTimeout(function(){
 
       $scope.graphType =  Utils.graphType;
+      $scope.loading = true;
       drawDypraph($scope.graphType);
 
     });
@@ -162,7 +169,7 @@ function DygraphDirective ($timeout, Interval) {
 
     function drawDypraph(graphType)  {
 
-      $scope.loading = true;
+      
 
       switch(graphType){
 
@@ -233,6 +240,29 @@ function DygraphDirective ($timeout, Interval) {
           $scope.metric.annotations = dygraphData.annotations;
           $scope.metric.graphNumberOfValidDatapoints = dygraphData.graphNumberOfValidDatapoints;
           $scope.loading = false;
+          $scope.loading = false;
+
+          /* if selected series is provided, show this series only */
+          if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === $scope.metric.alias) {
+
+            $scope.selectAll = false;
+
+              _.each($scope.metric.legendData, function(legendItem, i){
+
+                if(legendItem.name === TestRuns.selectedSeries ) {
+
+                  $scope.metric.legendData[i].visible = true;
+
+                }else{
+
+                  $scope.metric.legendData[i].visible = false;
+
+                }
+
+              })
+
+
+          }
 
           /* in case of live graphs set interval */
           if($scope.graphType === 'live-graph' &&  Interval.active.map(function(interval){return interval.metricId}).indexOf($scope.metric._id) === -1){

@@ -1,6 +1,8 @@
 <div flex class="dygraph-div"  style="width:100%; margin-top: 20px;"></div>
+<md-progress-linear ng-show="loading" md-mode="indeterminate" style="margin-left: 50px; width:95%;" ></md-progress-linear>
+
 <div layout="row" layout-align="space-between start">
-    <div  class="datagrid" style="margin-top: 20px; margin-left: 40px; ">
+    <div  ng-if="metric.graphNumberOfValidDatapoints > 0" class="datagrid" style="margin-top: 20px; margin-left: 40px; ">
         <table>
             <thead>
             <tr>

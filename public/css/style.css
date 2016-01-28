@@ -13979,7 +13979,7 @@ button.toast-close-button {
 .fix-to-top {
     position: fixed;
     top: 0;
-    z-index: 10;
+    z-index: 100;
     background-color: white;
     width: 100%;
 

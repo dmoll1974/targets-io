@@ -115,8 +115,12 @@ angular.module('graphs').controller('GraphsController', [
     });
 
     /* Get selected series params from query string */
-    if ($state.params.selectedSeries)
-      TestRuns.selectedSeries = decodeURIComponent($state.params.selectedSeries);
+
+    TestRuns.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
+
+    /* Get metricFilter params from query string */
+
+    TestRuns.metricFilter = ($state.params.metricFilter) ? decodeURIComponent($state.params.metricFilter) : '';
 
     $scope.value = $stateParams.tag;
     /* reset zoom*/
