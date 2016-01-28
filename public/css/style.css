@@ -13981,6 +13981,7 @@ button.toast-close-button {
     top: 0;
     z-index: 10;
     background-color: white;
+    width: 100%;
 
 }
 
