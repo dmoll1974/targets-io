@@ -13981,7 +13981,7 @@ button.toast-close-button {
     top: 0;
     z-index: 100;
     background-color: white;
-    width: 100%;
+    width: 82%;
 
 }
 
@@ -13993,7 +13993,7 @@ button.toast-close-button {
 }
 
 .graphs-header {
-    width: 100%;
+    /*width: 85%;*/
     background-color: white;
 }
 
