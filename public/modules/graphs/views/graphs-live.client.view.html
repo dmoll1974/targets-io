@@ -44,11 +44,11 @@
 
         <div layout="row" flex  >
             <div layout="row" flex="50" >
-                <md-input-container flex>
+                <md-input-container flex style="padding-bottom: 5px;">
                     <label>Filter metrics</label>
                     <input ng-model="metricFilter">
                 </md-input-container>
-                <md-icon ng-if="metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                <md-icon style="margin-bottom: 5px;" ng-if="metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
                          data-ng-click="clearMetricFilter()">
 
                 </md-icon>
