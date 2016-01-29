@@ -419,20 +419,21 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
     $scope.updateSelectedSeries = function() {
 
       /* show / hide selected series in legend */
+      setTimeout(function(){
 
-      _.each($scope.metric.legendData, function(legendItem, i){
+        _.each($scope.metric.legendData, function(legendItem, i){
 
             $scope.graph.setVisibility(legendItem.id, legendItem.visible);
 
-      })
+        })
 
-      /* set y-axis range to highest of the selected series */
+        /* set y-axis range to highest of the selected series */
 
-      var maxValue = getMaximumOfSelectedSeries($scope.metric.legendData);
-      $scope.graph.updateOptions({
-        valueRange: [0,maxValue ]
+        var maxValue = getMaximumOfSelectedSeries($scope.metric.legendData);
+        $scope.graph.updateOptions({
+          valueRange: [0,maxValue ]
+        });
       });
-
     }
 
     $scope.setAllSeriesSelected = function(setAllSeriesTo){
@@ -452,6 +453,59 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       });
 
     };
+
+    $scope.selectSeriesToggle = function (selectedLegendItem){
+
+      var selectedSeriesIndex = $scope.metric.legendData.map(function(legendItem){return legendItem.id;}).indexOf(selectedLegendItem.id);
+
+      if (selectedLegendItem.visible === true){
+
+        $scope.metric.legendData[selectedSeriesIndex].visible = false;
+        $scope.graph.setVisibility($scope.metric.legendData[selectedSeriesIndex].id, $scope.metric.legendData[selectedSeriesIndex].visible);
+
+      }else{
+
+        $scope.metric.legendData[selectedSeriesIndex].visible = true;
+        $scope.graph.setVisibility($scope.metric.legendData[selectedSeriesIndex].id, $scope.metric.legendData[selectedSeriesIndex].visible);
+      }
+
+      /* set y-axis range to highest of the selected series */
+
+      var maxValue = getMaximumOfSelectedSeries($scope.metric.legendData);
+      $scope.graph.updateOptions({
+        valueRange: [0,maxValue ]
+      });
+
+    }
+
+    $scope.selectOtherSeriesToggle = function (selectedLegendItem){
+
+      var selectedSeriesIndex = $scope.metric.legendData.map(function(legendItem){return legendItem.id;}).indexOf(selectedLegendItem.id);
+
+      //if (selectedLegendItem.visible === true) {
+
+        $scope.metric.legendData[selectedSeriesIndex].visible = true;
+        $scope.graph.setVisibility($scope.metric.legendData[selectedSeriesIndex].id, $scope.metric.legendData[selectedSeriesIndex].visible);
+
+        _.each($scope.metric.legendData, function (legendItem, i) {
+
+          if (legendItem.id !== selectedLegendItem.id) {
+
+            $scope.metric.legendData[i].visible = false;
+            $scope.graph.setVisibility($scope.metric.legendData[i].id, $scope.metric.legendData[i].visible);
+
+          }
+        });
+
+        /* set y-axis range to highest of the selected series */
+
+        var maxValue = getMaximumOfSelectedSeries($scope.metric.legendData);
+        $scope.graph.updateOptions({
+          valueRange: [0, maxValue]
+        });
+      //}
+    }
+
 
     function getMaximumOfSelectedSeries(legendData){
 
