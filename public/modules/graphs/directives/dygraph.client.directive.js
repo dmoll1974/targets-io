@@ -209,6 +209,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
         updateGraph(from, until, $scope.metric.targets, function (dygraphData) {
 
           $scope.opts = {
+            connectSeparatedPoints: true,
             labels: dygraphData.labels,
             axisLabelFontSize: 12,
             legend: 'never',

@@ -91,15 +91,14 @@ angular.module('graphs').factory('Graphite', [
             graphiteData[tempDate] = [];
           }
 
-          //I've chosen to 0 out any null values, otherwise additional data series
-          //could be inserted into previous data series array
-          //if (datapoint[0] === null) {
-          //  datapoint[0] = 0;
-          //}
+          /* set null values to NaN to show holes in graphs */
+          if (datapoint[0] === null) {
+            datapoint[0] = NaN;
+          }
 
           /* update minimum, maximum and avg values for series */
 
-          if(datapoint[0] !== null) {
+          if(!isNaN(datapoint[0])) {
             seriesMin = (!seriesMin || seriesMin > datapoint[0]) ? datapoint[0] : seriesMin;
             seriesMax = (seriesMax < datapoint[0]) ? datapoint[0] : seriesMax;
             seriesTotal = addToTotals(seriesTotal, datapoint[0]);
