@@ -140,8 +140,11 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       if (newVal !== oldVal) {
 
         Interval.clearAll();
+
         $scope.zoomRange =  Utils.zoomRange;
-        $scope.loading = true;
+
+        $scope.showProgressBar = true;
+
         drawDypraph($scope.graphType);
       }
     });
@@ -152,7 +155,8 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
     }, function (newVal, oldVal) {
       if (newVal !== oldVal && $scope.zoomLock === true) {
 
-        $scope.loading = true;
+        $scope.showProgressBar = true;
+
         drawDypraph($scope.graphType);
 
       }
@@ -161,7 +165,8 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
     setTimeout(function(){
 
       $scope.graphType =  Utils.graphType;
-      $scope.loading = true;
+      $scope.showProgressBar = true;
+
       drawDypraph($scope.graphType);
 
     });
@@ -169,7 +174,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
     function drawDypraph(graphType)  {
 
-      
+      $scope.loading = true;
 
       switch(graphType){
 
@@ -239,8 +244,9 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
           $scope.metric.annotations = dygraphData.annotations;
           $scope.metric.graphNumberOfValidDatapoints = dygraphData.graphNumberOfValidDatapoints;
+
           $scope.loading = false;
-          $scope.loading = false;
+          $scope.showProgressBar = false;
 
           /* if selected series is provided, show this series only */
           if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === $scope.metric.alias) {
