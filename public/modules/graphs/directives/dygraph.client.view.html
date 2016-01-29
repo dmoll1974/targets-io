@@ -28,23 +28,23 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="legendItem in metric.legendData" ng-if="legendItem.numberOfValidDatapoints > 0" class="hover-row" ng-mousemove="highlightSeries(legendItem.name)" ng-class="{'legend-highlighted': (legendItem.highlighted === true)}" ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
+            <tr ng-repeat="legendItem in metric.legendData" ng-if="legendItem.numberOfValidDatapoints > 0" class="hover-row pointer" ng-mousemove="highlightSeries(legendItem.name)" ng-class="{'legend-highlighted': (legendItem.highlighted === true)}">
                 <td>
-                    <input type="checkbox" ng-model="legendItem.visible" ng-click="stopEventPropagation($event)">
+                    <input type="checkbox" ng-model="legendItem.visible"  ng-change="updateSelectedSeries()" >
                 </td>
                 <td>
-                    <i class="fa fa-circle" ng-style="{color: legendItem.color}"></i>
+                    <i class="fa fa-circle" ng-style="{color: legendItem.color}"  ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)"></i>
                 </td>
-                <td>
+                <td  ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
                     {{legendItem.name}}
                 </td>
-                <td>
+                <td  ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
                     {{legendItem.min}}
                 </td>
-                <td>
+                <td ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
                     {{legendItem.max}}
                 </td>
-                <td>
+                <td ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
                     {{legendItem.avg}}
                 </td>
             </tr>
