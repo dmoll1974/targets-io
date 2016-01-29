@@ -30,7 +30,7 @@
             <tbody>
             <tr ng-repeat="legendItem in metric.legendData" ng-if="legendItem.numberOfValidDatapoints > 0" class="hover-row" ng-mousemove="highlightSeries(legendItem.name)" ng-class="{'legend-highlighted': (legendItem.highlighted === true)}" ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
                 <td>
-                    <input type="checkbox" ng-model="legendItem.visible" ng-change="updateSelectedSeries()">
+                    <input type="checkbox" ng-model="legendItem.visible" ng-click="stopEventPropagation($event)">
                 </td>
                 <td>
                     <i class="fa fa-circle" ng-style="{color: legendItem.color}"></i>
