@@ -1,39 +1,54 @@
-<div ng-controller="GraphsController" data-ng-init="init()">
+<md-content ng-controller="GraphsController" data-ng-init="init()">
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
     <div fix-to-top="fix-to-top" class="graphs-header">
-        <div layout="row" flex>
-            <md-radio-group ng-model="zoomRange">
-                <div layout="row" flex>
-                    <md-radio-button value="-10min" class="md-primary">10min</md-radio-button>
-                    <md-radio-button value="-30min" class="md-primary">30min</md-radio-button>
-                    <md-radio-button value="-1h" class="md-primary">1h</md-radio-button>
-                    <md-radio-button value="-3h" class="md-primary">3h</md-radio-button>
-                    <md-radio-button value="-6h" class="md-primary">6h</md-radio-button>
-                    <md-radio-button value="-12h" class="md-primary">12h</md-radio-button>
-                    <md-radio-button value="-1d" class="md-primary">1d</md-radio-button>
-                    <md-radio-button value="-2d" class="md-primary">2d</md-radio-button>
-                    <md-radio-button value="-3d" class="md-primary">3d</md-radio-button>
-                </div>
-            </md-radio-group>
+        <div layout="row" layout-align="space-between center" flex>
+           <div layout="row" flex>
+                    <md-radio-group ng-model="zoomRange">
+                        <div layout="row" flex>
+                            <md-radio-button value="-10min" class="md-primary">10min</md-radio-button>
+                            <md-radio-button value="-30min" class="md-primary">30min</md-radio-button>
+                            <md-radio-button value="-1h" class="md-primary">1h</md-radio-button>
+                            <md-radio-button value="-3h" class="md-primary">3h</md-radio-button>
+                            <md-radio-button value="-6h" class="md-primary">6h</md-radio-button>
+                            <md-radio-button value="-12h" class="md-primary">12h</md-radio-button>
+                            <md-radio-button value="-1d" class="md-primary">1d</md-radio-button>
+                            <md-radio-button value="-2d" class="md-primary">2d</md-radio-button>
+                            <md-radio-button value="-3d" class="md-primary">3d</md-radio-button>
+                        </div>
+                    </md-radio-group>
 
-            <md-checkbox ng-model="zoomLock" aria-label="Apply zoom to all graphs">
-                Apply zoom to all graphs
-            </md-checkbox>
-            <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
-            <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
+                    <md-checkbox ng-model="zoomLock" aria-label="Apply zoom to all graphs">
+                        Zoom all graphs
+                    </md-checkbox>
+                    <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
+                    <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
+            </div>
+            <div layout="row">
+                <md-radio-group ng-model="numberOfColumns" ng-change="toggleNumberOfColums(numberOfColumns)">
+                    <div layout="row" flex>
+                        <md-radio-button value="1" class="md-primary">1 column</md-radio-button>
+                        <md-radio-button value="2" class="md-primary">2 columns</md-radio-button>
+                        <md-radio-button value="3" class="md-primary">3 columns</md-radio-button>
+                    </div>
+                    <md-tooltip>
+                        Change number of columns
+                    </md-tooltip>
+                </md-radio-group>
+
+                </md-button>
+                <md-checkbox ng-model="showLegend" aria-label="Show legend" ng-change="toggleLegend()">
+                    Legend
+                </md-checkbox>
+                <!--<md-button  data-ng-click="toggleLegend()" class="md-fab md-mini md-primary">-->
+                    <!--<md-tooltip>-->
+                        <!--Toggle legend-->
+                    <!--</md-tooltip>-->
+                    <!--<md-icon  md-svg-icon="images/assets/ic_settings_power_black_24px.svg">-->
+
+                    <!--</md-icon>-->
+                <!--</md-button>-->
+            </div>
         </div>
-
-
-        <!--<div class="btn-group" >-->
-        <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-10min'" uncheckable>10min</label>-->
-        <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-30min'" uncheckable>30min</label>-->
-        <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-1h'" uncheckable>1h</label>-->
-        <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-3h'" uncheckable>3h</label>-->
-        <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-6h'" uncheckable>6h</label>-->
-        <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-12h'" uncheckable>12h</label>-->
-        <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-1d'" uncheckable>1d</label>-->
-        <!--<label class="btn btn-primary" ng-model="zoomRange" btn-radio="'-2d'" uncheckable>2d</label>-->
-        <!--</div>-->
 
         <md-tabs md-selected="selectedIndex" class="metric-panels" style="padding-bottom: 0px;">
             <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled" data-ng-model="value" active="isActive(tag.text)"
@@ -74,46 +89,50 @@
             </div>
         </div>
     </div>
+    <md-content layout="row">
+        <md-content class="md-padding graph-column" layout="column" ng-repeat="column in columnsArray" flex="flex">
 
-    <accordion close-others="false">
-        <div data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:metricFilter" data-ng-controller="HighchartsLiveController">
-            <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
-                <accordion-heading>
-                    <div>{{metric.alias}}</div>
-                </accordion-heading>
-                <div  ng-if="metric.isOpen">
-                        <span>
-                        <div class="btn-group">
-                            <label class="btn default" ng-click="editMetric(metric._id)"><span
-                                    class="btn btn-xs glyphicon glyphicon-wrench"></span></label>
-                            <label title="Edit tags" class="btn default" ng-click="setTags()"><span
-                                    class="btn btn-xs glyphicon glyphicon-tag"></span></label>
-                            <label class="btn default" ng-click="setMetricShareUrl(metric)"><span
-                                    class="btn btn-xs glyphicon glyphicon-share"></span></label>
-                        </div>
-                        </span>
-                    <span><input ng-readonly="true" ng-model="metricShareUrl" ng-if="showUrl" style="width:50%;"
-                                 share-graph-url/></span><span><button ng-if="showUrl && hasFlash()"
-                                                                       tooltip-size="medium" title="Copy graph URL"
-                                                                       tooltip-side="top" clip-copy="metricShareUrl"
-                                                                       clip-click="clipClicked()">Copy
-                </button></span>
-                        <span>
-                          <div class="input-group" ng-if="showTags" class="graph-input-tags">
-                              <tags-input data-ng-model="metric.tags" on-tag-removed="tagRemoved($tag)">
-                                  <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
-                              </tags-input>
-                                <span class="input-group-btn">
-                                    <button ng-click="updateTags()" class="btn btn-default" type="button"><span
-                                            class="btn btn-xs glyphicon glyphicon-ok"></button>
+            <accordion close-others="false">
+                <md-content data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:metricFilter | slice:column.start:column.end" data-ng-controller="HighchartsLiveController">
+                    <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
+                        <accordion-heading>
+                            <div>{{metric.alias}}</div>
+                        </accordion-heading>
+                        <div  ng-if="metric.isOpen">
+                                <span>
+                                <div class="btn-group">
+                                    <label class="btn default" ng-click="editMetric(metric._id)"><span
+                                            class="btn btn-xs glyphicon glyphicon-wrench"></span></label>
+                                    <label title="Edit tags" class="btn default" ng-click="setTags()"><span
+                                            class="btn btn-xs glyphicon glyphicon-tag"></span></label>
+                                    <label class="btn default" ng-click="setMetricShareUrl(metric)"><span
+                                            class="btn btn-xs glyphicon glyphicon-share"></span></label>
+                                </div>
                                 </span>
-                          </div>
-                        </span>
-                    <!--<highchart id="chart1" config="config"></highchart>-->
-                    <dygraph metric="metric"></dygraph>
+                            <span><input ng-readonly="true" ng-model="metricShareUrl" ng-if="showUrl" style="width:50%;"
+                                         share-graph-url/></span><span><button ng-if="showUrl && hasFlash()"
+                                                                               tooltip-size="medium" title="Copy graph URL"
+                                                                               tooltip-side="top" clip-copy="metricShareUrl"
+                                                                               clip-click="clipClicked()">Copy
+                        </button></span>
+                                <span>
+                                  <div class="input-group" ng-if="showTags" class="graph-input-tags">
+                                      <tags-input data-ng-model="metric.tags" on-tag-removed="tagRemoved($tag)">
+                                          <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
+                                      </tags-input>
+                                        <span class="input-group-btn">
+                                            <button ng-click="updateTags()" class="btn btn-default" type="button"><span
+                                                    class="btn btn-xs glyphicon glyphicon-ok"></button>
+                                        </span>
+                                  </div>
+                                </span>
+                            <!--<highchart id="chart1" config="config"></highchart>-->
+                            <dygraph metric="metric"></dygraph>
 
-                </div>
-            </accordion-group>
-        </div>
-    </accordion>
-</div>
+                        </div>
+                    </accordion-group>
+                </md-content>
+            </accordion>
+        </md-content>
+    </md-content>
+</md-content>

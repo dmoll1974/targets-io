@@ -113,6 +113,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
   function DygraphController($scope, $state, $stateParams, $rootScope, $timeout, TestRuns, Graphite, Events, Utils) {
 
     $scope.selectAll = true;
+    $scope.showLegend =  Utils.showLegend;
 
     var clickDetected = false;
 
@@ -131,7 +132,26 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       }
     });
 
-   
+    /* toggle showLegend*/
+    $scope.$watch(function (scope) {
+      return Utils.showLegend;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        $scope.showLegend =  Utils.showLegend;
+      }
+    });
+
+    /* hide legend when switching to two column view*/
+
+    //$scope.$watch(function (scope) {
+    //  return Utils.numberOfColums;
+    //}, function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //
+    //    if(newVal == '2' || newVal == '3' ) $scope.showLegend =  false;
+    //  }
+    //});
 
     /* watch zoomRange */
     $scope.$watch(function (scope) {

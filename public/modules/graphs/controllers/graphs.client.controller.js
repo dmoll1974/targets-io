@@ -16,6 +16,52 @@ angular.module('graphs').controller('GraphsController', [
   'SideMenu',
   function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
 
+
+    $scope.numberOfColumns = Utils.numberOfColums;
+    $scope.flex = 100 / $scope.numberOfColumns;
+    $scope.showLegend = true;
+
+    $scope.toggleLegend = function(){
+
+      if(Utils.showLegend === true) {
+        Utils.showLegend = false;
+      }else {
+        Utils.showLegend = true;
+      }
+    }
+
+    $scope.toggleNumberOfColums = function(numberOfColumns){
+
+      switch(numberOfColumns){
+
+        case 1:
+
+          $scope.numberOfColumns = 1;
+          $scope.flex = 100 / $scope.numberOfColumns;
+          Utils.showLegend = true;
+          break;
+
+        case 2:
+
+          $scope.numberOfColumns = 2;
+          $scope.flex = 100 / $scope.numberOfColumns;
+          Utils.showLegend = false;
+          break;
+
+        case 3:
+
+          $scope.numberOfColumns = 3;
+          $scope.flex = 100 / $scope.numberOfColumns;
+          Utils.showLegend = false;
+          break;
+      }
+
+      Utils.numberOfColums = $scope.numberOfColumns;
+      $scope.init();
+
+    }
+
+
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
@@ -133,7 +179,7 @@ angular.module('graphs').controller('GraphsController', [
     /* Zoom lock enabled by default */
     $scope.zoomLock = true;
 
-    /* watch metricFilter */
+    /* watch zoomLock */
     $scope.$watch('zoomLock', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         Utils.zoomLock = newVal;
@@ -147,6 +193,18 @@ angular.module('graphs').controller('GraphsController', [
       Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard) {
         $scope.dashboard = Dashboards.selected;
         $scope.metrics = addAccordionState(Dashboards.selected.metrics);
+
+        $scope.columnsArray =[];
+        var numberOfMetrics  = numberOfFilteredMetrics($scope.metrics);
+
+        var itemsPerColumn = Math.ceil(numberOfMetrics / $scope.numberOfColumns);
+
+        //Populates the column array
+        for (var i=0; i<numberOfMetrics; i += itemsPerColumn) {
+          var col = { start: i, end: Math.min(i + itemsPerColumn, numberOfMetrics) };
+          $scope.columnsArray.push(col);
+        }
+
         /* Get tags used in metrics */
         $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
         /* if reloading a non-existing tag is in $statParams */
@@ -160,6 +218,24 @@ angular.module('graphs').controller('GraphsController', [
         }
       });
     };
+
+    function numberOfFilteredMetrics(metrics){
+
+      var numberOfFilteredMetrics = 0;
+
+      _.each(metrics, function(metric){
+
+        _.each(metric.tags, function(tag){
+
+          if (tag.text === $scope.value) numberOfFilteredMetrics += 1;
+
+        });
+
+      });
+
+      return numberOfFilteredMetrics;
+    }
+
     function checkIfTagExists(tag) {
       var exists = false;
       _.each($scope.tags, function (existingTag) {

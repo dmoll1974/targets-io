@@ -11,7 +11,9 @@ angular.module('graphs').service('Utils', [function () {
       graphType: '',
       zoomRange: '',
       zoomFrom: '',
-      zoomUntil: ''
+      zoomUntil: '',
+      showLegend: true,
+      numberOfColums: 1
 
     };
     return Utils;
