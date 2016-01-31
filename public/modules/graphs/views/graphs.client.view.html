@@ -5,37 +5,43 @@
             <!--<span>-->
             <div layout="row" layout-align="space-between center" flex>
                 <div layout="row">
-                    <md-checkbox ng-model="zoomLock" aria-label="Apply zoom to all graphs">
-                    Zoom all graphs
-                </md-checkbox>
+                    <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="zoomLock" >
+                        Apply zoom to all graphs
+                    </md-switch>
                 <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
                 <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
                 </div>
 
                 <div layout="row">
-                    <md-radio-group ng-model="numberOfColumns" ng-change="toggleNumberOfColums(numberOfColumns)">
-                        <div layout="row" flex>
-                            <md-radio-button value="1" class="md-primary">1 column</md-radio-button>
-                            <md-radio-button value="2" class="md-primary">2 columns</md-radio-button>
-                            <md-radio-button value="3" class="md-primary">3 columns</md-radio-button>
-                        </div>
-                        <md-tooltip>
-                            Change number of columns
-                        </md-tooltip>
-                    </md-radio-group>
-
-                    </md-button>
-                    <md-checkbox ng-model="showLegend" aria-label="Show legend" ng-change="toggleLegend()">
-                        Legend
-                    </md-checkbox>
-                    <!--<md-button  class="md-primary" data-ng-click="toggleLegend()" class="md-icon-button">-->
-                        <!--<md-tooltip>-->
-                            <!--Toggle legend-->
-                        <!--</md-tooltip>-->
-                        <!--<md-icon  md-svg-icon="images/assets/ic_playlist_add_check_black_24px.svg">-->
-
-                        <!--</md-icon>-->
-                    <!--</md-button>-->
+                    <md-menu>
+                        <md-button aria-label="Open edit menu" class="md-icon-button"
+                                   ng-click="openMenu($mdOpenMenu, $event)">
+                            <md-icon md-menu-origin class="md-primary" md-svg-src="images/assets/ic_view_week_black_24px.svg"></md-icon>
+                            <md-tooltip>
+                                Number of columns
+                            </md-tooltip>
+                        </md-button>
+                        <md-menu-content width="4">
+                            <md-menu-item>
+                                <md-button data-ng-click="toggleNumberOfColums(1)">
+                                    One column view
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button data-ng-click="toggleNumberOfColums(2)">
+                                    Two columns view
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button data-ng-click="toggleNumberOfColums(3)">
+                                    Three columns view
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                    <md-switch class="md-primary" md-no-ink aria-label="Show legend" ng-model="showLegend" ng-change="toggleLegend()">
+                        Show legend
+                    </md-switch>
                 </div>
             </div>
         </div>

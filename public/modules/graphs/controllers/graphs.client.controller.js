@@ -17,6 +17,15 @@ angular.module('graphs').controller('GraphsController', [
   function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
 
 
+    /* initiaize menu */
+
+    var originatorEv;
+    $scope.openMenu = function ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
+
+
     $scope.numberOfColumns = Utils.numberOfColums;
     $scope.flex = 100 / $scope.numberOfColumns;
     $scope.showLegend = true;
@@ -29,6 +38,16 @@ angular.module('graphs').controller('GraphsController', [
         Utils.showLegend = true;
       }
     }
+
+    /* toggle showLegend*/
+    $scope.$watch(function (scope) {
+      return Utils.showLegend;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        $scope.showLegend =  Utils.showLegend;
+      }
+    });
 
     $scope.toggleNumberOfColums = function(numberOfColumns){
 
