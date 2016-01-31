@@ -56,7 +56,9 @@ module.exports = {
                 'public/lib/ng-clip/dest/ng-clip.min.js',
                 'public/lib/zeroclipboard/dist/ZeroClipboard.min.js',
                 'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js',
-                'public/lib/angular-utils-pagination/dirPagination.js'
+                'public/lib/angular-utils-pagination/dirPagination.js',
+                'public/lib/dygraphs/dygraph-combined-dev.js'
+
 
             ]
         },

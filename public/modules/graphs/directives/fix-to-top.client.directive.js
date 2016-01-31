@@ -8,9 +8,9 @@ angular.module('graphs').directive('fixToTop', [
       restrict: 'A',
       link: function (scope, element, attrs) {
         var topClass = attrs.fixToTop,
-          // get CSS class from directive's attribute value
-          offsetTop = element.prop('offsetTop');
         // get element's top relative to the document
+            offsetTop = element.offset().top;
+
         $win.on('scroll', function (e) {
           if ($win[0].pageYOffset >= offsetTop) {
             element.addClass(topClass);

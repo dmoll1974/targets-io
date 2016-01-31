@@ -35,6 +35,13 @@ angular.module('graphs').controller('HighchartsLiveController', [
         }
       }
     };
+
+    /* set zoomLock */
+    Utils.zoomLock = true;
+
+    /* set graphType */
+    Utils.graphType =  'live-graph';
+
     /* set Tags form graph */
     $scope.setTags = function () {
       if ($scope.showTags) {
@@ -98,16 +105,16 @@ angular.module('graphs').controller('HighchartsLiveController', [
 
       $scope.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '?';
 
-      if (TestRuns.zoomFrom) {
-        $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
+      if (Utils.zoomFrom) {
+        $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
       }
 
       $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
 
     /* generate deeplink to share metric graph */
     //$scope.setMetricShareUrl = function (metricId) {
-    //  if (TestRuns.zoomFrom) {
-    //    $scope.metricShareUrl = location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.tag + '/' + metricId + '?zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
+    //  if (Utils.zoomFrom) {
+    //    $scope.metricShareUrl = location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.tag + '/' + metricId + '?zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
     //  } else {
     //    $scope.metricShareUrl = location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.tag + '/' + metricId;
     //  }
@@ -128,15 +135,15 @@ angular.module('graphs').controller('HighchartsLiveController', [
     };
     /* If zoom is applied, replace series */
     //$scope.$watch(function (scope) {
-    //        return TestRuns.zoomFrom
+    //        return Utils.zoomFrom
     //    },
     //    function (newVal, oldVal) {
     //
     //        if (newVal !== oldVal) {
     //
     //
-    //            var from = (TestRuns.zoomFrom) ? TestRuns.zoomFrom : TestRuns.selected.start;
-    //            var until = (TestRuns.zoomUntil) ? TestRuns.zoomUntil : TestRuns.selected.end;
+    //            var from = (Utils.zoomFrom) ? Utils.zoomFrom : TestRuns.selected.start;
+    //            var until = (Utils.zoomUntil) ? Utils.zoomUntil : TestRuns.selected.end;
     //
     //            updateGraph(from, until, $scope.metric.targets, function(series) {
     //
@@ -151,18 +158,18 @@ angular.module('graphs').controller('HighchartsLiveController', [
     //);
     /* If zoom lock is checked, update all graphs when zoom is applied in one */
     $scope.$watch(function (scope) {
-      return TestRuns.zoomFrom;
+      return Utils.zoomFrom;
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
         Interval.clearAll();
-        var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : TestRuns.selected.startEpoch;
-        var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : TestRuns.selected.endEpoch;
+        var from = Utils.zoomFrom ? Utils.zoomFrom : TestRuns.selected.startEpoch;
+        var until = Utils.zoomUntil ? Utils.zoomUntil : TestRuns.selected.endEpoch;
         var chart = angular.element($scope.graphSelector).highcharts();
         while (chart.series.length > 0) {
           chart.series[0].remove(false);  //deletes all series
         }
         chart.showLoading('Loading data ...');
-        updateGraph(TestRuns.zoomFrom, TestRuns.zoomUntil, $scope.metric.targets, function (series) {
+        updateGraph(Utils.zoomFrom, Utils.zoomUntil, $scope.metric.targets, function (series) {
           chart.hideLoading();
           _.each(series, function (serie) {
             chart.addSeries(serie, false);
@@ -199,12 +206,8 @@ angular.module('graphs').controller('HighchartsLiveController', [
     /* reinitialise graph when zoomRange is changed */
     $scope.$watch('zoomRange', function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        TestRuns.zoomRange = $scope.zoomRange;
-
-        var chart = angular.element($scope.graphSelector).highcharts();
-        chart.destroy();
-        $scope.initConfig($scope.metric, $scope.chartIndex);
-      }
+        Utils.zoomRange = $scope.zoomRange;
+    }
     });
 
     var defaultChartConfig = {
@@ -369,8 +372,8 @@ angular.module('graphs').controller('HighchartsLiveController', [
             var until = typeof e.min === 'undefined' && typeof e.max === 'undefined' ? TestRuns.selected.endEpoch : Math.round(e.max);
             /* If zoom lock is checked, set zoom timestamps in TestRuns service */
             if ($scope.zoomLock === true) {
-              TestRuns.zoomFrom = from;
-              TestRuns.zoomUntil = until;
+              Utils.zoomFrom = from;
+              Utils.zoomUntil = until;
               $scope.$apply();
             } else {
               var chart = angular.element($scope.graphSelector).highcharts();
@@ -421,8 +424,8 @@ angular.module('graphs').controller('HighchartsLiveController', [
         angular.element($scope.graphSelector).highcharts('StockChart', $scope.config);
         var chart = angular.element($scope.graphSelector).highcharts();
         chart.showLoading('Loading data ...');
-        var from = TestRuns.zoomFrom ? TestRuns.zoomFrom : $scope.zoomRange;
-        var until = TestRuns.zoomUntil ? TestRuns.zoomUntil : 'now';
+        var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange;
+        var until = Utils.zoomUntil ? Utils.zoomUntil : 'now';
         updateGraph(from, until, metric.targets, function (series) {
           while (chart.series.length > 0) {
             chart.series[0].remove(false);  //deletes all series

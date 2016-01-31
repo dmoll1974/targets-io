@@ -16,6 +16,79 @@ angular.module('graphs').controller('GraphsController', [
   'SideMenu',
   function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
 
+
+    /* initiaize menu */
+
+    var originatorEv;
+    $scope.openMenu = function ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
+
+
+    $scope.numberOfColumns = Utils.numberOfColums;
+    $scope.flex = 100 / $scope.numberOfColumns;
+    $scope.showLegend = true;
+
+    $scope.toggleLegend = function(){
+
+      if(Utils.showLegend === true) {
+        Utils.showLegend = false;
+      }else {
+        Utils.showLegend = true;
+      }
+    }
+
+    /* toggle showLegend*/
+    $scope.$watch(function (scope) {
+      return Utils.showLegend;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        $scope.showLegend =  Utils.showLegend;
+      }
+    });
+
+    $scope.toggleNumberOfColums = function(numberOfColumns){
+
+      switch(numberOfColumns){
+
+        case 1:
+
+          $scope.numberOfColumns = 1;
+          $scope.flex = 100 / $scope.numberOfColumns;
+          Utils.showLegend = true;
+          break;
+
+        case 2:
+
+          $scope.numberOfColumns = 2;
+          $scope.flex = 100 / $scope.numberOfColumns;
+          Utils.showLegend = false;
+          break;
+
+        case 3:
+
+          $scope.numberOfColumns = 3;
+          $scope.flex = 100 / $scope.numberOfColumns;
+          Utils.showLegend = false;
+          break;
+      }
+
+      Utils.numberOfColums = $scope.numberOfColumns;
+      $scope.init();
+
+    }
+
+
+    $scope.drilldownToMetric = function(metric){
+
+      $scope.metricFilter = metric.alias;
+      $scope.numberOfColumns = 1;
+      Utils.numberOfColums = $scope.numberOfColumns;
+      $scope.init();
+    }
+
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
@@ -44,9 +117,9 @@ angular.module('graphs').controller('GraphsController', [
 
     /* Get deeplink zoom params from query string */
     if ($state.params.zoomFrom)
-      TestRuns.zoomFrom = $state.params.zoomFrom;
+      Utils.zoomFrom = $state.params.zoomFrom;
     if ($state.params.zoomUntil)
-      TestRuns.zoomUntil = $state.params.zoomUntil;
+      Utils.zoomUntil = $state.params.zoomUntil;
 
     if ($state.params.metricFilter) {
         $scope.metricFilter = $state.params.metricFilter;
@@ -82,11 +155,11 @@ angular.module('graphs').controller('GraphsController', [
           $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag;
 
       }
-      if (TestRuns.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
+      if (Utils.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
         $scope.viewShareUrl = $scope.viewShareUrl + '?';
       }
-      if (TestRuns.zoomFrom) {
-        $scope.viewShareUrl = $scope.viewShareUrl + '&zoomFrom=' + TestRuns.zoomFrom + '&zoomUntil=' + TestRuns.zoomUntil;
+      if (Utils.zoomFrom) {
+        $scope.viewShareUrl = $scope.viewShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
       }
       if ($state.params.selectedSeries) {
         $scope.viewShareUrl = $scope.viewShareUrl + '&selectedSeries=' + $state.params.selectedSeries;
@@ -110,36 +183,66 @@ angular.module('graphs').controller('GraphsController', [
     };
     /* Set product Filter in side menu */
     SideMenu.productFilter = $stateParams.productName;
-    $scope.$watch('selectedIndex', function (current, old) {
-      Utils.selectedIndex = current;
-    });
+    //$scope.$watch('selectedIndex', function (current, old) {
+    //  Utils.selectedIndex = current;
+    //});
 
     /* Get selected series params from query string */
-    if ($state.params.selectedSeries)
-      TestRuns.selectedSeries = decodeURIComponent($state.params.selectedSeries);
+
+    TestRuns.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
+
+    /* Get metricFilter params from query string */
+
+    TestRuns.metricFilter = ($state.params.metricFilter) ? decodeURIComponent($state.params.metricFilter) : '';
 
     $scope.value = $stateParams.tag;
     /* reset zoom*/
     $scope.resetZoom = function () {
       /*reset zoom*/
-      TestRuns.zoomFrom = '';
-      TestRuns.zoomUntil = '';
+      Utils.zoomFrom = '';
+      Utils.zoomUntil = '';
       $state.go($state.current, {}, { reload: true });
     };
     /* Zoom lock enabled by default */
     $scope.zoomLock = true;
+
+    /* watch zoomLock */
+    $scope.$watch('zoomLock', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        Utils.zoomLock = newVal;
+      }
+    });
+
+
     $scope.init = function () {
-      /* use local time in graphs */
-      Highcharts.setOptions({ global: { useUTC: false } });
+
       Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard) {
         $scope.dashboard = Dashboards.selected;
         $scope.metrics = addAccordionState(Dashboards.selected.metrics);
+
+        $scope.columnsArray =[];
+        var numberOfMetrics  = numberOfFilteredMetrics($scope.metrics);
+
+        var itemsPerColumn = Math.ceil(numberOfMetrics / $scope.numberOfColumns);
+
+        //Populates the column array
+        for (var i=0; i<numberOfMetrics; i += itemsPerColumn) {
+          var col = { start: i, end: Math.min(i + itemsPerColumn, numberOfMetrics) };
+          $scope.columnsArray.push(col);
+        }
+
         /* Get tags used in metrics */
         $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
         /* if reloading a non-existing tag is in $statParams */
         $scope.value = checkIfTagExists($stateParams.tag) ? $stateParams.tag : 'All';
+
         /* set the tab index */
-        $scope.selectedIndex = Tags.getTagIndex($scope.value, $scope.tags);
+        setTimeout(function(){
+
+          $scope.selectedIndex = Tags.getTagIndex($scope.value, $scope.tags);
+
+        });
+
         if ($stateParams.testRunId) {
           TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
             TestRuns.selected = testRun;
@@ -147,6 +250,24 @@ angular.module('graphs').controller('GraphsController', [
         }
       });
     };
+
+    function numberOfFilteredMetrics(metrics){
+
+      var numberOfFilteredMetrics = 0;
+
+      _.each(metrics, function(metric){
+
+        _.each(metric.tags, function(tag){
+
+          if (tag.text === $scope.value) numberOfFilteredMetrics += 1;
+
+        });
+
+      });
+
+      return numberOfFilteredMetrics;
+    }
+
     function checkIfTagExists(tag) {
       var exists = false;
       _.each($scope.tags, function (existingTag) {
@@ -164,7 +285,10 @@ angular.module('graphs').controller('GraphsController', [
       return metrics;
     }
     /* default zoom range for live graphs is -10m */
-    $scope.zoomRange = TestRuns.zoomRange !== '' ? TestRuns.zoomRange : '-10min';
+    $scope.zoomRange = Utils.zoomRange !== '' ? Utils.zoomRange : '-10min';
+
+    Utils.zoomRange = $scope.zoomRange;
+    
     /* Set active tab */
     $scope.isActive = function (tag) {
       return $scope.value === tag;

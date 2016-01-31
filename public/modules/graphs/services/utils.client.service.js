@@ -6,7 +6,15 @@ angular.module('graphs').service('Utils', [function () {
       dynamicSortMultiple: dynamicSortMultiple,
       dynamicSortTags: dynamicSortTags,
       selectedIndex: '',
-      metricFilter: ''
+      metricFilter: '',
+      zoomLock: true,
+      graphType: '',
+      zoomRange: '',
+      zoomFrom: '',
+      zoomUntil: '',
+      showLegend: true,
+      numberOfColums: 1
+
     };
     return Utils;
     function dynamicSortTags(sortOrderParam) {
