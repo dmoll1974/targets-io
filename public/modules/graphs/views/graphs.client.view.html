@@ -104,6 +104,9 @@
                                         <label title="Share URL" class="btn default"
                                                ng-click="setMetricShareUrl(metric)"><span
                                                 class="btn btn-xs glyphicon glyphicon-share"></span></label>
+                                        <!--<label ng-if= "numberOfColumns > 1" title="Drilldown" class="btn default"-->
+                                               <!--ng-click="drilldownToMetric(metric)"><span-->
+                                                <!--class="btn btn-xs glyphicon glyphicon-zoom-in"></span></label>-->
                                     </div>
                                 </span>
                                 <span><input ng-readonly="true" ng-model="metricShareUrl" ng-if="showUrl" style="width:50%;"
@@ -124,6 +127,13 @@
                                             </span>
                                       </div>
                                 </span>
+                                <span>
+                                    <label ng-if= "numberOfColumns > 1" title="Expand" class="btn default pull-right"
+                                           ng-click="drilldownToMetric(metric)"><span
+                                            class="btn btn-sm glyphicon  glyphicon-resize-full"></span></label>
+                                </span>
+
+
 
                                 <dygraph metric="metric"></dygraph>
 

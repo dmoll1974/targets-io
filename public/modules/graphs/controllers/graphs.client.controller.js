@@ -81,6 +81,14 @@ angular.module('graphs').controller('GraphsController', [
     }
 
 
+    $scope.drilldownToMetric = function(metric){
+
+      $scope.metricFilter = metric.alias;
+      $scope.numberOfColumns = 1;
+      Utils.numberOfColums = $scope.numberOfColumns;
+      $scope.init();
+    }
+
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
@@ -175,9 +183,9 @@ angular.module('graphs').controller('GraphsController', [
     };
     /* Set product Filter in side menu */
     SideMenu.productFilter = $stateParams.productName;
-    $scope.$watch('selectedIndex', function (current, old) {
-      Utils.selectedIndex = current;
-    });
+    //$scope.$watch('selectedIndex', function (current, old) {
+    //  Utils.selectedIndex = current;
+    //});
 
     /* Get selected series params from query string */
 
@@ -207,8 +215,7 @@ angular.module('graphs').controller('GraphsController', [
 
 
     $scope.init = function () {
-      /* use local time in graphs */
-      Highcharts.setOptions({ global: { useUTC: false } });
+
       Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard) {
         $scope.dashboard = Dashboards.selected;
         $scope.metrics = addAccordionState(Dashboards.selected.metrics);
@@ -228,8 +235,14 @@ angular.module('graphs').controller('GraphsController', [
         $scope.tags = Tags.setTags($scope.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
         /* if reloading a non-existing tag is in $statParams */
         $scope.value = checkIfTagExists($stateParams.tag) ? $stateParams.tag : 'All';
+
         /* set the tab index */
-        $scope.selectedIndex = Tags.getTagIndex($scope.value, $scope.tags);
+        setTimeout(function(){
+
+          $scope.selectedIndex = Tags.getTagIndex($scope.value, $scope.tags);
+
+        });
+
         if ($stateParams.testRunId) {
           TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
             TestRuns.selected = testRun;
