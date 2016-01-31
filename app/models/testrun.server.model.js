@@ -75,8 +75,10 @@ var TestrunSchema = new Schema({
   'benchmarkResultFixedOK': Boolean,
   'benchmarkResultPreviousOK': Boolean,
   'buildResultsUrl': String,
+  'annotations': String,
   'metrics': [testRunMetricSchema]
 }, { toObject: { getters: true } });
+
 TestrunSchema.virtual('startEpoch').get(function () {
   return this.start.getTime();
 });

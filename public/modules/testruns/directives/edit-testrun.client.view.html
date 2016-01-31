@@ -81,6 +81,10 @@
                     <label>CI Build result URL</label>
                     <input ng-model="testrun.buildResultsUrl">
                 </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label>Annotations</label>
+                    <textarea name="testrunAnnotations" ng-model="testrun.annotations" columns="1" md-maxlength="500" rows="10"></textarea>
+                </md-input-container>
                 <div layout="row">
                     <md-button md-no-ink class="md-primary" data-ng-click="update()">Submit</md-button>
                     <md-button data-ng-click="cancel()">Cancel</md-button>

@@ -1,5 +1,5 @@
 <!--<div data-ng-controller="TestrunsController" data-ng-init="listTestRunsForDashboard()">-->
-<div data-ng-controller="TestrunsController">
+<md-content data-ng-controller="TestrunsController">
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div layout="column">
 
@@ -36,7 +36,12 @@
 
             <tr dir-paginate="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } | itemsPerPage: showNumberOfTestRuns" total-items="totalNumberOftestRuns"
                 ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index < numberOfRunningTests)}" >
-                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)" >{{testRun.testRunId}}</td>
+                    <td>
+                        <div id="testRunInfo"  layout="row">
+                            <div class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.testRunId}}</div>
+                            <div   ng-if="testRun.annotations" class="fa fa-info-circle info-hover" data-ng-click="showAnnotations($event, testRun)" style="margin-left: 10px;"></div>
+                        </div>
+                    </td>
                 <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
                 <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
@@ -145,4 +150,4 @@
         <!--<div cg-busy="{promise:getTestRuns,message:'Loading test runs...'}"></div>-->
 
     </div>
-</div>
+</md-content>

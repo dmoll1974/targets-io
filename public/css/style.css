@@ -14288,3 +14288,7 @@ button.toast-close-button {
 .graph-column:hover{
     overflow-y: auto;
 }
+
+md-toast {
+    height: auto;
+}
