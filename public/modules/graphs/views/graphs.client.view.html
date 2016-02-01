@@ -45,9 +45,8 @@
                 </div>
             </div>
         </div>
-        <md-tabs md-selected="selectedIndex" class="metric-panels" style="padding-bottom: 0px;">
-            <md-tab ng-repeat="tag in tags" ng-disabled="tag.disabled" data-ng-model="value" active="isActive(tag.text)"
-                    ui-sref="viewGraphs(tag.route)">
+        <md-tabs md-selected="selectedIndex" style="padding-bottom: 0px;">
+            <md-tab ng-repeat="tag in tags" ui-sref="viewGraphs(tag.route)">
                 <span>{{tag.text}}</span>
             </md-tab>
         </md-tabs>
