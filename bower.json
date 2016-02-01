@@ -37,7 +37,7 @@
     "ng-clip": "~0.2.6",
     "moment": "~2.10.6",
     "angular-busy": "~4.1.3",
-    "angular-material": "0.11.3",
+    "angular-material": "1.0.4",
     "sc-date-time": "~1.1.2",
     "bootstrap-ui-datetime-picker": "~1.2.5",
     "jquery": "~2.1.4",
