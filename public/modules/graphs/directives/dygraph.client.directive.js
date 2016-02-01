@@ -532,11 +532,6 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       //}
     }
 
-    $scope.stopEventPropagation = function($event){
-
-      $event.stopPropagation();
-
-    }
 
     function getMaximumOfSelectedSeries(legendData){
 
