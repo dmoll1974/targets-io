@@ -54,12 +54,16 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
               })
 
             }
+
+
             /* set y-axis range to highest of the selected series */
 
-            var maxValue = getMaximumOfSelectedSeries(scope.metric.legendData);
+
+            var yRange = (scope.zoomedYRange) ? scope.zoomedYRange : [0, getMaximumOfSelectedSeries(scope.metric.legendData)];
             scope.graph.updateOptions({
-              valueRange: [0, maxValue]
+              valueRange: yRange
             });
+
 
             /* add colors to legend */
             var colors = scope.graph.getColors();
@@ -234,7 +238,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
             axisLabelFontSize: 12,
             legend: 'never',
             includeZero: true,
-            valueRange: [0, dygraphData.maxValue],
+            valueRange: $scope.yRange,
             highlightCircleSize: 0,
             highlightSeriesOpts: {
               strokeWidth: 2
@@ -254,6 +258,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
           $scope.data = dygraphData.data;
           $scope.metric.legendData = dygraphData.legendData;
+          $scope.yRange = ($scope.zoomedYRange) ? $scope.zoomedYRange : [0,dygraphData.maxValue ];
 
           /* synchronyze anotations with datapoints */
 
@@ -365,6 +370,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
       Utils.zoomFrom = Math.round(minDate);
       Utils.zoomUntil= Math.round(maxDate);
+      $scope.zoomedYRange = [Math.round(yRange[0][0]),Math.round(yRange[0][1])];
        drawDypraph($scope.graphType);
     }
 
