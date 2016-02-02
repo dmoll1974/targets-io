@@ -56,12 +56,11 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
             }
 
 
-            /* set y-axis range to highest of the selected series */
+            /* set y-axis range depending on zoom action*/
 
-
-            var yRange = (scope.zoomedYRange) ? scope.zoomedYRange : [0, getMaximumOfSelectedSeries(scope.metric.legendData)];
-            scope.graph.updateOptions({
-              valueRange: yRange
+              var yRange = (scope.horizontalZoom) ? [0, getMaximumOfSelectedSeries(scope.metric.legendData)] : scope.zoomedYRange;
+              scope.graph.updateOptions({
+                valueRange: yRange
             });
 
 
@@ -118,6 +117,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
     $scope.selectAll = true;
     $scope.showLegend =  Utils.showLegend;
+    $scope.horizontalZoom = true;
 
     var clickDetected = false;
 
@@ -367,6 +367,14 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
     }
 
     function zoomGraph(minDate, maxDate, yRange){
+
+      var fromBeforeZoom = (Utils.zoomFrom) ? Utils.zoomFrom : TestRuns.selected.startEpoch;
+      var untilBeforeZoom = (Utils.zoomUntil) ? Utils.zoomUntil : TestRuns.selected.endEpoch;
+
+      /* determine if horizontalZoom has been done*/
+
+      $scope.horizontalZoom = ((maxDate - minDate)/(untilBeforeZoom - fromBeforeZoom)) > 0.99 ? false : true;
+
 
       Utils.zoomFrom = Math.round(minDate);
       Utils.zoomUntil= Math.round(maxDate);
