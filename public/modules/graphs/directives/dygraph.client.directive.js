@@ -42,7 +42,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
           scope.graph.ready(function() {
 
-            /* if selected series is provided, show this series only */
+            /* if selected series is provided (via deeplink), show this series only */
             if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === scope.metric.alias) {
 
               /* show / hide selected series in legend */
@@ -55,6 +55,26 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
             }
 
+            /* if selected series have been set via the legend, set them again after reload or zoom */
+            if(scope.selectedSeries){
+
+
+                _.each(scope.metric.legendData, function (legendItem, i) {
+                  _.each(scope.selectedSeries, function (series) {
+
+                    if(legendItem.name === series.name)
+                      scope.metric.legendData[i].visible = series.visible;
+
+                  })
+                })
+
+                _.each(scope.metric.legendData, function (legendItem, i) {
+
+                  scope.graph.setVisibility(legendItem.id, legendItem.visible);
+
+                })
+
+            }
 
             /* set y-axis range depending on zoom action*/
 
@@ -467,6 +487,12 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
         $scope.graph.updateOptions({
           valueRange: [0,maxValue ]
         });
+
+        $scope.selectAll = false;
+
+        /* save series visibilty to apply after zoom or live reload */
+        saveSeriesVisibility($scope.metric.legendData);
+
       });
     }
 
@@ -485,6 +511,11 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       $scope.graph.updateOptions({
         valueRange: [0,maxValue ]
       });
+
+      $scope.selectAll = false;
+
+      /* save series visibilty to apply after zoom or live reload */
+      saveSeriesVisibility($scope.metric.legendData);
 
     };
 
@@ -510,7 +541,25 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
         valueRange: [0,maxValue ]
       });
 
+      $scope.selectAll = false;
+
+      /* save series visibilty to apply after zoom or live reload */
+      saveSeriesVisibility($scope.metric.legendData);
+
     }
+
+    function saveSeriesVisibility(legendData){
+
+      var selectedSeries = [];
+
+      _.each(legendData, function(legendItem){
+
+          selectedSeries.push({name: legendItem.name, visible: legendItem.visible});
+      })
+
+      $scope.selectedSeries = selectedSeries;
+
+    };
 
     $scope.selectOtherSeriesToggle = function (selectedLegendItem){
 
@@ -537,6 +586,12 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
         $scope.graph.updateOptions({
           valueRange: [0, maxValue]
         });
+
+      $scope.selectAll = false;
+
+
+      /* save series visibilty to apply after zoom or live reload */
+      saveSeriesVisibility($scope.metric.legendData);
       //}
     }
 
