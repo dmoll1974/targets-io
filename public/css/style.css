@@ -13989,8 +13989,8 @@ button.toast-close-button {
     position: fixed;
     top: 60px;
     left: 0px;
-
-}
+    width: 250px;
+    }
 
 .graphs-header {
     /*width: 85%;*/
@@ -14177,8 +14177,8 @@ button.toast-close-button {
 .targetsio-content {
 
     height: 100%;
-    width: 80%;
-    padding-left: 25px;
+    width: 100%;
+    /*padding-left: 25px;*/
 }
 
 .metric-panels {
@@ -14291,4 +14291,13 @@ button.toast-close-button {
 
 md-toast {
     height: auto;
+}
+
+.targets-io-sidenav{
+    width: inherit !important;
+}
+
+.range-selector-padding{
+
+    padding-right: 5px;
 }

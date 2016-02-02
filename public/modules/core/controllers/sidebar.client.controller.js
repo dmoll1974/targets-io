@@ -36,6 +36,7 @@ angular.module('core').controller('SidebarController', [
     }, true);
 
     $scope.clearProductFilter = function () {
+      $scope.productFilter = '';
       SideMenu.productFilter = '';
     };
     Products.fetch().success(function (products) {

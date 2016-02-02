@@ -50,16 +50,20 @@
                 <span>{{tag.text}}</span>
             </md-tab>
         </md-tabs>
-        <div layout="row" flex  >
-            <div layout="row" flex="50" >
-                <md-input-container style="padding-bottom: 5px;" flex>
-                    <label>Filter metrics</label>
-                    <input ng-model="metricFilter">
-                </md-input-container>
-                <md-icon style="margin-bottom: 5px;" ng-if="metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
-                         data-ng-click="clearMetricFilter()">
+        <div layout="row" flex >
+            <div layout="row" flex="50" layout-align="start center"  >
+                <div flex="90" layout-fill>
+                    <md-input-container layout-fill style="padding-bottom: 5px;">
+                        <label>Filter metrics</label>
+                        <input ng-model="metricFilter">
+                    </md-input-container>
+                </div>
+                <div flex="10">
+                    <md-icon style="margin-bottom: 5px;" ng-if="metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                             data-ng-click="clearMetricFilter()">
 
-                </md-icon>
+                    </md-icon>
+                </div>
 
             </div>
 
@@ -75,7 +79,7 @@
                 <input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"
                        share-graph-url/>
                 <label title="Share view URL" class="btn default"
-                       ng-click="setViewShareUrl('graphs')"><span
+                       ng-click="setViewShareUrl('graphs-live')"><span
                         class="btn  glyphicon glyphicon-share"></span>
                 </label>
 
