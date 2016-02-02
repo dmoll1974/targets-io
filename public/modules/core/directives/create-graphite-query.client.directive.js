@@ -6,7 +6,8 @@ function CreateGraphiteQueryDirective () {
 
     var directive = {
         scope: {
-            target: '='
+            target: '=',
+            index: '='
         },
         restrict: 'EA',
         templateUrl: 'modules/core/directives/create-graphite-query.client.view.html',
@@ -17,7 +18,7 @@ function CreateGraphiteQueryDirective () {
     return directive;
 
     /* @ngInject */
-    function CreateGraphiteQueryDirectiveController ($scope, $state, $timeout, Graphite) {
+    function CreateGraphiteQueryDirectiveController ($scope, $state, $timeout, Graphite, $mdMenu) {
 
         console.log('target: ' + $scope.target);
 
@@ -72,7 +73,8 @@ function CreateGraphiteQueryDirective () {
 
                 /* hacks to prevent md-menyu from closing when navigating Graphite tree */
                 $timeout(function() {
-                    var menuContent = document.getElementById('targets-menu-content');
+                    var menuContentId = 'targets-menu-content-' + $scope.index;
+                    var menuContent =  document.getElementById(menuContentId);
 
                     function hasAnyAttribute(target, attrs) {
                         if (!target) return false;
@@ -110,7 +112,11 @@ function CreateGraphiteQueryDirective () {
                                     if (target.hasAttribute("md-menu-disable-close") &&  $scope.expandable) {
                                         event.stopPropagation();
                                         angular.element(target).triggerHandler('click');
+                                    }else{
+
+                                        $mdMenu.hide(menu, { closeAll: true });
                                     }
+
                                     return; //let it propagate
                                 }
                                 break;
