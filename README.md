@@ -46,7 +46,7 @@ To start one of the demo scripts open the Jenkins console
 `http://localhost:8070` 
 
 Go to the configuration page `http://localhost:8070/configure` and scroll down to the Maven section.
-Click "Add maven", make sure "install automatically" is checked an provide a name for the installation. Then save the configuration.
+Click "Add maven", make sure "install automatically" is checked an provide a name for the installation and select version *3.3.1*. Then save the configuration.
 
 To start Gatling or Jmeter tests click on one of DEMO-GATLING or DEMO-JMETER jobs and click "Build now"
 
@@ -73,7 +73,7 @@ The requirements / benchmark thresholds can be set on any of the metrics you hav
 **Libraries / Dependencies**
 ------------------------
 + [Meanjs](https://github.com/meanjs/mean)
-+ [Highcharts] (http://www.highcharts.com/) PLEASE NOTE: Highcharts is not free for commercial use.  See [this page](http://shop.highsoft.com/faq/licensing) for licensing details. 
++ [Dygraphs] (http://dygraphs.com/) 
 + [Angular-Material] (https://github.com/angular/material)
 + [Twitter Bootstrap] (http://twitter.github.com/bootstrap/)
 + [ngTagsInput] (https://github.com/mbenford/ngTagsInput)
@@ -82,7 +82,8 @@ The requirements / benchmark thresholds can be set on any of the metrics you hav
 
 **Documentation**
 
-TBD
+[Wiki](https://github.com/dmoll1974/targets-io/wiki)
+
 ## License
 
 [MIT license](https://github.com/dmoll1974/targets-io/blob/master/LICENSE.md)
