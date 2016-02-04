@@ -42,7 +42,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
           scope.graph.ready(function() {
 
-            /* if selected series is provided, show this series only */
+            /* if selected series is provided (via deeplink), show this series only */
             if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === scope.metric.alias) {
 
               /* show / hide selected series in legend */
@@ -54,12 +54,35 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
               })
 
             }
-            /* set y-axis range to highest of the selected series */
 
-            var maxValue = getMaximumOfSelectedSeries(scope.metric.legendData);
-            scope.graph.updateOptions({
-              valueRange: [0, maxValue]
+            /* if selected series have been set via the legend, set them again after reload or zoom */
+            if(scope.selectedSeries){
+
+
+                _.each(scope.metric.legendData, function (legendItem, i) {
+                  _.each(scope.selectedSeries, function (series) {
+
+                    if(legendItem.name === series.name)
+                      scope.metric.legendData[i].visible = series.visible;
+
+                  })
+                })
+
+                _.each(scope.metric.legendData, function (legendItem, i) {
+
+                  scope.graph.setVisibility(legendItem.id, legendItem.visible);
+
+                })
+
+            }
+
+            /* set y-axis range depending on zoom action*/
+
+              var yRange = (scope.horizontalZoom) ? [0, getMaximumOfSelectedSeries(scope.metric.legendData)] : scope.zoomedYRange;
+              scope.graph.updateOptions({
+                valueRange: yRange
             });
+
 
             /* add colors to legend */
             var colors = scope.graph.getColors();
@@ -114,6 +137,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
     $scope.selectAll = true;
     $scope.showLegend =  Utils.showLegend;
+    $scope.horizontalZoom = true;
 
     var clickDetected = false;
 
@@ -234,7 +258,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
             axisLabelFontSize: 12,
             legend: 'never',
             includeZero: true,
-            valueRange: [0, dygraphData.maxValue],
+            valueRange: $scope.yRange,
             highlightCircleSize: 0,
             highlightSeriesOpts: {
               strokeWidth: 2
@@ -254,6 +278,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
           $scope.data = dygraphData.data;
           $scope.metric.legendData = dygraphData.legendData;
+          $scope.yRange = ($scope.zoomedYRange) ? $scope.zoomedYRange : [0,dygraphData.maxValue ];
 
           /* synchronyze anotations with datapoints */
 
@@ -363,8 +388,17 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
     function zoomGraph(minDate, maxDate, yRange){
 
+      var fromBeforeZoom = (Utils.zoomFrom) ? Utils.zoomFrom : TestRuns.selected.startEpoch;
+      var untilBeforeZoom = (Utils.zoomUntil) ? Utils.zoomUntil : TestRuns.selected.endEpoch;
+
+      /* determine if horizontalZoom has been done*/
+
+      $scope.horizontalZoom = ((maxDate - minDate)/(untilBeforeZoom - fromBeforeZoom)) > 0.99 ? false : true;
+
+
       Utils.zoomFrom = Math.round(minDate);
       Utils.zoomUntil= Math.round(maxDate);
+      $scope.zoomedYRange = [Math.round(yRange[0][0]),Math.round(yRange[0][1])];
        drawDypraph($scope.graphType);
     }
 
@@ -453,6 +487,12 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
         $scope.graph.updateOptions({
           valueRange: [0,maxValue ]
         });
+
+        $scope.selectAll = false;
+
+        /* save series visibilty to apply after zoom or live reload */
+        saveSeriesVisibility($scope.metric.legendData);
+
       });
     }
 
@@ -471,6 +511,11 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       $scope.graph.updateOptions({
         valueRange: [0,maxValue ]
       });
+
+      $scope.selectAll = false;
+
+      /* save series visibilty to apply after zoom or live reload */
+      saveSeriesVisibility($scope.metric.legendData);
 
     };
 
@@ -496,7 +541,25 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
         valueRange: [0,maxValue ]
       });
 
+      $scope.selectAll = false;
+
+      /* save series visibilty to apply after zoom or live reload */
+      saveSeriesVisibility($scope.metric.legendData);
+
     }
+
+    function saveSeriesVisibility(legendData){
+
+      var selectedSeries = [];
+
+      _.each(legendData, function(legendItem){
+
+          selectedSeries.push({name: legendItem.name, visible: legendItem.visible});
+      })
+
+      $scope.selectedSeries = selectedSeries;
+
+    };
 
     $scope.selectOtherSeriesToggle = function (selectedLegendItem){
 
@@ -523,14 +586,15 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
         $scope.graph.updateOptions({
           valueRange: [0, maxValue]
         });
+
+      $scope.selectAll = false;
+
+
+      /* save series visibilty to apply after zoom or live reload */
+      saveSeriesVisibility($scope.metric.legendData);
       //}
     }
 
-    $scope.stopEventPropagation = function($event){
-
-      $event.stopPropagation();
-
-    }
 
     function getMaximumOfSelectedSeries(legendData){
 

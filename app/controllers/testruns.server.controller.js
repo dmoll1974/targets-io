@@ -74,6 +74,7 @@ function update (req, res) {
       testRun.end = req.body.end;
       testRun.completed = req.body.completed;
       testRun.buildResultsUrl = req.body.buildResultsUrl;
+      testRun.annotations = req.body.annotations;
       testRun.humanReadableDuration = humanReadbleDuration(new Date(req.body.end).getTime() - new Date(req.body.start).getTime());
 
       testRun.save(function(err, savedTestRun){

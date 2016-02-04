@@ -263,6 +263,9 @@ angular.module('graphs').controller('GraphsController', [
 
         });
 
+        /* if 'ALL' tab is selected show all metrics*/
+        if ($scope.value === 'All') numberOfFilteredMetrics += 1;
+
       });
 
       return numberOfFilteredMetrics;

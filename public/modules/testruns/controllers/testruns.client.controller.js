@@ -11,7 +11,8 @@ angular.module('testruns').controller('TestrunsController', [
   'ConfirmModal',
   '$window',
   '$interval',
-  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window, $interval) {
+  '$mdDialog',
+  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window, $interval, $mdDialog) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -42,6 +43,61 @@ angular.module('testruns').controller('TestrunsController', [
       testRunPolling();
 
     }
+
+    $scope.showAnnotations = function ($event, testRun) {
+
+      var parentEl = angular.element(document.body);
+      $mdDialog.show({
+        parent: parentEl,
+        targetEvent: $event,
+        template:
+        '<md-dialog aria-label="Annotations">' +
+        '<md-toolbar class="md-padding"><h4>Test run annotations</h4></md-toolbar>' +
+        '  <div layout="column"' +
+        '  <md-dialog-content class="md-padding">'+
+        '    <h5><em>{{testRun.testRunId}}</em></h5>' +
+        '    <md-input-container class="md-block" flex>'+
+        '       <textarea name="testrunAnnotations" ng-model="testRun.annotations" columns="1" md-maxlength="500" rows="10"></textarea>'+
+        '    </md-input-container>'+
+        '  </md-dialog-content>' +
+        '  <md-dialog-actions>' +
+        '    <md-button ng-click="closeDialog()" class="md-primary">' +
+        '      OK' +
+        '    </md-button>' +
+        '  </md-dialog-actions>' +
+        '  </div>' +
+        '</md-dialog>',
+        locals: {
+          testRun: testRun
+        },
+        controller: DialogController
+      });
+      function DialogController($scope, $mdDialog, testRun, TestRuns) {
+        $scope.testRun = testRun;
+        $scope.closeDialog = function() {
+          TestRuns.update($scope.testRun).success(function(){
+
+            $mdDialog.hide();
+          })
+
+        }
+      }
+
+      //var alert = $mdDialog.alert()
+      //    .title('Test run annotations')
+      //    .content(annotation)
+      //    .ok('Close')
+      //    .templateUrl('modules/testruns/views/annotations-dialog.client.view.html');
+      //
+      //$mdDialog
+      //    .show( alert )
+      //    .finally(function() {
+      //      alert = undefined;
+      //    });
+
+    };
+
+
     /* refresh test runs every 15 seconds */
 
 

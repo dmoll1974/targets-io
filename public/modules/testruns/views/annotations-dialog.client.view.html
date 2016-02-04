@@ -1,0 +1,30 @@
+<md-dialog ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Test run annotations</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+          <md-input-container class="md-block" flex>
+              <label>Annotations</label>
+              <textarea name="testrunAnnotations" ng-model="testrun.annotations" columns="1" md-maxlength="500" rows="10"></textarea>
+          </md-input-container>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+
+      <md-button ng-click="answer('not useful')">
+       Save
+      </md-button>
+      <md-button ng-click="answer('useful')" style="margin-right:20px;">
+        Delete
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

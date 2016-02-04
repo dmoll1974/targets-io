@@ -16,7 +16,7 @@
                             <label>Target</label>
                             <input ng-model="metric.targets[$index]">
                         </md-input-container>
-                        <create-graphite-query target="metric.targets[$index]" query="'metric'"></create-graphite-query>
+                        <create-graphite-query target="metric.targets[$index]" index="$index"></create-graphite-query>
                         <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeTarget($index)"
                                  data-ng-show="metric.targets.length>1"></md-icon>
                     </div>

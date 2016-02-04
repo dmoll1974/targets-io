@@ -1,16 +1,30 @@
-<div class="fix-to-top-sidebar sidebar" data-ng-controller="SidebarController as vm">
-    <div layout="column">
-        <div layout="row"  layout-fill>
-            <md-input-container flex>
-                <label>Filter products</label>
-                <input ng-model="productFilter">
-            </md-input-container>
-            <md-icon ng-if="productFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
-                     data-ng-click="clearProductFilter()"></md-icon>
+<div class="fix-to-top-sidebar sidebar" data-ng-controller="SidebarController as vm" layout-fill>
+    <div layout="column" flex>
+        <div layout="row" layout-align="start center"  >
+            <div flex="90" layout-fill>
+                <md-input-container layout-fill style="padding-bottom: 5px;">
+                    <label>Filter products</label>
+                    <input ng-model="productFilter">
+                </md-input-container>
+            </div>
+            <div flex="10">
+                <md-icon style="margin-bottom: 5px;" ng-if="productFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                         data-ng-click="clearProductFilter()">
+
+                </md-icon>
+            </div>
         </div>
+        <!--<div layout="row">-->
+            <!--<md-input-container flex>-->
+                <!--<label>Filter products</label>-->
+                <!--<input ng-model="productFilter">-->
+            <!--</md-input-container>-->
+            <!--<md-icon ng-if="productFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"-->
+                     <!--data-ng-click="clearProductFilter()"></md-icon>-->
+        <!--</div>-->
         <md-button flex data-ng-href="/#!/add/product" style="text-align:left" class="md-primary">ADD PRODUCT</md-button>
         <div>
-            <md-sidenav class="md-sidenav-left md-whiteframe-z1 fix-to-top-sidebar" md-component-id="left"
+            <md-sidenav class="md-sidenav-left md-whiteframe-z1 targets-io-sidenav" md-component-id="left"
                         md-is-locked-open="$mdMedia('gt-sm')">
                 <md-content role="navigation" md-scroll-shrink>
                     <ul class="side-menu">
