@@ -16,7 +16,7 @@
                             <label>Target</label>
                             <input ng-model="metric.targets[$index]">
                         </md-input-container>
-                        <create-graphite-query target="metric.targets[$index]" query="'metric'"></create-graphite-query>
+                        <create-graphite-query target="metric.targets[$index]" query="'metric'" index="$index"></create-graphite-query>
                         <!--<md-menu style="padding-top: 0px; padding-bottom: 0px;">-->
                             <!--<div aria-label="Select target" class="md-icon-button"-->
                                  <!--ng-click="openMenu($mdOpenMenu, $event, target)">-->
