@@ -14301,3 +14301,13 @@ md-toast {
 
     padding-right: 5px;
 }
+
+.switch-label-disabled{
+
+    color: grey;
+}
+
+.switch-label-enabled{
+
+    color: black;
+}

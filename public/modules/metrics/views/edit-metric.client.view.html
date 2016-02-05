@@ -5,10 +5,12 @@
     <div cg-busy="{promise:updateTestrun,message:'Updating test runs...'}"></div>
     <form name="metricForm" novalidate>
         <div layout="column">
-            <md-input-container flex class="well">
-                <label>Alias</label>
-                <input ng-model="metric.alias">
-            </md-input-container>
+            <div  class="well">
+                <md-input-container layout-fill >
+                    <label>Alias</label>
+                    <input ng-model="metric.alias">
+                </md-input-container>
+            </div>
             <div layout="column" class="well">
                 <div ng-repeat="target in metric.targets track by $index">
                     <div layout="row" layout-align="end center">
@@ -49,9 +51,9 @@
                 </tags-input>
             </md-input-container>
             <div layout="column" class="well">
-                <md-checkbox ng-model="enableRequirement" aria-label="Requirements enabled">
-                    Requirements enabled
-                </md-checkbox>
+                <md-switch class="md-primary" md-no-ink aria-label="Requirements enabled" ng-model="enableRequirement" ng-class="{'switch-label-disabled': enableRequirement === false }">
+                    Requirements
+                </md-switch>
                 <div layout="row">
                     <md-input-container>
                         <label>Requirement</label>
@@ -71,9 +73,9 @@
                 </div>
             </div>
             <div layout="column" class="well">
-                <md-checkbox ng-model="enableBenchmarking" aria-label="Requirements enabled">
-                    Benchmarking enabled
-                </md-checkbox>
+                <md-switch class="md-primary" md-no-ink aria-label="Benchmarking enabled" ng-model="enableBenchmarking"  ng-class="{'switch-label-disabled': enableBenchmarking === false }">
+                    Benchmarking
+                </md-switch>
                 <div layout="row">
                     <md-input-container>
                         <label>Benchmark</label>
@@ -91,6 +93,15 @@
                         <input ng-model="metric.benchmarkValue" ng-disabled="enableBenchmarking===false">
                     </md-input-container>
                 </div>
+            </div>
+            <div layout="column" class="well">
+                <md-switch class="md-primary" md-no-ink aria-label="Include in test run summary" ng-model="metric.includeInSummary" ng-class="{'switch-label-disabled': metric.includeInSummary === false }">
+                    Include in test run summary
+                </md-switch>
+                <md-input-container class="md-block" flex>
+                    <label>Default annotations</label>
+                    <textarea name="defaultSummaryText" ng-model="metric.defaultSummaryText" columns="1" md-maxlength="500" rows="10" ng-disabled="metric.includeInSummary === false"></textarea>
+                </md-input-container>
             </div>
             <div layout="row">
                 <md-button md-no-ink class="md-primary" data-ng-click="update()">Submit</md-button>

@@ -343,6 +343,17 @@ angular.module('testruns').controller('TestrunsController', [
       });
     };
 
+    $scope.viewTestRunSummary = function(testRun){
+
+
+      $state.go('testRunSummary', {
+        'productName': $stateParams.productName,
+        'dashboardName': $stateParams.dashboardName,
+        'testRunId': testRun.testRunId
+      });
+
+    }
+
     $scope.liveGraphs = function(testRun){
 
       $state.go('viewLiveGraphs', {

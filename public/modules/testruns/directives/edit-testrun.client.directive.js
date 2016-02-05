@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('templates').directive('editTestrun', EditTestrunDirective);
+angular.module('testruns').directive('editTestrun', EditTestrunDirective);
 
 function EditTestrunDirective () {
 

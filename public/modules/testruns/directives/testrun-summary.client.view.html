@@ -1,0 +1,104 @@
+<section>
+    <div class="page-header">
+        <div layout="row" layout-align="space-between center">
+           <h1>Test run summary</h1>
+            <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode" ng-class="{'switch-label-disabled': editMode === false }">
+                Edit mode
+            </md-switch>
+        </div>
+    </div>
+    <md-content>
+        <!--<md-card>-->
+            <div flex="75">
+                <h3>Test run info</h3>
+                <table class="table">
+                <tbody>
+                <tr>
+                    <td>Product</td>
+                    <td>{{testRun.productName}}</td>
+                <tr>
+                    <td>Dashboard</td>
+                    <td>{{testRun.dashboardName}}</td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td>{{dashboard.description}}</td>
+                </tr>
+                <tr>
+                    <td>Test run ID </td>
+                    <td><a ng-click="testRunDetails(testRun, 'all')">{{testRun.testRunId}}</a></td>
+                <tr>
+                    <td>Start</td>
+                    <td>{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
+                </tr>
+                <tr>
+                    <td>End</td>
+                    <td>{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
+                </tr>
+                <tr ng-if="testRun.annotations" >
+                    <td>Test run annotations</td>
+                    <td>{{testRun.annotations}}</td>
+                </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+        <div ng-if="requirements.length > 0" flex="75">
+            <h3>Requirements</h3>
+
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Result</th>
+                    <tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="requirement in requirements">
+                        <td>{{requirement.requirementText}}</td>
+                        <td>
+                            <span ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
+                                  ng-click="testRunDetails(testRun, requirement.metricAlias)"  >
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <h3>Metrics</h3>
+
+        <md-content class="md-padding" layout="column" flex="90" >
+            <div  data-ng-repeat="metric in metrics | testRunSummary " >
+                <div layout="row" layout-align="space-between center">
+                    <h4 class="md-padding" data-ng-click="editMetric(metric._id)">{{metric.alias}}</h4>
+                    <md-button ng-if="editMode && $index > 0" class="md-icon-button" data-ng-click="moveUp(metric)">
+                        <md-icon md-svg-src="images/assets/ic_arrow_upward_black_24px.svg"></md-icon>
+                        <md-tooltip>
+                            Move up
+                        </md-tooltip>
+                    </md-button>
+                </div>
+
+
+                <div ng-if="editMode === true" class="md-padding">
+                    <md-input-container class="md-block" flex>
+                        <label>Annotations</label>
+                        <textarea name="summaryText" ng-model="metric.summaryText" columns="1" md-maxlength="500" rows="10"></textarea>
+                    </md-input-container>
+                </div>
+                <div ng-if="editMode === false" class="md-padding">
+                    <p>{{metric.summaryText}}</p>
+                </div>
+
+                <dygraph class="md-padding" metric="metric"></dygraph>
+
+            </div>
+        </md-content>
+
+
+    </md-content>
+</section>

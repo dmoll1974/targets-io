@@ -59,8 +59,9 @@ angular.module('metrics').controller('MetricsController', [
     $scope.metric = {};
     $scope.metric.dashboardId = Dashboards.selected._id;
     $scope.metric.targets = [''];
-    $scope.enableBenchmarking = 'disabled';
-    $scope.enableRequirement = 'disabled';
+    $scope.enableBenchmarking = false;
+    $scope.enableRequirement = false;
+    $scope.metric.includeInSummary = false;
 
     $scope.$watch('enableRequirement', function (newVal, oldVal) {
       if (newVal !== oldVal) {

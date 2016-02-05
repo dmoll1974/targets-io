@@ -193,6 +193,10 @@ function upload(req, res) {
                     newMetric.requirementOperator = importDashboardMetric.requirementOperator;
                     newMetric.tags = importDashboardMetric.tags;
                     newMetric.type = importDashboardMetric.type;
+                    newMetric.includeInSummary = importDashboardMetric.includeInSummary;
+                    newMetric.defaultSummaryText = importDashboardMetric.defaultSummaryText;
+                    newMetric.summaryIndex = importDashboardMetric.summaryIndex;
+
                     newMetric.save(function (err, newMetric) {
                       //console.log('Saved metric #'+ m);
                       metricCallback();

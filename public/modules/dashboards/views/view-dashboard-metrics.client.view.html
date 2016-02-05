@@ -28,6 +28,7 @@
                     </th>
                     <th>Requirement</th>
                     <th>Allowed deviation</th>
+                    <th>Testrun summary</th>
                     <th>
                         <i class="glyphicon glyphicon-plus" data-ng-click="addMetric()"></i></th>
                     <td>
@@ -47,6 +48,9 @@
                 </td>
                 <td ng-click="editMetric(metric._id)"><span>{{metric.requirementOperator}} {{metric.requirementValue}}</span></td>
                 <td ng-click="editMetric(metric._id)"><span data-ng-if="metric.benchmarkOperator">{{metric.benchmarkOperator === '>'?'+':'-'}} {{metric.benchmarkValue}}</span>
+                </td>
+                <td>
+                    <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="metric.includeInSummary === true"></md-icon>
                 </td>
                 <td ng-click="editMetric(metric._id)">
                 </td>

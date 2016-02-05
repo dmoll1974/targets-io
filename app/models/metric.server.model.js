@@ -3,6 +3,15 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'), Schema = mongoose.Schema;
+
+var CounterSchema = Schema({
+  _id: {type: String, required: true},
+  seq: { type: Number, default: 0 }
+});
+
+var Counter = mongoose.model('Counter', CounterSchema);
+
+
 /**
  * Metric Schema
  */
@@ -38,12 +47,23 @@ var metricSchema = new mongoose.Schema({
   'type': {
     type: String,
     default: 'Average'
-  }
+  },
+  'includeInSummary':{
+    type: Boolean,
+    default: false
+  },
+  'defaultSummaryText': String,
+  'summaryIndex': Number
 });
+
 metricSchema.pre('remove', function (next) {
   this.model('Dashboard').update({ _id: this.dashboardId }, { $pull: { metrics: this._id } }, { multi: true }, next);
 });
 metricSchema.pre('save', function (next) {
   this.model('Dashboard').update({ _id: this.dashboardId }, { $addToSet: { metrics: this._id } }, next);
 });
+
+
+
+
 mongoose.model('Metric', metricSchema);
