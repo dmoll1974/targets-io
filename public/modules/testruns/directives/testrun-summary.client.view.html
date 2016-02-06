@@ -1,9 +1,10 @@
 <section>
+    <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div class="page-header">
         <div layout="row" layout-align="space-between center">
-           <h1>Test run summary</h1>
+           <h1>Summary</h1>
             <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode" ng-class="{'switch-label-disabled': editMode === false }">
-                Edit mode
+                Edit
             </md-switch>
         </div>
     </div>
@@ -15,36 +16,49 @@
                 <tbody>
                 <tr>
                     <td>Product</td>
-                    <td>{{testRun.productName}}</td>
+                    <td>{{testRunSummary.productName}}</td>
                 <tr>
                     <td>Dashboard</td>
-                    <td>{{testRun.dashboardName}}</td>
+                    <td>{{testRunSummary.dashboardName}}</td>
                 </tr>
                 <tr>
                     <td>Description</td>
-                    <td>{{dashboard.description}}</td>
+                    <td>{{testRunSummary.description}}</td>
                 </tr>
                 <tr>
                     <td>Test run ID </td>
-                    <td><a ng-click="testRunDetails(testRun, 'all')">{{testRun.testRunId}}</a></td>
+                    <td><a ng-click="testRunDetails(testRun, 'all')">{{testRunSummary.testRunId}}</a></td>
                 <tr>
-                    <td>Start</td>
-                    <td>{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
+                    <td>Period</td>
+                    <td>{{testRunSummary.start | date:'EEEE, dd-M-yyyy H:mm:ss'}} - {{testRunSummary.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
                 </tr>
                 <tr>
-                    <td>End</td>
-                    <td>{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
+                    <td>Duration</td>
+                    <td>{{testRunSummary.humanReadableDuration}}</td>
                 </tr>
-                <tr ng-if="testRun.annotations" >
-                    <td>Test run annotations</td>
-                    <td>{{testRun.annotations}}</td>
-                </tr>
+
 
 
                 </tbody>
             </table>
         </div>
-        <div ng-if="requirements.length > 0" flex="75">
+
+        <div class="md-padding" ng-if="testRunSummary.goal" flex="75">
+            <h3>Goal</h3>
+            <p>{{testRunSummary.goal}}</p>
+        </div>
+        <div class="md-padding" ng-if="testRunSummary.annotations" flex="75">
+            <h3>Remarks</h3>
+            <div ng-if="editMode === true" class="md-padding">
+                <md-input-container class="md-block" flex>
+                    <label>Annotations</label>
+                    <textarea name="testRunSummaryAnnotations" ng-model="testRunSummary.annotations" columns="1" md-maxlength="500" rows="10"></textarea>
+                </md-input-container>
+            </div>
+            <p ng-if="editMode === false">{{testRunSummary.annotations}}</p>
+        </div>
+
+        <div class="md-padding" ng-if="testRunSummary.requirements.length > 0" flex="75">
             <h3>Requirements</h3>
 
 
@@ -56,7 +70,7 @@
                     <tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="requirement in requirements">
+                    <tr ng-repeat="requirement in testRunSummary.requirements">
                         <td>{{requirement.requirementText}}</td>
                         <td>
                             <span ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
@@ -72,7 +86,7 @@
         <h3>Metrics</h3>
 
         <md-content class="md-padding" layout="column" flex="90" >
-            <div  data-ng-repeat="metric in metrics | testRunSummary " >
+            <div  data-ng-repeat="metric in testRunSummary.metrics | testRunSummary " >
                 <div layout="row" layout-align="space-between center">
                     <h4 class="md-padding" data-ng-click="editMetric(metric._id)">{{metric.alias}}</h4>
                     <md-button ng-if="editMode && $index > 0" class="md-icon-button" data-ng-click="moveUp(metric)">
@@ -98,6 +112,12 @@
 
             </div>
         </md-content>
+        <div id="summary-buttons" layout="row">
+            <md-button  ng-if="editMode === true && summarySaved === false" md-no-ink class="md-primary" data-ng-click="saveTestRunSummary()">Save</md-button>
+            <md-button  ng-if="editMode === true && summarySaved === true" md-no-ink class="md-primary" data-ng-click="updateTestRunSummary()">Update</md-button>
+            <md-button ng-if="editMode === true && summarySaved === true" class="md-warn" data-ng-click="openDeleteModal('', testRunSummary)">Discard</md-button>
+
+        </div>
 
 
     </md-content>

@@ -13,45 +13,68 @@ function TestRunSummaryDirective () {
   return directive;
 
   /* @ngInject */
-  function TestRunSummaryDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics) {
+  function TestRunSummaryDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal) {
 
 
     Utils.graphType = 'testrun';
 
-    $scope.numberOfColumns = 1;
-    $scope.requirements = [];
+    $scope.testRunSummary = {};
+    $scope.testRunSummary.requirements = [];
     $scope.editMode = false;
 
+    TestRunSummary.getTestRunSummary($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRunSummary) {
 
-  /* get test run info */
-    TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+      if(testRunSummary){
 
-      $scope.testRun = testRun;
+        $scope.testRunSummary = testRunSummary;
+        $scope.summarySaved = true;
 
-      /* get dashboard info */
+        console.log('got test run summary from db!')
 
-      Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+      }else {
 
-        $scope.dashboard = dashboard;
+        $scope.summarySaved = false;
 
-        /* merge requirements results from test run data*/
+        /* get test run info */
 
-        $scope.metrics = addRequirementsResultsForTestRun($scope.dashboard.metrics, testRun.metrics);
+        TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+
+          $scope.testRunSummary.productName = testRun.productName;
+          $scope.testRunSummary.dashboardName = testRun.dashboardName;
+          $scope.testRunSummary.testRunId = testRun.testRunId;
+          $scope.testRunSummary.start = testRun.start;
+          $scope.testRunSummary.end = testRun.end;
+          $scope.testRunSummary.humanReadableDuration = testRun.humanReadableDuration;
+          $scope.testRunSummary.annotations = (testRun.annotations)? testRun.annotations : 'None';
+
+          /* get dashboard info */
+
+          Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+
+            $scope.testRunSummary.description = dashboard.description;
+            $scope.testRunSummary.goal = dashboard.goal;
 
 
-        /* add default annotation texts to model */
+            /* merge requirements results from test run data*/
 
-        _.each($scope.metrics, function(metric){
-
-           metric.summaryText = (metric.defaultSummaryText) ? (metric.defaultSummaryText) : '';
-
-        })
+            $scope.testRunSummary.metrics = addRequirementsResultsForTestRun(dashboard.metrics, testRun.metrics);
 
 
-      });
+            /* add default annotation texts to model */
+
+            _.each($scope.testRunSummary.metrics, function (metric) {
+
+              metric.summaryText = (metric.defaultSummaryText) ? metric.defaultSummaryText : '';
+
+            })
 
 
-    });
+          });
+
+
+        });
+      }
+  });
 
 
     function addRequirementsResultsForTestRun(dashboardMetrics, testRunMetrics) {
@@ -82,7 +105,7 @@ function TestRunSummaryDirective () {
 
             var requirementText =  dashboardMetric.requirementOperator == "<" ? dashboardMetric.alias + ' should be lower then ' + dashboardMetric.requirementValue : dashboardMetric.alias + ' should be higher then ' + dashboardMetric.requirementValue;
 
-            $scope.requirements.push({metricAlias: dashboardMetric.alias, requirementText: requirementText, meetsRequirement:testRunMetric.meetsRequirement });
+            $scope.testRunSummary.requirements.push({metricAlias: dashboardMetric.alias, requirementText: requirementText, meetsRequirement:testRunMetric.meetsRequirement });
           }
 
 
@@ -96,28 +119,28 @@ function TestRunSummaryDirective () {
     $scope.moveUp = function(metricToMove){
 
       var originalSummaryIndex = metricToMove.summaryIndex;
-      var currentIndex = $scope.metrics.map(function(metric){return metric._id.toString()}).indexOf(metricToMove._id.toString());
-      var newIndex = findNextSummaryMetricIndex($scope.metrics, currentIndex);
-      var newSummaryIndex = $scope.metrics[newIndex].summaryIndex;
+      var currentIndex = $scope.testRunSummary.metrics.map(function(metric){return metric._id.toString()}).indexOf(metricToMove._id.toString());
+      var newIndex = findNextSummaryMetricIndex($scope.testRunSummary.metrics, currentIndex);
+      var newSummaryIndex = $scope.testRunSummary.metrics[newIndex].summaryIndex;
 
-      //var tempArrayItem = $scope.metrics[newIndex];
-      //$scope.metrics[newIndex] = $scope.metrics[currentIndex];
-      //$scope.metrics[currentIndex] = tempArrayItem;
+      //var tempArrayItem = $scope.testRunSummary.metrics[newIndex];
+      //$scope.testRunSummary.metrics[newIndex] = $scope.testRunSummary.metrics[currentIndex];
+      //$scope.testRunSummary.metrics[currentIndex] = tempArrayItem;
 
       /* switch metric summaryIndeces*/
 
-      $scope.metrics[currentIndex].summaryIndex = $scope.metrics[currentIndex].summaryIndex - 1;
+      $scope.testRunSummary.metrics[currentIndex].summaryIndex = $scope.testRunSummary.metrics[currentIndex].summaryIndex - 1;
 
-      $scope.metrics[newIndex].summaryIndex = $scope.metrics[newIndex].summaryIndex + 1;
-
-
-      Metrics.update( $scope.metrics[currentIndex]).success(function (updatedMetricToMove) {
+      $scope.testRunSummary.metrics[newIndex].summaryIndex = $scope.testRunSummary.metrics[newIndex].summaryIndex + 1;
 
 
-        Metrics.update( $scope.metrics[newIndex]).success(function (updatedMovedMetric) {
+      Metrics.update( $scope.testRunSummary.metrics[currentIndex]).success(function (updatedMetricToMove) {
 
 
-          //$scope.metrics = $scope.metrics.sort(Utils.dynamicSort('summaryIndex'));
+        Metrics.update( $scope.testRunSummary.metrics[newIndex]).success(function (updatedMovedMetric) {
+
+
+          //$scope.testRunSummary.metrics = $scope.testRunSummary.metrics.sort(Utils.dynamicSort('summaryIndex'));
 
 
         });
@@ -185,13 +208,88 @@ function TestRunSummaryDirective () {
       });
     }
 
-    $scope.cancel = function () {
-      /* reset form*/
-      $scope.testrunForm.$setPristine();
-      if ($rootScope.previousStateParams)
-        $state.go($rootScope.previousState, $rootScope.previousStateParams);
-      else
-        $state.go($rootScope.previousState);
+    $scope.saveTestRunSummary = function(){
+
+      /* only save metrics that are in summary */
+
+      var metricsIncludedInSummary = [];
+
+      _.each($scope.testRunSummary.metrics, function(metric){
+
+        if(metric.includeInSummary === true) metricsIncludedInSummary.push(metric);
+
+      })
+
+      $scope.testRunSummary.metrics = metricsIncludedInSummary;
+
+
+      TestRunSummary.addTestRunSummary($scope.testRunSummary).success(function(savedTestRunSummary){
+
+
+          $scope.summarySaved = true;
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top center')
+              .parent(angular.element('#summary-buttons'))
+              .hideDelay(6000);
+
+          $mdToast.show(toast.content('Test run summary saved')).then(function(response) {
+
+          });
+
+      })
+    }
+
+    $scope.updateTestRunSummary = function(){
+
+
+      TestRunSummary.updateTestRunSummary($scope.testRunSummary).success(function(updatedTestRunSummary){
+
+
+          $scope.summarySaved = true;
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top center')
+              .parent(angular.element('#summary-buttons'))
+              .hideDelay(6000);
+
+          $mdToast.show(toast.content('Test run summary updated')).then(function(response) {
+
+          });
+
+      })
+    };
+
+
+    $scope.openDeleteModal = function (size, testRunSummary) {
+      ConfirmModal.itemType = 'Delete saved test run summary for ';
+      ConfirmModal.selectedItemDescription = testRunSummary.testRunId;
+      var modalInstance = $modal.open({
+        templateUrl: 'ConfirmDelete.html',
+        controller: 'ModalInstanceController',
+        size: size  //,
+      });
+      modalInstance.result.then(function () {
+        TestRunSummary.deleteTestRunSummary(testRunSummary).success(function () {
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top center')
+              .hideDelay(6000);
+
+          $mdToast.show(toast.content('Test run summary deleted from db')).then(function(response) {
+
+          });
+          /* reload*/
+          $state.go($state.current, {}, { reload: true });
+        });
+      }, function () {
+      });
     };
 
   }

@@ -27,7 +27,7 @@ angular.module('events').factory('TestRuns', [
       updateAllTestRunsForProduct: updateAllTestRunsForProduct,
       updateAllTestRunsForDashboard: updateAllTestRunsForDashboard,
       calculateTotalDuration: calculateTotalDuration,
-      calculateDuration: calculateDuration
+      calculateDuration: calculateDuration,
     };
     return TestRuns;
 

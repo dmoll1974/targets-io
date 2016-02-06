@@ -30,9 +30,13 @@
                         <div ng-message="required">Dashboard description is required.</div>
                     </div>
                 </md-input-container>
-                <md-checkbox ng-model="dashboard.useInBenchmark" aria-label="Benchmark test runs for this dashboard">
+                <md-input-container class="md-block" flex>
+                    <label>Goal description</label>
+                    <textarea name="goal" ng-model="dashboard.goal" columns="1" md-maxlength="500" rows="10"></textarea>
+                </md-input-container>
+                <md-switch ng-model="dashboard.useInBenchmark" aria-label="Benchmark test runs for this dashboard" ng-class="{'switch-label-disabled': dashboard.useInBenchmark === false }">
                     Benchmark test runs for this dashboard
-                </md-checkbox>
+                </md-switch>
             </div>
             <div layout="row">
                 <md-button md-no-ink class="md-primary" ng-click="dashboardForm.$valid && create()">Submit</md-button>

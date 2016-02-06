@@ -61,6 +61,7 @@ exports.update = function (req, res) {
   var dashboard = req.dashboard;
   dashboard.name = req.body.name;
   dashboard.description = req.body.description;
+  dashboard.goal = req.body.goal;
   dashboard.tags = req.body.tags;
   dashboard.baseline = req.body.baseline;
   dashboard.useInBenchmark = req.body.useInBenchmark;

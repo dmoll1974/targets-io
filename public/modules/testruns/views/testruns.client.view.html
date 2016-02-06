@@ -19,7 +19,7 @@
                 <th>Start</th>
                 <th>End</th>
                 <th>Duration</th>
-                <th data-ng-if="showBenchmarks">Requirements</th>
+                <th>Requirements</th>
                 <th data-ng-if="showBenchmarks">Previous Build</th>
                 <th data-ng-if="showBenchmarks">Fixed Baseline</th>
                 <th data-ng-if="showBenchmarks">
@@ -50,7 +50,7 @@
                 </td>
                 <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.humanReadableDuration}}
                 </td>
-                <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" class="text-center pointer"
+                <td data-ng-if="!(runningTest && $index < numberOfRunningTests)" header-class="text-center" class="text-center pointer"
                     data-ng-click="testRunRequirements($index)"><span
                         ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>
                 </td>
@@ -75,7 +75,7 @@
                             </md-tooltip>
                         </div>
                         <md-menu-content width="4">
-                            <md-menu-item data-ng-if="showBenchmarks">
+                            <md-menu-item>
                                 <md-button data-ng-click="refreshTestrun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_refresh_black_36px.svg"
                                              md-menu-align-target></md-icon>

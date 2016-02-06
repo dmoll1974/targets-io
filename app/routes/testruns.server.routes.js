@@ -1,6 +1,7 @@
 'use strict';
 module.exports = function (app) {
   var testruns = require('../../app/controllers/testruns.server.controller.js');
+  var testrunSummary = require('../../app/controllers/testrun-summary.server.controller.js');
   var benchmarks = require('../../app/controllers/testruns.benchmarks.server.controller');
   var requirements = require('../../app/controllers/testruns.requirements.server.controller');
 
@@ -19,4 +20,13 @@ module.exports = function (app) {
   app.route('/update-fixed-baseline-benchmark').post(benchmarks.updateFixedBaselineBenchmark);
   app.route('/update-all-dashboard-testruns/:oldProductName/:oldDashboardName/:newDashboardName').get(testruns.updateAllDashboardTestRuns);
   app.route('/update-all-product-testruns/:oldProductName/:newProductName').get(testruns.updateAllProductTestRuns);
+
+  /* test run summary routes */
+
+  app.route('/testrun-summary/:productName/:dashboardName/:testRunId').get(testrunSummary.get);
+  app.route('/testrun-summary').post(testrunSummary.create);
+  app.route('/testrun-summary').put(testrunSummary.update);
+  app.route('/testrun-summary/:productName/:dashboardName/:testRunId').delete(testrunSummary.delete);
+
+
 };

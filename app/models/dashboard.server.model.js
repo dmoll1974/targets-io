@@ -16,6 +16,7 @@ var dashboardSchema = new mongoose.Schema({
     uppercase: true
   },
   'description': String,
+  'goal': String,
   'metrics': [{
       type: Schema.Types.ObjectId,
       ref: 'Metric'
