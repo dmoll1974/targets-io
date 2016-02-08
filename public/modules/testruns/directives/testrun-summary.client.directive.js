@@ -80,21 +80,26 @@ function TestRunSummaryDirective () {
     function addRequirementsResultsForTestRun(dashboardMetrics, testRunMetrics) {
 
       var summaryIndex = 0;
+      var metricsInSummary = [];
 
       _.each(dashboardMetrics, function (dashboardMetric, i) {
 
         /* add initial summaryIndeces */
 
-        if(!dashboardMetric.summaryIndex && dashboardMetric.includeInSummary === true ){
+        if(dashboardMetric.includeInSummary === true ) {
+
+          if (!dashboardMetric.summaryIndex) {
 
 
-          dashboardMetric.summaryIndex = summaryIndex;
-          summaryIndex++;
-          Metrics.update(dashboardMetric).success(function (metric) {
+            dashboardMetric.summaryIndex = summaryIndex;
+            summaryIndex++;
+            Metrics.update(dashboardMetric).success(function (metric) {
 
-          });
+            });
+          }
+
+          metricsInSummary.push(dashboardMetric);
         }
-
 
 
         _.each(testRunMetrics, function (testRunMetric) {
@@ -112,7 +117,7 @@ function TestRunSummaryDirective () {
         });
       });
 
-      return dashboardMetrics.sort(Utils.dynamicSort('summaryIndex'));
+      return metricsInSummary.sort(Utils.dynamicSort('summaryIndex'));
     }
 
 

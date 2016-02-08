@@ -12,6 +12,7 @@ var testRunSummaryMetricSchema = new Schema({
   'legendData': [],
   'includeInSummary': Boolean,
   'summaryText': String,
+  'summaryIndex': Number,
   'targets': [String]
 });
 mongoose.model('TestrunSummaryMetric', testRunSummaryMetricSchema);
