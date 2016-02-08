@@ -145,7 +145,7 @@ function TestRunSummaryDirective () {
         Metrics.update( $scope.testRunSummary.metrics[newIndex]).success(function (updatedMovedMetric) {
 
 
-          //$scope.testRunSummary.metrics = $scope.testRunSummary.metrics.sort(Utils.dynamicSort('summaryIndex'));
+          $scope.testRunSummary.metrics = $scope.testRunSummary.metrics.sort(Utils.dynamicSort('summaryIndex'));
 
 
         });
