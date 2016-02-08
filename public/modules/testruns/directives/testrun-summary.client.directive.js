@@ -215,17 +215,16 @@ function TestRunSummaryDirective () {
 
     $scope.saveTestRunSummary = function(){
 
-      /* only save metrics that are in summary */
+      /* set summaryIndeces in current order of the scope */
 
-      var metricsIncludedInSummary = [];
 
-      _.each($scope.testRunSummary.metrics, function(metric){
+      _.each($scope.testRunSummary.metrics, function(metric, i){
 
-        if(metric.includeInSummary === true) metricsIncludedInSummary.push(metric);
+        metric.summaryIndex = i;
 
       })
 
-      $scope.testRunSummary.metrics = metricsIncludedInSummary;
+
 
 
       TestRunSummary.addTestRunSummary($scope.testRunSummary).success(function(savedTestRunSummary){
@@ -249,6 +248,14 @@ function TestRunSummaryDirective () {
 
     $scope.updateTestRunSummary = function(){
 
+      /* set summaryIndeces in current order of the scope */
+
+
+      _.each($scope.testRunSummary.metrics, function(metric, i){
+
+        metric.summaryIndex = i;
+
+      })
 
       TestRunSummary.updateTestRunSummary($scope.testRunSummary).success(function(updatedTestRunSummary){
 
