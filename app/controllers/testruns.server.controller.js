@@ -68,6 +68,7 @@ function update (req, res) {
 
       testRun.start = req.body.start;
       testRun.end = req.body.end;
+      testRun.testRunId = req.body.testRunId;
       testRun.completed = req.body.completed;
       testRun.buildResultsUrl = req.body.buildResultsUrl;
       testRun.annotations = req.body.annotations;
