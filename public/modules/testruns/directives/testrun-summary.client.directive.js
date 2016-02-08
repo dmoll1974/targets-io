@@ -249,6 +249,7 @@ function TestRunSummaryDirective () {
 
 
           $scope.summarySaved = true;
+          $scope.editMode = false;
 
           var toast = $mdToast.simple()
               .action('OK')

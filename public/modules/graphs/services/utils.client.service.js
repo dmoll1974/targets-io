@@ -13,10 +13,25 @@ angular.module('graphs').service('Utils', [function () {
       zoomFrom: '',
       zoomUntil: '',
       showLegend: true,
-      numberOfColums: 1
+      numberOfColums: 1,
+      reset: reset
 
     };
     return Utils;
+
+    function reset(){
+
+        Utils.selectedIndex = '';
+        Utils.metricFilter = '';
+        Utils.zoomLock = true;
+        Utils.graphType = '';
+        Utils.zoomRange = '';
+        Utils.zoomFrom = '';
+        Utils.zoomUntil = '';
+        Utils.showLegend = true;
+        Utils.numberOfColums = 1;
+
+    }
     function dynamicSortTags(sortOrderParam) {
         var sortOrder = 1;
         if (sortOrderParam === '-') {

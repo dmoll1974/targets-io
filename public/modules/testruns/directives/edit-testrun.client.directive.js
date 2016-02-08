@@ -26,6 +26,7 @@ function EditTestrunDirective () {
     });
 
 
+
     $scope.$watch('testrun.productName', function (val) {
       $scope.testrun.productName = $filter('uppercase')(val);
     }, true);

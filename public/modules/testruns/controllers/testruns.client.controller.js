@@ -12,7 +12,8 @@ angular.module('testruns').controller('TestrunsController', [
   '$window',
   '$interval',
   '$mdDialog',
-  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window, $interval, $mdDialog) {
+  'Utils',
+  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window, $interval, $mdDialog, Utils) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -306,6 +307,8 @@ angular.module('testruns').controller('TestrunsController', [
         TestRuns.list = [];
         TestRuns.runningTest = '';
         TestRuns.numberOfRunningTests = '';
+        Utils.reset();
+
       }
     });
     //$scope.$watch(function (scope) {
