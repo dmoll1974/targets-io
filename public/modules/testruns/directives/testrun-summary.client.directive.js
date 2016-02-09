@@ -40,6 +40,7 @@ function TestRunSummaryDirective () {
         TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
 
           $scope.testRunSummary.productName = testRun.productName;
+          $scope.testRunSummary.productRelease = testRun.productRelease;
           $scope.testRunSummary.dashboardName = testRun.dashboardName;
           $scope.testRunSummary.testRunId = testRun.testRunId;
           $scope.testRunSummary.start = testRun.start;

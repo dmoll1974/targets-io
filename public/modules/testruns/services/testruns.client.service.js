@@ -15,6 +15,7 @@ angular.module('events').factory('TestRuns', [
 
       listTestRunsForDashboard: listTestRunsForDashboard,
       listTestRunsForProduct: listTestRunsForProduct,
+      listTestRunsForProductRelease: listTestRunsForProductRelease,
       getRecentTestruns: getRecentTestruns,
       update: update,
       addTestRun: addTestRun,
@@ -60,10 +61,15 @@ angular.module('events').factory('TestRuns', [
     function listTestRunsForDashboard(productName, dashboardName, limit, page) {
       return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + limit + '/' + page);
     }
-    listTestRunsForProduct
+
     function listTestRunsForProduct(productName) {
       return $http.get('/testruns-product/' + productName);
     }
+
+    function listTestRunsForProductRelease(productName, productRelease) {
+      return $http.get('/testruns-product-release/' + productName + '/' + productRelease);
+    }
+
     function refreshTestrun(productName, dashboardName, testRunId) {
       return $http.get('/refresh-testrun/' + productName + '/' + dashboardName + '/' + testRunId);
     }

@@ -29,6 +29,14 @@
                                 </md-menu-item>
                                 <md-menu-divider></md-menu-divider>
                                 <md-menu-item>
+                                    <md-button data-ng-click="editProductRequirememts()">
+                                        <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"
+                                                 md-menu-align-target></md-icon>
+                                        Product requirements
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-divider></md-menu-divider>
+                                <md-menu-item>
                                     <md-button class="danger" data-ng-click="openDeleteProductModal('', $index)">
                                         <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"></md-icon>
                                         Delete product
@@ -43,9 +51,14 @@
         </div>
         <div>
             <md-tabs md-dynamic-height md-selected="selectedIndex">
-                <md-tab label="Test runs" ng-click="setTab(0)">
+                <md-tab label="Releases" ng-click="setTab(0)">
                     <md-content class="md-padding">
-                        <div data-ng-include="'modules/products/views/product.testruns.client.view.html'"></div>
+                        <product-releases></product-releases>
+                    </md-content>
+                </md-tab>
+                <md-tab label="Test runs" ng-click="setTab(1)">
+                    <md-content class="md-padding">
+                        <product-testruns></product-testruns>
                     </md-content>
                 </md-tab>
             </md-tabs>

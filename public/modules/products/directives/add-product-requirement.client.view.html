@@ -1,0 +1,30 @@
+<div class="page-header">
+    <h1>Add requirement</h1>
+</div>
+<form name="requirementForm">
+    <div layout="column">
+        <div layout="column">
+            <md-input-container class="md-block" flex required>
+                <label>Stakeholder</label>
+                <input name="requirementStakeholder" ng-model="requirement.stakeholder">
+                <div ng-messages="requirementForm.requirementStakeholder.$error"
+                     ng-if="requirementForm.$submitted || requirementForm.requirementStakeholder.$touched">
+                    <div ng-message="required">Stakeholder is required.</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block" flex required>
+                <label>Requirement</label>
+                <textarea name="requirementDescription" ng-model="requirement.description" columns="1" md-maxlength="500" rows="10" ></textarea>
+                <div ng-messages="requirementForm.requirementDescription.$error"
+                     ng-if="requirementForm.$submitted || requirementForm.requirementDescription.$touched">
+                    <div ng-message="required">Requirement description is required.</div>
+                </div>
+            </md-input-container>
+
+        </div>
+        <div layout="row">
+            <md-button md-no-ink class="md-primary" ng-click="requirementForm.$valid && create(requirement)">Submit</md-button>
+            <md-button data-ng-click="cancel()">Cancel</md-button>
+        </div>
+    </div>
+</form>

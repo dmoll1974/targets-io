@@ -13,7 +13,12 @@ angular.module('products').factory('Products', [
       create: create,
       delete: deleteFn,
       update: update,
-      selected: {}
+      selected: {},
+      selectedRequirement: {},
+      /* product release services*/
+      addProductRelease: addProductRelease,
+      updateProductRelease: addProductRelease,
+      deleteProductRelease: deleteProductRelease
     };
     return Products;
     function create(product) {
@@ -35,6 +40,23 @@ angular.module('products').factory('Products', [
     function query(a1, a2, a3, a4) {
       var resource = $resource('products/:productId', { productName: '@_id' }, { update: { method: 'PUT' } });
       return resource.query(a1, a2, a3, a4);
+    }
+    function addProductRelease(productRelease){
+
+      return $http.put('/product-release/', productRelease);
+
+    }
+
+    function updateProductRelease(productRelease){
+
+      return $http.put('/product-release/', productRelease);
+
+    }
+
+    function deleteProductRelease(productRelease){
+
+      return $http.delete('/product-release/' + productRelease.productName + '/' + productRelease.productRelease);
+
     }
   }
 ]);
