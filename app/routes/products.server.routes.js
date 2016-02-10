@@ -8,6 +8,7 @@ module.exports = function (app) {
   app.route('/product-release').post(releases.create);
   app.route('/product-release').put(releases.update);
   app.route('/product-release/:product/:productRelease').delete(releases.delete);
+  app.route('/product-release/:product/:productRelease').get(releases.get);
 
   // Products Routes
 

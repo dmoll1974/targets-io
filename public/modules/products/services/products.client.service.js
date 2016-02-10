@@ -17,8 +17,9 @@ angular.module('products').factory('Products', [
       selectedRequirement: {},
       /* product release services*/
       addProductRelease: addProductRelease,
-      updateProductRelease: addProductRelease,
-      deleteProductRelease: deleteProductRelease
+      updateProductRelease: updateProductRelease,
+      deleteProductRelease: deleteProductRelease,
+      getProductRelease: getProductRelease
     };
     return Products;
     function create(product) {
@@ -43,19 +44,25 @@ angular.module('products').factory('Products', [
     }
     function addProductRelease(productRelease){
 
-      return $http.put('/product-release/', productRelease);
+      return $http.post('/product-release', productRelease);
 
     }
 
     function updateProductRelease(productRelease){
 
-      return $http.put('/product-release/', productRelease);
+      return $http.put('/product-release', productRelease);
 
     }
 
     function deleteProductRelease(productRelease){
 
       return $http.delete('/product-release/' + productRelease.productName + '/' + productRelease.productRelease);
+
+    }
+
+    function getProductRelease(productName, productRelease){
+
+      return $http.get('/product-release/' + productName + '/' + productRelease);
 
     }
   }

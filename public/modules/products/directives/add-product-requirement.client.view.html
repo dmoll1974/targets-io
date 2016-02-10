@@ -20,6 +20,22 @@
                     <div ng-message="required">Requirement description is required.</div>
                 </div>
             </md-input-container>
+            <div layout="column" >
+                <div ng-repeat="dashboard in requirement.relatedDashboards track by $index">
+                    <div layout="row" layout-align="end center">
+                        <md-input-container flex>
+                            <label>Related dashboard</label>
+                            <input ng-model="requirement.relatedDashboards[$index]">
+                        </md-input-container>
+                        <select-requirement-dashboard dashboard="requirement.relatedDashboards[$index]" product="product.name"></select-requirement-dashboard>
+                        <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeDashboard($index)"
+                                 data-ng-show="requirement.relatedDashboards.length>1"></md-icon>
+                    </div>
+                </div>
+                <div layout="row" flex layout-align="end center">
+                    <md-button md-no-ink class="md-primary md-raised" data-ng-click="addRelatedDashboards()">Add dashboard</md-button>
+                </div>
+            </div>
 
         </div>
         <div layout="row">

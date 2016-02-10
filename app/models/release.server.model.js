@@ -8,7 +8,7 @@ var mongoose = require('mongoose'), Schema = mongoose.Schema, config = require('
  * Release Schema
  */
 var ReleaseSchema = new Schema({
-  'productName': {
+  'name': {
     type: String,
     uppercase: true
   },
@@ -21,7 +21,7 @@ var ReleaseSchema = new Schema({
     stakeholder : String,
     description : String,
     result : Boolean,
-    ascociatedTestRuns: [ {
+    relatedTestRuns: [ {
       productName: String,
       dashboardName: String,
       testRunId: String

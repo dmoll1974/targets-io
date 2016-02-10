@@ -1,0 +1,16 @@
+<md-menu style="padding-top: 0px; padding-bottom: 0px;">
+    <div aria-label="Select variable" class="md-icon-button"
+         ng-click="openMenu($mdOpenMenu, $event)">
+        <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
+        <md-tooltip>
+            Select dashboard
+        </md-tooltip>
+    </div>
+    <md-menu-content width="4" id="targets-menu-content">
+            <md-menu-item ng-repeat="dashboard in dashboards">
+            <md-button  ng-click="selectDashboard($index)">
+                {{dashboard}}
+            </md-button>
+        </md-menu-item>
+    </md-menu-content>
+</md-menu>

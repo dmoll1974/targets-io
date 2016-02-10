@@ -17,6 +17,15 @@ function AddProductRequirementDirective () {
 
     $scope.product = Products.selected;
 
+    $scope.requirement = {};
+    $scope.requirement.relatedDashboards = [];
+    $scope.requirement.relatedDashboards.push('');
+
+    $scope.addRelatedDashboards = function () {
+      $scope.requirement.relatedDashboards.push('');
+    };
+
+
     $scope.create = function(requirement) {
 
       $scope.product.requirements.push(requirement);
@@ -27,6 +36,12 @@ function AddProductRequirementDirective () {
         $state.go('productRequirements',{productName: product.name});
 
       });
+    }
+
+    $scope.removeDashboard = function(index){
+
+      $scope.requirement.relatedDashboards.splice(index, 1);
+
     }
 
     $scope.cancel = function () {

@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
 exports.create = create;
 exports.update = update;
 exports.delete = deleteRelease;
+exports.get = getRelease;
 
 /**
  * Delete a Template
@@ -43,31 +44,17 @@ function getTemplateByName(req, res) {
 
 };
 
-/**
- * List Templates
- */
 
-function list(req, res){
-
-    Template.find().sort('name').exec(function(err, templates){
-
-        if (err) {
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-        } else {
-            res.jsonp(templates);
-        }
-    });
-};
 
 /**
- * Update a Template
+ * Update a Release
  */
 
 function update(req, res){
 
 
     Release.findOne({$and:[
-        {productName: req.body.productName},
+        {name: req.body.name},
         {productRelease: req.body.productRelease}
 
     ]}).exec(function(err, release){
@@ -95,6 +82,27 @@ function update(req, res){
 
 };
 
+function getRelease(req, res){
+
+
+    Release.findOne({$and:[
+        {name: req.params.product},
+        {productRelease: req.params.productRelease}
+
+    ]}).exec(function(err, release){
+
+        if (err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        } else{
+            res.jsonp(release);
+
+        }
+
+    })
+
+
+};
+
 function create(req, res){
 
 
@@ -111,29 +119,4 @@ function create(req, res){
 
 }
 
-
-/**
- * Template middleware
- */
-function templateByID(req, res, next, id) {
-    Template.findById(id).exec(function (err, template) {
-        if (err)
-            return next(err);
-        if (!template)
-            return next(new Error('Failed to load template ' + id));
-        req.template = template;
-        next();
-    });
-};
-
-function templateByName(req, res, next, name) {
-    Template.findOne({ name: name.toUpperCase()}).exec(function (err, template) {
-        if (err)
-            return next(err);
-        if (!template)
-            return res.status(404).send({ message: 'No template with name' + name + 'has been found' });
-        req.template = template;
-        next();
-    });
-};
 

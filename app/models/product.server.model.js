@@ -19,6 +19,7 @@ var ProductSchema = new mongoose.Schema({
   'requirements': [ {
       'stakeholder': String,
       'description': String,
+      'relatedDashboards': [ String ],
       'result':{
           type: Boolean,
           default: true

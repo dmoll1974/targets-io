@@ -1,7 +1,7 @@
 <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
 <md-content layout="column">
     <div layout="row" layout-align="end center">
-        <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode" ng-class="{'switch-label-disabled': editMode === false }">
+        <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode" ng-change="submitProductRelease()" ng-class="{'switch-label-disabled': editMode === false }">
             Edit
         </md-switch>
     </div>
@@ -43,8 +43,8 @@
             <th>Stakeholder</th>
             <th>Requirement</th>
             <th>Result</th>
-            <th>Ascociated test run(s)</th>
-            <th></th>
+            <th>Related test run(s)</th>
+            <!--<th></th>-->
         </tr>
         </thead>
         <tbody>
@@ -60,34 +60,34 @@
             </td>
             <td class="testrun-summary-link">
                <div layout="column">
-                    <a style="padding-bottom: 5px;" ng-repeat="testRun in requirement.ascociatedTestRuns" ui-sref="productRelease({productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId})">{{testRun.testRunId}}</a>
+                    <a style="padding-bottom: 5px;" ng-repeat="testRun in requirement.relatedTestRuns" ui-sref="testRunSummary({productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId})">{{testRun.testRunId}}</a>
                </div>
             </td>
-            <td>
-                <md-menu ng-if="editMode === true" style="padding-top: 0px; padding-bottom: 0px;">
-                    <md-button aria-label="Add test run" class="md-icon-button"
-                               ng-click="openMenu($mdOpenMenu, $event)">
-                        <md-icon md-menu-origin md-svg-src="images/assets/ic_add_black_24px.svg"></md-icon>
-                        <md-tooltip>
-                            Add test run
-                        </md-tooltip>
-                    </md-button>
-                    <md-menu-content width="4">
-                        <md-menu-item ng-repeat="testRun in productReleaseTestRuns">
-                            <md-button data-ng-click="addTestRun(testRun, $parent.$index)">
-                                {{testRun.testRunId}}
-                            </md-button>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
-            </td>
+            <!--<td>-->
+                <!--<md-menu ng-if="editMode === true" style="padding-top: 0px; padding-bottom: 0px;">-->
+                    <!--<md-button aria-label="Add test run" class="md-icon-button"-->
+                               <!--ng-click="openMenu($mdOpenMenu, $event)">-->
+                        <!--<md-icon md-menu-origin md-svg-src="images/assets/ic_add_black_24px.svg"></md-icon>-->
+                        <!--<md-tooltip>-->
+                            <!--Add test run-->
+                        <!--</md-tooltip>-->
+                    <!--</md-button>-->
+                    <!--<md-menu-content width="4">-->
+                        <!--<md-menu-item ng-repeat="testRun in productReleaseTestRuns">-->
+                            <!--<md-button data-ng-click="addTestRun(testRun, $parent.$index)">-->
+                                <!--{{testRun.testRunId}}-->
+                            <!--</md-button>-->
+                        <!--</md-menu-item>-->
+                    <!--</md-menu-content>-->
+                <!--</md-menu>-->
+            <!--</td>-->
 
         </tr>
         </tbody>
     </table>
     <div id="summary-buttons" layout="row">
-        <md-button  ng-if="editMode === true && releaseSaved === false" md-no-ink class="md-primary" data-ng-click="saveproductRelease()">Save</md-button>
-        <md-button  ng-if="editMode === true && releaseSaved === true" md-no-ink class="md-primary" data-ng-click="updateproductRelease()">Update</md-button>
+        <!--<md-button  ng-if="editMode === true && releaseSaved === false" md-no-ink class="md-primary" data-ng-click="saveproductRelease()">Save</md-button>-->
+        <!--<md-button  ng-if="editMode === true && releaseSaved === true" md-no-ink class="md-primary" data-ng-click="updateproductRelease()">Update</md-button>-->
         <md-button ng-if="editMode === true && releaseSaved === true" class="md-warn" data-ng-click="openDeleteModal('', productRelease)">Discard</md-button>
 
     </div>

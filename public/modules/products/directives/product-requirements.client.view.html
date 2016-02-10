@@ -33,6 +33,7 @@
         <tr>
             <th>Stakeholder</th>
             <th>Requirement</th>
+            <th>Related dashboard(s)</th>
 
             <th><i class="glyphicon glyphicon-plus" data-ng-click="addRequirement()"></i></th>
             <th>
@@ -45,6 +46,11 @@
         <tr ng-repeat="requirement in product.requirements" class="hover-row">
             <td class="pointer" data-ng-click="editRequirement($index)">{{requirement.stakeholder}}</td>
             <td class="pointer" data-ng-click="editRequirement($index)">{{requirement.description}}</td>
+            <td class="pointer" data-ng-click="editRequirement($index)">
+                <div layout="column">
+                    <p style="padding-bottom: 1px;" ng-repeat="dashboard in requirement.relatedDashboards">{{dashboard}}</p>
+                </div>
+            </td>
             <td></td>
             <td>
                 <md-checkbox md-no-ink aria-label="select requirement" ng-model="requirement.selected"  ng-change="setRequirementSelected(requirement.selected)" style="margin: 0px;">

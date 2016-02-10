@@ -148,7 +148,7 @@ angular.module('graphs').controller('GraphsController', [
 
       switch(graphsType){
 
-        case 'graphs':
+        case 'testrun':
           $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag;
           break;
         case 'graphs-live':

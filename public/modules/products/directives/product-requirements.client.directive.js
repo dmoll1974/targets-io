@@ -14,7 +14,7 @@ function ProductRequirementsDirective () {
 
 
   /* @ngInject */
-  function ProductRequirementsDirectiveController ($scope, $state,  Dashboards, $filter, $rootScope, Products, ConfirmModal, $modal) {
+  function ProductRequirementsDirectiveController ($scope, $state,  Dashboards, $filter, $rootScope, Products, ConfirmModal, $modal, $stateParams) {
 
 
     Products.fetch().success(function(products){
@@ -28,8 +28,14 @@ function ProductRequirementsDirective () {
 
     })
 
+    Products.get($stateParams.productName).success(function (product) {
 
-    var originatorEv;
+      $scope.product = product;
+      Products.selected = product;
+
+    });
+
+      var originatorEv;
     $scope.openMenu = function ($mdOpenMenu, ev) {
       originatorEv = ev;
       $mdOpenMenu(ev);
@@ -51,7 +57,6 @@ function ProductRequirementsDirective () {
 
       });
     }
-    $scope.product = Products.selected;
 
     $scope.addRequirement = function(){
 
@@ -120,7 +125,7 @@ function ProductRequirementsDirective () {
         /* update product */
         Products.update($scope.product).success(function(product ) {
 
-
+            $scope.requirementSelected = false;
         });
 
 
