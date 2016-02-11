@@ -22,7 +22,7 @@ var ProductSchema = new mongoose.Schema({
       'relatedDashboards': [ String ],
       'result':{
           type: Boolean,
-          default: true
+          default: false
       }
   } ]
 });
