@@ -40,6 +40,13 @@
                     <td>Duration</td>
                     <td>{{testRunSummary.humanReadableDuration}}</td>
                 </tr>
+                <tr ng-if="testRunSummary.buildResultsUrl">
+                    <td>CI server build result page</td>
+                    <td><a ng-href="{{testRunSummary.buildResultsUrl}}">{{testRunSummary.buildResultsUrlDisplay}}</a></td>
+                </tr><tr ng-if="testRunSummary.buildResultsUrl">
+                    <td>Gatling details</td>
+                    <td><a ng-click="gatlingDetails(testRunSummary.testRunId)">{{testRunSummary.testRunId}}</a></td>
+                </tr>
 
 
 

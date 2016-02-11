@@ -47,6 +47,13 @@ function TestRunSummaryDirective () {
           $scope.testRunSummary.end = testRun.end;
           $scope.testRunSummary.humanReadableDuration = testRun.humanReadableDuration;
           $scope.testRunSummary.annotations = (testRun.annotations)? testRun.annotations : 'None';
+          if (testRun.buildResultsUrl){
+            $scope.testRunSummary.buildResultsUrl = testRun.buildResultsUrl;
+            /* in case of Jenkins CI server, get last two url parameters to display */
+            var splitbuildResultsUrl = testRun.buildResultsUrl.split('/');
+            $scope.testRunSummary.buildResultsUrlDisplay = splitbuildResultsUrl[splitbuildResultsUrl.length -3] + ' #' + splitbuildResultsUrl[splitbuildResultsUrl.length -2];
+          }
+
 
           /* get dashboard info */
 
@@ -77,6 +84,15 @@ function TestRunSummaryDirective () {
       }
   });
 
+    $scope.gatlingDetails = function(testRunId){
+
+      $state.go('viewGraphs', {
+        'productName': $stateParams.productName,
+        'dashboardName': $stateParams.dashboardName,
+        'testRunId': testRunId,
+        'tag': 'Gatling'
+      });
+    }
 
     function addRequirementsResultsForTestRun(dashboardMetrics, testRunMetrics) {
 
