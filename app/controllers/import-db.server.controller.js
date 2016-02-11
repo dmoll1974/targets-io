@@ -13,6 +13,8 @@ var mongoose = require('mongoose'),
     GatlingDetails = mongoose.model('GatlingDetails'),
     async = require('async'),
     Template = mongoose.model('Template'),
+    Release = mongoose.model('Release'),
+    TestrunSummary = mongoose.model('TestrunSummary'),
     testRunsModule = require('./testruns.server.controller');
 
 
@@ -25,7 +27,7 @@ function upload(req, res) {
       console.log(err);
   }
 
-  /* Remove existing Templates*/
+  /* Remove existing Templates and import from file*/
 
   Template.remove({}, function (err) {
     if (err)
@@ -37,6 +39,42 @@ function upload(req, res) {
         var templatesDoc = new Template(importTemplate);
 
         templatesDoc.save(function (err) {
+        });
+
+      });
+    }
+  });
+
+  /* Remove existing TestrunSummary and import from file */
+
+  TestrunSummary.remove({}, function (err) {
+    if (err)
+      console.log(err);
+    console.log('TestrunSummaries removed');
+    if(testrunSummaries) {
+      _.each(testrunSummaries, function (importTestrunSummary) {
+
+        var testrunSummaryDoc = new TestrunSummary(importTestrunSummary);
+
+        testrunSummaryDoc.save(function (err) {
+        });
+
+      });
+    }
+  });
+
+  /* Remove existing Releases and import from file */
+
+  Release.remove({}, function (err) {
+    if (err)
+      console.log(err);
+    console.log('Releases removed');
+    if(releases) {
+      _.each(releases, function (importRelease) {
+
+        var releaseDoc = new Release(importRelease);
+
+        releaseDoc.save(function (err) {
         });
 
       });
