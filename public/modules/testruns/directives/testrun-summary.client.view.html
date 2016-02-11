@@ -85,7 +85,7 @@
                         <td>{{requirement.requirementText}}</td>
                         <td>
                             <span ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                                  ng-click="testRunDetails(testRun, requirement.metricAlias)"  >
+                                  ng-click="testRunDetails(testRunSummary, requirement)"  >
                             </span>
                         </td>
                     </tr>

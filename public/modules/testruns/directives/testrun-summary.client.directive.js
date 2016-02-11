@@ -127,7 +127,9 @@ function TestRunSummaryDirective () {
 
             var requirementText =  dashboardMetric.requirementOperator == "<" ? dashboardMetric.alias + ' should be lower then ' + dashboardMetric.requirementValue : dashboardMetric.alias + ' should be higher then ' + dashboardMetric.requirementValue;
 
-            $scope.testRunSummary.requirements.push({metricAlias: dashboardMetric.alias, requirementText: requirementText, meetsRequirement:testRunMetric.meetsRequirement });
+            var tag = dashboardMetric.tags.length > 0 ? dashboardMetric.tags[0].text : 'All';
+
+            $scope.testRunSummary.requirements.push({metricAlias: dashboardMetric.alias, tag: tag, requirementText: requirementText, meetsRequirement:testRunMetric.meetsRequirement });
           }
 
 
@@ -194,10 +196,10 @@ function TestRunSummaryDirective () {
 
     };
 
-    $scope.testRunDetails = function (testRun, metricAlias) {
+    $scope.testRunDetails = function (testRun, requirement) {
       TestRuns.selected = testRun;
 
-      if (metricAlias === 'all')
+      if (requirement === 'all')
         {
 
           $state.go('viewGraphs', {
@@ -212,8 +214,8 @@ function TestRunSummaryDirective () {
           'productName': $stateParams.productName,
           'dashboardName': $stateParams.dashboardName,
           'testRunId': testRun.testRunId,
-          tag: Dashboards.getDefaultTag(Dashboards.selected.tags),
-          metricFilter: metricAlias
+          tag: requirement.tag,
+          metricFilter: requirement.metricAlias
         });
 
 
