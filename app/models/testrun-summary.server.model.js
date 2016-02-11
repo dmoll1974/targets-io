@@ -51,6 +51,8 @@ var TestrunSummarySchema = new Schema({
     type: Date,
   },
   'end': Date,
+  'buildResultsUrl': String,
+  'buildResultsUrlDisplay': String,
   'humanReadableDuration': String,
   'annotations': String,
   'metrics': [testRunSummaryMetricSchema],
