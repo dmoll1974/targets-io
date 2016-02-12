@@ -57,9 +57,10 @@ function getRunningTests(req, res){
 
 function runningTest(req, res){
 
-  let productName = req.body.productName;
-  let dashboardName = req.body.dashboardName;
-  let testRunId = req.body.testRunId.toUpperCase();
+  let runningTestKeepAlive = req.body;
+  let productName = runningTestKeepAlive.productName;
+  let dashboardName = runningTestKeepAlive.dashboardName;
+  let testRunId = runningTestKeepAlive.testRunId.toUpperCase();
 
   if(req.params.command === 'end'){
 
@@ -109,6 +110,10 @@ function runningTest(req, res){
 
         if(testRun && testRun.completed === false) {
 
+          /* add original start time */
+          runningTestKeepAlive.start = testRun.start;
+
+          /* remove test run from collection */
           Testrun.remove({
             $and: [
               {productName: productName},
@@ -117,7 +122,7 @@ function runningTest(req, res){
             ]
           }).exec(function (err, testRun) {
 
-            updateRunningTest(req.body)
+            updateRunningTest(runningTestKeepAlive)
                 .then(function (message) {
 
                   res.jsonp(message);
@@ -127,7 +132,7 @@ function runningTest(req, res){
 
         }else {
 
-          updateRunningTest(req.body)
+          updateRunningTest(runningTestKeepAlive)
               .then(function (message) {
 
                 res.jsonp(message);
