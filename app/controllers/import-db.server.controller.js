@@ -150,7 +150,8 @@ function upload(req, res) {
       testrun.buildResultsUrl = importTestrun.buildResultsUrl;
       testrun.baseline = importTestrun.baseline;
       testrun.previousBuild = importTestrun.previousBuild;
-      testrun.completed = true;
+      testrun.completed = importTestrun.completed;
+      testrun.productRelease = importTestrun.productRelease;
       testrun.meetsRequirement = importTestrun.meetsRequirement;
       testrun.benchmarkResultFixedOK = importTestrun.benchmarkResultFixedOK;
       testrun.benchmarkResultPreviousOK = importTestrun.benchmarkResultPreviousOK;
@@ -182,6 +183,8 @@ function upload(req, res) {
           newProduct.name = importProduct.name;
           newProduct.description = importProduct.description;
           newProduct.dashboards = importProduct.dashboards;
+          newProduct.requirements = importProduct.requirements;
+
           newProduct.save(function (err, NewProduct) {
             if (err)
               return console.error(err);
