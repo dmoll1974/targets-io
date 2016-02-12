@@ -14,7 +14,7 @@ function ProductReleaseDetailsDirective () {
 
 
   /* @ngInject */
-  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns) {
+  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, $mdToast) {
 
     $scope.editMode = false;
 
@@ -105,7 +105,36 @@ function ProductReleaseDetailsDirective () {
 
     }
 
+    $scope.openDeleteModal = function (size, product) {
+      ConfirmModal.itemType = 'Delete saved results for release ';
+      ConfirmModal.selectedItemDescription = product.productRelease;
+      var modalInstance = $modal.open({
+        templateUrl: 'ConfirmDelete.html',
+        controller: 'ModalInstanceController',
+        size: size  //,
+      });
+      modalInstance.result.then(function () {
+        Products.deleteProductRelease(product).success(function () {
 
+
+          $scope.releaseSaved = false;
+          $scope.editMode = false;
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top center')
+              .hideDelay(6000);
+
+          $mdToast.show(toast.content('Product release results deleted from db')).then(function(response) {
+
+          });
+          /* reload*/
+          $state.go($state.current, {}, { reload: true });
+        });
+      }, function () {
+      });
+    };
 
 
 

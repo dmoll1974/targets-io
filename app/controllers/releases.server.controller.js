@@ -20,7 +20,7 @@ function deleteRelease(req, res) {
 
     Release.remove({
         $and: [
-            {productName: req.params.product},
+            {name: req.params.product},
             {productRelease: req.params.productRelease}
         ]
     }).exec(function (err, release) {
@@ -28,7 +28,10 @@ function deleteRelease(req, res) {
         if (err) {
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         } else {
-            res.jsonp(release);
+
+
+           res.jsonp(release);
+
         }
     })
 

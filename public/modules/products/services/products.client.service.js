@@ -56,7 +56,7 @@ angular.module('products').factory('Products', [
 
     function deleteProductRelease(productRelease){
 
-      return $http.delete('/product-release/' + productRelease.productName + '/' + productRelease.productRelease);
+      return $http.delete('/product-release/' + productRelease.name + '/' + productRelease.productRelease);
 
     }
 
