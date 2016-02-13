@@ -49,6 +49,7 @@ angular.module('products').controller('ProductsController', [
         $scope.testRuns= testRuns;
         $scope.numberOfTestRuns = testRuns.length;
         $scope.totalDuration = TestRuns.calculateTotalDuration(testRuns);
+        $scope.productReleases = getProductReleases(testRuns);
 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
@@ -61,6 +62,20 @@ angular.module('products').controller('ProductsController', [
     testRunPolling();
     var polling = $interval(testRunPolling, 30000);
 
+
+    function getProductReleases(testRuns){
+
+      var productReleases = [];
+
+      _.each(testRuns, function(testRun){
+
+        if(testRun.productRelease && productReleases.map(function(productRelease){return productRelease.release}).indexOf(testRun.productRelease) === -1)
+          productReleases.push({release: testRun.productRelease, date: testRun.end});
+      })
+
+      return productReleases;
+    }
+
     $scope.testRunDetails = function (productName, dashboardName, testRunId) {
       $state.go('viewGraphs', {
         'productName': productName,
@@ -69,6 +84,14 @@ angular.module('products').controller('ProductsController', [
         'tag' : 'Load'
       });
     };
+
+    $scope.editProductRequirememts = function (){
+
+      $state.go('productRequirements', {
+        'productName': $scope.product.name
+      });
+
+    }
 
     $scope.$on('$destroy', function () {
       // Make sure that the interval is destroyed too

@@ -1,0 +1,40 @@
+<div data-ng-controller="ProductsController">
+    <div layout="column">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Release</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr dir-paginate="release in productReleases | orderBy:'date':true |  itemsPerPage: showNumberOfreleases" class="hover-row" data-ng-click="releaseDetails(release)">
+                    <td class="pointer" >{{release.release}}</td>
+                    <td class="pointer" >{{release.date | date:'EEEE, dd-M-yyyy'}}  </td>
+                </tr>
+            </tbody>
+        </table>
+        <div  layout="row" layout-align="end center">
+            <md-input-container ng-hide="(numberOfreleases < showNumberOfreleases) && (showNumberOfreleases === '10')">
+                <label>Rows</label>
+                <md-select ng-model="showNumberOfreleases">
+                    <md-option ng-repeat="numberOfRowOption in numberOfRowOptions" value="{{numberOfRowOption.value}}">
+                        {{numberOfRowOption.value}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <dir-pagination-controls
+                    max-size="8"
+                    direction-links="true"
+                    boundary-links="true">
+             </dir-pagination-controls>
+        </div>
+        <div flex="50" class="container" ng-if="loading">
+            <md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>
+            <div class="bottom-block">
+                <span>Loading releases ...</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -15,7 +15,16 @@ var ProductSchema = new mongoose.Schema({
   'dashboards': [{
       type: Schema.Types.ObjectId,
       ref: 'Dashboard'
-    }]
+    }],
+  'requirements': [ {
+      'stakeholder': String,
+      'description': String,
+      'relatedDashboards': [ String ],
+      'result':{
+          type: Boolean,
+          default: false
+      }
+  } ]
 });
 ProductSchema.index({ name: 1 }, { unique: true });
 mongoose.model('Product', ProductSchema);

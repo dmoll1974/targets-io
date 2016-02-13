@@ -24,6 +24,10 @@ var TestrunSummarySchema = new Schema({
     type: String,
     uppercase: true
   },
+  'productRelease': {
+    type: String,
+    uppercase: true
+  },
   'dashboardName': {
     type: String,
     uppercase: true
@@ -47,6 +51,8 @@ var TestrunSummarySchema = new Schema({
     type: Date,
   },
   'end': Date,
+  'buildResultsUrl': String,
+  'buildResultsUrlDisplay': String,
   'humanReadableDuration': String,
   'annotations': String,
   'metrics': [testRunSummaryMetricSchema],

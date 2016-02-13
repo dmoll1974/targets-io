@@ -16,6 +16,18 @@ angular.module('products').config([
     }).state('editProduct', {
       url: '/edit/product/:productName',
       templateUrl: 'modules/products/views/edit-product.client.view.html'
+    }).state('productRequirements', {
+      url: '/product-requirements/:productName',
+      template: '<product-requirements></product-requirements>'
+    }).state('addProductRequirement', {
+      url: '/add-product-requirement/:productName',
+      template: '<add-product-requirement></add-product-requirement>'
+    }).state('editProductRequirement', {
+      url: '/edit-product-requirement/:productName',
+      template: '<edit-product-requirement></edit-product-requirement>'
+    }).state('productReleaseDetails', {
+      url: '/product-release-details/:productName/:productRelease',
+      template: '<product-release-details></product-release-details>'
     });
   }
 ]);

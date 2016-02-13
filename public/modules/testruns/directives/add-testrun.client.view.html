@@ -52,6 +52,17 @@
                     </div>
                 </md-input-container>
                 <md-input-container
+                        md-is-error="testrunForm.testrunProductRelease.$invalid && (testrunForm.$submitted || testrunForm.testrunProductRelease.$dirty)"
+                        flex>
+                    <label>Product release</label>
+                    <input name="testrunProductRelease" ng-model="testrun.productRelease" required>
+
+                    <div ng-messages="testrunForm.testrunProductRelease.$error"
+                         ng-if="testrunForm.$submitted || testrunForm.testrunProductRelease.$touched">
+                        <div ng-message="required">Product release is required.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container
                         md-is-error="testrunForm.testrunDashboardName.$invalid && (testrunForm.$submitted || testrunForm.testrunDashboardName.$dirty)"
                         flex>
                     <label>Dashboard</label>

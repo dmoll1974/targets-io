@@ -14311,3 +14311,7 @@ md-toast {
 
     color: black;
 }
+
+.testrun-summary-link{
+    white-space: nowrap;
+}

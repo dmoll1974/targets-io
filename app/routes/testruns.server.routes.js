@@ -7,6 +7,7 @@ module.exports = function (app) {
 
   app.route('/testruns-dashboard/:productName/:dashboardName/:limit/:page').get(testruns.testRunsForDashboard);
   app.route('/testruns-product/:productName').get(testruns.testRunsForProduct);
+  app.route('/testruns-product-release/:productName/:productRelease').get(testruns.testRunsForProductRelease);
   app.route('/recent-testruns').get(testruns.recentTestRuns);
   app.route('/testrun').put(testruns.update);
   app.route('/add-testrun').post(testruns.addTestRun);

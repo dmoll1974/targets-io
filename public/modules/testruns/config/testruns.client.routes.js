@@ -25,9 +25,6 @@ angular.module('testruns').config([
     }).state('testRunSummary', {
       url: '/testrun-summary/:productName/:dashboardName/:testRunId',
       template: '<testrun-summary></testrun-summary>'
-    }).state('testRunSummaryConfig', {
-      url: '/testrun-summary-config/:productName/:dashboardName',
-      template: '<testrun-summary-config></testrun-summary-config>'
     });
   }
 ]);

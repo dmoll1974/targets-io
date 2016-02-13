@@ -18,6 +18,10 @@
                     <td>Product</td>
                     <td>{{testRunSummary.productName}}</td>
                 <tr>
+                <tr>
+                    <td>Product release</td>
+                    <td>{{testRunSummary.productRelease}}</td>
+                <tr>
                     <td>Dashboard</td>
                     <td>{{testRunSummary.dashboardName}}</td>
                 </tr>
@@ -35,6 +39,13 @@
                 <tr>
                     <td>Duration</td>
                     <td>{{testRunSummary.humanReadableDuration}}</td>
+                </tr>
+                <tr ng-if="testRunSummary.buildResultsUrl">
+                    <td>CI server build result page</td>
+                    <td><a ng-href="{{testRunSummary.buildResultsUrl}}">{{testRunSummary.buildResultsUrlDisplay}}</a></td>
+                </tr><tr ng-if="testRunSummary.buildResultsUrl">
+                    <td>Gatling details</td>
+                    <td><a ng-click="gatlingDetails(testRunSummary.testRunId)">{{testRunSummary.testRunId}}</a></td>
                 </tr>
 
 
@@ -74,7 +85,7 @@
                         <td>{{requirement.requirementText}}</td>
                         <td>
                             <span ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                                  ng-click="testRunDetails(testRun, requirement.metricAlias)"  >
+                                  ng-click="testRunDetails(testRunSummary, requirement)"  >
                             </span>
                         </td>
                     </tr>
