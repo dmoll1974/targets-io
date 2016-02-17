@@ -33,6 +33,10 @@ var RunningTestSchema = new mongoose.Schema({
         type: String,
         uppercase: true
     },
+    'productRelease': {
+        type: String,
+        uppercase: true
+    },
     'dashboardName': {
         type: String,
         uppercase: true

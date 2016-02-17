@@ -24,6 +24,7 @@ var mongoose = require('mongoose'),
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
 exports.testRunsForProduct = testRunsForProduct;
+exports.testRunsForProductRelease = testRunsForProductRelease;
 exports.deleteTestRunById = deleteTestRunById;
 exports.testRunById = testRunById;
 exports.refreshTestrun = refreshTestrun;
@@ -68,6 +69,7 @@ function update (req, res) {
 
       testRun.start = req.body.start;
       testRun.end = req.body.end;
+      testRun.productRelease = req.body.productRelease;
       testRun.testRunId = req.body.testRunId;
       testRun.completed = req.body.completed;
       testRun.buildResultsUrl = req.body.buildResultsUrl;
@@ -241,6 +243,26 @@ function deleteTestRunById(req, res) {
  */
 function testRunsForProduct(req, res) {
   Testrun.find({productName: req.params.productName}).sort({eventTimestamp: 1}).exec(function (err, testRuns) {
+    if (err) {
+      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+    } else {
+
+      _.each(testRuns, function(testRun, i){
+
+        testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+
+      });
+
+      res.jsonp(testRuns);
+
+    }
+  });
+}
+/**
+ * select test runs for product release
+ */
+function testRunsForProductRelease(req, res) {
+  Testrun.find({$and:[{productName: req.params.productName}, {productRelease: req.params.productRelease}]}).sort({eventTimestamp: 1}).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {

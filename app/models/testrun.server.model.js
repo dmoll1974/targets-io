@@ -35,6 +35,7 @@ var testRunMetricSchema = new Schema({
   },
   'annotation': String,
   'targets': [testRunTargetSchema]
+
 });
 mongoose.model('TestrunMetric', testRunMetricSchema);
 /**
@@ -42,6 +43,10 @@ mongoose.model('TestrunMetric', testRunMetricSchema);
  */
 var TestrunSchema = new Schema({
   'productName': {
+    type: String,
+    uppercase: true
+  },
+  'productRelease': {
     type: String,
     uppercase: true
   },

@@ -16,6 +16,29 @@ exports.get = getTestrunSummary;
 exports.create = createTestrunSummary;
 exports.update = updateTestrunSummary;
 exports.delete = deleteTestrunSummary;
+//exports.testRunsForProductRelease = testRunsForProductRelease;
+
+/**
+ * select test runs for product release
+ */
+//function testRunsForProductRelease(req, res) {
+//
+//  TestrunSummary.find({$and:[{productName: req.params.productName}, {productRelease: req.query.release}]}).sort({eventTimestamp: 1}).exec(function (err, testRuns) {
+//    if (err) {
+//      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+//    } else {
+//
+//      //_.each(testRuns, function(testRun, i){
+//      //
+//      //  testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+//      //
+//      //});
+//
+//      res.jsonp(testRuns);
+//
+//    }
+//  });
+//}
 
 
 function getTestrunSummary (req, res){

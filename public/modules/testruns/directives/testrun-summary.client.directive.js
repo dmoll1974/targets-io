@@ -40,12 +40,20 @@ function TestRunSummaryDirective () {
         TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
 
           $scope.testRunSummary.productName = testRun.productName;
+          $scope.testRunSummary.productRelease = testRun.productRelease;
           $scope.testRunSummary.dashboardName = testRun.dashboardName;
           $scope.testRunSummary.testRunId = testRun.testRunId;
           $scope.testRunSummary.start = testRun.start;
           $scope.testRunSummary.end = testRun.end;
           $scope.testRunSummary.humanReadableDuration = testRun.humanReadableDuration;
           $scope.testRunSummary.annotations = (testRun.annotations)? testRun.annotations : 'None';
+          if (testRun.buildResultsUrl){
+            $scope.testRunSummary.buildResultsUrl = testRun.buildResultsUrl;
+            /* in case of Jenkins CI server, get last two url parameters to display */
+            var splitbuildResultsUrl = testRun.buildResultsUrl.split('/');
+            $scope.testRunSummary.buildResultsUrlDisplay = splitbuildResultsUrl[splitbuildResultsUrl.length -3] + ' #' + splitbuildResultsUrl[splitbuildResultsUrl.length -2];
+          }
+
 
           /* get dashboard info */
 
@@ -76,6 +84,15 @@ function TestRunSummaryDirective () {
       }
   });
 
+    $scope.gatlingDetails = function(testRunId){
+
+      $state.go('viewGraphs', {
+        'productName': $stateParams.productName,
+        'dashboardName': $stateParams.dashboardName,
+        'testRunId': testRunId,
+        'tag': 'Gatling'
+      });
+    }
 
     function addRequirementsResultsForTestRun(dashboardMetrics, testRunMetrics) {
 
@@ -110,7 +127,9 @@ function TestRunSummaryDirective () {
 
             var requirementText =  dashboardMetric.requirementOperator == "<" ? dashboardMetric.alias + ' should be lower then ' + dashboardMetric.requirementValue : dashboardMetric.alias + ' should be higher then ' + dashboardMetric.requirementValue;
 
-            $scope.testRunSummary.requirements.push({metricAlias: dashboardMetric.alias, requirementText: requirementText, meetsRequirement:testRunMetric.meetsRequirement });
+            var tag = dashboardMetric.tags.length > 0 ? dashboardMetric.tags[0].text : 'All';
+
+            $scope.testRunSummary.requirements.push({metricAlias: dashboardMetric.alias, tag: tag, requirementText: requirementText, meetsRequirement:testRunMetric.meetsRequirement });
           }
 
 
@@ -177,10 +196,10 @@ function TestRunSummaryDirective () {
 
     };
 
-    $scope.testRunDetails = function (testRun, metricAlias) {
+    $scope.testRunDetails = function (testRun, requirement) {
       TestRuns.selected = testRun;
 
-      if (metricAlias === 'all')
+      if (requirement === 'all')
         {
 
           $state.go('viewGraphs', {
@@ -195,8 +214,8 @@ function TestRunSummaryDirective () {
           'productName': $stateParams.productName,
           'dashboardName': $stateParams.dashboardName,
           'testRunId': testRun.testRunId,
-          tag: Dashboards.getDefaultTag(Dashboards.selected.tags),
-          metricFilter: metricAlias
+          tag: requirement.tag,
+          metricFilter: requirement.metricAlias
         });
 
 
