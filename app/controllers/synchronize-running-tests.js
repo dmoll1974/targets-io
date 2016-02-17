@@ -193,6 +193,7 @@ let saveTestRun = function (runningTest){
       testRunId: runningTest.testRunId,
       start: runningTest.start,
       end: runningTest.end,
+      rampUpPeriod: runningTest.rampUpPeriod,
       completed: runningTest.completed,
       humanReadableDuration: humanReadbleDuration(runningTest.end.getTime() - runningTest.start.getTime())
 

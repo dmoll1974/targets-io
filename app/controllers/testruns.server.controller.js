@@ -71,6 +71,7 @@ function update (req, res) {
       testRun.testRunId = req.body.testRunId;
       testRun.completed = req.body.completed;
       testRun.buildResultsUrl = req.body.buildResultsUrl;
+      testRun.rampUpPeriod = req.body.rampUpPeriod;
       testRun.annotations = req.body.annotations;
       testRun.humanReadableDuration = humanReadbleDuration(new Date(req.body.end).getTime() - new Date(req.body.start).getTime());
 
@@ -643,8 +644,14 @@ function getDataForTestrun(testRun) {
       async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
         let targets = [];
         let value;
+        let start;
+        /* if include ramp up is false, add ramp up period to start of test run */
+
+        start = (dashboard.includeRampUp === false)? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
+
+
         async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
-          graphite.getGraphiteData(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
+          graphite.getGraphiteData(Math.round(start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
             _.each(body, function (bodyTarget) {
 
               value = calculateAverage(bodyTarget.datapoints);

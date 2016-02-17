@@ -33,6 +33,10 @@ var dashboardSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  'includeRampUp':  {
+    type: Boolean,
+    default: false
+  },
   'tags': {
     type: [{
         text: String,

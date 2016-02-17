@@ -159,6 +159,7 @@ function updateRunningTest(runningTest) {
         storedRunningTest.keepAliveTimestamp = dateNow;
         storedRunningTest.end = dateNow + 15 * 1000;
         storedRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(storedRunningTest.end.getTime() - storedRunningTest.start.getTime());
+        storedRunningTest.rampUpPeriod = runningTest.rampUpPeriod;
 
         storedRunningTest.save(function(err, runnigTestSaved){
 

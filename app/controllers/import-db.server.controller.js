@@ -144,6 +144,7 @@ function upload(req, res) {
           newProduct.name = importProduct.name;
           newProduct.description = importProduct.description;
           newProduct.dashboards = importProduct.dashboards;
+          newProduct.requirements = importProduct.requirements;
           newProduct.save(function (err, NewProduct) {
             if (err)
               return console.error(err);
@@ -165,6 +166,8 @@ function upload(req, res) {
               newDashboard.applications = importDashboard.applications;
               newDashboard.instances = importDashboard.instances;
               newDashboard.tags = importDashboard.tags;
+              newDashboard.goal = importDashboard.goal;
+              newDashboard.includeRampUp = importDashboard.includeRampUp;
               newDashboard.baseline = importDashboard.baseline;
               newDashboard.useInBenchmark = importDashboard.useInBenchmark;
               //
