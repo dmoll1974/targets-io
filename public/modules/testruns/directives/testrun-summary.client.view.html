@@ -1,6 +1,12 @@
 <section>
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div class="page-header">
+        <span class="md-subhead" style="padding-bottom: 20px;">
+            <a data-ng-href="/#!/browse/{{testRunSummary.productName}}">{{testRunSummary.productName}}</a>  /
+            <a ui-sref="productReleaseDetails({productName: testRunSummary.productName, productRelease: testRunSummary.productRelease})">
+            {{testRunSummary.productRelease}}
+            </a>  /  {{testRunSummary.testRunId}}
+        </span>
         <div layout="row" layout-align="space-between center">
            <h1>Summary</h1>
             <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode" ng-class="{'switch-label-disabled': editMode === false }">
@@ -20,7 +26,7 @@
                 <tr>
                 <tr>
                     <td>Product release</td>
-                    <td>{{testRunSummary.productRelease}}</td>
+                    <td><a class="pointer" ui-sref="productReleaseDetails({productName: testRunSummary.productName, productRelease: testRunSummary.productRelease})">{{testRunSummary.productRelease}}</a></td>
                 <tr>
                     <td>Dashboard</td>
                     <td>{{testRunSummary.dashboardName}}</td>
