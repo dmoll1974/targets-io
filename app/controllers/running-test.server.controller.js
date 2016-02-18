@@ -14,14 +14,9 @@ var testRunsModule = require('./testruns.server.controller');
 
 exports.runningTest = runningTest;
 exports.updateRunningTest = updateRunningTest;
-exports.synchronizeEvents = synchronizeRunningTestRuns;
 exports.getRunningTests = getRunningTests;
 exports.runningTestForDashboard = runningTestForDashboard;
 
-
-  /* start polling every 15 seconds */
-  //setInterval(synchronizeRunningTestRuns, 15 * 1000);
-//}
 function runningTestForDashboard(req, res){
 
   RunningTest.findOne({$and:[{productName: req.params.productName}, {dashboardName: req.params.dashboardName}]}).exec(function(err, runningTest){
@@ -193,39 +188,6 @@ function updateRunningTest(runningTest) {
   });
 }
 
-function synchronizeRunningTestRuns () {
-
-
-  var dateNow = new Date().getTime();
-
-
-  /* Get  running tests */
-
-  RunningTest.find().exec(function (err, runningTests) {
-
-    console.log('checking running tests');
-
-    _.each(runningTests, function (runningTest) {
-
-            /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
-            if (dateNow - runningTest.keepAliveTimestamp.getTime() > 16 * 1000){
-
-              /* mark test as not completed */
-              runningTest.completed = false;
-
-              saveTestRun(runningTest)
-              .then(function(){
-                runningTest.remove(function(err, removedRunningTest){
-                  console.log('removed: ' + removedRunningTest);
-                });
-              });
-
-            }
-
-          });
-
-  });
-}
 
 
 let saveTestRun = function (runningTest){
@@ -253,8 +215,3 @@ let saveTestRun = function (runningTest){
   });
 }
 
-let errorHandler = function (err){
-
-  console.log('Error: ' + err);
-
-}

@@ -535,27 +535,7 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
       if (testRun) {
         callback(testRun);
       } else {
-        //Event.find({
-        //  $and: [
-        //    { productName: productName },
-        //    { dashboardName: dashboardName },
-        //    { testRunId: testRunId }
-        //  ]
-        //}).sort('-end').exec(function (err, events) {
-        //  if (err) {
-        //    return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-        //  } else {
-        //    if (events.length > 0) {
-        //      createTestrunFromEvents(productName, dashboardName, events, function(testRun){
-        //        benchmarkAndPersistTestRunById(productName, dashboardName, testRun[0], function(persistedTestRun){
-        //          callback(persistedTestRun);
-        //        });
-        //      });
-        //    } else {
-        //      callback(null);
-        //    }
-        //  }
-        //});
+
         callback();
       }
     }
@@ -837,7 +817,9 @@ function calculateLinearFit(datapoints){
 
   for(var j=0;j< datapoints.length;j++){
 
-    data.push([j, datapoints[j][0]]);
+    if(datapoints[j][0] !== null) {
+      data.push([j, datapoints[j][0]]);
+    }
   }
 
   var line = ss.linear_regression()
@@ -847,14 +829,12 @@ function calculateLinearFit(datapoints){
   var gradient = ss.linear_regression()
       .data(data)
       .m()
-  console.log('stijgings percentage: ' + (line(data.length-1)-line(0)) / data.length);
-  console.log('gradient: ' + gradient * 100);
-  console.log('line(0): ' + line(0));
-  console.log('line(data.length-1): ' + line(data.length-1));
+  //console.log('stijgings percentage: ' + (line(data.length-1)-line(0))/ line(0)) / data.length * 100;
+  //console.log('gradient: ' + gradient * 100);
+  //console.log('line(0): ' + line(0));
+  //console.log('line(data.length-1): ' + line(data.length-1));
 
-  //return Math.round(((line(data.length-1)-line(0))/line(0) * 100) * 100) / 100;
-  //return Math.round(gradient/(line(data.length-1)-line(0)) * 100);
-  return Math.round(gradient * 100 * 100) / 100;
+  return Math.round(((((line(data.length-1)-line(0))/ line(0)) / data.length) * 100 * 100)* 100) / 100;
 
 }
 
@@ -914,121 +894,7 @@ function saveTestrun(testrun, metrics, callback) {
     });
   });
 }
-function getPreviousBuild(productName, dashboardName, testrunId, callback) {
-  var previousBuild;
-  Event.find({
-    $and: [
-      { productName: productName },
-      { dashboardName: dashboardName }
-    ]
-  }).sort({ eventTimestamp: -1 }).exec(function (err, events) {
-    if (err) {
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    } else {
-      createTestrunFromEvents(productName, dashboardName, events, function (testruns) {
-        _.each(testruns, function (testrun, i) {
-          if (testrun.testRunId === testrunId) {
-            if (i + 1 === testruns.length) {
-              return null;
-            } else {
-              previousBuild = testruns[i + 1].testRunId;
-              return previousBuild;
-            }
-          }
-        });
-        callback(previousBuild);
-      });
-    }
-  });
-}
-function createTestrunFromEvents(productName, dashboardName, events, callback) {
-  var testRuns = [];
-  var baseline;
-  var dashboardBaseline;
-  Product.findOne({ name: productName }).exec(function (err, product) {
-    if (err)
-      console.log(err);
-    Dashboard.findOne({
-      $and: [
-        { productId: product._id },
-        { name: dashboardName }
-      ]
-    }).exec(function (err, dashboard) {
-      if (err) {
-        console.log(err);
-      } else {
-        dashboardBaseline = dashboard.baseline ? dashboard.baseline : baseline;
-        for (var i = 0; i < events.length; i++) {
-          if (events[i].eventDescription === 'start') {
-            for (var j = 0; j < events.length; j++) {
-              if (events[j].eventDescription === 'end' && events[j].testRunId == events[i].testRunId) {
-                /* If no baseline has been set for this dashboard, set the first test run as baseline*/
-                if (!dashboardBaseline && !baseline) {
-                  baseline = events[i].testRunId;
-                  dashboardBaseline = events[i].testRunId;
-                } else {
-                  baseline = dashboardBaseline;
-                }
-                if (events[i].buildResultsUrl) {
-                  testRuns.push({
-                    start: events[i].eventTimestamp,
-                    startEpoch: events[i].eventTimestamp.getTime(),
-                    end: events[j].eventTimestamp,
-                    endEpoch: events[j].eventTimestamp.getTime(),
-                    productName: events[i].productName,
-                    dashboardName: events[i].dashboardName,
-                    testRunId: events[i].testRunId,
-                    buildResultsUrl: events[i].buildResultsUrl,
-                    eventIds: [
-                      events[i].id,
-                      events[j].id
-                    ],
-                    //meetsRequirement: null,
-                    //benchmarkResultFixedOK: null,
-                    //benchmarkResultPreviousOK: null,
-                    baseline: baseline
-                  });
-                } else {
-                  testRuns.push({
-                    start: events[i].eventTimestamp,
-                    startEpoch: events[i].eventTimestamp.getTime(),
-                    end: events[j].eventTimestamp,
-                    endEpoch: events[j].eventTimestamp.getTime(),
-                    productName: events[i].productName,
-                    dashboardName: events[i].dashboardName,
-                    testRunId: events[i].testRunId,
-                    eventIds: [
-                      events[i].id,
-                      events[j].id
-                    ],
-                    //meetsRequirement: null,
-                    //benchmarkResultFixedOK: null,
-                    //benchmarkResultPreviousOK: null,
-                    baseline: baseline
-                  });
-                }
-                break;
-              }
-            }
-          }
-        }
-        /* If no baseline has been set for this dashboard, set the first test run as baseline*/
-        if (!dashboard.baseline && testRuns) {
-          dashboard.baseline = dashboardBaseline;
-          dashboard.save(function (err) {
-            if (err) {
-              console.log(err);
-            } else {
-              callback(testRuns);
-            }
-          });
-        } else {
-          callback(testRuns);
-        }
-      }
-    });
-  });
-}
+
 function updateAllDashboardTestRuns(req, res){
 
   var regExpDashboardName = new RegExp(req.params.oldDashboardName, 'igm');
