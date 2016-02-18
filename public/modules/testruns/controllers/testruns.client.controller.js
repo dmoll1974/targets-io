@@ -368,33 +368,33 @@ angular.module('testruns').controller('TestrunsController', [
       });
     }
 
-    $scope.testRunFixedBaselineBenchmark = function (index) {
-      TestRuns.selected = $scope.testRuns[index];
-      var benchmarkFixedResult = $scope.testRuns[index].benchmarkResultFixedOK ? 'passed' : 'failed';
+    $scope.testRunFixedBaselineBenchmark = function (testRun) {
+      TestRuns.selected = testRun;
+      var benchmarkFixedResult = testRun.benchmarkResultFixedOK ? 'passed' : 'failed';
       $state.go('benchmarkFixedBaselineTestRun', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName,
-        'testRunId': $scope.testRuns[index].testRunId,
+        'testRunId': testRun.testRunId,
         'benchmarkResult': benchmarkFixedResult
       });
     };
-    $scope.testRunPreviousBuildBenchmark = function (index) {
-      TestRuns.selected = $scope.testRuns[index];
-      var benchmarkPreviousResult = $scope.testRuns[index].benchmarkResultPreviousOK ? 'passed' : 'failed';
+    $scope.testRunPreviousBuildBenchmark = function (testRun) {
+      TestRuns.selected = testRun;
+      var benchmarkPreviousResult = testRun.benchmarkResultPreviousOK ? 'passed' : 'failed';
       $state.go('benchmarkPreviousBuildTestRun', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName,
-        'testRunId': $scope.testRuns[index].testRunId,
+        'testRunId': testRun.testRunId,
         'benchmarkResult': benchmarkPreviousResult
       });
     };
-    $scope.testRunRequirements = function (index) {
-      TestRuns.selected = $scope.testRuns[index];
-      var requirementsResult = $scope.testRuns[index].meetsRequirement ? 'passed' : 'failed';
+    $scope.testRunRequirements = function (testRun) {
+      TestRuns.selected = testRun;
+      var requirementsResult = testRun.meetsRequirement ? 'passed' : 'failed';
       $state.go('requirementsTestRun', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName,
-        'testRunId': $scope.testRuns[index].testRunId,
+        'testRunId': testRun.testRunId,
         'requirementsResult': requirementsResult
       });
     };
