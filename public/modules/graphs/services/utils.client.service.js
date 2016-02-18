@@ -38,8 +38,13 @@ angular.module('graphs').service('Utils', [function () {
             sortOrder = -1;
         }
         return function (a, b) {
-            var result = a.tags[0].text < b.tags[0].text ? -1 : a.tags[0].text > b.tags[0].text ? 1 : 0;
-            return result * sortOrder;
+            if(a.tags[0] && b.tags[0]) {
+                var result = a.tags[0].text < b.tags[0].text ? -1 : a.tags[0].text > b.tags[0].text ? 1 : 0;
+                return result * sortOrder;
+            }else{
+                var result = a.alias < b.alias ? -1 : a.alias > b.alias ? 1 : 0;
+                return result * sortOrder;
+            }
         };
     }
 
