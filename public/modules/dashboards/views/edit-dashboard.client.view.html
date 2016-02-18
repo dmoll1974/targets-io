@@ -37,6 +37,13 @@
                 <md-switch ng-model="dashboard.useInBenchmark" aria-label="Benchmark test runs for this dashboard" ng-class="{'switch-label-disabled': dashboard.useInBenchmark === false }">
                     Benchmark test runs for this dashboard
                 </md-switch>
+                <md-switch ng-model="dashboard.includeRampUp" aria-label="Include ramp up period in benchmarks" ng-class="{'switch-label-disabled': dashboard.includeRampUp === false }">
+                    Include ramp up period in benchmarks
+                </md-switch>
+                <md-input-container  flex>
+                    <label>Steady state reached after n (seconds)</label>
+                    <input name="startSteadyState" ng-model="dashboard.startSteadyState">
+                </md-input-container>
             </div>
             <div layout="row">
                 <md-button md-no-ink class="md-primary" data-ng-click="dashboardForm.$valid &&  update()">Submit

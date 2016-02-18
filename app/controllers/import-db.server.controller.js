@@ -152,6 +152,8 @@ function upload(req, res) {
       testrun.previousBuild = importTestrun.previousBuild;
       testrun.completed = importTestrun.completed;
       testrun.productRelease = importTestrun.productRelease;
+      testrun.rampUpPeriod = importTestrun.rampUpPeriod;
+      testrun.annotations = importTestrun.annotations;
       testrun.meetsRequirement = importTestrun.meetsRequirement;
       testrun.benchmarkResultFixedOK = importTestrun.benchmarkResultFixedOK;
       testrun.benchmarkResultPreviousOK = importTestrun.benchmarkResultPreviousOK;
@@ -208,6 +210,7 @@ function upload(req, res) {
               newDashboard.tags = importDashboard.tags;
               newDashboard.goal = importDashboard.goal;
               newDashboard.includeRampUp = importDashboard.includeRampUp;
+              newDashboard.startSteadyState = importDashboard.startSteadyState;
               newDashboard.baseline = importDashboard.baseline;
               newDashboard.useInBenchmark = importDashboard.useInBenchmark;
               //

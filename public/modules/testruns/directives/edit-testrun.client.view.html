@@ -13,7 +13,7 @@
                         <label>start</label>
                         <input name="start" type="text" ng-model="testrun.start" required/>
                         <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss"
-                               ng-model="testrun.start" is-open="isOpenStart"/>
+                               ng-model="testrun.start" is-open="isOpenStart">
 
                         <div ng-messages="testrunForm.start.$error"
                              ng-if="testrunForm.$submitted || testrunForm.start.$touched">
@@ -40,6 +40,10 @@
                     <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
                              data-ng-click="openCalendar($event, 'end')"></md-icon>
                 </div>
+                <md-input-container flex>
+                    <label>Ramp up period in seconds</label>
+                    <input ng-model="testrun.rampUpPeriod">
+                </md-input-container>
                 <md-input-container
                         md-is-error="testrunForm.testrunProductName.$invalid && (testrunForm.$submitted || testrunForm.testrunProductName.$dirty)"
                         flex>

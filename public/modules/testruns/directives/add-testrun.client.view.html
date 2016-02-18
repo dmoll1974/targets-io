@@ -40,6 +40,10 @@
                     <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
                              data-ng-click="openCalendar($event, 'end')"></md-icon>
                 </div>
+                <md-input-container flex>
+                    <label>Ramp up period in seconds</label>
+                    <input ng-model="testrun.rampUpPeriod">
+                </md-input-container>
                 <md-input-container
                         md-is-error="testrunForm.testrunProductName.$invalid && (testrunForm.$submitted || testrunForm.testrunProductName.$dirty)"
                         flex>

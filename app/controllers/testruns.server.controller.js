@@ -16,7 +16,9 @@ var mongoose = require('mongoose'),
     Benchmarks = require('./testruns.benchmarks.server.controller'),
     Metric = mongoose.model('Metric'),
     async = require('async'),
-    RunningTest = mongoose.model('RunningTest');
+    RunningTest = mongoose.model('RunningTest'),
+    ss = require('simple-statistics');
+
 
 
 
@@ -501,10 +503,12 @@ function refreshTestrun(req, res) {
       newTestRun.start = testRun.start;
       newTestRun.end = testRun.end;
       newTestRun.productName = testRun.productName;
+      newTestRun.productRelease = testRun.productRelease;
       newTestRun.dashboardName = testRun.dashboardName;
       newTestRun.testRunId = testRun.testRunId;
       newTestRun.completed = testRun.completed;
       newTestRun.humanReadableDuration = testRun.humanReadableDuration;
+      newTestRun.rampUpPeriod = testRun.rampUpPeriod;
       newTestRun.buildResultsUrl = testRun.buildResultsUrl;
 
       testRun.remove(function(err){
@@ -524,34 +528,35 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
       { dashboardName: dashboardName },
       { testRunId: testRunId }
     ]
-  }).sort('-end').exec(function (err, testRun) {
+  }).exec(function (err, testRun) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
       if (testRun) {
         callback(testRun);
       } else {
-        Event.find({
-          $and: [
-            { productName: productName },
-            { dashboardName: dashboardName },
-            { testRunId: testRunId }
-          ]
-        }).sort('-end').exec(function (err, events) {
-          if (err) {
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-          } else {
-            if (events.length > 0) {
-              createTestrunFromEvents(productName, dashboardName, events, function(testRun){
-                benchmarkAndPersistTestRunById(productName, dashboardName, testRun[0], function(persistedTestRun){
-                  callback(persistedTestRun);
-                });
-              });
-            } else {
-              callback(null);
-            }
-          }
-        });
+        //Event.find({
+        //  $and: [
+        //    { productName: productName },
+        //    { dashboardName: dashboardName },
+        //    { testRunId: testRunId }
+        //  ]
+        //}).sort('-end').exec(function (err, events) {
+        //  if (err) {
+        //    return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        //  } else {
+        //    if (events.length > 0) {
+        //      createTestrunFromEvents(productName, dashboardName, events, function(testRun){
+        //        benchmarkAndPersistTestRunById(productName, dashboardName, testRun[0], function(persistedTestRun){
+        //          callback(persistedTestRun);
+        //        });
+        //      });
+        //    } else {
+        //      callback(null);
+        //    }
+        //  }
+        //});
+        callback();
       }
     }
   });
@@ -667,16 +672,54 @@ function getDataForTestrun(testRun) {
         let targets = [];
         let value;
         let start;
-        /* if include ramp up is false, add ramp up period to start of test run */
+        /* if dashboard has startSteadyState configured and metric type = gradient use steady state period only */
 
-        start = (dashboard.includeRampUp === false)? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
+        if(dashboard.startSteadyState && metric.type === 'Gradient'){
 
+          start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000);
 
+        }else {
+
+          /* if include ramp up is false, add ramp up period to start of test run */
+          start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
+
+        }
         async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
           graphite.getGraphiteData(Math.round(start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
             _.each(body, function (bodyTarget) {
 
-              value = calculateAverage(bodyTarget.datapoints);
+              /* save value based on metric type */
+
+              switch(metric.type){
+
+                case 'Average':
+
+                  value = calculateAverage(bodyTarget.datapoints);
+                  break;
+
+                case 'Maximum':
+
+                  value = calculateMaximum(bodyTarget.datapoints);
+                  break;
+
+                case 'Minimum':
+
+                  value = calculateMinimum(bodyTarget.datapoints);
+                  break;
+
+                case 'Last':
+
+                  value = getLastDatapoint(bodyTarget.datapoints);
+                  break;
+
+                case 'Gradient':
+
+                  value = calculateLinearFit(bodyTarget.datapoints);
+                  break;
+
+              }
+
+
               /* if target has values other than null values only, store it */
               if(value !== null) {
                 targets.push({
@@ -751,6 +794,70 @@ function calculateAverage(datapoints) {
   else
     return null;
 }
+
+function calculateMaximum(datapoints){
+
+  var maximum = 0;
+
+  for(var d=0;d<datapoints.length;d++){
+
+    if (datapoints[d][0] > maximum)
+      maximum = datapoints[d][0];
+  }
+
+  return maximum;
+}
+
+function calculateMinimum(datapoints){
+
+  var minimum = Infinity;
+
+  for(var d=0;d<datapoints.length;d++){
+
+    if (datapoints[d][0] < minimum)
+      minimum = datapoints[d][0];
+  }
+
+  return minimum;
+}
+
+function getLastDatapoint(datapoints){
+
+
+  for(var d=datapoints.length-1;d>=0;--d){
+
+
+    if(datapoints[d][0]!= null)
+      return  Math.round((datapoints[d][0])*100)/100;
+  }
+}
+function calculateLinearFit(datapoints){
+
+  var data = [];
+
+  for(var j=0;j< datapoints.length;j++){
+
+    data.push([j, datapoints[j][0]]);
+  }
+
+  var line = ss.linear_regression()
+      .data(data)
+      .line()
+
+  var gradient = ss.linear_regression()
+      .data(data)
+      .m()
+  console.log('stijgings percentage: ' + (line(data.length-1)-line(0)) / data.length);
+  console.log('gradient: ' + gradient * 100);
+  console.log('line(0): ' + line(0));
+  console.log('line(data.length-1): ' + line(data.length-1));
+
+  //return Math.round(((line(data.length-1)-line(0))/line(0) * 100) * 100) / 100;
+  //return Math.round(gradient/(line(data.length-1)-line(0)) * 100);
+  return Math.round(gradient * 100 * 100) / 100;
+
+}
+
 
 function TempSaveTestruns(testruns,  callback) {
 

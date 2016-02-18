@@ -108,6 +108,7 @@ function evaluateRequirement(value, requirementOperator, requirementValue) {
   }
   return requirementResult;
 }
+
 function setTargetRequirementResults(targets, requirementOperator, requirementValue) {
   var updatedTargets = [];
   _.each(targets, function (target) {

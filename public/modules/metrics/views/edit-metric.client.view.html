@@ -50,6 +50,16 @@
                     <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
                 </tags-input>
             </md-input-container>
+            <div  class="well">
+                <md-input-container flex >
+                    <label>Type</label>
+                    <md-select ng-model="metric.type">
+                        <md-option ng-repeat="metricType in metricTypes" value="{{metricType}}">
+                            {{metricType}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
             <div layout="column" class="well">
                 <md-switch class="md-primary" md-no-ink aria-label="Requirements enabled" ng-model="enableRequirement" ng-class="{'switch-label-disabled': enableRequirement === false }">
                     Requirements

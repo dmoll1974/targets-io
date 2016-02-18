@@ -30,7 +30,7 @@ angular.module('metrics').controller('MetricsController', [
       'Maximum',
       'Minimum',
       'Last',
-      'Slope'
+      'Gradient'
     ];
     $scope.operatorOptions = [
       {

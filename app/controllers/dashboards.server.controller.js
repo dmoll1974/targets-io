@@ -24,13 +24,8 @@ exports.clone = function (req, res) {
     });
   });
   dashboardClone.name = req.dashboard.name + '-CLONE';
-  dashboardClone.metricsRegexWily = req.dashboard.metricsRegexWily;
   dashboardClone.metrics = metricCloneArray;
   dashboardClone.productId = req.dashboard.productId;
-  dashboardClone.granularity = req.dashboard.granularity;
-  dashboardClone.metricsRegexWily = req.dashboard.metricsRegexWily;
-  dashboardClone.hosts = req.dashboard.hosts;
-  dashboardClone.applications = req.dashboard.applications;
   dashboardClone.save(function (err) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
@@ -65,6 +60,8 @@ exports.update = function (req, res) {
   dashboard.tags = req.body.tags;
   dashboard.baseline = req.body.baseline;
   dashboard.useInBenchmark = req.body.useInBenchmark;
+  dashboard.includeRampUp = req.body.includeRampUp;
+  dashboard.startSteadyState = req.body.startSteadyState;
   dashboard.save(function (err) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
