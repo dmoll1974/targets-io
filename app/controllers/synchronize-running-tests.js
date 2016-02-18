@@ -145,7 +145,7 @@ var Testrun = mongoose.model('Testrun');
 
 
   /* start polling every minute */
-  setInterval(synchronizeRunningTestRuns, 60 * 1000);
+  setInterval(synchronizeRunningTestRuns, 30 * 1000);
 
 
 
