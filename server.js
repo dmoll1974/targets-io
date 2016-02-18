@@ -26,7 +26,7 @@ var db = mongoose.connect(config.db, function(err) {
 });
 
 if(cluster.isMaster) {
-	var numWorkers = require('os').cpus().length;
+	var numWorkers = require('os').cpus().length - 1; /* save one core for daemon */
 
 	console.log('Master cluster setting up ' + numWorkers + ' workers...');
 
