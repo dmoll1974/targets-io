@@ -90,8 +90,8 @@
                     <tr ng-repeat="requirement in testRunSummary.requirements">
                         <td>{{requirement.requirementText}}</td>
                         <td>
-                            <span ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                                  ng-click="testRunDetails(testRunSummary, requirement)"  >
+                            <span  class="pointer" ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
+                                  ui-sref="requirementsTestRun({productName: testRunSummary.productName, dashboardName: testRunSummary.dashboardName, testRunId: testRunSummary.testRunId, requirementsResult: requirement.meetsRequirement ? 'passed' : 'failed', selectedMetric: requirement.metricAlias })"  >
                             </span>
                         </td>
                     </tr>
