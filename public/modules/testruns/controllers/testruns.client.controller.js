@@ -310,6 +310,8 @@ angular.module('testruns').controller('TestrunsController', [
         TestRuns.runningTest = '';
         TestRuns.numberOfRunningTests = '';
         Utils.reset();
+        Utils.zoomFrom = '';
+        Utils.zoomUntil = '';
 
       }
     });

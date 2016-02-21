@@ -99,12 +99,11 @@ angular.module('graphs').controller('GraphsController', [
       $scope.showViewUrl = false;
     };
 
-    $scope.$on('$destroy', function () {
-      /* reset zoom variables when leaving graphs view */
-      Utils.zoomRange = '';
-      Utils.zoomFrom = '';
-      Utils.zoomUntil = '';
-    });
+    //$scope.$on('$destroy', function () {
+    //  /* reset zoom variables when leaving graphs view */
+    //  Utils.zoomFrom = '';
+    //  Utils.zoomUntil = '';
+    //});
 
     $scope.hasFlash = function () {
       var hasFlash = false;
