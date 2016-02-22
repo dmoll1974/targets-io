@@ -66,7 +66,7 @@ function update(req, res){
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         } else{
 
-            release.requirements = req.body.requirements;
+            release.releaseTestRuns = req.body.releaseTestRuns;
 
             release.save(function(err, savedRelease){
 

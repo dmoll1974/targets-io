@@ -72,9 +72,9 @@ function ProductReleaseDetailsDirective () {
     });
 
 
-    $scope.toggleRequirementResult = function (index){
+    $scope.toggleRequirementResult = function (parentIndex, index){
 
-      $scope.product.requirements[index].result = !$scope.product.requirements[index].result;
+      $scope.product.releaseTestRuns[parentIndex].requirements[index].result = !$scope.product.releaseTestRuns[parentIndex].requirements[index].result;
     }
 
     $scope.submitProductRelease = function(){

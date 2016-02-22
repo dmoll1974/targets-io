@@ -1,6 +1,13 @@
 <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
 <md-content layout="column">
     <div layout="row" layout-align="end center">
+        <div id="summary-buttons" layout="row">
+            <!--<md-button  ng-if="editMode === true && releaseSaved === false" md-no-ink class="md-primary" data-ng-click="saveproductRelease()">Save</md-button>-->
+            <!--<md-button  ng-if="editMode === true && releaseSaved === true" md-no-ink class="md-primary" data-ng-click="updateproductRelease()">Update</md-button>-->
+            <md-button ng-if="editMode === true && releaseSaved === true" class="md-warn" data-ng-click="openDeleteModal('', product)">Discard</md-button>
+
+        </div>
+
         <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode" ng-change="submitProductRelease()" ng-class="{'switch-label-disabled': editMode === false }">
             Edit
         </md-switch>
@@ -55,7 +62,7 @@
                     <td>{{requirement.description}}</td>
                     <td class="pointer center"  ng-model="requirement.result">
                         <span ng-if="editMode === true" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                              data-ng-click="toggleRequirementResult($index)"  >
+                              data-ng-click="toggleRequirementResult($parent.$index, $index)"  >
                         </span>
                         <span ng-if="editMode === false" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'">
                         </span>
@@ -66,12 +73,6 @@
         </div>
     </md-content>
 
-    <div id="summary-buttons" layout="row">
-        <!--<md-button  ng-if="editMode === true && releaseSaved === false" md-no-ink class="md-primary" data-ng-click="saveproductRelease()">Save</md-button>-->
-        <!--<md-button  ng-if="editMode === true && releaseSaved === true" md-no-ink class="md-primary" data-ng-click="updateproductRelease()">Update</md-button>-->
-        <md-button ng-if="editMode === true && releaseSaved === true" class="md-warn" data-ng-click="openDeleteModal('', product)">Discard</md-button>
-
-    </div>
 
 </md-content>
 
