@@ -34,14 +34,21 @@
         </table>
         </div>
     </div>
+
+
+
     <h3>Release test runs</h3>
+
+    <div  style="margin-bottom: 5px;" ng-repeat="testRunIndexItem in testRunIndexItems | orderBy:'-end':true">
+        <a class="md-padding" href="" ng-click="scrollTo(testRunIndexItem.testRunId)">{{testRunIndexItem.description}}</a><br/>
+    </div>
 
 
 
 
 <md-content ng-repeat="testRun in product.releaseTestRuns track by $index">
 
-    <release-testrun-summary  testrun="testRun" index="index"></release-testrun-summary>
+    <release-testrun-summary ng-attr-id="{{testRun.testRunId}}" testrun="testRun" index="index"></release-testrun-summary>
 
     <md-content >
 

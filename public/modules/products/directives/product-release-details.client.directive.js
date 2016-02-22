@@ -14,10 +14,11 @@ function ProductReleaseDetailsDirective () {
 
 
   /* @ngInject */
-  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, $mdToast) {
+  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, $mdToast, $location, $anchorScroll) {
 
     $scope.editMode = false;
-
+    $scope.testRunIndexItems = [];
+    $scope.releaseTestRunsIndex = [];
 
     var originatorEv;
     $scope.openMenu = function ($mdOpenMenu, ev) {
@@ -33,6 +34,17 @@ function ProductReleaseDetailsDirective () {
           $scope.product = productRelease;
           $scope.releaseSaved = true;
 
+
+          /* add test runs to index */
+          _.each($scope.product.releaseTestRuns, function (testRun) {
+
+            Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
+
+                $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
+
+            });
+          });
+
         }else {
 
           $scope.releaseSaved = false;
@@ -45,12 +57,20 @@ function ProductReleaseDetailsDirective () {
             /* get test runs for release */
             TestRuns.listTestRunsForProductRelease($scope.product.name, $stateParams.productRelease).success(function (testRuns) {
 
-
               $scope.product.releaseTestRuns = testRuns;
 
               /* match test runs to requirements */
 
               _.each($scope.product.releaseTestRuns, function (testRun) {
+
+                /* add test runs to index */
+
+                Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
+
+                  $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
+
+                });
+
 
                 testRun.requirements = [];
 
@@ -58,7 +78,10 @@ function ProductReleaseDetailsDirective () {
 
                   _.each(requirement.relatedDashboards, function (dashboard) {
 
-                    if (testRun.dashboardName === dashboard)  testRun.requirements.push(requirement);
+                    if (testRun.dashboardName === dashboard) {
+                      testRun.requirements.push(requirement);
+                      testRun.description = dashboard.description;
+                    }
 
                   })
 
@@ -70,6 +93,9 @@ function ProductReleaseDetailsDirective () {
           });
         }
     });
+
+
+
 
 
     $scope.toggleRequirementResult = function (parentIndex, index){
@@ -101,6 +127,11 @@ function ProductReleaseDetailsDirective () {
       }
 
 
+    }
+
+    $scope.scrollTo = function(id) {
+      $location.hash(id);
+      $anchorScroll();
     }
 
     $scope.openDeleteModal = function (size, product) {
