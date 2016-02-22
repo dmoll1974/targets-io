@@ -17,6 +17,20 @@ var ReleaseSchema = new Schema({
     uppercase: true
   },
   'date': Date,
+  'releaseTestRuns':[
+    {
+      productName: String,
+      dashboardName: String,
+      testRunId: String,
+      requirements: [
+        {
+          stakeholder: String,
+          description: String,
+          result: Boolean
+        }
+      ]
+    }
+  ],
   'requirements': [{
     stakeholder : String,
     description : String,

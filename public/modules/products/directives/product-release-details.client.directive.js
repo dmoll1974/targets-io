@@ -46,21 +46,19 @@ function ProductReleaseDetailsDirective () {
             TestRuns.listTestRunsForProductRelease($scope.product.name, $stateParams.productRelease).success(function (testRuns) {
 
 
+              $scope.product.releaseTestRuns = testRuns;
+
               /* match test runs to requirements */
 
-              _.each($scope.product.requirements, function (requirement, i) {
+              _.each($scope.product.releaseTestRuns, function (testRun) {
 
-                $scope.product.requirements[i].relatedTestRuns = [];
+                testRun.requirements = [];
 
-                _.each(requirement.relatedDashboards, function (dashboard) {
+                _.each($scope.product.requirements, function (requirement, i) {
 
-                  _.each(testRuns, function (testRun) {
+                  _.each(requirement.relatedDashboards, function (dashboard) {
 
-                    if (testRun.dashboardName === dashboard) $scope.product.requirements[i].relatedTestRuns.push({
-                      productName: testRun.productName,
-                      dashboardName: testRun.dashboardName,
-                      testRunId: testRun.testRunId
-                    });
+                    if (testRun.dashboardName === dashboard)  testRun.requirements.push(requirement);
 
                   })
 

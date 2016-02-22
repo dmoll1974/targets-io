@@ -14315,3 +14315,7 @@ md-toast {
 .testrun-summary-link{
     white-space: nowrap;
 }
+
+.testrun-header{
+    color:#FF5722;
+}

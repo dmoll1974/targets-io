@@ -27,64 +27,45 @@
         </table>
         </div>
     </div>
-    <h3>Requirements</h3>
+    <h3>Release test runs</h3>
 
-    <table class="table">
-        <colgroup>
-            <col span="1" style="width: 10%;">
-            <col span="1" style="width: 60%;">
-            <col span="1" style="width: 5%;">
-            <col span="1" style="width: 20%;">
-            <col span="1" style="width: 5%;">
 
-        </colgroup>
-        <thead>
-        <tr>
-            <th>Stakeholder</th>
-            <th>Requirement</th>
-            <th>Result</th>
-            <th>Related test run(s)</th>
-            <!--<th></th>-->
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="requirement in product.requirements" class="hover-row">
-            <td >{{requirement.stakeholder}}</td>
-            <td class="pointer" data-ng-click="editRequirement($index)">{{requirement.description}}</td>
-            <td class="pointer center"  ng-model="requirement.result">
-                <span ng-if="editMode === true" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                      data-ng-click="toggleRequirementResult($index)"  >
-                </span>
-                <span ng-if="editMode === false" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'">
-                </span>
-            </td>
-            <td class="testrun-summary-link">
-               <div layout="column">
-                    <a style="padding-bottom: 5px;" ng-repeat="testRun in requirement.relatedTestRuns" ui-sref="testRunSummary({productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId})">{{testRun.testRunId}}</a>
-               </div>
-            </td>
-            <!--<td>-->
-                <!--<md-menu ng-if="editMode === true" style="padding-top: 0px; padding-bottom: 0px;">-->
-                    <!--<md-button aria-label="Add test run" class="md-icon-button"-->
-                               <!--ng-click="openMenu($mdOpenMenu, $event)">-->
-                        <!--<md-icon md-menu-origin md-svg-src="images/assets/ic_add_black_24px.svg"></md-icon>-->
-                        <!--<md-tooltip>-->
-                            <!--Add test run-->
-                        <!--</md-tooltip>-->
-                    <!--</md-button>-->
-                    <!--<md-menu-content width="4">-->
-                        <!--<md-menu-item ng-repeat="testRun in productReleaseTestRuns">-->
-                            <!--<md-button data-ng-click="addTestRun(testRun, $parent.$index)">-->
-                                <!--{{testRun.testRunId}}-->
-                            <!--</md-button>-->
-                        <!--</md-menu-item>-->
-                    <!--</md-menu-content>-->
-                <!--</md-menu>-->
-            <!--</td>-->
 
-        </tr>
-        </tbody>
-    </table>
+
+<md-content ng-repeat="testRun in product.releaseTestRuns track by $index">
+
+    <release-testrun-summary  testrun="testRun"></release-testrun-summary>
+
+    <md-content >
+
+        <div class="md-padding" flex="75">
+            <h4>Related product requirement(s)</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Stakeholder</th>
+                    <th>Requirement</th>
+                    <th>Result</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="requirement in testRun.requirements">
+                    <td>{{requirement.stakeholder}}</td>
+                    <td>{{requirement.description}}</td>
+                    <td class="pointer center"  ng-model="requirement.result">
+                        <span ng-if="editMode === true" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
+                              data-ng-click="toggleRequirementResult($index)"  >
+                        </span>
+                        <span ng-if="editMode === false" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'">
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </md-content>
+
     <div id="summary-buttons" layout="row">
         <!--<md-button  ng-if="editMode === true && releaseSaved === false" md-no-ink class="md-primary" data-ng-click="saveproductRelease()">Save</md-button>-->
         <!--<md-button  ng-if="editMode === true && releaseSaved === true" md-no-ink class="md-primary" data-ng-click="updateproductRelease()">Update</md-button>-->
