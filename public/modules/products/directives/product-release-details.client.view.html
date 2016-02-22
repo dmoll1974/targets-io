@@ -48,7 +48,7 @@
 
 <md-content ng-repeat="testRun in product.releaseTestRuns track by $index">
 
-    <release-testrun-summary ng-attr-id="{{testRun.testRunId}}" testrun="testRun" index="index"></release-testrun-summary>
+    <release-testrun-summary ng-attr-id="{{testRun.testRunId}}" testrun="testRun" index="$index"></release-testrun-summary>
 
     <md-content >
 

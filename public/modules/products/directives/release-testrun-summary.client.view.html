@@ -1,7 +1,8 @@
 <md-content>
         <md-content flex="75">
             <h3 class="testrun-header">{{testRunSummary.description}}</h3>
-            <div class="md-padding">
+            <div ng-attr-id="{{'show-detailed-testrun-summary-' + index}}" class="md-padding">
+
                 <h4>Test run summary</h4>
                 <table class="table">
                     <tbody>
@@ -97,7 +98,7 @@
         </table>
 
     </md-content>
-    <md-button ng-attr-id="{{'show-detailed-testrun-summary-' + index}}" ng-click="toggleShowTestRunDetails()" ng-if="!showTestRunDetails" class="md-primary" aria-label="Show detailed test run summary">
+    <md-button ng-click="toggleShowTestRunDetails()" ng-if="!showTestRunDetails" class="md-primary" aria-label="Show detailed test run summary">
         <md-tooltip>Show detailed test run Summary</md-tooltip>
         <md-icon md-svg-src="images/assets/ic_zoom_in_black_24px.svg"></md-icon>
         <span>Show detailed test run Summary</span>
