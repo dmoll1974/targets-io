@@ -36,6 +36,7 @@ angular.module('graphs').controller('HighchartsController', [
 
     /* set graphType */
     Utils.graphType =  'testrun';
+    $scope.graphType =  'testrun';
 
     /* set Tags form graph */
     $scope.setTags = function () {

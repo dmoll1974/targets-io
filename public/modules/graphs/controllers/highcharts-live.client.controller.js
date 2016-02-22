@@ -40,7 +40,8 @@ angular.module('graphs').controller('HighchartsLiveController', [
     Utils.zoomLock = true;
 
     /* set graphType */
-    Utils.graphType =  'live-graph';
+    Utils.graphType =  'graphs-live';
+    $scope.graphType =  'graphs-live';
 
     /* set Tags form graph */
     $scope.setTags = function () {
