@@ -235,7 +235,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
           break;
 
-        case 'live-graph':
+        case 'graphs-live':
 
           $scope.zoomRange =  Utils.zoomRange;
             
@@ -317,7 +317,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           }
 
           /* in case of live graphs set interval */
-          if($scope.graphType === 'live-graph' &&  Interval.active.map(function(interval){return interval.metricId}).indexOf($scope.metric._id) === -1){
+          if($scope.graphType === 'graphs-live' &&  Interval.active.map(function(interval){return interval.metricId}).indexOf($scope.metric._id) === -1){
 
             var intervalId = setInterval(function () {
 
