@@ -177,7 +177,7 @@ function updateRunningTest(runningTest) {
         /* if start request, give some additional time to start up */
 
         newRunningTest.keepAliveTimestamp = dateNow + 120 * 1000;
-        newRunningTest.end = dateNow + 15 * 1000;
+        newRunningTest.end = dateNow + 30 * 1000;
         newRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(newRunningTest.end.getTime() - newRunningTest.start.getTime())
         newRunningTest.save(function(err, newRunningTest){
 
