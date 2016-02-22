@@ -6,7 +6,8 @@ function ReleaseTestRunSummaryDirective () {
 
   var directive = {
     scope: {
-      testrun: '='
+      testrun: '=',
+      index: '='
     },
 
     restrict: 'EA',
@@ -98,6 +99,22 @@ function ReleaseTestRunSummaryDirective () {
     $scope.toggleShowTestRunDetails = function(){
 
       $scope.showTestRunDetails = ($scope.showTestRunDetails === false)? true : false;
+
+      if($scope.showTestRunDetails === true){
+
+        var element = '#show-detailed-testrun-summary-' + $scope.index;
+
+        var toast = $mdToast.simple()
+            .action('OK')
+            .highlightAction(true)
+            .position('bottom left')
+            .parent(angular.element(element))
+            .hideDelay(6000);
+
+        $mdToast.show(toast.content('Scroll down to view test run summary details ...')).then(function(response) {
+
+        });
+      }
 
     }
 

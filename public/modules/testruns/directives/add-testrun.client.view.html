@@ -3,7 +3,7 @@
         <h1>Add Test Run</h1>
     </div>
     <!--<div class="col-md-12">-->
-    <form name="testrunForm">
+    <form  id="submit" name="testrunForm">
         <div layout="column">
             <div layout="column">
                 <div layout="row">
@@ -101,7 +101,7 @@
                     <textarea name="testrunAnnotations" ng-model="testrun.annotations" columns="1" md-maxlength="500" rows="10"></textarea>
                 </md-input-container>
                 <div layout="row">
-                    <md-button md-no-ink class="md-primary" data-ng-click="create()">Submit</md-button>
+                    <md-button  md-no-ink class="md-primary" data-ng-click="create()">Submit</md-button>
                     <md-button data-ng-click="cancel()">Cancel</md-button>
                 </div>
             </div>

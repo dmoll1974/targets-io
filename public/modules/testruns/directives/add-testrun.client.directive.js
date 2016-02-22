@@ -13,7 +13,7 @@ function AddTestrunDirective () {
   return directive;
 
   /* @ngInject */
-  function AddTestrunDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams) {
+  function AddTestrunDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, $mdToast) {
 
     $scope.testrun = {};
     $scope.testrun.productName = $state.params.productName;
@@ -59,6 +59,19 @@ function AddTestrunDirective () {
 
     // Create new Testrun
     $scope.create = function () {
+
+
+      var toast = $mdToast.simple()
+          .action('OK')
+          .highlightAction(true)
+          .position('bottom center')
+          .parent(angular.element('#submit'))
+          .hideDelay(6000);
+
+      $mdToast.show(toast.content('Test run data is collected and saved ... (could take a while)')).then(function(response) {
+
+      });
+
       TestRuns.addTestRun($scope.testrun).then(function (testrun) {
 
         if ($rootScope.previousStateParams)

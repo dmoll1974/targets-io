@@ -23,7 +23,7 @@
                     </tr>
                     <tr>
                         <td>Test run ID </td>
-                        <td><a ng-click="testRunDetails(testRunSummary, 'all')">{{testRunSummary.testRunId}}</a></td>
+                        <td><a class="pointer" ng-click="testRunDetails(testRunSummary, 'all')">{{testRunSummary.testRunId}}</a></td>
                     <tr>
                         <td>Period</td>
                         <td>{{testRunSummary.start | date:'EEEE, dd-M-yyyy H:mm:ss'}} - {{testRunSummary.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
@@ -47,7 +47,7 @@
                         <td><a ng-href="{{testRunSummary.buildResultsUrl}}">{{testRunSummary.buildResultsUrlDisplay}}</a></td>
                     </tr><tr ng-if="testRunSummary.buildResultsUrl && showTestRunDetails">
                         <td>Gatling details</td>
-                        <td><a ng-click="gatlingDetails(testRunSummary.testRunId)">{{testRunSummary.testRunId}}</a></td>
+                        <td><a class="pointer" ng-click="gatlingDetails(testRunSummary.testRunId)">{{testRunSummary.testRunId}}</a></td>
                     </tr>
                 </tbody>
             </table>
@@ -97,7 +97,7 @@
         </table>
 
     </md-content>
-    <md-button ng-click="toggleShowTestRunDetails()" ng-if="!showTestRunDetails" class="md-primary" aria-label="Show detailed test run summary">
+    <md-button ng-attr-id="{{'show-detailed-testrun-summary-' + index}}" ng-click="toggleShowTestRunDetails()" ng-if="!showTestRunDetails" class="md-primary" aria-label="Show detailed test run summary">
         <md-tooltip>Show detailed test run Summary</md-tooltip>
         <md-icon md-svg-src="images/assets/ic_zoom_in_black_24px.svg"></md-icon>
         <span>Show detailed test run Summary</span>
