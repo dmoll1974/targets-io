@@ -3,19 +3,13 @@
     <div layout="row">
         <div flex="40" class="md-toolbar-tools">
             <h1>
-                <a ng-href="/#!/">TARGETS-IO</a>
+                <a ng-click="goHome()" >TARGETS-IO</a>
             </h1>
         </div>
         <div flex="55" class="md-toolbar-tools">
             <div layout="row">
-                <h1 ng-if="productName">
-                    {{productName}}
-                </h1>
-                <h1 ng-if="dashboardName">
-                    -
-                </h1>
-                <h1 ng-if="dashboardName">
-                    {{dashboardName}}
+                <h1 ng-if="header">
+                    {{header}}
                 </h1>
             </div>
         </div>

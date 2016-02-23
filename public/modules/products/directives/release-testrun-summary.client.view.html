@@ -38,7 +38,7 @@
                         <td>
                             <div  data-ng-repeat="metric in testRunSummary.metrics | testRunSummary">
                                 <div>
-                                    <p>{{metric.summaryText}}</p>
+                                    <p><b>{{metric.summaryText}}</b></p>
                                 </div>
                             </div>
                         </td>
@@ -54,6 +54,7 @@
             </table>
         </div>
     </md-content>
+
 
 
 
@@ -75,8 +76,9 @@
         </div>
     </md-content>
 
+
     <md-content class="md-padding" ng-if="testRunSummary.requirements.length > 0 && showTestRunDetails" flex="75">
-        <h4>Test run requirements</h4>
+        <h4>Metric requirement(s)</h4>
 
         <table class="table">
             <thead>
@@ -98,6 +100,36 @@
         </table>
 
     </md-content>
+    <md-content >
+
+        <div class="md-padding" flex="75">
+            <h4>Related product requirement(s)</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Stakeholder</th>
+                    <th>Requirement</th>
+                    <th>Result</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="productRequirement in productrequirements">
+                    <td>{{productRequirement.stakeholder}}</td>
+                    <td>{{productRequirement.description}}</td>
+                    <td class="pointer center"  ng-model="productRequirement.result">
+                        <span ng-if="edit === true" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
+                              data-ng-click="toggleRequirementResult($index)"  >
+                        </span>
+                        <span ng-if="edit === false" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'">
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </md-content>
+
     <md-button ng-click="toggleShowTestRunDetails()" ng-if="!showTestRunDetails" class="md-primary" aria-label="Show detailed test run summary">
         <md-tooltip>Show detailed test run Summary</md-tooltip>
         <md-icon md-svg-src="images/assets/ic_zoom_in_black_24px.svg"></md-icon>

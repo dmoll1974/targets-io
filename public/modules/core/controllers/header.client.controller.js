@@ -30,17 +30,37 @@ angular.module('core').controller('HeaderController', [
       $window.location.href = url;
     };
 
+
+
     /* get productName an dashboardName form $stateParams in case of deeplink */
     setTimeout(function(){
-      if($stateParams.productName)  $scope.productName = $stateParams.productName;
-      if($stateParams.dashboardName)  $scope.dashboardName = $stateParams.dashboardName;
+      if (newVal !== oldVal) {
+        if ($stateParams.productName) {
+          $scope.header = $stateParams.productName;
+        }
+        if ($stateParams.dashboardName) {
+          $scope.header += ('-' + $stateParams.dashboardName);
+        }
+        if ($stateParams.productRelease) {
+          $scope.header += ('-' + $stateParams.productRelease);
+        }
+
+      }
     },0);
 
     $scope.$watch(function (scope) {
       return Dashboards.selected.name;
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        $scope.dashboardName = Dashboards.selected.name;
+        if($stateParams.productName){
+          $scope.header = $stateParams.productName ;
+        }
+        if($stateParams.dashboardName){
+          $scope.header += ('-' + $stateParams.dashboardName);
+        }
+        if($stateParams.productRelease){
+          $scope.header += ('-' + $stateParams.productRelease);
+        }
       }
     });
 
@@ -48,9 +68,28 @@ angular.module('core').controller('HeaderController', [
       return Products.selected.name;
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        $scope.productName = Products.selected.name;
+
+          if($stateParams.productName){
+            $scope.header = $stateParams.productName ;
+          }
+          if($stateParams.dashboardName){
+            $scope.header += ('-' + $stateParams.dashboardName);
+          }
+          if($stateParams.productRelease){
+            $scope.header += ('-' + $stateParams.productRelease);
+          }
       }
     });
+
+
+
+    $scope.goHome = function(){
+
+      $scope.header = null;
+      $state.go('home');
+
+
+    }
 
 
     $scope.showTemplates = function(){

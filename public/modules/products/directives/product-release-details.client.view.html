@@ -48,38 +48,39 @@
 
 <md-content ng-repeat="testRun in product.releaseTestRuns track by $index">
 
-    <release-testrun-summary ng-attr-id="{{testRun.testRunId}}" testrun="testRun" index="$index"></release-testrun-summary>
 
-    <md-content >
 
-        <div class="md-padding" flex="75">
-            <h4>Related product requirement(s)</h4>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Stakeholder</th>
-                    <th>Requirement</th>
-                    <th>Result</th>
+    <!--<md-content >-->
 
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="requirement in testRun.requirements">
-                    <td>{{requirement.stakeholder}}</td>
-                    <td>{{requirement.description}}</td>
-                    <td class="pointer center"  ng-model="requirement.result">
-                        <span ng-if="editMode === true" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                              data-ng-click="toggleRequirementResult($parent.$index, $index)"  >
-                        </span>
-                        <span ng-if="editMode === false" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'">
-                        </span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </md-content>
+        <!--<div class="md-padding" flex="75">-->
+            <!--<h4>Related product requirement(s)</h4>-->
+            <!--<table class="table">-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th>Stakeholder</th>-->
+                    <!--<th>Requirement</th>-->
+                    <!--<th>Result</th>-->
 
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--<tr ng-repeat="requirement in testRun.requirements">-->
+                    <!--<td>{{requirement.stakeholder}}</td>-->
+                    <!--<td>{{requirement.description}}</td>-->
+                    <!--<td class="pointer center"  ng-model="requirement.result">-->
+                        <!--<span ng-if="editMode === true" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"-->
+                              <!--data-ng-click="toggleRequirementResult($parent.$index, $index)"  >-->
+                        <!--</span>-->
+                        <!--<span ng-if="editMode === false" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'">-->
+                        <!--</span>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+        <!--</div>-->
+    <!--</md-content>-->
+
+    <release-testrun-summary ng-attr-id="{{testRun.testRunId}}" testrun="testRun" index="$index" productrequirements="testRun.requirements" edit="editMode"></release-testrun-summary>
 
 </md-content>
 

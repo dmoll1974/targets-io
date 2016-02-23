@@ -7,7 +7,9 @@ function ReleaseTestRunSummaryDirective () {
   var directive = {
     scope: {
       testrun: '=',
-      index: '='
+      index: '=',
+      productrequirements: '=',
+      edit: '='
     },
 
     restrict: 'EA',
@@ -173,6 +175,11 @@ function ReleaseTestRunSummaryDirective () {
       return metricsInSummary.sort(Utils.dynamicSort('summaryIndex'));
     }
 
+
+    $scope.toggleRequirementResult = function (index){
+
+      $scope.productrequirements[index].result = !$scope.productrequirements[index].result;
+    }
 
 
     $scope.testRunDetails = function (testRun, requirement) {
