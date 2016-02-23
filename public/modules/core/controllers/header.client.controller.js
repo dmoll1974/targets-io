@@ -34,7 +34,6 @@ angular.module('core').controller('HeaderController', [
 
     /* get productName an dashboardName form $stateParams in case of deeplink */
     setTimeout(function(){
-      if (newVal !== oldVal) {
         if ($stateParams.productName) {
           $scope.header = $stateParams.productName;
         }
@@ -45,7 +44,7 @@ angular.module('core').controller('HeaderController', [
           $scope.header += ('-' + $stateParams.productRelease);
         }
 
-      }
+
     },0);
 
     $scope.$watch(function (scope) {

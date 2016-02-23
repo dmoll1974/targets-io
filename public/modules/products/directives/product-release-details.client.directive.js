@@ -96,7 +96,17 @@ function ProductReleaseDetailsDirective () {
 
 
 
+    $scope.addLink = function(){
 
+      Products.selectedRelease = $scope.product;
+      $state.go('addProductReleaseLink', {productName: $stateParams.productName, productRelease: $stateParams.productRelease});
+
+    }
+
+    $scope.removeLink = function(index){
+
+      $scope.product.releaseLinks.splice(index,1);
+    }
 
     $scope.toggleRequirementResult = function (parentIndex, index){
 

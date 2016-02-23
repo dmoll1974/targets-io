@@ -32,10 +32,22 @@ var ReleaseSchema = new Schema({
       ]
     }
   ],
+  releaseLinks :[
+    {
+      description: String,
+      url: String,
+      linkText: String,
+      openInNewTab: {
+        type: Boolean,
+        default: true
+      }
+    }
+  ],
   'requirements': [{
     stakeholder : String,
     description : String,
     result : Boolean,
+
     relatedTestRuns: [ {
       productName: String,
       dashboardName: String,

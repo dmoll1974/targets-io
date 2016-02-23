@@ -2,8 +2,7 @@
 <md-content layout="column">
     <div layout="row" layout-align="end center">
         <div id="summary-buttons" layout="row">
-            <!--<md-button  ng-if="editMode === true && releaseSaved === false" md-no-ink class="md-primary" data-ng-click="saveproductRelease()">Save</md-button>-->
-            <!--<md-button  ng-if="editMode === true && releaseSaved === true" md-no-ink class="md-primary" data-ng-click="updateproductRelease()">Update</md-button>-->
+            <md-button  ng-if="editMode === true" md-no-ink class="md-primary" data-ng-click="addLink()">Add link</md-button>
             <md-button ng-if="editMode === true && releaseSaved === true" class="md-warn" data-ng-click="openDeleteModal('', product)">Discard</md-button>
 
         </div>
@@ -24,9 +23,18 @@
                 <tr>
                     <td>Product release</td>
                     <td>{{product.productRelease}}</td>
-                <tr ng-if="product.productRelease.date">
-                    <td>Tests started</td>
-                    <td>{{product.productRelease.date | date:'EEEE, dd-M-yyyy'}}</td>
+                <tr ng-repeat="link in product.releaseLinks">
+                    <td>{{link.description}}</td>
+                    <td>
+                        <a ng-if="!link.openInNewTab" ng-href="{{link.url}}">{{link.linkText}}</a>
+                        <a ng-if="link.openInNewTab" target="_blank" ng-href="{{link.url}}">{{link.linkText}}</a>
+                    </td>
+                    <td ng-if="editMode === true">
+                        <md-icon style="margin-bottom: 5px;"  md-svg-src="images/assets/ic_clear_black_36px.svg"
+                                 data-ng-click="removeLink($index)">
+
+                        </md-icon>
+                    </td>
                 </tr>
 
 
@@ -49,38 +57,10 @@
 <md-content ng-repeat="testRun in product.releaseTestRuns track by $index">
 
 
-
-    <!--<md-content >-->
-
-        <!--<div class="md-padding" flex="75">-->
-            <!--<h4>Related product requirement(s)</h4>-->
-            <!--<table class="table">-->
-                <!--<thead>-->
-                <!--<tr>-->
-                    <!--<th>Stakeholder</th>-->
-                    <!--<th>Requirement</th>-->
-                    <!--<th>Result</th>-->
-
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody>-->
-                <!--<tr ng-repeat="requirement in testRun.requirements">-->
-                    <!--<td>{{requirement.stakeholder}}</td>-->
-                    <!--<td>{{requirement.description}}</td>-->
-                    <!--<td class="pointer center"  ng-model="requirement.result">-->
-                        <!--<span ng-if="editMode === true" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"-->
-                              <!--data-ng-click="toggleRequirementResult($parent.$index, $index)"  >-->
-                        <!--</span>-->
-                        <!--<span ng-if="editMode === false" ng-class="requirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'">-->
-                        <!--</span>-->
-                    <!--</td>-->
-                <!--</tr>-->
-                <!--</tbody>-->
-            <!--</table>-->
-        <!--</div>-->
-    <!--</md-content>-->
-
     <release-testrun-summary ng-attr-id="{{testRun.testRunId}}" testrun="testRun" index="$index" productrequirements="testRun.requirements" edit="editMode"></release-testrun-summary>
+
+    <br/>
+    <md-divider  ng-if="!$last"></md-divider>
 
 </md-content>
 

@@ -15,6 +15,7 @@ angular.module('products').factory('Products', [
       update: update,
       selected: {},
       selectedRequirement: {},
+      selectedRelease: {},
       /* product release services*/
       addProductRelease: addProductRelease,
       updateProductRelease: updateProductRelease,

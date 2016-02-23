@@ -28,6 +28,9 @@ angular.module('products').config([
     }).state('productReleaseDetails', {
       url: '/product-release-details/:productName/:productRelease',
       template: '<product-release-details></product-release-details>'
+    }).state('addProductReleaseLink', {
+      url: '/add-link/:productName/:productRelease',
+      template: '<add-product-release-link></add-product-release-link>'
     });
   }
 ]);
