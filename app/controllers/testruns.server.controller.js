@@ -542,7 +542,7 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
   });
 };
 
-let removeAndSaveTestRun = function(testRun){
+let upsertTestRun = function(testRun){
 
   return new Promise((resolve, reject) => {
 
@@ -578,7 +578,7 @@ function benchmarkAndPersistTestRunById(testRun) {
     .then(Requirements.setRequirementResultsForTestRun)
     .then(Benchmarks.setBenchmarkResultsPreviousBuildForTestRun)
     .then(Benchmarks.setBenchmarkResultsFixedBaselineForTestRun)
-    .then(removeAndSaveTestRun)
+    .then(upsertTestRun)
     .then(function(completedTestrun){
       resolve(completedTestrun);
     })

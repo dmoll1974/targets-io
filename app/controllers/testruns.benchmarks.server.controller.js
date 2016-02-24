@@ -22,8 +22,8 @@ function updateBenchmarkResults(testRun) {
 
   return new Promise((resolve, reject) => {
 
-    setBenchmarkResultsFixedBaselineForTestRun(testRun)
-    .then(setBenchmarkResultsPreviousBuildForTestRun)
+    setBenchmarkResultsPreviousBuildForTestRun(testRun)
+    .then(setBenchmarkResultsFixedBaselineForTestRun)
     .then(function (updatedTestRun) {
       /* Save updated test run */
 
@@ -33,7 +33,7 @@ function updateBenchmarkResults(testRun) {
               {dashboardName: updatedTestRun.dashboardName},
               {testRunId: updatedTestRun.testRunId}
             ]
-          }, {benchchmarkResultFixedOK: updatedTestRun.benchmarkResultFixedOK}
+          }, {benchmarkResultPreviousOK: updatedTestRun.benchmarkResultPreviousOK, benchmarkResultFixedOK: updatedTestRun.benchmarkResultFixedOK , metrics: updatedTestRun.metrics}
           , {upsert: true}, function (err, savedTestRun) {
             if(err !== null) {
               reject(err);

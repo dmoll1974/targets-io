@@ -68,7 +68,7 @@ function AddTestrunDirective () {
           .parent(angular.element('#submit'))
           .hideDelay(6000);
 
-      $mdToast.show(toast.content('Test run data is collected and saved ... (could take a while)')).then(function(response) {
+      $mdToast.show(toast.content('Test run data is being collected ... (could take a while)')).then(function(response) {
 
       });
 

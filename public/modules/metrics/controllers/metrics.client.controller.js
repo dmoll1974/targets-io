@@ -15,7 +15,8 @@ angular.module('metrics').controller('MetricsController', [
   'ConfirmModal',
   'TestRuns',
   'Graphite',
-  function ($scope, $modal, $log, $rootScope, $stateParams, $state, $timeout, $location, Authentication, Metrics, Dashboards, ConfirmModal, TestRuns, Graphite) {
+  '$mdToast',
+  function ($scope, $modal, $log, $rootScope, $stateParams, $state, $timeout, $location, Authentication, Metrics, Dashboards, ConfirmModal, TestRuns, Graphite, $mdToast) {
     $scope.authentication = Authentication;
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -120,7 +121,17 @@ angular.module('metrics').controller('MetricsController', [
         var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
         var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
         /* if requirement or benchmark values have changed, update test runs */
-        if ((updateRequirements || updateBenchmarks) && Dashboards.selected.useInBenchmark) {
+        if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top center')
+              .hideDelay(3000);
+
+          $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
+
+          });
           $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
             TestRuns.list = testRuns;
           });
@@ -171,7 +182,17 @@ angular.module('metrics').controller('MetricsController', [
         var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
 
         /* if requirement or benchmark vlaues have changed, update test runs */
-        if ((updateRequirements || updateBenchmarks) && Dashboards.selected.useInBenchmark) {
+        if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top center')
+              .hideDelay(3000);
+
+          $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
+
+          });
           $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
             TestRuns.list = testRuns;
             if ($rootScope.previousStateParams)

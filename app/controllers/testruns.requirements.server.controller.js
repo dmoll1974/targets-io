@@ -30,7 +30,7 @@ function updateRequirementResults(testRun) {
               {dashboardName: updatedTestRun.dashboardName},
               {testRunId: updatedTestRun.testRunId}
             ]
-          }, {benchchmarkResultFixedOK: updatedTestRun.benchmarkResultFixedOK}
+          }, {meetsRequirement: updatedTestRun.meetsRequirement, metrics: updatedTestRun.metrics}
           , {upsert: true}, function (err, savedTestRun) {
             if (err) {
               reject(err);
