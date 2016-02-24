@@ -170,22 +170,27 @@ angular.module('dashboards').controller('DashboardsController', [
       //dashboard.name = this.name;
       //dashboard.description = this.description;
       //dashboard.useInBenchmark = this.useInBenchmark;
-      Dashboards.create($scope.dashboard, $stateParams.productName).then(function (response) {
+      Dashboards.create($scope.dashboard, $stateParams.productName).success(function (dashboard) {
         /* Refresh sidebar */
+
+        Dashboards.selected = dashboard;
+
         Products.fetch().success(function (products) {
           $scope.products = Products.items;
+
+
           SideMenu.addProducts(products);
-          /* reset Test runs*/
+
+            /* reset Test runs*/
           TestRuns.list = [];
+
           $state.go('viewDashboard', {
             productName: $stateParams.productName,
-            dashboardName: response.data.name
+            dashboardName: Dashboards.selected.name
           });
-          $scope.productForm.$setPristine();  //
-                                              //// Clear form fields
-                                              //$scope.name = '';
-                                              //$scope.description = '';
-                                              //$scope.productName = '';
+
+          $scope.dashboardForm.$setPristine();  //
+
         });
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
