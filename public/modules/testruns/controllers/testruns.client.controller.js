@@ -285,8 +285,7 @@ angular.module('testruns').controller('TestrunsController', [
       // Make sure that the interval is destroyed too
       $interval.cancel(spinner);
       $interval.cancel(polling);
-      /* make sure Testruns.list is empty*/
-      TestRuns.list = [];
+
     });
     
     var originatorEv;

@@ -38,7 +38,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
 
 
-          scope.graph = new Dygraph(elem.children()[0], scope.data, scope.opts);
+          scope.graph = new Dygraph(elem.children()[0].children[1], scope.data, scope.opts);
 
 
           scope.graph.ready(function() {
@@ -137,46 +137,18 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
   function DygraphController($scope, $state, $stateParams, $rootScope, $timeout, TestRuns, Graphite, Events, Utils) {
 
     $scope.selectAll = true;
-    $scope.showLegend =  Utils.showLegend;
+    $scope.showLegend =  true;
     $scope.horizontalZoom = true;
 
     var clickDetected = false;
 
-    /* set zoomLock */
+    /* set zoomLock to false */
+    $scope.zoomLock =  false;
 
-    $scope.zoomLock =  Utils.zoomLock;
+    $scope.graphType =  'testrun';
 
-    /* watch zoomLock */
 
-    $scope.$watch(function (scope) {
-      return Utils.zoomLock;
-    }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
 
-        $scope.zoomLock =  Utils.zoomLock;
-      }
-    });
-
-    /* toggle showLegend*/
-    $scope.$watch(function (scope) {
-      return Utils.showLegend;
-    }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-
-        $scope.showLegend =  Utils.showLegend;
-      }
-    });
-
-    /* hide legend when switching to two column view*/
-
-    //$scope.$watch(function (scope) {
-    //  return Utils.numberOfColums;
-    //}, function (newVal, oldVal) {
-    //  if (newVal !== oldVal) {
-    //
-    //    if(newVal == '2' || newVal == '3' ) $scope.showLegend =  false;
-    //  }
-    //});
 
     /* watch zoomRange */
     $scope.$watch(function (scope) {
@@ -209,7 +181,6 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
     setTimeout(function(){
 
-      $scope.graphType =  Utils.graphType;
       $scope.showProgressBar = true;
 
       drawDypraph($scope.graphType);
@@ -392,6 +363,8 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       var fromBeforeZoom = (Utils.zoomFrom) ? Utils.zoomFrom : TestRuns.selected.startEpoch;
       var untilBeforeZoom = (Utils.zoomUntil) ? Utils.zoomUntil : TestRuns.selected.endEpoch;
 
+      $scope.graphZoomed = true;
+
       /* determine if horizontalZoom has been done*/
 
       $scope.horizontalZoom = ((maxDate - minDate)/(untilBeforeZoom - fromBeforeZoom)) > 0.99 ? false : true;
@@ -404,6 +377,19 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
     }
 
 
+    $scope.resetZoom = function(){
+
+      /* reset from and until */
+      Utils.zoomFrom = TestRuns.selected.startEpoch;
+      Utils.zoomUntil= TestRuns.selected.endEpoch;
+
+      /* set graph to unzoomed */
+      $scope.graphZoomed = false;
+
+      /* redraw graph */
+
+      drawDypraph($scope.graphType);
+    }
 
     function synchronizeWithDataPoint (annotationFromEvent){
 
