@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
     requestjson = require('request-json'),
     config = require('../../config/config'),
     Memcached = require('memcached'),
+    GraphiteCache = mongoose.model('GraphiteCache'),
     md5 = require('MD5');
 /* Memcached config */
 Memcached.config.poolSize = 512;
@@ -17,8 +18,8 @@ Memcached.config.retries = 3;
 Memcached.config.reconnect = 1000;
 Memcached.config.maxValue = 10480000;
 exports.getGraphiteData = getGraphiteData;
-exports.flushMemcachedKey = flushMemcachedKey;
-exports.createMemcachedKey = createMemcachedKey;
+exports.flushMemcachedKey = flushGraphiteCacheKey;
+exports.createMemcachedKey = creategraphiteCacheKey;
 
 /**
  * Find metrics
@@ -66,7 +67,7 @@ exports.getData = function (req, res) {
 };
 function getGraphiteData(from, until, targets, maxDataPoints, callback) {
   /* memcached stuff*/
-  var memcachedKey = createMemcachedKey(from, until, targets);
+  var graphiteCacheKey = creategraphiteCacheKey(from, until, targets);
   var memcached = new Memcached(config.memcachedHost);
   var graphiteTargetUrl = createUrl(from, until, targets, maxDataPoints);
   var client = requestjson.createClient(config.graphiteHost);
@@ -83,14 +84,43 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
       }
     });
   } else {
-    /* first check memcached */
-    memcached.get(memcachedKey, function (err, result) {
+    ///* first check memcached */
+    //memcached.get(graphiteCacheKey, function (err, result) {
+    //  if (err)
+    //    console.error('memcached error: ' + err);
+    //  if (result && !err) {
+    //    console.dir('cache hit: ' + graphiteCacheKey);
+    //    callback(result);
+    //    memcached.end();
+    //  } else {
+    //    //console.log(graphiteTargetUrl);
+    //    /* if no cache hit, go to graphite back end */
+    //    client.get(graphiteTargetUrl, function (err, response, body) {
+    //      if (err) {
+    //        callback([]);
+    //      } else {
+    //        callback(body);
+    //        /* add to memcached if it is a valid response */
+    //        if (body != '[]' && body.length > 0 && response.statusCode == 200) {
+    //          memcached.set(graphiteCacheKey, body, 3600 * 24 * 7, function (err, result) {
+    //            if (err)
+    //              console.error(err);
+    //            console.dir('key set ' + graphiteCacheKey + ' : ' + result);
+    //            memcached.end();
+    //          });
+    //        }
+    //      }
+    //    });
+    //  }
+    //});
+    /* first check Graphite cache in mongo */
+    GraphiteCache.findOne({key: graphiteCacheKey}).exec(function(err, result){
       if (err)
-        console.error('memcached error: ' + err);
+        console.error('graphite cache error: ' + err);
       if (result && !err) {
-        console.dir('cache hit: ' + memcachedKey);
-        callback(result);
-        memcached.end();
+        console.dir('cache hit: ' + graphiteCacheKey);
+        callback(result.value);
+
       } else {
         //console.log(graphiteTargetUrl);
         /* if no cache hit, go to graphite back end */
@@ -101,12 +131,16 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
             callback(body);
             /* add to memcached if it is a valid response */
             if (body != '[]' && body.length > 0 && response.statusCode == 200) {
-              memcached.set(memcachedKey, body, 3600 * 24 * 7, function (err, result) {
+              var graphiteCacheItem = new GraphiteCache({key: graphiteCacheKey, value: body });
+
+              graphiteCacheItem.save(function(err, savedItem){
+
                 if (err)
                   console.error(err);
-                console.dir('key set ' + memcachedKey + ' : ' + result);
-                memcached.end();
-              });
+                console.dir('key set: ' + graphiteCacheKey);
+
+              })
+
             }
           }
         });
@@ -125,23 +159,23 @@ function createUrl(from, until, targets, maxDataPoints) {
   }
   return graphiteTargetUrl;
 }
-function createMemcachedKey(from, until, targets) {
-  var memcachedKey;
-  var hashedMemcachedKey;
-  memcachedKey = from.toString() + until.toString();
+function creategraphiteCacheKey(from, until, targets) {
+  var graphiteCacheKey;
+  var hashedGraphiteCacheKey;
+  graphiteCacheKey = from.toString() + until.toString();
   if (_.isArray(targets)) {
     targets.sort();
     _.each(targets, function (target) {
-      memcachedKey += target;
+      graphiteCacheKey += target;
     });
   } else {
-    memcachedKey += targets;
+    graphiteCacheKey += targets;
   }
-  //    console.log("raw key:" + memcachedKey)
-  hashedMemcachedKey = md5(memcachedKey);
-  return hashedMemcachedKey;  //    return memcachedKey.replace(/\s/g,'');
+  //    console.log("raw key:" + graphiteCacheKey)
+  hashedGraphiteCacheKey = md5(graphiteCacheKey);
+  return hashedGraphiteCacheKey;  //    return graphiteCacheKey.replace(/\s/g,'');
 }
-function flushMemcachedKey(key, callback) {
+function flushGraphiteCacheKey(key, callback) {
   var memcached = new Memcached(config.memcachedHost);
   memcached.del(key, function (err, result) {
     if (err)

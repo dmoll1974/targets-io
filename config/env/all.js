@@ -8,6 +8,7 @@ module.exports = {
 	},
 	graphiteHost: 'http://localhost:8090',
 	graphiteRetentionPeriod: '90d', /*90 days*/
+	graphiteCacheTTL: '7d', /*7 days*/
 	db: 'mongodb://mongodb/targets-io-dev',
 	memcachedHost: [ 'localhost:11211'],
 	port: process.env.PORT || 3000,
