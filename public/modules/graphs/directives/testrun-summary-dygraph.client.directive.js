@@ -19,18 +19,18 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
     link: function(scope, elem, attrs) {
 
       scope.$watch('loading', function (newVal, oldVal) {
-        if (newVal !== oldVal && newVal !== true) {
+        if (/*newVal !== oldVal && */newVal !== true) {
 
 
           /* if no data , set title to 'No data available'*/
 
           if(scope.metric.graphNumberOfValidDatapoints === 0){
 
-            if(scope.data.length > 0){
+            if(scope.metric.data.length > 0){
 
               scope.opts.title = 'No data available';
             }else {
-              scope.data = 'X\n';
+              scope.metric.data = 'X\n';
               scope.opts.title = 'Error, check your Graphite query';
             }
           }
@@ -38,7 +38,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
 
 
-          scope.graph = new Dygraph(elem.children()[0].children[1], scope.data, scope.opts);
+          scope.graph = new Dygraph(elem.children()[0].children[1], scope.metric.data, scope.opts);
 
 
           scope.graph.ready(function() {
@@ -144,8 +144,10 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
     /* set zoomLock to false */
     $scope.zoomLock =  false;
-
     $scope.graphType =  'testrun';
+
+    $scope.showProgressBar = true;
+    $scope.loading = true;
 
 
 
@@ -179,147 +181,131 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       }
     });
 
-    setTimeout(function(){
 
-      $scope.showProgressBar = true;
 
-      drawDypraph($scope.graphType);
+    //setTimeout(function(){
 
-    });
 
+
+
+      /* if dygraphData is already available form db, and we are not zooming, use the data from db */
+
+    //setTimeout(function(){
+
+
+      if($scope.metric.dygraphData && !$scope.graphZoomed){
+
+        console.log('Drawing graph from persisted data!')
+        processGraphData(convertTimeStamps($scope.metric.dygraphData));
+
+      }else {
+
+
+        drawDypraph($scope.graphType);
+      }
+    //});
+
+    function convertTimeStamps(dygraphData){
+
+      _.each(dygraphData.data, function(dataline){
+
+            dataline[0] = new Date(dataline[0]);
+      })
+
+      return dygraphData;
+    }
+
+    function processGraphData(dygraphData) {
+
+      $scope.opts = {
+        connectSeparatedPoints: true,
+        labels: dygraphData.labels,
+        axisLabelFontSize: 12,
+        legend: 'never',
+        includeZero: true,
+        valueRange: $scope.yRange,
+        highlightCircleSize: 0,
+        highlightSeriesOpts: {
+          strokeWidth: 2
+        },
+        highlightCallback: highLightLegend,
+        unhighlightCallback: unHighLightLegend,
+        axes: {
+          x: {
+            axisLabelFormatter: Dygraph.dateAxisLabelFormatter,
+            valueFormatter: Dygraph.dateString_
+          }
+        },
+        underlayCallback: createUnderlayFormEvents,
+        //clickCallback: createEventFromClick,
+        //zoomCallback: zoomGraph
+      };
+
+      $scope.metric.dygraphData = dygraphData;
+      $scope.metric.data = dygraphData.data;
+      $scope.metric.legendData = dygraphData.legendData;
+      $scope.yRange = ($scope.zoomedYRange) ? $scope.zoomedYRange : [0, dygraphData.maxValue];
+
+      /* synchronyze anotations with datapoints */
+
+      _.each(dygraphData.annotations, function (annotation) {
+
+        annotation = synchronizeWithDataPoint(annotation);
+      })
+
+
+      $scope.metric.annotations = dygraphData.annotations;
+      $scope.metric.graphNumberOfValidDatapoints = dygraphData.graphNumberOfValidDatapoints;
+
+      $scope.loading = false;
+      $scope.showProgressBar = false;
+
+    }
 
     function drawDypraph(graphType)  {
 
-      $scope.loading = true;
+        switch (graphType) {
 
-      switch(graphType){
+          case 'testrun':
 
-        case 'testrun':
+            TestRuns.getTestRunById($scope.testrun.productName, $scope.testrun.dashboardName, $scope.testrun.testRunId).success(function (testRun) {
+              TestRuns.selected = testRun;
+              var from = Utils.zoomFrom ? Utils.zoomFrom : TestRuns.selected.startEpoch;
+              var until = Utils.zoomUntil ? Utils.zoomUntil : TestRuns.selected.endEpoch;
 
-          TestRuns.getTestRunById($scope.testrun.productName, $scope.testrun.dashboardName, $scope.testrun.testRunId).success(function (testRun) {
-            TestRuns.selected = testRun;
-            var from = Utils.zoomFrom ? Utils.zoomFrom : TestRuns.selected.startEpoch;
-            var until = Utils.zoomUntil ? Utils.zoomUntil : TestRuns.selected.endEpoch;
+              processGraph(from, until);
+
+            });
+
+            break;
+
+          case 'live-graph':
+
+            $scope.zoomRange = Utils.zoomRange;
+
+            var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange;
+            var until = Utils.zoomUntil ? Utils.zoomUntil : 'now';
 
             processGraph(from, until);
 
+            break;
+        }
+
+        function processGraph(from, until) {
+
+          getGraphData(from, until, $scope.metric.targets, function (dygraphData) {
+
+            processGraphData(dygraphData);
           });
 
-          break;
-
-        case 'live-graph':
-
-          $scope.zoomRange =  Utils.zoomRange;
-            
-          var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange;
-          var until = Utils.zoomUntil ? Utils.zoomUntil : 'now';
-
-          processGraph(from, until);
-
-          break;
-      }
-
-      function processGraph(from, until)
-      {
-
-        updateGraph(from, until, $scope.metric.targets, function (dygraphData) {
-
-          $scope.opts = {
-            connectSeparatedPoints: true,
-            labels: dygraphData.labels,
-            axisLabelFontSize: 12,
-            legend: 'never',
-            includeZero: true,
-            valueRange: $scope.yRange,
-            highlightCircleSize: 0,
-            highlightSeriesOpts: {
-              strokeWidth: 2
-            },
-            highlightCallback: highLightLegend,
-            unhighlightCallback: unHighLightLegend,
-            axes: {
-              x: {
-                axisLabelFormatter: Dygraph.dateAxisLabelFormatter,
-                valueFormatter: Dygraph.dateString_
-              }
-            },
-            underlayCallback: createUnderlayFormEvents,
-            clickCallback: createEventFromClick,
-            zoomCallback: zoomGraph
-          };
-
-          $scope.data = dygraphData.data;
-          $scope.metric.legendData = dygraphData.legendData;
-          $scope.yRange = ($scope.zoomedYRange) ? $scope.zoomedYRange : [0,dygraphData.maxValue ];
-
-          /* synchronyze anotations with datapoints */
-
-          _.each(dygraphData.annotations, function (annotation) {
-
-            annotation = synchronizeWithDataPoint(annotation);
-          })
-
-
-          $scope.metric.annotations = dygraphData.annotations;
-          $scope.metric.graphNumberOfValidDatapoints = dygraphData.graphNumberOfValidDatapoints;
-
-          $scope.loading = false;
-          $scope.showProgressBar = false;
-
-          /* if selected series is provided, show this series only */
-          if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === $scope.metric.alias) {
-
-            $scope.selectAll = false;
-
-              _.each($scope.metric.legendData, function(legendItem, i){
-
-                if(legendItem.name === TestRuns.selectedSeries ) {
-
-                  $scope.metric.legendData[i].visible = true;
-
-                }else{
-
-                  $scope.metric.legendData[i].visible = false;
-
-                }
-
-              })
-
-
-          }
-
-          /* in case of live graphs set interval */
-          if($scope.graphType === 'live-graph' &&  Interval.active.map(function(interval){return interval.metricId}).indexOf($scope.metric._id) === -1){
-
-            var intervalId = setInterval(function () {
-
-              drawDypraph($scope.graphType);
-
-            }, 10000);
-
-            Interval.active.push({
-              intervalId: intervalId,
-              metricId: $scope.metric._id
-            });
-
-            /* if zoomrange execeeds 3h, don't update graph due to bad performance*/
-
-            if(!($scope.zoomRange === '-10min' || $scope.zoomRange === '-30min' || $scope.zoomRange === '-1h' || $scope.zoomRange === '-3h' )){
-              Interval.clearAll();
-            }
-
-          }
-        });
-
-      }
-
+        }
 
     }
 
     function createUnderlayFormEvents  (canvas, area, g) {
-      if($scope.data.length > 0) {
+      if($scope.metric.data.length > 0) {
         /* get full range of graph to determine width of underlay */
-        var xAxisRange = new Date($scope.data[$scope.data.length - 1][0]).getTime() - new Date($scope.data[0][0]).getTime();
+        var xAxisRange = new Date($scope.metric.data[$scope.metric.data.length - 1][0]).getTime() - new Date($scope.metric.data[0][0]).getTime();
         _.each($scope.metric.annotations, function (annotation) {
           var bottom_left = g.toDomCoords(annotation.x, -20);
           var top_right = g.toDomCoords(annotation.x + (xAxisRange / 800), +20);
@@ -360,46 +346,51 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
     function zoomGraph(minDate, maxDate, yRange){
 
-      var fromBeforeZoom = (Utils.zoomFrom) ? Utils.zoomFrom : TestRuns.selected.startEpoch;
-      var untilBeforeZoom = (Utils.zoomUntil) ? Utils.zoomUntil : TestRuns.selected.endEpoch;
+      //var fromBeforeZoom = (Utils.zoomFrom) ? Utils.zoomFrom : TestRuns.selected.startEpoch;
+      //var untilBeforeZoom = (Utils.zoomUntil) ? Utils.zoomUntil : TestRuns.selected.endEpoch;
 
       $scope.graphZoomed = true;
 
       /* determine if horizontalZoom has been done*/
 
-      $scope.horizontalZoom = ((maxDate - minDate)/(untilBeforeZoom - fromBeforeZoom)) > 0.99 ? false : true;
-
-
-      Utils.zoomFrom = Math.round(minDate);
-      Utils.zoomUntil= Math.round(maxDate);
-      $scope.zoomedYRange = [Math.round(yRange[0][0]),Math.round(yRange[0][1])];
-       drawDypraph($scope.graphType);
+      //$scope.horizontalZoom = ((maxDate - minDate)/(untilBeforeZoom - fromBeforeZoom)) > 0.99 ? false : true;
+      //
+      //
+      //Utils.zoomFrom = Math.round(minDate);
+      //Utils.zoomUntil= Math.round(maxDate);
+      //$scope.zoomedYRange = [Math.round(yRange[0][0]),Math.round(yRange[0][1])];
+      // drawDypraph($scope.graphType);
     }
 
 
     $scope.resetZoom = function(){
 
       /* reset from and until */
-      Utils.zoomFrom = TestRuns.selected.startEpoch;
-      Utils.zoomUntil= TestRuns.selected.endEpoch;
+      //Utils.zoomFrom = TestRuns.selected.startEpoch;
+      //Utils.zoomUntil= TestRuns.selected.endEpoch;
 
       /* set graph to unzoomed */
       $scope.graphZoomed = false;
 
+      $scope.graph.updateOptions({
+        dateWindow: null,
+        valueRange: null
+      });
       /* redraw graph */
 
-      drawDypraph($scope.graphType);
+
+      //drawDypraph($scope.graphType);
     }
 
     function synchronizeWithDataPoint (annotationFromEvent){
 
       var synchronizedAnnotationTimestamp = annotationFromEvent ;
 
-      for(var i=0;i < $scope.data.length; i++){
+      for(var i=0;i < $scope.metric.data.length; i++){
 
-        if(new Date($scope.data[i][0]).getTime() > annotationFromEvent.x){
+        if(new Date($scope.metric.data[i][0]).getTime() > annotationFromEvent.x){
 
-          synchronizedAnnotationTimestamp.x = new Date($scope.data[i][0]).getTime();
+          synchronizedAnnotationTimestamp.x = new Date($scope.metric.data[i][0]).getTime();
           break;
         }
       }
@@ -443,7 +434,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       $scope.graph.setSelection(false, seriesName)
     }
 
-    function updateGraph(from, until, targets, callback) {
+    function getGraphData(from, until, targets, callback) {
       Graphite.getData(from, until, targets, 900).then(function (series) {
         if (series.data.length > 0) {
           Graphite.addEvents(series, from, until, $scope.testrun.productName, $scope.testrun.dashboardName, $scope.testrun.testRunId).then(function (seriesEvents) {
