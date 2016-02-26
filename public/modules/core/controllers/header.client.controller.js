@@ -10,7 +10,9 @@ angular.module('core').controller('HeaderController', [
   'Dashboards',
   'Products',
   '$stateParams',
-  function ($scope, Authentication, Menus, $location, $http, $window, $state, Dashboards, Products, $stateParams) {
+  '$mdToast',
+  'Utils',
+  function ($scope, Authentication, Menus, $location, $http, $window, $state, Dashboards, Products, $stateParams, $mdToast, Utils) {
     $scope.authentication = Authentication;
     $scope.isCollapsed = false;
     $scope.menu = Menus.getMenu('topbar');
@@ -102,6 +104,23 @@ angular.module('core').controller('HeaderController', [
       $state.go('gettingStarted');
 
     };
+
+    $scope.flushGraphiteCache = function(){
+
+        Utils.flushGraphiteCache().success(function(){
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top center')
+              .hideDelay(3000);
+
+          $mdToast.show(toast.content('Graphite cache has been flushed!')).then(function(response) {
+
+          });
+        })
+    };
+
 
 
     var originatorEv;

@@ -21,11 +21,28 @@ exports.getGraphiteData = getGraphiteData;
 exports.flushGraphiteCacheKey = flushGraphiteCacheKey;
 exports.createGraphiteCacheKey = createGraphiteCacheKey;
 
+
+
+exports.flushGraphiteCache = function(req, res){
+
+
+  GraphiteCache.remove({}, function (err) {
+    if (err)
+      console.log(err)
+    else
+      res.jsonp({"message": 'Graphite cache has been flushed!'})
+
+  });
+}
 /**
  * Find metrics
  */
 
+
 exports.findMetrics = function (req, res) {
+
+
+
 
 
   // Set the headers
