@@ -175,7 +175,7 @@ function createGraphiteCacheKey(from, until, targets) {
   hashedGraphiteCacheKey = md5(graphiteCacheKey);
   return hashedGraphiteCacheKey;  //    return graphiteCacheKey.replace(/\s/g,'');
 }
-function flushGraphiteCacheKey(key, callback) {
+function flushGraphiteCacheKey(graphiteCacheKey, callback) {
 
   GraphiteCache.remove({key: graphiteCacheKey}).exec(function(err, result){
     if (err)
