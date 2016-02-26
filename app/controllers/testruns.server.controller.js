@@ -613,7 +613,7 @@ function flushMemcachedForTestRun(testRun, callback){
 
                 _.each(metric.targets, function(target){
 
-                  graphite.flushMemcachedKey(graphite.createMemcachedKey(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target), function(){
+                  graphite.flushGraphiteCacheKey(graphite.createGraphiteCacheKey(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target), function(){
 
                     });
                 });

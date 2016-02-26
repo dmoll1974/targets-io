@@ -18,8 +18,8 @@ Memcached.config.retries = 3;
 Memcached.config.reconnect = 1000;
 Memcached.config.maxValue = 10480000;
 exports.getGraphiteData = getGraphiteData;
-exports.flushMemcachedKey = flushGraphiteCacheKey;
-exports.createMemcachedKey = creategraphiteCacheKey;
+exports.flushGraphiteCacheKey = flushGraphiteCacheKey;
+exports.createGraphiteCacheKey = createGraphiteCacheKey;
 
 /**
  * Find metrics
@@ -67,7 +67,7 @@ exports.getData = function (req, res) {
 };
 function getGraphiteData(from, until, targets, maxDataPoints, callback) {
   /* memcached stuff*/
-  var graphiteCacheKey = creategraphiteCacheKey(from, until, targets);
+  var graphiteCacheKey = createGraphiteCacheKey(from, until, targets);
   var memcached = new Memcached(config.memcachedHost);
   var graphiteTargetUrl = createUrl(from, until, targets, maxDataPoints);
   var client = requestjson.createClient(config.graphiteHost);
@@ -159,7 +159,7 @@ function createUrl(from, until, targets, maxDataPoints) {
   }
   return graphiteTargetUrl;
 }
-function creategraphiteCacheKey(from, until, targets) {
+function createGraphiteCacheKey(from, until, targets) {
   var graphiteCacheKey;
   var hashedGraphiteCacheKey;
   graphiteCacheKey = from.toString() + until.toString();
@@ -176,12 +176,24 @@ function creategraphiteCacheKey(from, until, targets) {
   return hashedGraphiteCacheKey;  //    return graphiteCacheKey.replace(/\s/g,'');
 }
 function flushGraphiteCacheKey(key, callback) {
-  var memcached = new Memcached(config.memcachedHost);
-  memcached.del(key, function (err, result) {
+
+  GraphiteCache.remove({key: graphiteCacheKey}).exec(function(err, result){
     if (err)
-      callback(err);
-    console.info('deleted key: ' + key + ' : ' + result);
-    callback();
+      console.error('graphite cache flush error: ' + err);
+    else (result && !err)
+    {
+      console.dir('cache flushed for key: ' + graphiteCacheKey);
+      callback();
+    }
   });
-  memcached.end();  // as we are 100% certain we are not going to use the connection again, we are going to end it
+  //
+  //
+  //    var memcached = new Memcached(config.memcachedHost);
+  //memcached.del(key, function (err, result) {
+  //  if (err)
+  //    callback(err);
+  //  console.info('deleted key: ' + key + ' : ' + result);
+  //  callback();
+  //});
+  //memcached.end();  // as we are 100% certain we are not going to use the connection again, we are going to end it
 }
