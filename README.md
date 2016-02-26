@@ -27,7 +27,6 @@ This fires up 7 docker containers:
 | targets-io 	| Performance dashboard application                      	| 3000  	|
 | mongodb    	| Database to store dashboard configurations           		| 27017 	|
 | graphite   	| Time based series database                             	| 8090  	|
-| memcached  	| Distributed cache between targets-io and Graphite      	| 11211 	|
 | jenkins    	| CI server to start demo Gatling and Jmeter scripts     	| 8070  	|
 | dropwizard 	| Demo rest application to run performance tests against 	| 8080  	|
 | jmxtrans   	| Pushes dropwizard JVM metrics to graphite              	| n/a   	|
