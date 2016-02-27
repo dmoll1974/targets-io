@@ -19,7 +19,7 @@ console.log ("graphite host: " + config.graphiteHost)
 
 
 // Bootstrap db connection
-var db = mongoose.createConnection(config.db, function(err) {
+global.db = mongoose.createConnection(config.db, function(err) {
 	if (err) {
 		console.error(chalk.red('Could not connect to db!'));
 		console.log(chalk.red(err));
