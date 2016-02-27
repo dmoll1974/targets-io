@@ -26,6 +26,14 @@ global.db = mongoose.createConnection(config.db, function(err) {
 	}
 });
 
+// Bootstrap cacheDb connection
+global.cacheDb = mongoose.createConnection(config.cacheDb, function(err) {
+	if (err) {
+		console.error('Could not connect to cacheDb!');
+		console.log(err);
+	}
+});
+
 
 if(cluster.isMaster) {
 	var numWorkers = (require('os').cpus().length - 1 > 0) ? require('os').cpus().length - 1 : 1; /* save one core for daemon, unless there is only one core */

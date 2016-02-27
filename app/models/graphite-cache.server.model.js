@@ -7,13 +7,6 @@ var mongoose = require('mongoose'),
     config = require('../../config/config');
 
 
-// Bootstrap cacheDb connection
- var cacheDb = mongoose.createConnection(config.cacheDb, function(err) {
-  if (err) {
-    console.error('Could not connect to cacheDb!');
-    console.log(err);
-  }
-});
 
 var Mixed = Schema.Types.Mixed;
 
