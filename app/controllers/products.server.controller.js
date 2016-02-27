@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Product = mongoose.model('Product'), _ = require('lodash');
+var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Product = db.model('Product'), _ = require('lodash');
 /**
  * Create a Product
  */

@@ -5,11 +5,11 @@
 var mongoose = require('mongoose'),
     _ = require('lodash'),
     fs = require('fs'),
-    Event = mongoose.model('Event'),
-    Dashboard = mongoose.model('Dashboard'),
-    Product = mongoose.model('Product'),
-    Testrun = mongoose.model('Testrun'),
-    Metric = mongoose.model('Metric'),
+    Event = db.model('Event'),
+    Dashboard = db.model('Dashboard'),
+    Product = db.model('Product'),
+    Testrun = db.model('Testrun'),
+    Metric = db.model('Metric'),
     async = require('async');
 
 function upload(req, res) {

@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Metric = mongoose.model('Metric'), testruns = require('./testruns.server.controller.js'), _ = require('lodash');
+var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Metric = db.model('Metric'), testruns = require('./testruns.server.controller.js'), _ = require('lodash');
 /**
  * Create a Metric
  */

@@ -4,10 +4,10 @@
  */
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
-    Event = mongoose.model('Event'),
-    Testrun = mongoose.model('Testrun'),
-    Dashboard = mongoose.model('Dashboard'),
-    Product = mongoose.model('Product'),
+    Event = db.model('Event'),
+    Testrun = db.model('Testrun'),
+    Dashboard = db.model('Dashboard'),
+    Product = db.model('Product'),
     testruns = require('./testruns.server.controller.js'),
     _ = require('lodash'),
     runningTest = require('./running-test.server.controller');

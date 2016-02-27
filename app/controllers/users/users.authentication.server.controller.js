@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var _ = require('lodash'), errorHandler = require('../errors.server.controller'), mongoose = require('mongoose'), passport = require('passport'), User = mongoose.model('User');
+var _ = require('lodash'), errorHandler = require('../errors.server.controller'), mongoose = require('mongoose'), passport = require('passport'), User = db.model('User');
 /**
  * Signup
  */

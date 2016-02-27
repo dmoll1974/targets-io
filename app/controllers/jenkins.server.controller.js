@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     requestjson = require('request-json'),
     config = require('../../config/config'),
     Memcached = require('memcached'),
-    GatlingDetails = mongoose.model('GatlingDetails');
+    GatlingDetails = db.model('GatlingDetails');
 
 exports.getConsoleData = function (req, res) {
   var memcached = new Memcached(config.memcachedHost);

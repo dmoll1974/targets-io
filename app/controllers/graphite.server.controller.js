@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
     requestjson = require('request-json'),
     config = require('../../config/config'),
     Memcached = require('memcached'),
-    GraphiteCache = mongoose.model('GraphiteCache'),
+    GraphiteCache = cacheDb.model('GraphiteCache'),
     md5 = require('MD5');
 /* Memcached config */
 Memcached.config.poolSize = 512;

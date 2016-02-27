@@ -4,7 +4,7 @@
  */
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
-    Release = mongoose.model('Release'),
+    Release = db.model('Release'),
     _ = require('lodash');
 
 

@@ -5,18 +5,18 @@
  */
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
-    Event = mongoose.model('Event'),
-    Testrun = mongoose.model('Testrun'),
-    Dashboard = mongoose.model('Dashboard'),
-    Product = mongoose.model('Product'),
+    Event = db.model('Event'),
+    Testrun = db.model('Testrun'),
+    Dashboard = db.model('Dashboard'),
+    Product = db.model('Product'),
     _ = require('lodash'),
     graphite = require('./graphite.server.controller'),
     Utils = require('./utils.server.controller'),
     Requirements = require('./testruns.requirements.server.controller'),
     Benchmarks = require('./testruns.benchmarks.server.controller'),
-    Metric = mongoose.model('Metric'),
+    Metric = db.model('Metric'),
     async = require('async'),
-    RunningTest = mongoose.model('RunningTest'),
+    RunningTest = db.model('RunningTest'),
     ss = require('simple-statistics');
 
 

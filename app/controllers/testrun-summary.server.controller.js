@@ -5,7 +5,7 @@
  */
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
-    TestrunSummary = mongoose.model('TestrunSummary'),
+    TestrunSummary = db.model('TestrunSummary'),
     _ = require('lodash'),
     Utils = require('./utils.server.controller');
 

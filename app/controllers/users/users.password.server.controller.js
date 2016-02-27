@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var _ = require('lodash'), errorHandler = require('../errors.server.controller'), mongoose = require('mongoose'), passport = require('passport'), User = mongoose.model('User'), config = require('../../../config/config'), nodemailer = require('nodemailer'), async = require('async'), crypto = require('crypto');
+var _ = require('lodash'), errorHandler = require('../errors.server.controller'), mongoose = require('mongoose'), passport = require('passport'), User = db.model('User'), config = require('../../../config/config'), nodemailer = require('nodemailer'), async = require('async'), crypto = require('crypto');
 /**
  * Forgot for reset password (forgot POST)
  */

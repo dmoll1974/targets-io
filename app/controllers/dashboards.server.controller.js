@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), Metric = mongoose.model('Metric'), _ = require('lodash');
+var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Dashboard = db.model('Dashboard'), Product = db.model('Product'), Metric = db.model('Metric'), _ = require('lodash');
 exports.clone = function (req, res) {
   var dashboardClone = new Dashboard();
   var metricCloneArray = [];

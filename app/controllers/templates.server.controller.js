@@ -4,9 +4,9 @@
  */
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
-    Metric = mongoose.model('Metric'),
-    Product = mongoose.model('Product'),
-    Template = mongoose.model('Template'),
+    Metric = db.model('Metric'),
+    Product = db.model('Product'),
+    Template = db.model('Template'),
     _ = require('lodash'),
     async = require('async');
 

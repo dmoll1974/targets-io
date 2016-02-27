@@ -4,11 +4,11 @@
  */
 var mongoose = require('mongoose');
 var _ = require('lodash');
-var RunningTest = mongoose.model('RunningTest');
-var Event = mongoose.model('Event');
-var Testrun = mongoose.model('Testrun');
-var Dashboard = mongoose.model('Dashboard');
-var Product = mongoose.model('Product');
+var RunningTest = db.model('RunningTest');
+var Event = db.model('Event');
+var Testrun = db.model('Testrun');
+var Dashboard = db.model('Dashboard');
+var Product = db.model('Product');
 var testRunsModule = require('./testruns.server.controller');
 
 

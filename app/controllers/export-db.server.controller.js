@@ -5,15 +5,15 @@
 var mongoose = require('mongoose'),
     _ = require('lodash'),
     fs = require('fs'),
-    Event = mongoose.model('Event'),
-    Testrun = mongoose.model('Testrun'),
-    Dashboard = mongoose.model('Dashboard'),
-    Product = mongoose.model('Product'),
-    Metric = mongoose.model('Metric'),
-    GatlingDetails = mongoose.model('GatlingDetails'),
-    Release = mongoose.model('Release'),
-    TestrunSummary = mongoose.model('TestrunSummary'),
-    Template = mongoose.model('Template');
+    Event = db.model('Event'),
+    Testrun = db.model('Testrun'),
+    Dashboard = db.model('Dashboard'),
+    Product = db.model('Product'),
+    Metric = db.model('Metric'),
+    GatlingDetails = db.model('GatlingDetails'),
+    Release = db.model('Release'),
+    TestrunSummary = db.model('TestrunSummary'),
+    Template = db.model('Template');
 
 var wstream = fs.createWriteStream('myOutput.txt');
 module.exports.dbExport = function (req, res) {
