@@ -21,4 +21,4 @@ gatlingDetailsSchema.on('index', function(err) {
   }
 });
 
-module.exports = mongoose.model('GatlingDetails', gatlingDetailsSchema);
+db.model('GatlingDetails', gatlingDetailsSchema);

@@ -66,4 +66,4 @@ metricSchema.pre('save', function (next) {
 
 
 
-mongoose.model('Metric', metricSchema);
+db.model('Metric', metricSchema);

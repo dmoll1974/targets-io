@@ -97,4 +97,4 @@ TestrunSummarySchema.index({
   productName: 1,
   dashboardName: 1
 }, { unique: true });
-mongoose.model('TestrunSummary', TestrunSummarySchema);
+db.model('TestrunSummary', TestrunSummarySchema);

@@ -97,4 +97,4 @@ TestrunSchema.index({
   testRunId: 1,
   dashboardId: 1
 }, { unique: true });
-mongoose.model('Testrun', TestrunSchema);
+db.model('Testrun', TestrunSchema);

@@ -57,4 +57,4 @@ RunningTestSchema.index({
     }, { unique: true });
 
 
-mongoose.model('RunningTest', RunningTestSchema);
+db.model('RunningTest', RunningTestSchema);

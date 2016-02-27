@@ -61,4 +61,4 @@ ReleaseSchema.index({
   productName: 1,
   productRelease: 1
  }, { unique: true });
-mongoose.model('Release', ReleaseSchema);
+db.model('Release', ReleaseSchema);

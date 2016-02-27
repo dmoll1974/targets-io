@@ -43,4 +43,4 @@ eventSchema.index({
 }, { unique: true });
 
 
-mongoose.model('Event', eventSchema);
+db.model('Event', eventSchema);

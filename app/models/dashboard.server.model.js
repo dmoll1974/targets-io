@@ -97,4 +97,4 @@ dashboardSchema.index({
   name: 1,
   productId: 1
 }, { unique: true });
-mongoose.model('Dashboard', dashboardSchema);
+db.model('Dashboard', dashboardSchema);

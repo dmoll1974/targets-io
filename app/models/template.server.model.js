@@ -102,4 +102,4 @@ var TemplateSchema = new Schema({
     ]
   }
 });
-mongoose.model('Template', TemplateSchema);
+db.model('Template', TemplateSchema);
