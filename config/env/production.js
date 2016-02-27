@@ -19,6 +19,7 @@ module.exports = {
 	//},
     graphiteHost: process.env.GRAPHITE_HOST,
     db: process.env.MONGO_URL + '/targets-io',
+    cacheDb: process.env.MONGO_CACHE_URL + '/graphite-cache',
     memcachedHost: [process.env.MEMCACHED_HOST],
     assets: {
         lib: {

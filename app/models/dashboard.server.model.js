@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), Schema = mongoose.Schema;
+var mongoose = require('mongoose'), Schema = mongoose.Schema, server = require('../../server');
 /**
  * Dashboard Schema
  */

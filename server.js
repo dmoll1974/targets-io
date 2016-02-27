@@ -19,12 +19,13 @@ console.log ("graphite host: " + config.graphiteHost)
 
 
 // Bootstrap db connection
-var db = mongoose.connect(config.db, function(err) {
+var db = mongoose.createConnection(config.db, function(err) {
 	if (err) {
-		console.error(chalk.red('Could not connect to MongoDB!'));
+		console.error(chalk.red('Could not connect to db!'));
 		console.log(chalk.red(err));
 	}
 });
+
 
 if(cluster.isMaster) {
 	var numWorkers = (require('os').cpus().length - 1 > 0) ? require('os').cpus().length - 1 : 1; /* save one core for daemon, unless there is only one core */

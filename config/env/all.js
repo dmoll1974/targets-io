@@ -10,6 +10,7 @@ module.exports = {
 	graphiteRetentionPeriod: '90d', /*90 days*/
 	graphiteCacheTTL: '7d', /*7 days*/
 	db: 'mongodb://mongodb/targets-io-dev',
+	cacheDb: 'mongodb://mongodb/graphite-cache',
 	memcachedHost: [ 'localhost:11211'],
 	port: process.env.PORT || 3000,
 	templateEngine: 'swig',
