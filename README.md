@@ -7,7 +7,7 @@ Any metric stored in Graphite can be benchmarked between test runs, to provide a
 
 **Demo**
 
-To set up a local demo environment take the following steps (instructions for linux Ubuntu):
+To set up a local demo environment take the following steps (instructions for linux Ubuntu, use this [Vagrantfile](https://github.com/dmoll1974/targets-io/blob/master/Vagrantfile) to generate a box):
 
 - [Install docker](http://docs.docker.com/linux/step_one/)  
 - [Install docker compose](https://github.com/docker/compose/releases)
@@ -20,14 +20,13 @@ To set up a local demo environment take the following steps (instructions for li
 - Run docker compose  `sudo docker-compose up`
 
 
-This fires up 7 docker containers:
+This fires up 6 docker containers:
 
 | Container  	| Description                                            	| port  	|
 |------------	|--------------------------------------------------------	|-------	|
 | targets-io 	| Performance dashboard application                      	| 3000  	|
 | mongodb    	| Database to store dashboard configurations           		| 27017 	|
 | graphite   	| Time based series database                             	| 8090  	|
-| memcached  	| Distributed cache between targets-io and Graphite      	| 11211 	|
 | jenkins    	| CI server to start demo Gatling and Jmeter scripts     	| 8070  	|
 | dropwizard 	| Demo rest application to run performance tests against 	| 8080  	|
 | jmxtrans   	| Pushes dropwizard JVM metrics to graphite              	| n/a   	|
