@@ -6,7 +6,6 @@ targetsio:
    - .:/code
   links:
    - graphite
-   - memcached
    - db
   environment:
      MONGO_SERVICE_HOST: "db"
