@@ -16,8 +16,9 @@ angular.module('dashboards').controller('DashboardsController', [
   'SideMenu',
   'Templates',
   'Events',
+  'Utils',
   '$q',
-  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, $q) {
+  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, Utils, $q) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -66,6 +67,14 @@ angular.module('dashboards').controller('DashboardsController', [
       $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
 
       if (Dashboards.selected.productName !== $stateParams.productName || Dashboards.selected.name !== $stateParams.dashboardName) {
+
+        /* reset all test run related state */
+        TestRuns.list = [];
+        TestRuns.runningTest = '';
+        TestRuns.numberOfRunningTests = '';
+        Utils.reset();
+        Utils.zoomFrom = '';
+        Utils.zoomUntil = '';
 
         Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
           $scope.dashboard = Dashboards.selected;
