@@ -12,7 +12,7 @@ var testRunTargetSchema = new Schema({
   'benchmarkPreviousValue': Number,
   'benchmarkFixedValue': Number
 });
-mongoose.model('TestrunTarget', testRunTargetSchema);
+
 var testRunMetricSchema = new Schema({
   'alias': String,
   'type': String,
