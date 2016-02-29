@@ -37,7 +37,6 @@ var testRunMetricSchema = new Schema({
   'targets': [testRunTargetSchema]
 
 });
-mongoose.model('TestrunMetric', testRunMetricSchema);
 /**
  * Testrun Schema
  */
