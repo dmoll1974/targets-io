@@ -526,7 +526,8 @@ let upsertTestRun = function(testRun){
         benchmarkResultPreviousOK: testRun.benchmarkResultPreviousOK,
         baseline: testRun.baseline,
         previousBuild: testRun.previousBuild,
-        humanReadableDuration: humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime())}
+        humanReadableDuration: humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime()),
+        addToCache: true} //trigger tet run cache update
         , {upsert:true}, function(err, savedTestRun){
       if (err) {
         reject(err);
@@ -710,6 +711,7 @@ function getDataForTestrun(testRun) {
               console.log('Retrieved data for:' + testRun.productName + '-' + testRun.dashboardName + 'testrunId: ' + testRun.testRunId);
 
               testRun.metrics = metrics;
+              testRun.addToCache = false; //prevent triggering the cache update yet
 
 
               testRun.save(function(err, savedTestrun){
