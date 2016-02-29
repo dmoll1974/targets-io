@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
 var Mixed = Schema.Types.Mixed;
 
 /**
- * Event Schema
+ * Graphite cache Schema
  */
 var graphiteCacheSchema = new mongoose.Schema({
   'key': {

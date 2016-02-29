@@ -17,6 +17,7 @@ var mongoose = require('mongoose'),
     Metric = db.model('Metric'),
     async = require('async'),
     RunningTest = db.model('RunningTest'),
+    TestRunCache = cacheDb.model('TestRunCache'),
     ss = require('simple-statistics');
 
 
@@ -322,147 +323,113 @@ function testRunsForProductRelease(req, res) {
  */
 function testRunsForDashboard(req, res) {
 
-  var response = {};
-  response.numberOfRunningTests = 0;
-  response.runningTest = false;
+  /* first check if we can get test runs from test run cache */
 
-  var query = {
-    $and: [
-      { productName: req.params.productName },
-      { dashboardName: req.params.dashboardName }
-    ]
-  };
+  getTestRunsFromCache(req.params.productName, req.params.dashboardName)
+  .then(function(testRuns){
 
+    var response = {};
+    response.numberOfRunningTests = 0;
+    response.runningTest = false;
 
+    response.totalNumberOftestRuns = testRuns.length;
 
-  Testrun.find(query).sort({end: -1 }).exec(function(err, testRuns) {
-    if (err) {
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    } else {
+    /* Only return paginated test runs */
 
+    let page = req.params.page;
+    let limit = req.params.limit;
+    let paginatedTestRuns = [];
 
+    _.each(testRuns, function (testRun, index) {
 
-      response.totalNumberOftestRuns = testRuns.length;
+      if (index >= (page - 1) * (limit) && index <= (page * limit) - 1) {
 
-      /* Only return paginated test runs */
+        paginatedTestRuns.push(testRun);
+      }
 
-      let page = req.params.page;
-      let limit = req.params.limit;
-      let paginatedTestRuns = [];
+    });
 
-      _.each(testRuns, function(testRun, index){
-
-        if(index >= (page - 1) * (limit)  && index <= (page * limit) - 1){
-
-          paginatedTestRuns.push(testRun);
-        }
-
-      });
-
-      response.testRuns = paginatedTestRuns;
+    response.testRuns = paginatedTestRuns;
 
     /* Check for running tests */
-      RunningTest.find({
-        $and: [
-          { productName: req.params.productName },
-          { dashboardName: req.params.dashboardName }
-        ]
-      }).exec(function(err, runningTests){
+    RunningTest.find({
+      $and: [
+        {productName: req.params.productName},
+        {dashboardName: req.params.dashboardName}
+      ]
+    }).exec(function (err, runningTests) {
 
-        if(err){
-          res.jsonp(response);
-        }else{
-
-
-          /* if running tests are found, put them on top*/
-          if(runningTests.length > 0){
-
-            response.runningTest = true;
-
-            _.each(runningTests, function(runningTest){
-
-              response.numberOfRunningTests = response.numberOfRunningTests + 1;
+      if (err) {
+        res.jsonp(response);
+      } else {
 
 
-              /* mark temporarily as completed to make it visible in test run list*/
-              runningTest.completed = true;
+        /* if running tests are found, put them on top*/
+        if (runningTests.length > 0) {
 
-              response.testRuns.unshift(runningTest);
+          response.runningTest = true;
 
-            })
+          _.each(runningTests, function (runningTest) {
+
+            response.numberOfRunningTests = response.numberOfRunningTests + 1;
 
 
-          }
+            /* mark temporarily as completed to make it visible in test run list*/
+            runningTest.completed = true;
+
+            response.testRuns.unshift(runningTest);
+
+          })
 
 
-          res.jsonp(response);
         }
 
-      });
 
+        res.jsonp(response);
+      }
 
-    }
+    });
+
   });
+}
 
-  function persistTestrunsFromEvents(testRuns, testRunsFromEvents, callback) {
-    var persistedTestRuns = [];
-    var testRunsToBePersisted = [];
-    var testRunsToBenchmark = [];
-    _.each(testRunsFromEvents, function (testRunFromEvents) {
-      var exists = false;
-      _.each(testRuns, function (testRun) {
-        if (testRun.testRunId === testRunFromEvents.testRunId) {
-          exists = true;
-          persistedTestRuns.push(testRun);
-          return exists;
+let getTestRunsFromCache = function(productName, dashboardName){
+
+    return new Promise((resolve, reject) => {
+      var key = productName + dashboardName;
+
+      TestRunCache.findOne({key: key}).exec(function(err, cacheItem){
+
+        if (err)
+          reject(err);
+        else {
+
+          if(cacheItem){
+
+            resolve(cacheItem.value);
+
+          }else{
+
+            Testrun.find({
+              $and: [
+                {productName: productName},
+                {dashboardName: dashboardName}
+              ]
+            }).sort({end: -1}).exec(function (err, testRuns) {
+              if (err) {
+                reject(err);
+              } else {
+
+                resolve(testRuns);
+
+              }
+          });
         }
-      });
-      if (exists === false) {
-        testRunsToBePersisted.push(testRunFromEvents);
       }
     });
-    async.forEachLimit(testRunsToBePersisted, 16, function (testRun, callback) {
-      getDataForTestrun(testRun.productName, testRun.dashboardName, testRun, function (metrics) {
-        saveTestrun(testRun, metrics, function (savedTestrun) {
-          console.log('test run saved: ' + savedTestrun.testRunId);
-          testRunsToBenchmark.push(savedTestrun);
-          callback();
-        });
-      });
-    }, function (err) {
-      if (err)
-        return next(err);
-      testRunsToBenchmark.sort(Utils.dynamicSort('-start'));
-      async.forEachLimit(testRunsToBenchmark, 1, function (testRun, callback) {
-        Requirements.setRequirementResultsForTestRun(testRun, function (requirementsTestrun) {
-          if (requirementsTestrun)
-            console.log('Requirements set for: ' + requirementsTestrun.productName + '-' + requirementsTestrun.dashboardName + 'testrunId: ' + requirementsTestrun.testRunId);
-          Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviousBuildTestrun) {
-            if (benchmarkPreviousBuildTestrun)
-              console.log('Benchmark previous build done for: ' + benchmarkPreviousBuildTestrun.productName + '-' + benchmarkPreviousBuildTestrun.dashboardName + 'testrunId: ' + benchmarkPreviousBuildTestrun.testRunId);
-            Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviousBuildTestrun, function (benchmarkFixedBaselineTestrun) {
-              if (benchmarkFixedBaselineTestrun)
-                console.log('Benchmark fixed baseline done for: ' + benchmarkFixedBaselineTestrun.productName + '-' + benchmarkFixedBaselineTestrun.dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
-              benchmarkFixedBaselineTestrun.save(function (err) {
-                if (err) {
-                  console.log(err);
-                  callback(err);
-                } else {
-                  persistedTestRuns.push(benchmarkFixedBaselineTestrun);
-                  callback();
-                }
-              });
-            });
-          });
-        });
-      }, function (err) {
-        if (err)
-          console.log(err);
-        callback(persistedTestRuns);
-      });
-    });
-  }
+  });
 }
+
 function testRunById(req, res) {
   Testrun.findOne({
     $and: [

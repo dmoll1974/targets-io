@@ -298,22 +298,22 @@ angular.module('testruns').controller('TestrunsController', [
       $window.location.href = url;
     };
 
-    $scope.$watch(function (scope) {
-      return Dashboards.selected._id;
-    }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
-        $scope.dashboard = Dashboards.selected;
-        $scope.testRuns = [];
-        TestRuns.list = [];
-        TestRuns.runningTest = '';
-        TestRuns.numberOfRunningTests = '';
-        Utils.reset();
-        Utils.zoomFrom = '';
-        Utils.zoomUntil = '';
-
-      }
-    });
+    //$scope.$watch(function (scope) {
+    //  return Dashboards.selected._id;
+    //}, function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //    $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+    //    $scope.dashboard = Dashboards.selected;
+    //    $scope.testRuns = [];
+    //    TestRuns.list = [];
+    //    TestRuns.runningTest = '';
+    //    TestRuns.numberOfRunningTests = '';
+    //    Utils.reset();
+    //    Utils.zoomFrom = '';
+    //    Utils.zoomUntil = '';
+    //
+    //  }
+    //});
     //$scope.$watch(function (scope) {
     //  return TestRuns.list;
     //}, function (newVal, oldVal) {

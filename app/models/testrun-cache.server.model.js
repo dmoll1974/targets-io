@@ -93,49 +93,26 @@ TestrunSchema.virtual('startEpoch').get(function () {
 TestrunSchema.virtual('endEpoch').get(function () {
   return this.end.getTime();
 });
-TestrunSchema.index({
-  testRunId: 1,
-  dashboardId: 1
-}, { unique: true });
 
-TestrunSchema.post('save', function (testRun) {
-
-  var TestRunCache = cacheDb.model('TestRunCache')
-      TestRuns = db.model('Testrun') ;
-
-
-    TestRuns.find({
-      $and: [
-        {productName: testRun.productName},
-        {name: testRun.dashboardName}
-      ]
-    }).sort({end: -1 }).exec(function (err, testRuns) {
-
-      if(err)
-        console.log(err);
-      else{
-
-        if(testRuns.length > 0) {
-
-          var key = testRun.productName + testRun.dashboardName;
-
-          TestRunCache.findOneAndUpdate({key: key},
-              {
-                value: testRuns,
-                created: new Date()
-              },
-              {upsert: true}, function (err, testRunCacheItem) {
-
-                if(err)
-                  console.log(err);
-                else
-                  console.log('test run cache updated');
-              })
-        }
-      }
-
-    })
-
+/**
+ * Test run cache Schema
+ */
+var testRunCacheSchema = new mongoose.Schema({
+  'key': {
+    type: String,
+  },
+  'value': [TestrunSchema],
+  'created': {
+    type: Date,
+    default: Date.now,
+    expires: config.graphiteCacheTTL
+  }
 });
 
-db.model('Testrun', TestrunSchema);
+
+testRunCacheSchema.index({
+  key: 1,
+}, { unique: true });
+
+
+cacheDb.model('TestRunCache', testRunCacheSchema);

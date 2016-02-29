@@ -67,6 +67,12 @@ angular.module('dashboards').controller('DashboardsController', [
 
       if (Dashboards.selected.productName !== $stateParams.productName || Dashboards.selected.name !== $stateParams.dashboardName) {
 
+        /* reset test run state */
+        TestRuns.list = [];
+        TestRuns.runningTest = '';
+        TestRuns.numberOfRunningTests = '';
+        Utils.reset();
+
         Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
           $scope.dashboard = Dashboards.selected;
           $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
