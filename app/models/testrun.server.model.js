@@ -138,4 +138,4 @@ TestrunSchema.post('save', function (testRun) {
 });
 
 db.model('Testrun', TestrunSchema);
-var Testrun = model('Testrun', TestrunSchema);
+var Testrun = db.model('Testrun', TestrunSchema);
