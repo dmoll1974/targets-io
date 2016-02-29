@@ -120,6 +120,7 @@ TestrunSchema.post('save', function (testRun) {
 
           TestRunCache.findOneAndUpdate({key: key},
               {
+                key: key,
                 value: testRuns,
                 created: new Date()
               },

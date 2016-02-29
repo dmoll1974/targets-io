@@ -411,6 +411,8 @@ let getTestRunsFromCache = function(productName, dashboardName){
 
           }else{
 
+            console.log('no test runs in cache!');
+
             Testrun.find({
               $and: [
                 {productName: productName},
