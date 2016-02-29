@@ -159,7 +159,7 @@ function upload(req, res) {
       testrun.benchmarkResultPreviousOK = importTestrun.benchmarkResultPreviousOK;
       testrun.metrics = importTestrun.metrics;
       testrun.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date(importTestrun.end).getTime() - new Date(importTestrun.start).getTime());
-
+      testrun.addToCache = false;
 
       testrun.save(function (err) {
         if (err)

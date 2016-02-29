@@ -16,8 +16,9 @@ angular.module('dashboards').controller('DashboardsController', [
   'SideMenu',
   'Templates',
   'Events',
+  'Utils',
   '$q',
-  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, $q) {
+  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, Utils, $q) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -71,7 +72,7 @@ angular.module('dashboards').controller('DashboardsController', [
         TestRuns.list = [];
         TestRuns.runningTest = '';
         TestRuns.numberOfRunningTests = '';
-        Utils.reset();
+        Utils.reset;
 
         Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
           $scope.dashboard = Dashboards.selected;

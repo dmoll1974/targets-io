@@ -83,7 +83,11 @@ var TestrunSchema = new Schema({
   'rampUpPeriod': {
       type: Number
   },
-  'metrics': [testRunMetricSchema]
+  'metrics': [testRunMetricSchema],
+  'addToCache': {
+    type: Boolean,
+    default: true
+  }
 }, { toObject: { getters: true } });
 
 TestrunSchema.virtual('startEpoch').get(function () {
@@ -101,20 +105,21 @@ TestrunSchema.index({
 
 TestrunSchema.post('save', function (testRun) {
 
-  var TestRunCache = cacheDb.model('TestRunCache')
+  if(testRun.addToCache) { //don't do this when importing test runs!
+    var TestRunCache = cacheDb.model('TestRunCache');
 
     Testrun.find({
       $and: [
         {productName: testRun.productName},
-        {name: testRun.dashboardName}
+        {dashboardName: testRun.dashboardName}
       ]
-    }).sort({end: -1 }).exec(function (err, testRuns) {
+    }).sort({end: -1}).exec(function (err, testRuns) {
 
-      if(err)
+      if (err)
         console.log(err);
-      else{
+      else {
 
-        if(testRuns.length > 0) {
+        if (testRuns.length > 0) {
 
           var key = testRun.productName + testRun.dashboardName;
 
@@ -126,7 +131,7 @@ TestrunSchema.post('save', function (testRun) {
               },
               {upsert: true}, function (err, testRunCacheItem) {
 
-                if(err)
+                if (err)
                   console.log(err);
                 else
                   console.log('test run cache updated');
@@ -135,7 +140,7 @@ TestrunSchema.post('save', function (testRun) {
       }
 
     })
-
+  }
 });
 
 db.model('Testrun', TestrunSchema);
