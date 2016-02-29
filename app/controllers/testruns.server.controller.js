@@ -406,6 +406,7 @@ let getTestRunsFromCache = function(productName, dashboardName){
 
           if(cacheItem){
 
+            console.log('got test runs from cache!');
             resolve(cacheItem.value);
 
           }else{
