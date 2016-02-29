@@ -97,13 +97,13 @@ TestrunSchema.index({
   dashboardId: 1
 }, { unique: true });
 
+
+
 TestrunSchema.post('save', function (testRun) {
 
   var TestRunCache = cacheDb.model('TestRunCache')
-      TestRuns = db.model('Testrun') ;
 
-
-    TestRuns.find({
+    Testrun.find({
       $and: [
         {productName: testRun.productName},
         {name: testRun.dashboardName}
