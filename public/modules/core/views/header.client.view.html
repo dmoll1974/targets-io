@@ -14,7 +14,9 @@
                         Product home
                     </md-tooltip>
                 </md-button>
-                <span class="targetsio-header-text" >PRODUCT </span>
+                <div>
+                    <span class="targetsio-header-text" >PRODUCT </span>
+                </div>
                 <!--<md-button class="md-icon-button" data-ng-click="addProduct()">-->
                     <!--<md-tooltip>-->
                         <!--Add product-->
@@ -85,7 +87,9 @@
 
             <div layout="row" layout-align="left center">
 
-                <span class="targetsio-header-text" style="margin-left: 20px;" ng-if="product" ng-click="goToDashboardHome(product, dashboard)">DASHBOARD </span>
+                <div>
+                    <span class="targetsio-header-text" style="margin-left: 20px;" ng-if="product" ng-click="goToDashboardHome(product, dashboard)">DASHBOARD </span>
+                </div>
                 <div ng-if="product"  data-ng-controller="DashboardsController">
                     <md-menu >
                         <md-button aria-label="Open edit menu" class="md-icon-button"
