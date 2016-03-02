@@ -2,7 +2,11 @@
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
     <div fix-to-top="fix-to-top" offsetTop="0" class="graphs-header">
         <div layout="column">
-            <!--<span>-->
+            <span>
+                {{testRun.productName}}  /
+                <a data-ng-href="/#!/browse/{{testRun.productName}}/{{testRun.dashboardName}}">{{testRun.dashboardName}}</a>
+                  /  {{testRun.testRunId}}
+            </span>
             <div layout="row" layout-align="space-between center" flex>
                 <div layout="row">
                     <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="zoomLock" >
@@ -79,7 +83,7 @@
                 <input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"
                        share-graph-url/>
                 <label title="Share view URL" class="btn default"
-                       ng-click="setViewShareUrl('graphs-live')"><span
+                       ng-click="setViewShareUrl('testrun')"><span
                         class="btn  glyphicon glyphicon-share"></span>
                 </label>
 

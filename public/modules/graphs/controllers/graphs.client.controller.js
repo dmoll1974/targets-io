@@ -64,7 +64,7 @@ angular.module('graphs').controller('GraphsController', [
 
           $scope.numberOfColumns = 2;
           $scope.flex = 100 / $scope.numberOfColumns;
-          Utils.showLegend = false;
+          Utils.showLegend = true;
           break;
 
         case 3:
@@ -154,13 +154,15 @@ angular.module('graphs').controller('GraphsController', [
 
       switch(graphsType){
 
-        case 'testrun':
-          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag;
-          break;
+
         case 'graphs-live':
           $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag;
+          break;
+        case 'testrun':
+          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag;
 
       }
+
       if (Utils.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
         $scope.viewShareUrl = $scope.viewShareUrl + '?';
       }
@@ -252,6 +254,7 @@ angular.module('graphs').controller('GraphsController', [
         if ($stateParams.testRunId) {
           TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
             TestRuns.selected = testRun;
+            $scope.testRun = testRun;
           });
         }
       });

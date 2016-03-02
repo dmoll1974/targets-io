@@ -1,8 +1,9 @@
 <section>
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
-    <!--<div class="page-header">-->
-        <span class="md-subhead" style="padding-bottom: 20px;">
+    <div layout="row" layout-align="space-between">
+        <span>
             <a data-ng-href="/#!/browse/{{testRunSummary.productName}}">{{testRunSummary.productName}}</a>  /
+            <a data-ng-href="/#!/browse/{{testRunSummary.productName}}/{{testRunSummary.dashboardName}}">{{testRunSummary.dashboardName}}</a>  /
             <a ui-sref="productReleaseDetails({productName: testRunSummary.productName, productRelease: testRunSummary.productRelease})">
             {{testRunSummary.productRelease}}
             </a>  /  {{testRunSummary.testRunId}}
@@ -14,12 +15,12 @@
                 Edit
             </md-switch>
         </div>
-    <!--</div>-->
+    </div>
     <h2>Summary</h2>
     <md-content>
 
         <!--<md-card>-->
-            <div flex="75">
+            <div flex="50">
                 <h3>Test run info</h3>
                 <table class="table">
                 <tbody>
@@ -63,11 +64,11 @@
             </table>
         </div>
 
-        <div class="md-padding" ng-if="testRunSummary.goal" flex="75">
+        <div class="md-padding" ng-if="testRunSummary.goal" flex="50">
             <h3>Goal</h3>
             <p>{{testRunSummary.goal}}</p>
         </div>
-        <div class="md-padding" ng-if="testRunSummary.annotations" flex="75">
+        <div class="md-padding" ng-if="testRunSummary.annotations" flex="50">
             <h3>Remarks</h3>
             <div ng-if="editMode === true" class="md-padding">
                 <md-input-container class="md-block" flex>
@@ -78,7 +79,7 @@
             <p ng-if="editMode === false">{{testRunSummary.annotations}}</p>
         </div>
 
-        <div class="md-padding" ng-if="testRunSummary.requirements.length > 0" flex="75">
+        <div class="md-padding" ng-if="testRunSummary.requirements.length > 0" flex="50">
             <h3>Requirements</h3>
 
 
@@ -105,7 +106,7 @@
 
         <h3>Metrics</h3>
 
-        <md-content class="md-padding" layout="column" flex="90" >
+        <md-content class="md-padding" layout="column" flex="75" >
             <div  data-ng-repeat="metric in testRunSummary.metrics | testRunSummary " >
                 <div layout="row" layout-align="space-between center">
                     <h4 class="md-padding" data-ng-click="editMetric(metric._id)">{{metric.alias}}</h4>

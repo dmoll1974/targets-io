@@ -12,15 +12,9 @@ angular.module('graphs').config([
     $stateProvider.state('viewGraphs', {
       url: '/graphs/:productName/:dashboardName/:testRunId/:tag?zoomFrom&zoomUntil&selectedSeries&metricFilter',
       templateUrl: 'modules/graphs/views/graphs.client.view.html'
-    })/*.state('deepLinkGraph', {
-      url: '/graphs/:productName/:dashboardName/:testRunId/:tag?zoomFrom&zoomUntil&selectedSeries&metricFilter',
-      templateUrl: 'modules/graphs/views/graphs.client.view.html'
-    })*/.state('viewLiveGraphs', {
+    }).state('viewLiveGraphs', {
       url: '/graphs-live/:productName/:dashboardName/:tag?zoomFrom&zoomUntil&metricFilter',
       templateUrl: 'modules/graphs/views/graphs-live.client.view.html'
-    })/*.state('deepLinkLiveGraph', {
-      url: '/graphs-live/:productName/:dashboardName/:tag?zoomFrom&zoomUntil&metricFilter',
-      templateUrl: 'modules/graphs/views/graphs-live.client.view.html'
-    })*/;
+    });
   }
 ]);
