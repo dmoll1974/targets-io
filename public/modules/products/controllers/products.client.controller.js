@@ -21,6 +21,13 @@ angular.module('products').controller('ProductsController', [
     /* reset selected dashboard when accessing this page */
     Dashboards.selected = {};
 
+    /* fetch products to trigger update of header */
+
+    Products.fetch().success(function(products){
+
+      Products.items = products;
+
+    })
 
     $scope.showNumberOfTestRuns = 10;
 
@@ -88,7 +95,7 @@ angular.module('products').controller('ProductsController', [
     $scope.editProductRequirememts = function (){
 
       $state.go('productRequirements', {
-        'productName': $scope.product.name
+        'productName': Products.selected.name
       });
 
     }
@@ -124,8 +131,9 @@ angular.module('products').controller('ProductsController', [
       product.description = this.product.description;
       Products.create(product).then(function (response) {
         Products.fetch().success(function (products) {
+          Products.items = products;
           SideMenu.addProducts(products);
-          $scope.products = Products.items;
+          $scope.products = products;
           $state.go('viewProduct', { productName: response.data.name });
           $scope.productForm.$setPristine();
         });
@@ -151,7 +159,8 @@ angular.module('products').controller('ProductsController', [
 
                   /* Refresh sidebar */
               Products.fetch().success(function (products) {
-                $scope.products = Products.items;
+                Products.items = products;
+                $scope.products = products;
                 SideMenu.addProducts(products);
 
                $state.go('viewProduct',{productName: product.name});
@@ -201,7 +210,8 @@ angular.module('products').controller('ProductsController', [
           Products.selected = {};
           /* Refresh sidebar */
           Products.fetch().success(function (products) {
-            $scope.products = Products.items;
+            Products.items = products;
+            $scope.products = products;
           });
           $state.go('home');
         });

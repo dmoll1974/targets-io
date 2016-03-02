@@ -45,20 +45,13 @@
 
 <body>
 
-	<div layout="column" layout-fill>
-		<div ng-cloak>
-			<md-toolbar>
+	<div layout="column" ng-cloak layout-fill>
+		<md-toolbar>
 				<div data-ng-include="'/modules/core/views/header.client.view.html'"></div>
-			</md-toolbar>
-		</div>
-		<div layout="row" layout-fill>
-			<!--<div flex="15" data-ng-include="'/modules/core/views/sidebar.client.view.html'" ng-cloak></div>-->
-			<div flex class="targetsio-content" layout-fill ng-cloak>
-				<md-content class="md-padding" >
-					{% block content %}{% endblock %}
-				</md-content>
-			</div>
-		</div>
+		</md-toolbar>
+		<md-content class="targetsio-content" flex>
+			{% block content %}{% endblock %}
+		</md-content>
 	</div>
 	<!--Embedding The User Object-->
 	<script type="text/javascript">

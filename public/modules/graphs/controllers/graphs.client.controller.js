@@ -17,6 +17,21 @@ angular.module('graphs').controller('GraphsController', [
   function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
 
 
+
+    /* Releative interval options in live graphs */
+
+    $scope.zoomOptions = [
+      {value: '-10min' , label: 'Last 10 minutes'},
+      {value: '-30min' , label: 'Last 30 minutes'},
+      {value: '-1h', label: 'Last hour'},
+      {value: '-3h', label: 'Last 3 hours'},
+      {value: '-6h', label: 'Last 6 hours'},
+      {value: '-12h', label: 'Last 12 hours'},
+      {value: '-1d', label: 'Last day'},
+      {value: '-2d', label: 'Last 2 days'},
+      {value: '-3d', label: 'Last 3 days'}
+    ];
+
     /* initiaize menu */
 
     var originatorEv;
@@ -26,7 +41,7 @@ angular.module('graphs').controller('GraphsController', [
     };
 
 
-    $scope.numberOfColumns = Utils.numberOfColums;
+    $scope.numberOfColumns = Utils.numberOfColumns;
     $scope.flex = 100 / $scope.numberOfColumns;
     $scope.showLegend = true;
 
@@ -75,7 +90,7 @@ angular.module('graphs').controller('GraphsController', [
           break;
       }
 
-      Utils.numberOfColums = $scope.numberOfColumns;
+      Utils.numberOfColumns = $scope.numberOfColumns;
       $scope.init();
 
     }
@@ -85,7 +100,7 @@ angular.module('graphs').controller('GraphsController', [
 
       $scope.metricFilter = metric.alias;
       $scope.numberOfColumns = 1;
-      Utils.numberOfColums = $scope.numberOfColumns;
+      Utils.numberOfColumns = $scope.numberOfColumns;
       $scope.init();
     }
 

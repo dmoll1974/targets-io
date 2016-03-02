@@ -3,7 +3,7 @@
         <h1>Edit Event</h1>
     </div>
     <!--<div class="col-md-12">-->
-    <form name="eventForm">
+    <form name="eventForm" autocomplete="off" >
         <div layout="column">
             <div layout="column">
                 <div layout="row">
@@ -49,7 +49,7 @@
                         md-is-error="eventForm.eventTestRunId.$invalid && (eventForm.$submitted || eventForm.eventTestRunId.$dirty)"
                         flex>
                     <label>Testrun ID</label>
-                    <input name="eventTestRunId" ng-model="event.testRunId"
+                    <input autocomplete="off" name="eventTestRunId" ng-model="event.testRunId"
                            typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8" required>
 
                     <div ng-messages="eventForm.eventTestRunId.$error"

@@ -8,7 +8,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 	function($locationProvider) {
 		$locationProvider.hashPrefix('!');
 	}
-]).run(['$rootScope', 'Interval', function($rootScope, Interval){
+]).run(['$rootScope', 'Interval', 'Products', function($rootScope, Interval, Products){
 
         $rootScope.previousState;
         $rootScope.currentState;
@@ -22,6 +22,14 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 
                 if ($rootScope.previousState === 'viewLiveGraphs') Interval.clearAll();
 
+                /* fetch products if Products.items is empty*/
+
+                if(Products.items.length === 0){
+
+                    Products.fetch().success(function(products){
+                        Products.items = products;
+                    })
+                }
 
         //    console.log('Previous state:'+$rootScope.previousState)
         //    console.log('Current state:'+$rootScope.currentState)

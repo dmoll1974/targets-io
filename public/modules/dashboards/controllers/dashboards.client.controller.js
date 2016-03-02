@@ -82,10 +82,12 @@ angular.module('dashboards').controller('DashboardsController', [
         });
       }
     }else{
-      Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
-        $scope.dashboard = Dashboards.selected;
-        $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
-      });
+      if($stateParams.dashboardName) {
+        Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+          $scope.dashboard = Dashboards.selected;
+          $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+        });
+      }
     }
 
     $scope.$watch(function (scope) {
@@ -185,7 +187,10 @@ angular.module('dashboards').controller('DashboardsController', [
         Dashboards.selected = dashboard;
 
         Products.fetch().success(function (products) {
-          $scope.products = Products.items;
+
+          Products.items = products;
+
+          $scope.products = products;
 
 
           SideMenu.addProducts(products);
@@ -216,8 +221,10 @@ angular.module('dashboards').controller('DashboardsController', [
       Dashboards.clone().success(function (dashboard) {
         /* Refresh sidebar */
         Products.fetch().success(function (products) {
+          Products.items = products;
+
           SideMenu.addProducts(products);
-          $scope.products = Products.items;
+          $scope.products = products;
         });
         $state.go('editDashboard', {
           'productName': $stateParams.productName,
@@ -264,7 +271,10 @@ angular.module('dashboards').controller('DashboardsController', [
             /* Refresh sidebar */
             Products.fetch().success(function (products) {
               SideMenu.addProducts(products);
-              $scope.products = Products.items;
+
+              Products.items = products;
+
+              $scope.products = products;
             });
             $state.go('viewDashboard', {
               'productName': $stateParams.productName,
@@ -332,6 +342,12 @@ angular.module('dashboards').controller('DashboardsController', [
         $log.info('Modal dismissed at: ' + new Date());
       });
     };
+
+    $scope.addDashboard = function(){
+
+      $state.go('createDashboard', {productName: $stateParams.productName});
+    }
+
     $scope.openDeleteSelectedMetricsModal = function (size) {
 
       ConfirmModal.itemType = 'Delete ';
@@ -382,8 +398,9 @@ angular.module('dashboards').controller('DashboardsController', [
         Dashboards.delete(Dashboards.selected._id).success(function (dashboard) {
           /* Refresh sidebar */
           Products.fetch().success(function (products) {
+            Products.items = products;
             SideMenu.addProducts(products);
-            $scope.products = Products.items;
+            $scope.products = products;
           });
           $state.go('viewProduct', { 'productName': $stateParams.productName });
         });

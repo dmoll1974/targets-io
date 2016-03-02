@@ -12,42 +12,56 @@ angular.module('core').controller('HeaderController', [
   'TestRuns',
   '$stateParams',
   '$filter',
-  function ($scope, Authentication, Menus, $location, $http, $window, $state, Dashboards, Products, TestRuns, $stateParams, $filter) {
+  '$timeout',
+  function ($scope, Authentication, Menus, $location, $http, $window, $state, Dashboards, Products, TestRuns, $stateParams, $filter, $timeout) {
     $scope.authentication = Authentication;
     $scope.isCollapsed = false;
     $scope.menu = Menus.getMenu('topbar');
     $scope.toggleCollapsibleMenu = function () {
       $scope.isCollapsed = !$scope.isCollapsed;
     };
-    // Collapsing the menu after navigation
-    $scope.$on('$stateChangeSuccess', function () {
-      //$scope.product = null;
-      //$scope.dashboard = null;
-      Products.fetch().success(function (products) {
 
-        $scope.products = products;
+    $scope.$watch(function (scope) {
+      return Dashboards.selected._id;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        $scope.dashboard = Dashboards.selected;
+        $scope.dashboardSelected = true;
+        Products.get($stateParams.productName).success(function (product) {
+          $scope.product = product;
 
-        if($stateParams.productName) {
-
-          var productIndex = $scope.products.map(function(product){return product.name;}).indexOf($stateParams.productName);
-          $scope.product = $scope.products[productIndex];
-
-
-          if($stateParams.dashboardName) {
-
-              var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($stateParams.dashboardName);
-              $scope.dashboard = $scope.product.dashboards[dashboardIndex];
-          }else{
-              $scope.dashboard = null;
-              $scope.dashboardSearchText = '';
-          }
-        }
-
-
-
-
-      });
+        });
+      }
     });
+
+
+    $scope.$watch(function (scope) {
+      return Products.items;
+    }, function (newVal, oldVal) {
+      if (newVal.length > 0) {
+
+        $timeout(function(){
+            $scope.products = Products.items;
+
+            if($stateParams.productName) {
+
+              var productIndex = $scope.products.map(function(product){return product.name;}).indexOf($stateParams.productName);
+              $scope.product = $scope.products[productIndex];
+
+
+              if($stateParams.dashboardName) {
+
+                var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($stateParams.dashboardName);
+                $scope.dashboard = $scope.product.dashboards[dashboardIndex];
+              }else{
+                $scope.$$childTail.dashboard = undefined;
+                $scope.$$childTail.dashboardSearchText = undefined;
+              }
+            }
+        })
+      }
+    });
+
 
     $scope.go = function (path) {
       $location.path(path);
@@ -70,7 +84,16 @@ angular.module('core').controller('HeaderController', [
       $scope.dashboardSearchText = $filter('uppercase')(val);
     }, true);
 
+    $scope.goToProductHome = function(product){
 
+      $scope.dashboard = undefined;
+      $state.go('viewProduct', {productName: product.name});
+
+    };
+    $scope.goToDashboardHome = function(product, dashboard){
+
+      $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
+    };
 
     $scope.selectedProductChange = function(product){
 
@@ -78,11 +101,16 @@ angular.module('core').controller('HeaderController', [
 
 
         if(product) {
-          if (!$stateParams.dashboardName) {
+          if (!$state.includes('productReleaseDetails') && !$stateParams.dashboardName ) {
 
-            $scope.dashboardSearchText = null;
-            $scope.dashboard = null;
-            $state.go('viewProduct', {productName: product.name});
+            $scope.dashboardSelected = false;
+            $scope.dashboard = undefined;
+
+            $timeout(function(){
+
+              $state.go('viewProduct', {productName: product.name});
+
+            });
           }
         }else{
           $state.go('home');
@@ -91,8 +119,9 @@ angular.module('core').controller('HeaderController', [
 
     $scope.selectedDashboardChange = function(dashboard){
 
-
       if(dashboard) {
+        $scope.dashboardSelected = true;
+        $scope.dashboard = dashboard;
         if (!$stateParams.testRunId) {
           $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
         }
@@ -143,17 +172,13 @@ angular.module('core').controller('HeaderController', [
       };
     }
 
-    /* get productName an dashboardName form $stateParams in case of deeplink */
+    /* If dashboardName is in $stateParams in case of deeplink, set dashboardSelected to true */
     setTimeout(function(){
-        if ($stateParams.productName) {
-          $scope.header = $stateParams.productName;
-        }
+
         if ($stateParams.dashboardName) {
-          $scope.header += ('-' + $stateParams.dashboardName);
+          $scope.dashboardSelected = true;
         }
-        if ($stateParams.productRelease) {
-          $scope.header += ('-' + $stateParams.productRelease);
-        }
+
 
 
     },0);
@@ -194,6 +219,8 @@ angular.module('core').controller('HeaderController', [
 
 
     $scope.goHome = function(){
+
+      $scope.dashboardSelected = false;
 
       $scope.dashboard = null;
       $scope.dashboardSearchText = null;

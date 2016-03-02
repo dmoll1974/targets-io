@@ -5,8 +5,8 @@
     position: fixed;
     top: 0;
     z-index: 100;
-    background-color: white;
-    /*width: 100%;*/
+    /*background-color: white;*/
+    width: 100%;
 
 }
 
@@ -89,16 +89,8 @@
     background-color: #bbb;
 }
 
-.dashboardView {
-    width: 100%;
-}
 
 /* Styles go here */
-
-/*body {*/
-/*font-family: 'Ubuntu', sans-serif;*/
-/*color: orangered;*/
-/*}*/
 
 .fill-height {
     display: flex;
@@ -351,10 +343,10 @@ md-autocomplete{
     background-color: rgb(33,150,243) !important;
 }
 
-.md-autocomplete-suggestions li{
-    color: white  !important;
-    background-color: rgb(33,150,243) !important;
-}
+/*.md-autocomplete-suggestions li{*/
+    /*color: white  !important;*/
+    /*background-color: rgb(33,150,243) !important;*/
+/*}*/
 
 .targetsio-header-text{
     font-size: 15px;

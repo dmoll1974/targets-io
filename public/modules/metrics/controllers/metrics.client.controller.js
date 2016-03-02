@@ -136,7 +136,7 @@ angular.module('metrics').controller('MetricsController', [
             TestRuns.list = testRuns;
           });
         }
-        $location.path('browse/' + $stateParams.productName + '/' + $stateParams.dashboardName);
+        $state.go('viewDashboard', {productName:  $stateParams.productName, dashboardName: $stateParams.dashboardName});
       });
     };
     // Remove existing Metric
@@ -193,6 +193,7 @@ angular.module('metrics').controller('MetricsController', [
           $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
 
           });
+
           $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
             TestRuns.list = testRuns;
             if ($rootScope.previousStateParams)

@@ -169,7 +169,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
     /* hide legend when switching to two column view*/
 
     //$scope.$watch(function (scope) {
-    //  return Utils.numberOfColums;
+    //  return Utils.numberOfColumns;
     //}, function (newVal, oldVal) {
     //  if (newVal !== oldVal) {
     //

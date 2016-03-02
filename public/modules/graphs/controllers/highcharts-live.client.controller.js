@@ -16,6 +16,9 @@ angular.module('graphs').controller('HighchartsLiveController', [
   'Events',
   'Utils',
   function ($scope, Interval, $stateParams, $state, Graphite, TestRuns, Metrics, Dashboards, Tags, $q, $http, $log, Events, Utils) {
+    
+
+    
     /* Zero copied logic */
     $scope.clipClicked = function () {
       $scope.showUrl = false;

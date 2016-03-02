@@ -1,30 +1,51 @@
 <md-content ng-controller="GraphsController" data-ng-init="init()">
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
     <div fix-to-top="fix-to-top" class="graphs-header">
-        <div layout="row" layout-align="space-between center" flex>
-           <!--<div layout="row">-->
 
-                    <md-radio-group ng-model="zoomRange">
-                        <div layout="row" layout-align="space-between end">
-                            <md-radio-button class="range-selector-padding" value="-10min" class="md-primary">10min</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-30min" class="md-primary">30min</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-1h" class="md-primary">1h</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-3h" class="md-primary">3h</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-6h" class="md-primary">6h</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-12h" class="md-primary">12h</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-1d" class="md-primary">1d</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-2d" class="md-primary">2d</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-3d" class="md-primary">3d</md-radio-button>
-                        </div>
-                    </md-radio-group>
+        <div layout="row"  flex layout-align="space-between center" flex>
+            <div layout="row" layout-align="start center" flex>
+                <div>
+                <span>
+                    <a data-ng-href="/#!/browse/{{productName}}">{{productName}}</a>  /
+                    <a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}">{{dashboardName}}</a>
+                </span>
+                </div>
+                <div class="md-padding">
+                    <md-select ng-model="zoomRange">
+                        <md-option ng-repeat="zoomOption in zoomOptions" value="{{zoomOption.value}}">
+                            {{zoomOption.label}}
+                        </md-option>
+                    </md-select>
+                </div>
+            </div>
 
-                   <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="zoomLock" >
-                       Apply zoom to all graphs
-                   </md-switch>
-                   <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
-                   <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
-            <!--</div>-->
-            <!--<div layout="row">-->
+
+            <div layout="row" layout-align="end center" flex>
+                       <!--<div layout="row">-->
+
+
+                <!--<md-radio-group ng-model="zoomRange">-->
+                    <!--<div layout="row" layout-align="space-around center">-->
+                        <!--<md-radio-button class="range-selector-padding" value="-10min" class="md-primary">10min</md-radio-button>-->
+                        <!--<md-radio-button class="range-selector-padding" value="-30min" class="md-primary">30min</md-radio-button>-->
+                        <!--<md-radio-button class="range-selector-padding" value="-1h" class="md-primary">1h</md-radio-button>-->
+                        <!--<md-radio-button class="range-selector-padding" value="-3h" class="md-primary">3h</md-radio-button>-->
+                        <!--<md-radio-button class="range-selector-padding" value="-6h" class="md-primary">6h</md-radio-button>-->
+                        <!--<md-radio-button class="range-selector-padding" value="-12h" class="md-primary">12h</md-radio-button>-->
+                        <!--<md-radio-button class="range-selector-padding" value="-1d" class="md-primary">1d</md-radio-button>-->
+                        <!--<md-radio-button class="range-selector-padding" value="-2d" class="md-primary">2d</md-radio-button>-->
+                        <!--<md-radio-button class="range-selector-padding" value="-3d" class="md-primary">3d</md-radio-button>-->
+                    <!--</div>-->
+                <!--</md-radio-group>-->
+
+               <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="zoomLock" >
+                   Apply zoom to all graphs
+               </md-switch>
+               <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
+               <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
+            </div>
+            <div layout="row" layout-align="end center" flex>
+
                 <md-menu>
                     <md-button aria-label="Open edit menu" class="md-icon-button"
                                ng-click="openMenu($mdOpenMenu, $event)">
@@ -55,7 +76,7 @@
                     Show legend
                 </md-switch>
 
-            <!--</div>-->
+            </div>
         </div>
 
         <md-tabs md-selected="selectedIndex" class="metric-panels" style="padding-bottom: 0px;">

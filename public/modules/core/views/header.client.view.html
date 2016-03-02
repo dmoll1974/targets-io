@@ -1,15 +1,27 @@
-<div data-ng-controller="HeaderController">
+<div  data-ng-controller="HeaderController">
 
     <div layout="row" >
-        <div flex="10" class="md-toolbar-tools">
+        <div flex="15" class="md-toolbar-tools">
             <h1>
                 <a ng-click="goHome()" >TARGETS-IO</a>
             </h1>
         </div>
-        <div flex="85" layout="row" layout-align="left center">
+        <div flex="80" layout="row" layout-align="left center">
             <div layout="row" layout-align="left center">
-                <span class="targetsio-header-text">PRODUCT </span>
-                <div>
+                <md-button ng-if="product" style="margin-left: 20px;"  class="md-icon-button" ng-click="goToProductHome(product)">
+                    <md-icon md-svg-src="images/assets/ic_home_white_24px.svg"></md-icon>
+                    <md-tooltip>
+                        Product home
+                    </md-tooltip>
+                </md-button>
+                <span class="targetsio-header-text" >PRODUCT </span>
+                <!--<md-button class="md-icon-button" data-ng-click="addProduct()">-->
+                    <!--<md-tooltip>-->
+                        <!--Add product-->
+                    <!--</md-tooltip>-->
+                    <!--<md-icon md-svg-src="images/assets/ic_add_white_24px.svg"></md-icon>-->
+                <!--</md-button>-->
+                <div data-ng-controller="ProductsController">
                     <md-menu>
                         <md-button aria-label="Open edit menu" class="md-icon-button"
                                    ng-click="openMenu($mdOpenMenu, $event)">
@@ -68,12 +80,14 @@
                         No products matching "{{productSearchText}}" were found.
                     </md-not-found>
                 </md-autocomplete>
+
             </div>
 
             <div layout="row" layout-align="left center">
-                <span class="targetsio-header-text" style="margin-left: 15px;" ng-if="product">DASHBOARD </span>
-                <div  ng-if="product">
-                    <md-menu>
+
+                <span class="targetsio-header-text" style="margin-left: 20px;" ng-if="product" ng-click="goToDashboardHome(product, dashboard)">DASHBOARD </span>
+                <div ng-if="product"  data-ng-controller="DashboardsController">
+                    <md-menu >
                         <md-button aria-label="Open edit menu" class="md-icon-button"
                                    ng-click="openMenu($mdOpenMenu, $event)">
                             <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_white_24px.svg"></md-icon>
@@ -89,42 +103,42 @@
                                     Add dashboard
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-divider ng-if="dashboard"></md-menu-divider>
-                            <md-menu-item ng-if="dashboard">
+                            <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
+                            <md-menu-item ng-if="dashboardSelected">
                                 <md-button data-ng-click="edit()">
                                     <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"
                                              md-menu-align-target></md-icon>
                                     Edit dashboard
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item ng-if="dashboard">
+                            <md-menu-item ng-if="dashboardSelected">
                                 <md-button data-ng-click="clone()">
                                     <md-icon md-svg-src="images/assets/ic_queue_black_36px.svg"></md-icon>
                                     Clone dashboard
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item ng-if="dashboard">
+                            <md-menu-item ng-if="dashboardSelected">
                                 <md-button data-ng-click="manageTags()">
                                     <md-icon md-svg-src="images/assets/ic_local_offer_black_36px.svg"></md-icon>
                                     Manage tags
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-divider ng-if="dashboard"></md-menu-divider>
-                            <md-menu-item ng-if="dashboard">
+                            <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
+                            <md-menu-item ng-if="dashboardSelected">
                                 <md-button class="danger" data-ng-click="openDeleteDashboardModal('', $index)">
                                     <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"></md-icon>
                                     Delete dashboard
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-divider ng-if="dashboard"></md-menu-divider>
-                            <md-menu-item ng-if="dashboard">
+                            <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
+                            <md-menu-item ng-if="dashboardSelected">
                                 <md-button data-ng-click="addTemplate()">
                                     <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg"></md-icon>
                                     Create template
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-divider ng-if="dashboard"></md-menu-divider>
-                            <md-menu-item ng-if="dashboard">
+                            <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
+                            <md-menu-item ng-if="dashboardSelected">
                                 <md-button data-ng-click="addTestRun()">
                                     <md-icon md-svg-src="images/assets/testrun.svg"></md-icon>
                                     Add Test Run
@@ -140,7 +154,7 @@
                                  md-selected-item-change="selectedDashboardChange(dashboard)"
                                  md-item-text="dashboard.name"
                                  md-min-length="0"
-                                 md-autoselect="false"
+                                 md-autoselect="true"
                                  placeholder="Dashboard">
                     <md-item-template>
                         <span>{{dashboard.name}}</span>
@@ -149,6 +163,20 @@
                         No dashboards matching "{{dashboardSearchText}}" were found.
                     </md-not-found>
                 </md-autocomplete>
+                <md-button ng-if="dashboardSelected" style="margin-left: 20px;"  class="md-icon-button" ng-click="goToDashboardHome(product, dashboard)">
+                    <md-icon md-svg-src="images/assets/ic_arrow_back_white_24px.svg"></md-icon>
+                    <md-tooltip>
+                        Back to dashboard home
+                    </md-tooltip>
+                </md-button>
+                <div ng-if="dashboardSelected"  data-ng-controller="DashboardsController">
+                    <md-button  class="md-icon-button" data-ng-click="viewLiveGraphs()">
+                        <md-icon md-svg-src="images/assets/ic_assessment_white_24px.svg"></md-icon>
+                        <md-tooltip>
+                            Live graphs
+                        </md-tooltip>
+                    </md-button>
+                </div>
             </div>
 
         </div>
@@ -159,7 +187,7 @@
                 <!--</h1>-->
             <!--</div>-->
         <!--</div>-->
-        <div flex="5">
+        <div flex="5" layout="row" layout-align="end center">
             <md-menu class="md-toolbar-tools">
                 <md-button aria-label="Open database menu" class="md-icon-button"
                            ng-click="openMenu($mdOpenMenu, $event)">
