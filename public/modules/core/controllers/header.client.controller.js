@@ -24,7 +24,7 @@ angular.module('core').controller('HeaderController', [
     $scope.$watch(function (scope) {
       return Dashboards.selected._id;
     }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
+      if (newVal !== oldVal && newVal) {
         $scope.dashboard = Dashboards.selected;
         $scope.dashboardSelected = true;
         Products.get($stateParams.productName).success(function (product) {
@@ -97,27 +97,38 @@ angular.module('core').controller('HeaderController', [
 
     $scope.selectedProductChange = function(product){
 
-        Products.selected = product;
+      Products.selected = product;
 
 
-        if(product) {
-          if (!$state.includes('productReleaseDetails') && !$stateParams.dashboardName ) {
+
+      if(product) {
+          if (!$state.includes('productReleaseDetails') /*&& !$state.includes('viewProduct')*/ && !$stateParams.dashboardName ) {
 
             $scope.dashboardSelected = false;
-            $scope.dashboard = undefined;
+            $scope.dashboard = null;
+            $scope.dashboardSearchText = null;
 
             $timeout(function(){
 
+              $scope.$$childTail.dashboard = undefined;
+              $scope.$$childTail.dashboardSearchText = undefined;
               $state.go('viewProduct', {productName: product.name});
 
             });
           }
         }else{
-          $state.go('home');
+
+        $scope.dashboardSelected = false;
+        $scope.dashboard = null;
+        $scope.dashboardSearchText = undefined;
+
+
+        $state.go('home');
         }
     }
 
     $scope.selectedDashboardChange = function(dashboard){
+
 
       if(dashboard) {
         $scope.dashboardSelected = true;
@@ -126,7 +137,10 @@ angular.module('core').controller('HeaderController', [
           $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
         }
       }else {
-        $state.go('viewProduct', {productName: $scope.product.name});
+        $scope.dashboardSelected = false;
+        if(!$state.includes('viewProduct')) {
+          $state.go('viewProduct', {productName: $scope.product.name});
+        }
       }
     }
 
@@ -183,39 +197,6 @@ angular.module('core').controller('HeaderController', [
 
     },0);
 
-    //$scope.$watch(function (scope) {
-    //  return Dashboards.selected.name;
-    //}, function (newVal, oldVal) {
-    //  if (newVal !== oldVal) {
-    //    if($stateParams.productName){
-    //      $scope.header = $stateParams.productName ;
-    //    }
-    //    if($stateParams.dashboardName){
-    //      $scope.header += ('-' + $stateParams.dashboardName);
-    //    }
-    //    if($stateParams.productRelease){
-    //      $scope.header += ('-' + $stateParams.productRelease);
-    //    }
-    //  }
-    //});
-
-    //$scope.$watch(function (scope) {
-    //  return Products.selected.name;
-    //}, function (newVal, oldVal) {
-    //  if (newVal !== oldVal) {
-    //
-    //      if($stateParams.productName){
-    //        $scope.header = $stateParams.productName ;
-    //      }
-    //      if($stateParams.dashboardName){
-    //        $scope.header += ('-' + $stateParams.dashboardName);
-    //      }
-    //      if($stateParams.productRelease){
-    //        $scope.header += ('-' + $stateParams.productRelease);
-    //      }
-    //  }
-    //});
-
 
 
     $scope.goHome = function(){
@@ -231,6 +212,14 @@ angular.module('core').controller('HeaderController', [
 
     }
 
+    $scope.viewLiveGraphs = function(){
+
+      $state.go('viewLiveGraphs', {
+        'productName': $stateParams.productName,
+        'dashboardName': $stateParams.dashboardName,
+        tag: Dashboards.getDefaultTag(Dashboards.selected.tags)
+      });
+    }
 
     $scope.showTemplates = function(){
 

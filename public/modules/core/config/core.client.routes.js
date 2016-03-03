@@ -14,6 +14,10 @@ angular.module('core', ['dashboards']).config([
     .state('gettingStarted', {
       url: '/getting-started',
       templateUrl: 'modules/core/views/getting-started.client.view.html'
+    }).state('productMenu', {
+      template: '<product-menu></product-menu>'
+    }).state('dashboardMenu', {
+      template: '<dashboard-menu></dashboard-menu>'
     });
   }
 ]);

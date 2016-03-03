@@ -6,7 +6,7 @@ angular.module('dashboards').factory('Dashboards', [
     var Dashboards = {
       //            items : [],
       'get': getFn,
-      selected: '',
+      selected: {},
       update: update,
       updateTags: updateTags,
       clone: clone,

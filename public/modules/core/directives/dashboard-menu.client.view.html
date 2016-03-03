@@ -1,0 +1,59 @@
+<md-menu >
+    <md-button aria-label="Open edit menu" class="md-icon-button"
+               ng-click="openMenu($mdOpenMenu, $event)">
+        <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_white_24px.svg"></md-icon>
+        <md-tooltip>
+            Dashboard menu
+        </md-tooltip>
+    </md-button>
+    <md-menu-content width="4" height="10">
+        <md-menu-item>
+            <md-button data-ng-click="addDashboard()">
+                <md-icon md-svg-src="images/assets/ic_add_black_36px.svg"
+                         md-menu-align-target></md-icon>
+                Add dashboard
+            </md-button>
+        </md-menu-item>
+        <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
+        <md-menu-item ng-if="dashboardSelected">
+            <md-button data-ng-click="edit()">
+                <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"
+                         md-menu-align-target></md-icon>
+                Edit dashboard
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="dashboardSelected">
+            <md-button data-ng-click="clone()">
+                <md-icon md-svg-src="images/assets/ic_queue_black_36px.svg"></md-icon>
+                Clone dashboard
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="dashboardSelected">
+            <md-button data-ng-click="manageTags()">
+                <md-icon md-svg-src="images/assets/ic_local_offer_black_36px.svg"></md-icon>
+                Manage tags
+            </md-button>
+        </md-menu-item>
+        <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
+        <md-menu-item ng-if="dashboardSelected">
+            <md-button class="danger" data-ng-click="openDeleteDashboardModal('', $index)">
+                <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"></md-icon>
+                Delete dashboard
+            </md-button>
+        </md-menu-item>
+        <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
+        <md-menu-item ng-if="dashboardSelected">
+            <md-button data-ng-click="addTemplate()">
+                <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg"></md-icon>
+                Create template
+            </md-button>
+        </md-menu-item>
+        <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
+        <md-menu-item ng-if="dashboardSelected">
+            <md-button data-ng-click="addTestRun()">
+                <md-icon md-svg-src="images/assets/testrun.svg"></md-icon>
+                Add Test Run
+            </md-button>
+        </md-menu-item>
+    </md-menu-content>
+</md-menu>

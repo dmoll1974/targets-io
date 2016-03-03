@@ -10,10 +10,10 @@ angular.module('graphs').config([
   function ($stateProvider) {
     // Graphs state routing
     $stateProvider.state('viewGraphs', {
-      url: '/graphs/:productName/:dashboardName/:testRunId/:tag?zoomFrom&zoomUntil&selectedSeries&metricFilter',
+      url: '/graphs/:productName/:dashboardName/:testRunId/:tag/?zoomFrom&zoomUntil&selectedSeries&metricFilter',
       templateUrl: 'modules/graphs/views/graphs.client.view.html'
     }).state('viewLiveGraphs', {
-      url: '/graphs-live/:productName/:dashboardName/:tag?zoomFrom&zoomUntil&metricFilter',
+      url: '/graphs-live/:productName/:dashboardName/:tag/?zoomFrom&zoomUntil&metricFilter',
       templateUrl: 'modules/graphs/views/graphs-live.client.view.html'
     });
   }

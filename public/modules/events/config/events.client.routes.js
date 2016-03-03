@@ -8,10 +8,10 @@ angular.module('events').config([
       url: '/events',
       templateUrl: 'modules/events/views/list-events-dashboard.client.view.html'
     }).state('createEvent', {
-      url: '/create/event/:productName/:dashboardName',
+      url: '/create/event/:productName/:dashboardName/',
       template: '<add-event></add-event>'
     }).state('editEvent', {
-      url: '/edit/event/:productName/:dashboardName/:eventId',
+      url: '/edit/event/:productName/:dashboardName/:eventId/',
       template: '<edit-event></edit-event>'
     });
   }

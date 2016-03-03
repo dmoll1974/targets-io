@@ -23,48 +23,8 @@
                     <!--</md-tooltip>-->
                     <!--<md-icon md-svg-src="images/assets/ic_add_white_24px.svg"></md-icon>-->
                 <!--</md-button>-->
-                <div data-ng-controller="ProductsController">
-                    <md-menu>
-                        <md-button aria-label="Open edit menu" class="md-icon-button"
-                                   ng-click="openMenu($mdOpenMenu, $event)">
-                            <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_white_24px.svg"></md-icon>
-                            <md-tooltip>
-                                Product menu
-                            </md-tooltip>
-                        </md-button>
-                        <md-menu-content width="4">
-                            <md-menu-item>
-                                <md-button data-ng-click="addProduct()">
-                                    <md-icon md-svg-src="images/assets/ic_add_black_36px.svg"
-                                             md-menu-align-target></md-icon>
-                                    Add product
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item ng-if="product">
-                                <md-button data-ng-click="editProduct(product.name)">
-                                    <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"
-                                             md-menu-align-target></md-icon>
-                                    Edit product
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-divider ng-if="product"></md-menu-divider>
-                            <md-menu-item ng-if="product">
-                                <md-button data-ng-click="editProductRequirememts()">
-                                    <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"
-                                             md-menu-align-target></md-icon>
-                                    Product requirements
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-divider ng-if="product"></md-menu-divider>
-                            <md-menu-item ng-if="product">
-                                <md-button class="danger" data-ng-click="openDeleteProductModal('', $index)">
-                                    <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"></md-icon>
-                                    Delete product
-                                </md-button>
-                            </md-menu-item>
-
-                        </md-menu-content>
-                    </md-menu>
+                <div>
+                    <product-menu></product-menu>
                 </div>
                 <md-autocomplete
                         md-selected-item="product"
@@ -90,66 +50,8 @@
                 <div>
                     <span class="targetsio-header-text" style="margin-left: 20px;" ng-if="product" ng-click="goToDashboardHome(product, dashboard)">DASHBOARD </span>
                 </div>
-                <div ng-if="product"  data-ng-controller="DashboardsController">
-                    <md-menu >
-                        <md-button aria-label="Open edit menu" class="md-icon-button"
-                                   ng-click="openMenu($mdOpenMenu, $event)">
-                            <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_white_24px.svg"></md-icon>
-                            <md-tooltip>
-                                Dashboard menu
-                            </md-tooltip>
-                        </md-button>
-                        <md-menu-content width="4" height="10">
-                            <md-menu-item>
-                                <md-button data-ng-click="addDashboard()">
-                                    <md-icon md-svg-src="images/assets/ic_add_black_36px.svg"
-                                             md-menu-align-target></md-icon>
-                                    Add dashboard
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
-                            <md-menu-item ng-if="dashboardSelected">
-                                <md-button data-ng-click="edit()">
-                                    <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"
-                                             md-menu-align-target></md-icon>
-                                    Edit dashboard
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item ng-if="dashboardSelected">
-                                <md-button data-ng-click="clone()">
-                                    <md-icon md-svg-src="images/assets/ic_queue_black_36px.svg"></md-icon>
-                                    Clone dashboard
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item ng-if="dashboardSelected">
-                                <md-button data-ng-click="manageTags()">
-                                    <md-icon md-svg-src="images/assets/ic_local_offer_black_36px.svg"></md-icon>
-                                    Manage tags
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
-                            <md-menu-item ng-if="dashboardSelected">
-                                <md-button class="danger" data-ng-click="openDeleteDashboardModal('', $index)">
-                                    <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"></md-icon>
-                                    Delete dashboard
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
-                            <md-menu-item ng-if="dashboardSelected">
-                                <md-button data-ng-click="addTemplate()">
-                                    <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg"></md-icon>
-                                    Create template
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-divider ng-if="dashboardSelected"></md-menu-divider>
-                            <md-menu-item ng-if="dashboardSelected">
-                                <md-button data-ng-click="addTestRun()">
-                                    <md-icon md-svg-src="images/assets/testrun.svg"></md-icon>
-                                    Add Test Run
-                                </md-button>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
+                <div ng-if="product">
+                    <dashboard-menu></dashboard-menu>
                 </div>
                 <md-autocomplete ng-if="product"
                                  md-selected-item="dashboard"
@@ -173,7 +75,7 @@
                         Back to dashboard home
                     </md-tooltip>
                 </md-button>
-                <div ng-if="dashboardSelected"  data-ng-controller="DashboardsController">
+                <div ng-if="dashboardSelected">
                     <md-button  class="md-icon-button" data-ng-click="viewLiveGraphs()">
                         <md-icon md-svg-src="images/assets/ic_assessment_white_24px.svg"></md-icon>
                         <md-tooltip>
@@ -230,61 +132,5 @@
             </md-menu>
         </div>
     </div>
-    <!--<a href="/#!/" class="pull-left     navbar-brand">TARGETS-IO</a>-->
 
-    <!--<div class="navbar-header">-->
-    <!--<button class="navbar-toggle" type="button" data-ng-click="toggleCollapsibleMenu()">-->
-    <!--<span class="sr-only">Toggle navigation</span>-->
-    <!--<span class="icon-bar"></span>-->
-    <!--<span class="icon-bar"></span>-->
-    <!--<span class="icon-bar"></span>-->
-    <!--</button>-->
-    <!--</div>-->
-    <!--<nav class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">-->
-    <!--<ul class="nav navbar-nav" data-ng-if="menu.shouldRender(authentication.user);">-->
-    <!--<li data-ng-repeat="item in menu.items | orderBy: 'position'" data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType" ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}" ng-class="{active: ($uiRoute)}" dropdown="item.menuItemType === 'dropdown'">-->
-    <!--<a ng-switch-when="dropdown" class="dropdown-toggle">-->
-    <!--<span data-ng-bind="item.title"></span>-->
-    <!--<b class="caret"></b>-->
-    <!--</a>-->
-    <!--<ul ng-switch-when="dropdown" class="dropdown-menu">-->
-    <!--<li data-ng-repeat="subitem in item.items | orderBy: 'position'" data-ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}" ng-class="{active: $uiRoute}">-->
-    <!--<a href="/#!/{{subitem.link}}" data-ng-bind="subitem.title"></a>-->
-    <!--</li>-->
-    <!--</ul>-->
-    <!--<a ng-switch-default href="/#!/{{item.link}}" data-ng-bind="item.title"></a>-->
-    <!--</li>-->
-    <!--</ul>-->
-    <!--<ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">-->
-    <!--<li ui-route="/signup" ng-class="{active: $uiRoute}">-->
-    <!--<a href="/#!/signup">Sign Up</a>-->
-    <!--</li>-->
-    <!--<li class="divider-vertical"></li>-->
-    <!--<li ui-route="/signin" ng-class="{active: $uiRoute}">-->
-    <!--<a href="/#!/signin">Sign In</a>-->
-    <!--</li>-->
-    <!--</ul>-->
-    <!--<ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">-->
-    <!--<li class="dropdown">-->
-    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">-->
-    <!--<span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>-->
-    <!--</a>-->
-    <!--<ul class="dropdown-menu">-->
-    <!--<li>-->
-    <!--<a href="/#!/settings/profile">Edit Profile</a>-->
-    <!--</li>-->
-    <!--<li>-->
-    <!--<a href="/#!/settings/accounts">Manage Social Accounts</a>-->
-    <!--</li>-->
-    <!--<li data-ng-show="authentication.user.provider === 'local'">-->
-    <!--<a href="/#!/settings/password">Change Password</a>-->
-    <!--</li>-->
-    <!--<li class="divider"></li>-->
-    <!--<li>-->
-    <!--<a href="/auth/signout">Signout</a>-->
-    <!--</li>-->
-    <!--</ul>-->
-    <!--</li>-->
-    <!--</ul>-->
-    <!--</nav>-->
 </div>
