@@ -299,9 +299,27 @@
     width: 100%;
 }
 
-.graph-column {
-    position: relative;
+
+md-content#column-0-2.graph-column {
+    position: fixed;
+    top: 200px;
+    bottom: 0px;
+    left: 10px;
+    width: 48.5%;
+    /*overflow: auto;*/
 }
+
+md-content#column-1-2.graph-column {
+    position: fixed;
+    top: 200px;
+    right: 10px;
+    bottom: 0px;
+    width: 48.5%;
+
+    /*overflow: auto;*/
+}
+
+
 
 .graph-column:hover{
     overflow-y: auto;
