@@ -1,22 +1,7 @@
 'use strict';
 
 module.exports = {
-	//db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/targets-io',
-	//assets: {
-	//	lib: {
-	//		css: [
-	//			'public/lib/bootstrap/dist/css/bootstrap.min.css',
-	//			'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
-	//		],
-	//		js: [
-	//			'public/lib/angular/angular.min.js',
-	//			'public/lib/angular-resource/angular-resource.js',
-	//			'public/lib/angular-ui-router/release/angular-ui-router.min.js',
-	//		]
-	//	},
-	//	css: 'public/dist/application.min.css',
-	//	js: 'public/dist/application.min.js'
-	//},
+
     graphiteHost: process.env.GRAPHITE_HOST,
     db: process.env.MONGO_URL + '/targets-io',
     memcachedHost: [process.env.MEMCACHED_HOST],

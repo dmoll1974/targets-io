@@ -1,5 +1,10 @@
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 
+html, body {
+    overflow-x: hidden;
+
+}
+
 /* fix zoom ranges and tabs*/
 .fix-to-top {
     position: fixed;
@@ -191,12 +196,15 @@
     padding-bottom: 12px;
 }
 
+
 .targetsio-content {
 
     height: 100%;
     width: 100%;
     padding-left: 50px;
     padding-right: 50px;
+    overflow-x: hidden;
+
 }
 
 .metric-panels {
@@ -304,25 +312,29 @@ md-content#column-0-2.graph-column {
     position: fixed;
     top: 200px;
     bottom: 0px;
-    left: 10px;
-    width: 48.5%;
-    /*overflow: auto;*/
+    left: 5px;
+    width: 49.0%;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+
 }
 
 md-content#column-1-2.graph-column {
     position: fixed;
     top: 200px;
-    right: 10px;
+    right: 5px;
     bottom: 0px;
-    width: 48.5%;
+    width: 49.0%;
 
-    /*overflow: auto;*/
+    overflow-x: hidden;
+    overflow-y: scroll;
+
 }
-
-
 
 .graph-column:hover{
     overflow-y: auto;
+
 }
 
 md-toast {
