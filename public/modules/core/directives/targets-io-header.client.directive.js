@@ -236,9 +236,9 @@ function TargetsIoHeaderDirective () {
         };
 
 
-        $scope.updateFilter = function(){
+        $scope.updateFilter = function(metricFilter){
 
-            Utils.metricFilter = $scope.metricFilter;
+            Utils.metricFilter = metricFilter;
         }
 
         var originatorEv;

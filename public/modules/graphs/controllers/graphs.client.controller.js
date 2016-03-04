@@ -123,11 +123,10 @@ angular.module('graphs').controller('GraphsController', [
       $scope.showViewUrl = false;
     };
 
-    //$scope.$on('$destroy', function () {
-    //  /* reset zoom variables when leaving graphs view */
-    //  Utils.zoomFrom = '';
-    //  Utils.zoomUntil = '';
-    //});
+    $scope.$on('$destroy', function () {
+      /* reset metricFilter when leaving graphs view */
+      Utils.metricFilter = '';
+    });
 
     $scope.hasFlash = function () {
       var hasFlash = false;
