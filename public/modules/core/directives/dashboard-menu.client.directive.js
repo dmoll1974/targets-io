@@ -48,11 +48,9 @@ function DashboardMenuDirective () {
 
         $scope.clone = function () {
             Dashboards.clone().success(function (dashboard) {
-                /* Refresh sidebar */
+                /* Refresh header */
                 Products.fetch().success(function (products) {
                     Products.items = products;
-
-                    SideMenu.addProducts(products);
                     $scope.products = products;
                 });
                 $state.go('editDashboard', {
@@ -85,7 +83,6 @@ function DashboardMenuDirective () {
                     /* Refresh sidebar */
                     Products.fetch().success(function (products) {
                         Products.items = products;
-                        SideMenu.addProducts(products);
                         $scope.products = products;
                     });
                     $state.go('viewProduct', { 'productName': $stateParams.productName });

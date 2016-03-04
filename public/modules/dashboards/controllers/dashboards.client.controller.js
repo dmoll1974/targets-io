@@ -200,6 +200,8 @@ angular.module('dashboards').controller('DashboardsController', [
     $scope.update = function () {
       Dashboards.update($scope.dashboard).success(function (dashboard) {
 
+        Dashboards.selected = dashboard;
+
         TestRuns.updateAllTestRunsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function(testruns) {
 
           TestRuns.list = testruns;

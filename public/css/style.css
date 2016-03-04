@@ -381,3 +381,9 @@ md-autocomplete{
 .targetsio-header-text{
     font-size: 15px;
 }
+
+.time-range-selector{
+    margin-bottom: 0px;
+    margin-top: 0px;
+
+}

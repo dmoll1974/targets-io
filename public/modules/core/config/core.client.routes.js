@@ -18,6 +18,8 @@ angular.module('core', ['dashboards']).config([
       template: '<product-menu></product-menu>'
     }).state('dashboardMenu', {
       template: '<dashboard-menu></dashboard-menu>'
+    }).state('targestIoHeader', {
+      template: '<targets-io-header></targets-io-header>'
     });
   }
 ]);

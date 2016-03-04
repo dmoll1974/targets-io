@@ -7,7 +7,7 @@ angular.module('products').config([
     $stateProvider.state('listProducts', {
       url: '/products',
       templateUrl: 'modules/products/views/list-products.client.view.html'
-    }).state('createProduct', {
+    }).state('addProduct', {
       url: '/add/product',
       templateUrl: 'modules/products/views/create-product.client.view.html'
     }).state('viewProduct', {
