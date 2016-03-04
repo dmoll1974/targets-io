@@ -379,7 +379,20 @@ md-autocomplete{
 /*}*/
 
 .targetsio-header-text{
-    font-size: 15px;
+    font-size: 15px !important;
+    color: white !important;
+}
+md-input-container.targetsio-header-text{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 30px;
+    width: 300px;
+}
+
+md-input-container.md-default-theme.targetsio-header-text label,
+md-input-container.md-default-theme.targetsio-header-text input,
+md-input-container.md-default-theme.targetsio-header-text .md-placeholder {
+    color: white !important;
 }
 
 .time-range-selector{

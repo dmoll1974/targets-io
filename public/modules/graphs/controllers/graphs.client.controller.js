@@ -64,6 +64,15 @@ angular.module('graphs').controller('GraphsController', [
       }
     });
 
+    $scope.$watch(function (scope) {
+      return Utils.metricFilter;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        $scope.metricFilter =  Utils.metricFilter;
+      }
+    });
+
     $scope.toggleNumberOfColums = function(numberOfColumns){
 
       switch(numberOfColumns){

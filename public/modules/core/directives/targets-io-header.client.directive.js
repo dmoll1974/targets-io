@@ -14,7 +14,13 @@ function TargetsIoHeaderDirective () {
     return directive;
 
     /* @ngInject */
-    function TargetsIoHeaderDirectiveController ($scope, $state, $stateParams, $interval, Products, Dashboards, Templates, ConfirmModal, $modal,$filter, $timeout) {
+    function TargetsIoHeaderDirectiveController ($scope, $state, $stateParams, $interval, Products, Dashboards, Templates, ConfirmModal, $modal,$filter, $timeout, Utils) {
+
+        $scope.$on('$stateChangeSuccess',function(){
+            $scope.$state = $state;
+        })
+
+
 
         $scope.$watch(function (scope) {
             return Dashboards.selected._id;
@@ -229,6 +235,11 @@ function TargetsIoHeaderDirective () {
 
         };
 
+
+        $scope.updateFilter = function(){
+
+            Utils.metricFilter = $scope.metricFilter;
+        }
 
         var originatorEv;
         $scope.openMenu = function ($mdOpenMenu, ev) {
