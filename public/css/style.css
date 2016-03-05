@@ -400,3 +400,8 @@ md-input-container.md-default-theme.targetsio-header-text .md-placeholder {
     margin-top: 0px;
 
 }
+
+md-menu.md-open-menu-container.dashboard-menu{
+
+    max-height: 1000px !important;
+}

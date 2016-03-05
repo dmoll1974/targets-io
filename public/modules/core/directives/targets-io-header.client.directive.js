@@ -166,7 +166,7 @@ function TargetsIoHeaderDirective () {
         $scope.clearMetricFilter = function(){
 
             $scope.metricFilter = '';
-            Utilss.metricFilter = '';
+            Utils.metricFilter = '';
         };
 
         $scope.filterTestRuns = function (query) {
