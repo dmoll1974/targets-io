@@ -14,7 +14,7 @@ function TargetsIoHeaderDirective () {
     return directive;
 
     /* @ngInject */
-    function TargetsIoHeaderDirectiveController ($scope, $state, $stateParams, $interval, Products, Dashboards, Templates, ConfirmModal, $modal,$filter, $timeout, Utils) {
+    function TargetsIoHeaderDirectiveController ($scope, $state, $stateParams, $interval, Products, Dashboards, Templates, TestRuns, ConfirmModal, $modal,$filter, $timeout, Utils) {
 
         $scope.$on('$stateChangeSuccess',function(){
             $scope.$state = $state;
@@ -89,11 +89,13 @@ function TargetsIoHeaderDirective () {
         $scope.goToProductHome = function(product){
 
             $scope.dashboard = undefined;
+
             $state.go('viewProduct', {productName: product.name});
 
         };
         $scope.goToDashboardHome = function(product, dashboard){
 
+            TestRuns.list = [];
             $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
         };
 
@@ -136,6 +138,7 @@ function TargetsIoHeaderDirective () {
                 $scope.dashboardSelected = true;
                 $scope.dashboard = dashboard;
                 if (!$stateParams.testRunId && !$state.includes('viewGraphs') && !$state.includes('viewLiveGraphs')) {
+                    TestRuns.list = [];
                     $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
                 }
             }else {
@@ -159,6 +162,12 @@ function TargetsIoHeaderDirective () {
             return results;
 
         }
+
+        $scope.clearMetricFilter = function(){
+
+            $scope.metricFilter = '';
+
+        };
 
         $scope.filterTestRuns = function (query) {
             var results = query ? $scope.testRuns.filter( createFilterForTestRuns(query) ) : $scope.testRuns;

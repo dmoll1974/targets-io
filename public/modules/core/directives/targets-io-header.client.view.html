@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        <div layout="row" layout-align="start center" ng-if="$state.includes('viewGraphs') || $state.includes('viewLiveGraphs')" >
+        <div layout="row" layout-align="start center" ng-show="$state.includes('viewGraphs') || $state.includes('viewLiveGraphs')" >
             <div>
                 <md-input-container class="targetsio-header-text" >
                     <label class="targetsio-header-text">Filter metrics</label>
@@ -93,7 +93,7 @@
             </div>
             <div>
                 <md-icon  ng-if="metricFilter && metricFilter !==''" md-svg-src="images/assets/ic_clear_white_24px.svg"
-                         data-ng-click="metricFilter='';">
+                         data-ng-click="clearMetricFilter()">
                 </md-icon>
             </div>
 
