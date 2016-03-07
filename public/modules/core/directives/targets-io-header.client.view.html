@@ -16,12 +16,7 @@
             <div>
                 <span class="targetsio-header-text" >PRODUCT </span>
             </div>
-            <!--<md-button class="md-icon-button" data-ng-click="addProduct()">-->
-            <!--<md-tooltip>-->
-            <!--Add product-->
-            <!--</md-tooltip>-->
-            <!--<md-icon md-svg-src="images/assets/ic_add_white_24px.svg"></md-icon>-->
-            <!--</md-button>-->
+
             <div>
                 <product-menu></product-menu>
             </div>
@@ -52,7 +47,7 @@
             <div ng-if="product">
                 <dashboard-menu></dashboard-menu>
             </div>
-            <md-autocomplete ng-if="product"
+            <md-autocomplete ng-show="product"
                              md-selected-item="dashboard"
                              md-search-text="dashboardSearchText"
                              md-items="dashboard in filterDashboards(dashboardSearchText)"

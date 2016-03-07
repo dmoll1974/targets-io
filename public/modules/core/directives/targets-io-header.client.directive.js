@@ -14,7 +14,7 @@ function TargetsIoHeaderDirective () {
     return directive;
 
     /* @ngInject */
-    function TargetsIoHeaderDirectiveController ($scope, $state, $stateParams, $interval, Products, Dashboards, Templates, TestRuns, ConfirmModal, $modal,$filter, $timeout, Utils) {
+    function TargetsIoHeaderDirectiveController ($scope, $rootScope, $state, $stateParams, $interval, Products, Dashboards, Templates, TestRuns, ConfirmModal, $modal,$filter, $timeout, Utils, TargetsIoHeader) {
 
         $scope.$on('$stateChangeSuccess',function(){
             $scope.$state = $state;
@@ -22,47 +22,87 @@ function TargetsIoHeaderDirective () {
 
 
 
-        $scope.$watch(function (scope) {
-            return Dashboards.selected._id;
-        }, function (newVal, oldVal) {
-            if (newVal !== oldVal && newVal) {
-                $scope.dashboard = Dashboards.selected;
-                $scope.dashboardSelected = true;
-                $scope.dashboardSearchText = $scope.dashboard.name;
-                Products.get($stateParams.productName).success(function (product) {
-                    $scope.product = product;
+        //$scope.$watch(function (scope) {
+        //    return Dashboards.selected._id;
+        //}, function (newVal, oldVal) {
+        //    if (newVal !== oldVal && newVal) {
+        //        $scope.dashboard = Dashboards.selected;
+        //        $scope.dashboardSelected = true;
+        //        $scope.dashboardSearchText = $scope.dashboard.name;
+        //        Products.get($stateParams.productName).success(function (product) {
+        //            $scope.product = product;
+        //
+        //        });
+        //    }
+        //});
 
-                });
-            }
-        });
 
+        $rootScope.$watch('currentStateParams', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
 
-        $scope.$watch(function (scope) {
-            return Products.items;
-        }, function (newVal, oldVal) {
-            if (newVal.length > 0) {
+                /* fetch products */
 
-                $timeout(function(){
+                Products.fetch().success(function(products){
+                    Products.items = products;
                     $scope.products = Products.items;
 
-                    if($stateParams.productName) {
+                    if($rootScope.currentStateParams.productName) {
 
-                        var productIndex = $scope.products.map(function(product){return product.name;}).indexOf($stateParams.productName);
+                        var productIndex = $scope.products.map(function(product){return product.name;}).indexOf($rootScope.currentStateParams.productName);
                         $scope.product = $scope.products[productIndex];
 
 
-                        if($stateParams.dashboardName) {
+                        if($rootScope.currentStateParams.dashboardName) {
 
-                            var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($stateParams.dashboardName);
+                            var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($rootScope.currentStateParams.dashboardName);
                             $scope.dashboard = $scope.product.dashboards[dashboardIndex];
                         }else{
-                            $scope.$$childTail.dashboard = undefined;
-                            $scope.$$childTail.dashboardSearchText = undefined;
+                            $scope.$$childTail.dashboard = null;
+                            $scope.$$childTail.dashboardSearchText = null;
                         }
                     }
-                })
+
+                });
+
             }
         });
+
+
+        //$scope.$watch(function (scope) {
+        //    return TargetsIoHeader.productName;
+        //}, function () {
+        //
+        //    //$timeout(function(){
+        //
+        //        /* fetch products */
+        //
+        //        Products.fetch().success(function(products){
+        //            Products.items = products;
+        //            $scope.products = Products.items;
+        //
+        //            if(TargetsIoHeader.productName) {
+        //
+        //                var productIndex = $scope.products.map(function(product){return product.name;}).indexOf(TargetsIoHeader.productName);
+        //                $scope.product = $scope.products[productIndex];
+        //
+        //
+        //                if(TargetsIoHeader.dashboardName) {
+        //
+        //                    var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf(TargetsIoHeader.dashboardName);
+        //                    $scope.dashboard = $scope.product.dashboards[dashboardIndex];
+        //                }else{
+        //                    $scope.$$childTail.dashboard = null;
+        //                    $scope.$$childTail.dashboardSearchText = null;
+        //                }
+        //            }
+        //
+        //        });
+        //
+        //
+        //
+        //    })
+
+        //});
 
 
         $scope.go = function (path) {
@@ -88,7 +128,7 @@ function TargetsIoHeaderDirective () {
 
         $scope.goToProductHome = function(product){
 
-            $scope.dashboard = undefined;
+            $scope.dashboard = null;
 
             $state.go('viewProduct', {productName: product.name});
 
@@ -114,8 +154,8 @@ function TargetsIoHeaderDirective () {
 
                     $timeout(function(){
 
-                        $scope.$$childTail.dashboard = undefined;
-                        $scope.$$childTail.dashboardSearchText = undefined;
+                        $scope.$$childTail.dashboard = null;
+                        $scope.$$childTail.dashboardSearchText = null;
                         $state.go('viewProduct', {productName: product.name});
 
                     });
@@ -124,7 +164,7 @@ function TargetsIoHeaderDirective () {
 
                 $scope.dashboardSelected = false;
                 $scope.dashboard = null;
-                $scope.dashboardSearchText = undefined;
+                $scope.dashboardSearchText = null;
 
 
                 $state.go('home');
