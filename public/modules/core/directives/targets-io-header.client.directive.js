@@ -40,10 +40,7 @@ function TargetsIoHeaderDirective () {
         $rootScope.$watch('currentStateParams', function (newVal, oldVal) {
             if (newVal !== oldVal) {
 
-                /* fetch products */
-
-                Products.fetch().success(function(products){
-                    Products.items = products;
+                fetchProducts(function(products){
                     $scope.products = Products.items;
 
                     if($rootScope.currentStateParams.productName) {
@@ -63,12 +60,25 @@ function TargetsIoHeaderDirective () {
                             $scope.dashboardSearchText = null;
                         }
                     }
-
                 });
 
             }
         });
 
+        function fetchProducts(callback){
+
+            /* fetch products */
+
+            if (!Products.items || Products.items.length === 0){
+                Products.fetch().success(function (products) {
+                    Products.items = products;
+                    callback(products);
+                });
+            }else{
+                callback(Products.items);
+            }
+
+        }
 
         //$scope.$watch(function (scope) {
         //    return TargetsIoHeader.productName;

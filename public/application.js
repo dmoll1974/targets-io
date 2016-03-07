@@ -18,13 +18,14 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
             $rootScope.currentState = to.name;
             $rootScope.currentStateParams = toParams;
 
-                /* clear all running Intervals when leaving the live graphs state*/
+            /* clear all running Intervals when leaving the live graphs state*/
 
-                if ($rootScope.previousState === 'viewLiveGraphs') Interval.clearAll();
+            if ($rootScope.previousState === 'viewLiveGraphs') Interval.clearAll();
 
 
 
-        //    console.log('Previous state:'+$rootScope.previousState)
+
+            //    console.log('Previous state:'+$rootScope.previousState)
         //    console.log('Current state:'+$rootScope.currentState)
         });
     }
