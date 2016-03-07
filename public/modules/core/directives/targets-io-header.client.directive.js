@@ -224,7 +224,12 @@ function TargetsIoHeaderDirective () {
                 'editDashboard',
                 'manageDashboardTags',
                 'addMetric',
-                'editMetric'
+                'editMetric',
+                'requirementsTestRun',
+                'benchmarkPreviousBuildTestRun',
+                'benchmarkFixedBaselineTestRun',
+                'addTestRun',
+                'editTestRun'
             ]
 
             var stateCheck = true;
