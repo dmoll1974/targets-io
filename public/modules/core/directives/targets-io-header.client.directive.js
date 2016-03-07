@@ -59,6 +59,8 @@ function TargetsIoHeaderDirective () {
                         }else{
                             $scope.$$childTail.dashboard = null;
                             $scope.$$childTail.dashboardSearchText = null;
+                            $scope.dashboard = null;
+                            $scope.dashboardSearchText = null;
                         }
                     }
 
@@ -183,7 +185,7 @@ function TargetsIoHeaderDirective () {
                 }
             }else {
                 $scope.dashboardSelected = false;
-                if(!$state.includes('viewProduct')) {
+                if(!$state.includes('viewProduct') && !$state.includes('productReleaseDetails')) {
                     $state.go('viewProduct', {productName: $scope.product.name});
                 }
             }
