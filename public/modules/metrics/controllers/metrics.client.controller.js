@@ -232,7 +232,7 @@ angular.module('metrics').controller('MetricsController', [
     $scope.clone = function () {
       $scope.metric._id = undefined;
       Metrics.clone = $scope.metric;
-      $state.go('createMetric', {
+      $state.go('addMetric', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName
       });

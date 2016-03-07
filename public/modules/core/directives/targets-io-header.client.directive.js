@@ -222,7 +222,9 @@ function TargetsIoHeaderDirective () {
                 'viewGraphs',
                 'viewLiveGraphs',
                 'editDashboard',
-                'manageDashboardTags'
+                'manageDashboardTags',
+                'addMetric',
+                'editMetric'
             ]
 
             var stateCheck = true;

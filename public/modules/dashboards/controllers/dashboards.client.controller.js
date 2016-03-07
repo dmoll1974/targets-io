@@ -153,7 +153,7 @@ angular.module('dashboards').controller('DashboardsController', [
     //$scope.authentication = Authentication;
     $scope.addMetric = function () {
       //            console.log('add/metric/' + $stateParams.productName + '/' + $stateParams.dashboardName)
-      $state.go('createMetric', {
+      $state.go('addMetric', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName
       });
