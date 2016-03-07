@@ -148,7 +148,7 @@ function TargetsIoHeaderDirective () {
 
 
             if(product) {
-                if (!$state.includes('productReleaseDetails') && !$state.includes('editProduct') && !$stateParams.dashboardName ) {
+                if (checkProductState($state) && !$stateParams.dashboardName ) {
 
                     $scope.dashboardSelected = false;
                     $scope.dashboard = null;
@@ -173,22 +173,67 @@ function TargetsIoHeaderDirective () {
             }
         }
 
+        function checkProductState($state){
+
+            var statesToCheck =[
+                'productReleaseDetails',
+                'editProduct',
+                'productRequirements',
+                'addProductRequirement',
+                'editProductRequirement',
+                'addProductReleaseLink',
+                'addDashboard',
+                'editDashboard'
+            ]
+
+            var stateCheck = true;
+
+            _.each(statesToCheck, function(stateToCheck){
+
+                if($state.includes(stateToCheck))stateCheck = false;
+
+            })
+
+            return stateCheck;
+        }
+
+
         $scope.selectedDashboardChange = function(dashboard){
 
 
             if(dashboard) {
                 $scope.dashboardSelected = true;
                 $scope.dashboard = dashboard;
-                if (!$stateParams.testRunId && !$state.includes('viewGraphs') && !$state.includes('viewLiveGraphs')) {
+                if (checkDashboardState($state)) {
                     TestRuns.list = [];
                     $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
                 }
             }else {
                 $scope.dashboardSelected = false;
-                if(!$state.includes('viewProduct') && !$state.includes('productReleaseDetails')) {
+                if(checkProductState($state)) {
                     $state.go('viewProduct', {productName: $scope.product.name});
                 }
             }
+        }
+
+        function checkDashboardState($state){
+
+            var statesToCheck =[
+                'viewGraphs',
+                'viewLiveGraphs',
+                'editDashboard',
+                'manageDashboardTags'
+            ]
+
+            var stateCheck = true;
+
+            _.each(statesToCheck, function(stateToCheck){
+
+                if($state.includes(stateToCheck))stateCheck = false;
+
+            })
+
+            return stateCheck;
         }
 
         $scope.filterProducts = function (query) {

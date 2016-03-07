@@ -36,7 +36,7 @@ function DashboardMenuDirective () {
 
         $scope.addDashboard = function(){
 
-            $state.go('createDashboard', {productName: $stateParams.productName});
+            $state.go('addDashboard', {productName: $stateParams.productName});
         }
 
         $scope.addTemplate = function(){
