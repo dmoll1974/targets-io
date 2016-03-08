@@ -33,6 +33,22 @@ angular.module('metrics').controller('MetricsController', [
       'Last',
       'Gradient'
     ];
+
+    $scope.metricUnits = [
+      'None',
+      'Count',
+      'Errors',
+      'Mb',
+      'Milliseconds',
+      'Percentage',
+      'Responses',
+      'Bytes/second',
+      'CPUsec',
+      'Users',
+      'Custom'
+    ];
+
+
     $scope.operatorOptions = [
       {
         alias: 'lower than',
@@ -82,6 +98,12 @@ angular.module('metrics').controller('MetricsController', [
     });
 
 
+    $scope.addCustomUnit = function(){
+
+      $scope.metricUnits.push($scope.metric.customUnit)
+      $scope.metric.unit = $scope.metric.customUnit;
+
+    }
 
     $scope.addTarget = function () {
       $scope.metric.targets.push('');
@@ -218,6 +240,13 @@ angular.module('metrics').controller('MetricsController', [
       Metrics.get($stateParams.metricId).success(function (metric) {
 
         $scope.metric = metric;
+
+        /* if metric has custom unit, add it to the select list */
+
+        if($scope.metricUnits.indexOf($scope.metric.unit ) === -1){
+          $scope.metricUnits.unshift($scope.metric.unit);
+        }
+
         /* set benchmark and requirement toggles */
         if ($scope.metric.requirementValue)
           $scope.enableRequirement = true;

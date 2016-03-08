@@ -14,7 +14,7 @@ function TargetsIoHeaderDirective () {
     return directive;
 
     /* @ngInject */
-    function TargetsIoHeaderDirectiveController ($scope, $rootScope, $state, $stateParams, $interval, Products, Dashboards, Templates, TestRuns, ConfirmModal, $modal,$filter, $timeout, Utils, TargetsIoHeader) {
+    function TargetsIoHeaderDirectiveController ($scope, $rootScope, $state, $stateParams, $location, Products, Dashboards, Templates, TestRuns, ConfirmModal, $modal,$filter, $timeout, Utils, TargetsIoHeader) {
 
         $scope.$on('$stateChangeSuccess',function(){
             $scope.$state = $state;

@@ -34,14 +34,37 @@
                 </tags-input>
             </md-input-container>
             <div  class="well">
-                <md-input-container flex >
-                    <label>Type</label>
-                    <md-select ng-model="metric.type">
-                        <md-option ng-repeat="metricType in metricTypes" value="{{metricType}}">
-                            {{metricType}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>
+                <div layout="row"  layout-align="start center">
+                    <div class="md-padding">
+                        <md-input-container >
+                            <label>Type</label>
+                            <md-select ng-model="metric.type">
+                                <md-option ng-repeat="metricType in metricTypes" value="{{metricType}}">
+                                    {{metricType}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div class="md-padding">
+                        <md-input-container>
+                            <label>Unit</label>
+                            <md-select ng-model="metric.unit">
+                                <md-option ng-repeat="metricUnit in metricUnits" value="{{metricUnit}}">
+                                    {{metricUnit}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div layout="row" layout-align="start center" class="md-padding">
+                        <md-input-container ng-if="metric.unit ==='Custom'">
+                            <label>Custom unit</label>
+                            <input ng-model="metric.customUnit">
+                        </md-input-container>
+                        <md-button  ng-if="metric.unit === 'Custom'" md-no-ink class="md-primary md-padding" data-ng-click="addCustomUnit()">
+                            Add custom unit
+                        </md-button>
+                    </div>
+                </div>
             </div>
             <div layout="column" class="well">
                 <md-switch class="md-primary" md-no-ink aria-label="Requirements enabled" ng-model="enableRequirement" ng-class="{'switch-label-disabled': enableRequirement === false }">
