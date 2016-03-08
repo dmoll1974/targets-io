@@ -92,6 +92,40 @@ function upload(req, res) {
 
         var testrunSummaryDoc = new TestrunSummary(importTestrunSummary);
 
+        _.each(testrunSummaryDoc.metrics, function(metric){
+
+          var responseTimePattern = new RegExp("Response Times|Time");
+          if(responseTimePattern.test(metric.alias)) metric.unit = 'Milliseconds';
+
+          var heapInUsePattern = new RegExp("Mb");
+          if(heapInUsePattern.test(metric.alias)) metric.unit = 'Mb';
+
+          var transactionsPattern = new RegExp("Transactions|transactions");
+          if(transactionsPattern.test(metric.alias)) metric.unit = 'Transactions';
+
+          var countPattern = new RegExp("Count|count|numActive|ThreadsBusy");
+          if(countPattern.test(metric.alias)) metric.unit = 'Count';
+
+          var percentagePattern = new RegExp("Percentage|percentage|CPU per host");
+          if(percentagePattern.test(metric.alias)) metric.unit = 'Percentage';
+
+          var bytesSecondPattern = new RegExp("bytes\/second");
+          if(bytesSecondPattern.test(metric.alias)) metric.unit = 'Bytes/second';
+
+          var responsesPattern = new RegExp("Responses|responses");
+          if(responsesPattern.test(metric.alias)) metric.unit = 'Responses';
+
+
+          var errorsPattern = new RegExp("Errors|errors");
+          if(errorsPattern.test(metric.alias)) metric.unit = 'Errors';
+
+          var usersPattern = new RegExp("Users|users");
+          if(usersPattern.test(metric.alias)) metric.unit = 'Users';
+
+          var cpusecPattern = new RegExp("CPU process|CPUSec");
+          if(cpusecPattern.test(metric.alias)) metric.unit = 'CPUSec';
+
+        })
         testrunSummaryDoc.save(function (err) {
         });
 
