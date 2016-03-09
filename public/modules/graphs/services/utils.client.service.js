@@ -13,11 +13,12 @@ angular.module('graphs').service('Utils', ['$http', function ($http) {
       zoomFrom: '',
       zoomUntil: '',
       showLegend: true,
-      flushGraphiteCache:  flushGraphiteCache
+      flushGraphiteCache:  flushGraphiteCache,
       numberOfColumns: 2,
       reset: reset
 
     };
+
     return Utils;
 
     function flushGraphiteCache(){
