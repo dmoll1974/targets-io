@@ -212,6 +212,7 @@ function TargetsIoHeaderDirective () {
                 'editProductRequirement',
                 'addProductReleaseLink',
                 'addDashboard',
+                'home',
                 'editDashboard'
             ]
 
