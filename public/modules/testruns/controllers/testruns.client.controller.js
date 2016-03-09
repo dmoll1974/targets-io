@@ -272,7 +272,7 @@ angular.module('testruns').controller('TestrunsController', [
             }
             if (counter++ % 4 == 0)
               j++;
-            console.log('bla');
+            //console.log('bla');
           }, 100, 0, true);
         }else{
 
