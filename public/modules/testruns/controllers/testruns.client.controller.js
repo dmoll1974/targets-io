@@ -295,7 +295,8 @@ angular.module('testruns').controller('TestrunsController', [
     };
 
     $scope.go = function (url) {
-      $window.location.href = url;
+      //$window.location.href = url;
+      $window.open(url, '_blank');
     };
 
     //$scope.$watch(function (scope) {
@@ -304,13 +305,6 @@ angular.module('testruns').controller('TestrunsController', [
     //  if (newVal !== oldVal) {
     //    $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
     //    $scope.dashboard = Dashboards.selected;
-    //    $scope.testRuns = [];
-    //    TestRuns.list = [];
-    //    TestRuns.runningTest = '';
-    //    TestRuns.numberOfRunningTests = '';
-    //    Utils.reset();
-    //    Utils.zoomFrom = '';
-    //    Utils.zoomUntil = '';
     //
     //  }
     //});

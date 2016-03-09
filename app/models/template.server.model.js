@@ -26,6 +26,14 @@ var templateMetricSchema = new mongoose.Schema({
   'requirementOperator': {
     type: String,
     default: null
+  },
+  'unit': {
+    type: String,
+    default: 'None'
+  },
+  'type': {
+    type: String,
+    default: 'Average'
   }
 });
 

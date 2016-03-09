@@ -53,7 +53,11 @@ var metricSchema = new mongoose.Schema({
     default: false
   },
   'defaultSummaryText': String,
-  'summaryIndex': Number
+  'summaryIndex': Number,
+  'unit': {
+    type: String,
+    default: 'None'
+  }
 });
 
 metricSchema.pre('remove', function (next) {

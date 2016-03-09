@@ -1,30 +1,35 @@
 <md-content ng-controller="GraphsController" data-ng-init="init()">
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
     <div fix-to-top="fix-to-top" class="graphs-header">
-        <div layout="row" layout-align="space-between center" flex>
-           <!--<div layout="row">-->
 
-                    <md-radio-group ng-model="zoomRange">
-                        <div layout="row" layout-align="space-between end">
-                            <md-radio-button class="range-selector-padding" value="-10min" class="md-primary">10min</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-30min" class="md-primary">30min</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-1h" class="md-primary">1h</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-3h" class="md-primary">3h</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-6h" class="md-primary">6h</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-12h" class="md-primary">12h</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-1d" class="md-primary">1d</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-2d" class="md-primary">2d</md-radio-button>
-                            <md-radio-button class="range-selector-padding" value="-3d" class="md-primary">3d</md-radio-button>
-                        </div>
-                    </md-radio-group>
+        <div layout="row"  flex layout-align="space-between center" flex>
+            <div layout="row" layout-align="space-between center" flex>
+                <div>
+                <span>
+                    <a data-ng-href="/#!/browse/{{productName}}/">{{productName}}</a>  /
+                    <a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}/">{{dashboardName}}</a>
+                </span>
+                </div>
+                <div layout="row" layout-align="start center">
+                        <span>Time range</span>
+                        <md-select class="md-padding time-range-selector" ng-model="zoomRange">
+                            <md-option ng-repeat="zoomOption in zoomOptions" value="{{zoomOption.value}}">
+                                {{zoomOption.label}}
+                            </md-option>
+                        </md-select>
+                </div>
+            </div>
 
-                   <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="zoomLock" >
-                       Apply zoom to all graphs
-                   </md-switch>
-                   <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
-                   <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
-            <!--</div>-->
-            <!--<div layout="row">-->
+
+            <div layout="row" layout-align="end center" flex>
+               <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="zoomLock" >
+                   Apply zoom to all graphs
+               </md-switch>
+               <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
+               <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
+            </div>
+            <div layout="row" layout-align="end center" flex>
+
                 <md-menu>
                     <md-button aria-label="Open edit menu" class="md-icon-button"
                                ng-click="openMenu($mdOpenMenu, $event)">
@@ -55,7 +60,7 @@
                     Show legend
                 </md-switch>
 
-            <!--</div>-->
+            </div>
         </div>
 
         <md-tabs md-selected="selectedIndex" class="metric-panels" style="padding-bottom: 0px;">
@@ -65,44 +70,44 @@
             </md-tab>
         </md-tabs>
 
-        <div layout="row" flex >
-            <div layout="row" flex="50" layout-align="start top"  >
-                <div flex="90" layout-fill>
-                    <md-input-container layout-fill style="padding-bottom: 5px;">
-                        <label>Filter metrics</label>
-                        <input ng-model="metricFilter">
-                    </md-input-container>
-                </div>
-                <div flex="10">
-                    <md-icon style="margin-bottom: 5px;" ng-if="metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
-                         data-ng-click="clearMetricFilter()">
+        <!--<div layout="row" flex >-->
+            <!--<div layout="row" flex="50" layout-align="start top"  >-->
+                <!--<div flex="90" layout-fill>-->
+                    <!--<md-input-container layout-fill style="padding-bottom: 5px;">-->
+                        <!--<label>Filter metrics</label>-->
+                        <!--<input ng-model="metricFilter">-->
+                    <!--</md-input-container>-->
+                <!--</div>-->
+                <!--<div flex="10">-->
+                    <!--<md-icon style="margin-bottom: 5px;" ng-if="metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"-->
+                         <!--data-ng-click="clearMetricFilter()">-->
 
-                    </md-icon>
-                </div>
+                    <!--</md-icon>-->
+                <!--</div>-->
 
-            </div>
-
-
-            <div flex="50" layout="row" layout-align="end center" >
+            <!--</div>-->
 
 
-                <button ng-if="showViewUrl && hasFlash()"
-                        tooltip-size="medium" title="Copy graph URL"
-                        tooltip-side="top" clip-copy="viewShareUrl"
-                        clip-click="clipClicked()">Copy
-                </button>
-                <input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"
-                       share-graph-url/>
-                <label title="Share view URL" class="btn default"
-                       ng-click="setViewShareUrl('graphs-live')"><span
-                        class="btn  glyphicon glyphicon-share"></span>
-                </label>
+            <!--<div flex="50" layout="row" layout-align="end center" >-->
 
-            </div>
-        </div>
+
+                <!--<button ng-if="showViewUrl && hasFlash()"-->
+                        <!--tooltip-size="medium" title="Copy graph URL"-->
+                        <!--tooltip-side="top" clip-copy="viewShareUrl"-->
+                        <!--clip-click="clipClicked()">Copy-->
+                <!--</button>-->
+                <!--<input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"-->
+                       <!--share-graph-url/>-->
+                <!--<label title="Share view URL" class="btn default"-->
+                       <!--ng-click="setViewShareUrl('graphs-live')"><span-->
+                        <!--class="btn  glyphicon glyphicon-share"></span>-->
+                <!--</label>-->
+
+            <!--</div>-->
+        <!--</div>-->
     </div>
     <md-content layout="row">
-        <md-content class="md-padding graph-column" layout="column" ng-repeat="column in columnsArray" flex="flex">
+        <md-content class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + columnsArray.length}}" layout="column" ng-repeat="column in columnsArray" flex="flex">
 
             <accordion close-others="false">
                 <md-content data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:metricFilter | slice:column.start:column.end" data-ng-controller="HighchartsLiveController">

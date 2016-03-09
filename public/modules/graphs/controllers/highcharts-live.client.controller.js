@@ -16,6 +16,9 @@ angular.module('graphs').controller('HighchartsLiveController', [
   'Events',
   'Utils',
   function ($scope, Interval, $stateParams, $state, Graphite, TestRuns, Metrics, Dashboards, Tags, $q, $http, $log, Events, Utils) {
+    
+
+    
     /* Zero copied logic */
     $scope.clipClicked = function () {
       $scope.showUrl = false;
@@ -104,7 +107,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
     /* generate deeplink to share metric graph */
     $scope.setMetricShareUrl = function (metric) {
 
-      $scope.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '?';
+      $scope.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?';
 
       if (Utils.zoomFrom) {
         $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;

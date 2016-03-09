@@ -31,7 +31,7 @@
             <td></td>
         </tr>
         <tbody>
-        <tr ng-repeat="recentTest in recentTests | orderBy:'-end'" class="hover-row" ui-sref="viewDashboard({productName: recentTest.productName, dashboardName: recentTest.dashboardName})">
+        <tr ng-repeat="recentTest in recentTests | orderBy:'-end'" class="pointer hover-row" ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})">
             <td>
                 {{recentTest.productName}}
             </td>

@@ -56,21 +56,21 @@ if(cluster.isMaster) {
 
 /* spawn child process that synchronizes running tests */
 
-	var child_process = require('child_process');
-	var debug = typeof v8debug === 'object';
-	if (debug) {
-		//Set an unused port number.
-		process.execArgv.push('--debug=' + (40894));
-	}
-
-	var env = { mongoUrl: config.db };
-
-	var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
-
-	synchronizeRunningTestsDaemonFork.on('exit', function (code, signal) {
-		console.log("synchronizeRunningTestsDaemonFork process terminated with code: " + code);
-		synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js');
-	});
+	//var child_process = require('child_process');
+	//var debug = typeof v8debug === 'object';
+	//if (debug) {
+	//	//Set an unused port number.
+	//	process.execArgv.push('--debug=' + (40894));
+	//}
+    //
+	//var env = { mongoUrl: config.db };
+    //
+	//var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
+    //
+	//synchronizeRunningTestsDaemonFork.on('exit', function (code, signal) {
+	//	console.log("synchronizeRunningTestsDaemonFork process terminated with code: " + code);
+	//	synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js');
+	//});
 
 } else {
 	var app = require('./config/express')(db);

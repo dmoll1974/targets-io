@@ -8,7 +8,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 	function($locationProvider) {
 		$locationProvider.hashPrefix('!');
 	}
-]).run(['$rootScope', 'Interval', function($rootScope, Interval){
+]).run(['$rootScope', 'Interval', 'Products', 'TargetsIoHeader', '$stateParams', function($rootScope, Interval, Products, TargetsIoHeader, $stateParams){
 
         $rootScope.previousState;
         $rootScope.currentState;
@@ -18,12 +18,14 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
             $rootScope.currentState = to.name;
             $rootScope.currentStateParams = toParams;
 
-                /* clear all running Intervals when leaving the live graphs state*/
+            /* clear all running Intervals when leaving the live graphs state*/
 
-                if ($rootScope.previousState === 'viewLiveGraphs') Interval.clearAll();
+            if ($rootScope.previousState === 'viewLiveGraphs') Interval.clearAll();
 
 
-        //    console.log('Previous state:'+$rootScope.previousState)
+
+
+            //    console.log('Previous state:'+$rootScope.previousState)
         //    console.log('Current state:'+$rootScope.currentState)
         });
     }

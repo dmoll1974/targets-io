@@ -39,6 +39,7 @@ var testRunSummaryMetricSchema = new Schema({
     'graphNumberOfValidDatapoints': Number,
     'maxValue': Number
   },
+  'unit': String,
   'includeInSummary': Boolean,
   'summaryText': String,
   'summaryIndex': Number,

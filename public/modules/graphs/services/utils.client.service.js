@@ -13,10 +13,9 @@ angular.module('graphs').service('Utils', ['$http', function ($http) {
       zoomFrom: '',
       zoomUntil: '',
       showLegend: true,
-      numberOfColums: 1,
-      reset: reset,
       flushGraphiteCache:  flushGraphiteCache
-
+      numberOfColumns: 2,
+      reset: reset
 
     };
     return Utils;
@@ -36,7 +35,7 @@ angular.module('graphs').service('Utils', ['$http', function ($http) {
         Utils.zoomFrom = '';
         Utils.zoomUntil = '';
         Utils.showLegend = true;
-        Utils.numberOfColums = 1;
+        Utils.numberOfColumns = 2;
 
     }
     function dynamicSortTags(sortOrderParam) {
