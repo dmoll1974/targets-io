@@ -22,6 +22,7 @@ function EditTemplateDirective () {
 
       $scope.template = Templates.selected;
 
+
       $scope.update = function(){
 
           Templates.update($scope.template).success(function (template){

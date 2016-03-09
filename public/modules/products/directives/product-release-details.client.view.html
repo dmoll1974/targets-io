@@ -1,15 +1,21 @@
 <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
 <md-content layout="column">
-    <div layout="row" layout-align="end center">
-        <div id="summary-buttons" layout="row">
-            <md-button  ng-if="editMode === true" md-no-ink class="md-primary" data-ng-click="addLink()">Add link</md-button>
-            <md-button ng-if="editMode === true && releaseSaved === true" class="md-warn" data-ng-click="openDeleteModal('', product)">Discard</md-button>
 
+    <div layout="row" layout-align="space-between center">
+        <span>
+            <a data-ng-href="/#!/browse/{{product.name}}/">{{product.name}} / RELEASES </a>  /  {{product.productRelease}}
+        </span>
+        <div layout="row" layout-align="end center">
+            <div id="summary-buttons" layout="row">
+                <md-button  ng-if="editMode === true" md-no-ink class="md-primary" data-ng-click="addLink()">Add link</md-button>
+                <md-button ng-if="editMode === true && releaseSaved === true" class="md-warn" data-ng-click="openDeleteModal('', product)">Discard</md-button>
+
+            </div>
+
+                <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode" ng-change="submitProductRelease()" ng-class="{'switch-label-disabled': editMode === false }">
+                Edit
+            </md-switch>
         </div>
-
-            <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode" ng-change="submitProductRelease()" ng-class="{'switch-label-disabled': editMode === false }">
-            Edit
-        </md-switch>
     </div>
     <div layout="row">
         <div flex="50">

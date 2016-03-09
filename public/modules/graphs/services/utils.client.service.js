@@ -13,7 +13,7 @@ angular.module('graphs').service('Utils', [function () {
       zoomFrom: '',
       zoomUntil: '',
       showLegend: true,
-      numberOfColums: 1,
+      numberOfColumns: 2,
       reset: reset
 
     };
@@ -29,7 +29,7 @@ angular.module('graphs').service('Utils', [function () {
         Utils.zoomFrom = '';
         Utils.zoomUntil = '';
         Utils.showLegend = true;
-        Utils.numberOfColums = 1;
+        Utils.numberOfColumns = 2;
 
     }
     function dynamicSortTags(sortOrderParam) {

@@ -18,6 +18,43 @@ function EditTemplateMetricDirective () {
 
       $scope.metric = Templates.metric;
 
+      /* values for form drop downs*/
+      $scope.metricTypes = [
+          'Average',
+          'Maximum',
+          'Minimum',
+          'Last',
+          'Gradient'
+      ];
+
+      $scope.metricUnits = [
+          'None',
+          'Count',
+          'Errors',
+          'Mb',
+          'Milliseconds',
+          'Percentage',
+          'Responses',
+          'Bytes/second',
+          'CPUsec',
+          'Users',
+          'Custom'
+      ];
+
+      /* if metric has custom unit, add it to the select list */
+
+      if($scope.metricUnits.indexOf($scope.metric.unit ) === -1){
+          $scope.metricUnits.unshift($scope.metric.unit);
+      }
+
+      $scope.addCustomUnit = function(){
+
+          $scope.metricUnits.push($scope.metric.customUnit)
+          $scope.metric.unit = $scope.metric.customUnit;
+
+      }
+
+
       /* watch benchmark and requirement toggles */
 
       $scope.$watch('enableRequirement', function (newVal, oldVal) {

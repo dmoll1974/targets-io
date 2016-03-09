@@ -331,7 +331,8 @@ function MergeTemplateDirective () {
                           benchmarkValue: metric.benchmarkValue,
                           benchmarkOperator: metric.benchmarkOperator,
                           requirementValue: metric.requirementValue,
-                          requirementOperator: metric.requirementOperator
+                          requirementOperator: metric.requirementOperator,
+                          unit: metric.unit
                       });
 
                   targets = [];

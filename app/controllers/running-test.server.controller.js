@@ -71,6 +71,7 @@ function runningTest(req, res){
         /* set test run end time*/
         runningTest.end = new Date().getTime();
         /* Save test run*/
+
         saveTestRun(runningTest)
           .then(testRunsModule.benchmarkAndPersistTestRunById)
           .then(function(testRun){

@@ -3,7 +3,7 @@
         <h1>Add Test Run</h1>
     </div>
     <!--<div class="col-md-12">-->
-    <form  id="submit" name="testrunForm">
+    <form  id="submit" name="testrunForm" autocomplete="off" >
         <div layout="column">
             <div layout="column">
                 <div layout="row">
@@ -81,7 +81,7 @@
                         md-is-error="testrunForm.testRunId.$invalid && (testrunForm.$submitted || testrunForm.testRunId.$dirty)"
                         flex>
                     <label>Testrun ID</label>
-                    <input name="testRunId" ng-model="testrun.testRunId"
+                    <input autocomplete="off"  name="testRunId" ng-model="testrun.testRunId"
                            typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8"
                            record-availability-validator="/testrun/{{testrun.productName}}/{{testrun.dashboardName}}" required>
 

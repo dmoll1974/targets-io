@@ -228,6 +228,8 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
         highlightSeriesOpts: {
           strokeWidth: 2
         },
+        ylabel: $scope.metric.unit !== 'None'? $scope.metric.unit : '' ,
+        yLabelWidth: 14,
         highlightCallback: highLightLegend,
         unhighlightCallback: unHighLightLegend,
         axes: {

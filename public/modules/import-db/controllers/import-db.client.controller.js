@@ -45,6 +45,7 @@ angular.module('import-db').controller('ImportDbController', [
       //console.log('file is ' + JSON.stringify(file));
       FileUpload.uploadFileToUrl(file, uploadUrl).then(function () {
         Products.fetch().success(function (products) {
+          Products.items = products;
           SideMenu.addProducts(products);
           $location.path('/#!/');
           $scope.activated = false;
