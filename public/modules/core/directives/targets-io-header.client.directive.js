@@ -35,6 +35,15 @@ function TargetsIoHeaderDirective () {
         //        });
         //    }
         //});
+        // $scope.$watch(function (scope) {
+        //    return Products.selected ;
+        //}, function (newVal, oldVal) {
+        //    if (newVal !== oldVal && newVal) {
+        //
+        //        $scope.product = newVal ;
+        //
+        //    }
+        //});
 
 
         $rootScope.$watch('currentStateParams', function (newVal, oldVal) {
@@ -45,19 +54,21 @@ function TargetsIoHeaderDirective () {
 
                     if($rootScope.currentStateParams.productName) {
 
+
                         var productIndex = $scope.products.map(function(product){return product.name;}).indexOf($rootScope.currentStateParams.productName);
                         $scope.product = $scope.products[productIndex];
-
 
                         if($rootScope.currentStateParams.dashboardName) {
 
                             var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($rootScope.currentStateParams.dashboardName);
                             $scope.dashboard = $scope.product.dashboards[dashboardIndex];
+
                         }else{
                             $scope.$$childTail.dashboard = null;
                             $scope.$$childTail.dashboardSearchText = null;
                             $scope.dashboard = null;
                             $scope.dashboardSearchText = null;
+
                         }
                     }
                 });
@@ -134,6 +145,7 @@ function TargetsIoHeaderDirective () {
             $scope.productSearchText = $filter('uppercase')(val);
         }, true);
 
+
         $scope.$watch('dashboardSearchText', function (val) {
             $scope.dashboardSearchText = $filter('uppercase')(val);
         }, true);
@@ -153,22 +165,24 @@ function TargetsIoHeaderDirective () {
 
         $scope.selectedProductChange = function(product){
 
-            Products.selected = product;
-
-
 
             if(product) {
                 if (checkProductState($state) && !$stateParams.dashboardName ) {
 
+
+
+                    Products.selected = product;
                     $scope.dashboardSelected = false;
                     $scope.dashboard = null;
                     $scope.dashboardSearchText = null;
 
                     $timeout(function(){
 
+
                         $scope.$$childTail.dashboard = null;
                         $scope.$$childTail.dashboardSearchText = null;
-                        $state.go('viewProduct', {productName: product.name});
+
+                        $state.go('viewProduct', {productName: Products.selected.name});
 
                     });
                 }
@@ -221,7 +235,7 @@ function TargetsIoHeaderDirective () {
             }else {
                 $scope.dashboardSelected = false;
                 if(checkProductState($state)) {
-                    $state.go('viewProduct', {productName: $scope.product.name});
+                    $state.go('viewProduct', {productName: Products.selected.name});
                 }
             }
         }
