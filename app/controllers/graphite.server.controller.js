@@ -8,15 +8,15 @@ var mongoose = require('mongoose'),
     request = require('request'),
     requestjson = require('request-json'),
     config = require('../../config/config'),
-    Memcached = require('memcached'),
+    //Memcached = require('memcached'),
     GraphiteCache = cacheDb.model('GraphiteCache'),
     md5 = require('MD5');
 /* Memcached config */
-Memcached.config.poolSize = 512;
-Memcached.config.timeout = 100;
-Memcached.config.retries = 3;
-Memcached.config.reconnect = 1000;
-Memcached.config.maxValue = 10480000;
+//Memcached.config.poolSize = 512;
+//Memcached.config.timeout = 100;
+//Memcached.config.retries = 3;
+//Memcached.config.reconnect = 1000;
+//Memcached.config.maxValue = 10480000;
 exports.getGraphiteData = getGraphiteData;
 exports.flushGraphiteCacheKey = flushGraphiteCacheKey;
 exports.createGraphiteCacheKey = createGraphiteCacheKey;
@@ -85,7 +85,7 @@ exports.getData = function (req, res) {
 function getGraphiteData(from, until, targets, maxDataPoints, callback) {
   /* memcached stuff*/
   var graphiteCacheKey = createGraphiteCacheKey(from, until, targets);
-  var memcached = new Memcached(config.memcachedHost);
+  //var memcached = new Memcached(config.memcachedHost);
   var graphiteTargetUrl = createUrl(from, until, targets, maxDataPoints);
   var client = requestjson.createClient(config.graphiteHost);
   /* Don't cache live data! */
