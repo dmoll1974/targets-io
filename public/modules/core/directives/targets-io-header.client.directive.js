@@ -60,6 +60,11 @@ function TargetsIoHeaderDirective () {
 
                         if($rootScope.currentStateParams.dashboardName) {
 
+                            /* if switching dashboards, reset test runs list */
+                            if($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName) {
+                                TestRuns.list = [];
+                            }
+
                             var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($rootScope.currentStateParams.dashboardName);
                             $scope.dashboard = $scope.product.dashboards[dashboardIndex];
 
