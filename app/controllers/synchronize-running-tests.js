@@ -215,10 +215,10 @@ let saveTestRun = function (runningTest){
       rampUpPeriod: runningTest.rampUpPeriod,
       completed: runningTest.completed,
       humanReadableDuration: humanReadbleDuration(runningTest.end.getTime() - runningTest.start.getTime())
-      buildResultsUrl: runningTest.buildResultsUrl
+      buildResultsUrl: runningTest.buildResultsUrl,
       meetsRequirement: null,
       benchmarkResultFixedOK: null,
-      benchmarkResultPreviousOK: null,
+      benchmarkResultPreviousOK: null
 
     });
 
