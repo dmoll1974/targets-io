@@ -214,7 +214,7 @@ let saveTestRun = function (runningTest){
       end: runningTest.end,
       rampUpPeriod: runningTest.rampUpPeriod,
       completed: runningTest.completed,
-      humanReadableDuration: humanReadbleDuration(runningTest.end.getTime() - runningTest.start.getTime())
+      humanReadableDuration: humanReadbleDuration(runningTest.end.getTime() - runningTest.start.getTime()),
       buildResultsUrl: runningTest.buildResultsUrl,
       meetsRequirement: null,
       benchmarkResultFixedOK: null,
