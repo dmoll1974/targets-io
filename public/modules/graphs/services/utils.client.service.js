@@ -26,7 +26,7 @@ angular.module('graphs').service('Utils', [function () {
         Utils.zoomLock = true;
         Utils.graphType = '';
         Utils.zoomRange = '';
-        Utils.zoomFrom = '';
+        Utils.zoomFrom = '-10min';
         Utils.zoomUntil = '';
         Utils.showLegend = true;
         Utils.numberOfColumns = 2;
