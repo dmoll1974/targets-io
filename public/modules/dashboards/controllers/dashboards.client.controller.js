@@ -61,9 +61,9 @@ angular.module('dashboards').controller('DashboardsController', [
         TestRuns.list = [];
         TestRuns.runningTest = '';
         TestRuns.numberOfRunningTests = '';
-        Utils.reset();
-        Utils.zoomFrom = '';
-        Utils.zoomUntil = '';
+        //Utils.reset();
+        //Utils.zoomFrom = '';
+        //Utils.zoomUntil = '';
 
         Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
           $scope.dashboard = Dashboards.selected;

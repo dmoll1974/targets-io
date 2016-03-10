@@ -319,10 +319,16 @@ angular.module('graphs').controller('GraphsController', [
       });
       return metrics;
     }
-    /* default zoom range for live graphs is -10m */
-    $scope.zoomRange = Utils.zoomRange !== '' ? Utils.zoomRange : '-10min';
+    /* get zoom range  */
+    $scope.zoomRange = Utils.zoomRange;
 
-    Utils.zoomRange = $scope.zoomRange;
+    /* watch zoomRange */
+    $scope.$watch('zoomRange', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        Utils.zoomRange = $scope.zoomRange;
+      }
+    });
+
     
     /* Set active tab */
     $scope.isActive = function (tag) {

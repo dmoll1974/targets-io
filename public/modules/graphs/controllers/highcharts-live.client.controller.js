@@ -164,7 +164,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
     $scope.$watch(function (scope) {
       return Utils.zoomFrom;
     }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
+      if (newVal !== oldVal && oldVal) {
         Interval.clearAll();
         var from = Utils.zoomFrom ? Utils.zoomFrom : TestRuns.selected.startEpoch;
         var until = Utils.zoomUntil ? Utils.zoomUntil : TestRuns.selected.endEpoch;
