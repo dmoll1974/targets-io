@@ -212,16 +212,17 @@ angular.module('dashboards').controller('DashboardsController', [
 
             /* Refresh sidebar */
             Products.fetch().success(function (products) {
-              SideMenu.addProducts(products);
 
               Products.items = products;
 
               $scope.products = products;
+
+              $state.go('viewDashboard', {
+                'productName': $stateParams.productName,
+                'dashboardName': $scope.dashboard.name
+              });
             });
-            $state.go('viewDashboard', {
-              'productName': $stateParams.productName,
-              'dashboardName': $scope.dashboard.name
-            });
+
           });
         });
       });
