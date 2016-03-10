@@ -60,9 +60,10 @@ function TargetsIoHeaderDirective () {
 
                         if($rootScope.currentStateParams.dashboardName) {
 
-                            /* if switching dashboards, reset test runs list */
+                            /* if switching dashboards, reset application state */
                             if($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName) {
                                 TestRuns.list = [];
+                                Utils.reset();
                             }
 
                             var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($rootScope.currentStateParams.dashboardName);
@@ -96,42 +97,10 @@ function TargetsIoHeaderDirective () {
 
         }
 
-        //$scope.$watch(function (scope) {
-        //    return TargetsIoHeader.productName;
-        //}, function () {
-        //
-        //    //$timeout(function(){
-        //
-        //        /* fetch products */
-        //
-        //        Products.fetch().success(function(products){
-        //            Products.items = products;
-        //            $scope.products = Products.items;
-        //
-        //            if(TargetsIoHeader.productName) {
-        //
-        //                var productIndex = $scope.products.map(function(product){return product.name;}).indexOf(TargetsIoHeader.productName);
-        //                $scope.product = $scope.products[productIndex];
-        //
-        //
-        //                if(TargetsIoHeader.dashboardName) {
-        //
-        //                    var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf(TargetsIoHeader.dashboardName);
-        //                    $scope.dashboard = $scope.product.dashboards[dashboardIndex];
-        //                }else{
-        //                    $scope.$$childTail.dashboard = null;
-        //                    $scope.$$childTail.dashboardSearchText = null;
-        //                }
-        //            }
-        //
-        //        });
-        //
-        //
-        //
-        //    })
-
-        //});
-
+        if ($state.params.metricFilter) {
+            $scope.metricFilter = $state.params.metricFilter;
+            Utils.metricFilter = $state.params.metricFilter;
+        }
 
         $scope.go = function (path) {
             $location.path(path);
