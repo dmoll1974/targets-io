@@ -141,7 +141,7 @@ function TargetsIoHeaderDirective () {
 
 
             if(product) {
-                if (checkProductState($state) && !$stateParams.dashboardName ) {
+                if (checkProductState($rootScope.currentState) && !$stateParams.dashboardName ) {
 
 
 
@@ -165,13 +165,15 @@ function TargetsIoHeaderDirective () {
                 $scope.dashboardSelected = false;
                 $scope.dashboard = null;
                 $scope.dashboardSearchText = null;
+                $scope.product = null;
+                $scope.productSearchText = null;
 
 
                 $state.go('home');
             }
         }
 
-        function checkProductState($state){
+        function checkProductState(state){
 
             var statesToCheck =[
                 'productReleaseDetails',
@@ -181,7 +183,6 @@ function TargetsIoHeaderDirective () {
                 'editProductRequirement',
                 'addProductReleaseLink',
                 'addDashboard',
-                'home',
                 'editDashboard'
             ]
 
@@ -189,7 +190,7 @@ function TargetsIoHeaderDirective () {
 
             _.each(statesToCheck, function(stateToCheck){
 
-                if($state.includes(stateToCheck))stateCheck = false;
+                if(state === stateToCheck)stateCheck = false;
 
             })
 
@@ -203,19 +204,19 @@ function TargetsIoHeaderDirective () {
             if(dashboard) {
                 $scope.dashboardSelected = true;
                 $scope.dashboard = dashboard;
-                if (checkDashboardState($state)) {
+                if (checkDashboardState($rootScope.currentState)) {
                     TestRuns.list = [];
                     $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
                 }
             }else {
                 $scope.dashboardSelected = false;
-                if(checkProductState($state)) {
+                if(checkProductState($rootScope.currentState) && $rootScope.currentState !== 'home' ) {
                     $state.go('viewProduct', {productName: Products.selected.name});
                 }
             }
         }
 
-        function checkDashboardState($state){
+        function checkDashboardState(state){
 
             var statesToCheck =[
                 'viewGraphs',
@@ -235,7 +236,7 @@ function TargetsIoHeaderDirective () {
 
             _.each(statesToCheck, function(stateToCheck){
 
-                if($state.includes(stateToCheck))stateCheck = false;
+                if(state === stateToCheck)stateCheck = false;
 
             })
 
