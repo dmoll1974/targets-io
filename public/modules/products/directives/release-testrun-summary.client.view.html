@@ -57,9 +57,14 @@
 
 
 
-
+    <md-button ng-click="toggleShowTestRunDetails()" ng-if="showTestRunDetails" class="md-primary" aria-label="Hide detailed test run summary">
+        <md-tooltip>Hide detailed test run Summary</md-tooltip>
+        <md-icon md-svg-src="images/assets/ic_zoom_out_black_24px.svg"></md-icon>
+        <span>Hide detailed test run Summary</span>
+    </md-button>
 
     <md-content ng-if="showTestRunDetails" class="md-padding" layout="column" flex="90" >
+
         <h4>Metrics</h4>
         <div  data-ng-repeat="metric in testRunSummary.metrics | testRunSummary " >
             <div layout="row" layout-align="space-between center">
