@@ -47,7 +47,7 @@ function TargetsIoHeaderDirective () {
 
 
         $rootScope.$watch('currentStateParams', function (newVal, oldVal) {
-            if (newVal !== oldVal) {
+            //if (newVal !== oldVal) {
 
                 fetchProducts(function(products){
                     $scope.products = Products.items;
@@ -79,7 +79,7 @@ function TargetsIoHeaderDirective () {
                     }
                 });
 
-            }
+            //}
         });
 
         function fetchProducts(callback){
@@ -156,7 +156,7 @@ function TargetsIoHeaderDirective () {
                         $scope.$$childTail.dashboard = null;
                         $scope.$$childTail.dashboardSearchText = null;
 
-                        $state.go('viewProduct', {productName: Products.selected.name});
+                        $state.go('viewProduct', {productName: $scope.product.name});
 
                     });
                 }
@@ -211,7 +211,7 @@ function TargetsIoHeaderDirective () {
             }else {
                 $scope.dashboardSelected = false;
                 if(checkProductState($rootScope.currentState) && $rootScope.currentState !== 'home' ) {
-                    $state.go('viewProduct', {productName: Products.selected.name});
+                    $state.go('viewProduct', {productName: $scope.product.name});
                 }
             }
         }
@@ -229,7 +229,8 @@ function TargetsIoHeaderDirective () {
                 'benchmarkPreviousBuildTestRun',
                 'benchmarkFixedBaselineTestRun',
                 'addTestRun',
-                'editTestRun'
+                'editTestRun',
+                'testRunSummary'
             ]
 
             var stateCheck = true;
