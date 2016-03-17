@@ -97,10 +97,6 @@ function TargetsIoHeaderDirective () {
 
         }
 
-        if ($state.params.metricFilter) {
-            $scope.metricFilter = $state.params.metricFilter;
-            Utils.metricFilter = $state.params.metricFilter;
-        }
 
         $scope.go = function (path) {
             $location.path(path);
@@ -258,11 +254,6 @@ function TargetsIoHeaderDirective () {
 
         }
 
-        $scope.clearMetricFilter = function(){
-
-            $scope.metricFilter = '';
-            Utils.metricFilter = '';
-        };
 
         $scope.filterTestRuns = function (query) {
             var results = query ? $scope.testRuns.filter( createFilterForTestRuns(query) ) : $scope.testRuns;
@@ -340,10 +331,6 @@ function TargetsIoHeaderDirective () {
         };
 
 
-        $scope.updateFilter = function(metricFilter){
-
-            Utils.metricFilter = metricFilter;
-        }
 
         var originatorEv;
         $scope.openMenu = function ($mdOpenMenu, ev) {
