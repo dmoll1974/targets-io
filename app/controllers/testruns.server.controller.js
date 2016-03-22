@@ -23,7 +23,7 @@ var mongoose = require('mongoose'),
 
 
 
-
+exports.productReleasesFromTestRuns = productReleasesFromTestRuns;
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
 exports.testRunsForProduct = testRunsForProduct;
@@ -245,7 +245,7 @@ function deleteTestRunById(req, res) {
  * select test runs for product
  */
 function testRunsForProduct(req, res) {
-  Testrun.find({productName: req.params.productName}).sort({eventTimestamp: 1}).exec(function (err, testRuns) {
+  Testrun.find({productName: req.params.productName, completed: true}).sort({end: -1}).limit(req.params.limit).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
@@ -257,6 +257,22 @@ function testRunsForProduct(req, res) {
       });
 
       res.jsonp(testRuns);
+
+    }
+  });
+}
+
+/**
+ * get distinct releases for product
+ */
+function productReleasesFromTestRuns(req, res) {
+  Testrun.find({productName: req.params.productName}).distinct('productRelease').sort().exec(function (err, releases) {
+    if (err) {
+      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+    } else {
+
+
+      res.jsonp(releases);
 
     }
   });
@@ -333,23 +349,42 @@ function testRunsForDashboard(req, res) {
     response.runningTest = false;
 
     response.totalNumberOftestRuns = testRuns.length;
+  var query = {
+    $and: [
+      { productName: req.params.productName },
+      { dashboardName: req.params.dashboardName }
+    ]
+  };
 
-    /* Only return paginated test runs */
 
-    let page = req.params.page;
-    let limit = req.params.limit;
-    let paginatedTestRuns = [];
 
-    _.each(testRuns, function (testRun, index) {
+  Testrun.find(query).sort({end: -1 }).limit(req.params.limit).exec(function(err, testRuns) {
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
 
-      if (index >= (page - 1) * (limit) && index <= (page * limit) - 1) {
 
-        paginatedTestRuns.push(testRun);
-      }
 
-    });
+      //response.totalNumberOftestRuns = testRuns.length;
+      //
+      ///* Only return paginated test runs */
+      //
+      //let page = req.params.page;
+      //let limit = req.params.limit;
+      //let paginatedTestRuns = [];
+      //
+      //_.each(testRuns, function(testRun, index){
+      //
+      //  if(index >= (page - 1) * (limit)  && index <= (page * limit) - 1){
+      //
+      //    paginatedTestRuns.push(testRun);
+      //  }
+      //
+      //});
+      //
+      //response.testRuns = paginatedTestRuns;
 
-    response.testRuns = paginatedTestRuns;
+      response.testRuns = testRuns;
 
     /* Check for running tests */
     RunningTest.find({
@@ -390,6 +425,8 @@ function testRunsForDashboard(req, res) {
 
     });
 
+
+    }
   });
 }
 

@@ -47,7 +47,7 @@ function TargetsIoHeaderDirective () {
 
 
         $rootScope.$watch('currentStateParams', function (newVal, oldVal) {
-            if (newVal !== oldVal) {
+            //if (newVal !== oldVal) {
 
                 fetchProducts(function(products){
                     $scope.products = Products.items;
@@ -59,6 +59,12 @@ function TargetsIoHeaderDirective () {
                         $scope.product = $scope.products[productIndex];
 
                         if($rootScope.currentStateParams.dashboardName) {
+
+                            /* if switching dashboards, reset application state */
+                            if($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName) {
+                                TestRuns.list = [];
+                                Utils.reset();
+                            }
 
                             var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($rootScope.currentStateParams.dashboardName);
                             $scope.dashboard = $scope.product.dashboards[dashboardIndex];
@@ -73,7 +79,7 @@ function TargetsIoHeaderDirective () {
                     }
                 });
 
-            }
+            //}
         });
 
         function fetchProducts(callback){
@@ -90,42 +96,6 @@ function TargetsIoHeaderDirective () {
             }
 
         }
-
-        //$scope.$watch(function (scope) {
-        //    return TargetsIoHeader.productName;
-        //}, function () {
-        //
-        //    //$timeout(function(){
-        //
-        //        /* fetch products */
-        //
-        //        Products.fetch().success(function(products){
-        //            Products.items = products;
-        //            $scope.products = Products.items;
-        //
-        //            if(TargetsIoHeader.productName) {
-        //
-        //                var productIndex = $scope.products.map(function(product){return product.name;}).indexOf(TargetsIoHeader.productName);
-        //                $scope.product = $scope.products[productIndex];
-        //
-        //
-        //                if(TargetsIoHeader.dashboardName) {
-        //
-        //                    var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf(TargetsIoHeader.dashboardName);
-        //                    $scope.dashboard = $scope.product.dashboards[dashboardIndex];
-        //                }else{
-        //                    $scope.$$childTail.dashboard = null;
-        //                    $scope.$$childTail.dashboardSearchText = null;
-        //                }
-        //            }
-        //
-        //        });
-        //
-        //
-        //
-        //    })
-
-        //});
 
 
         $scope.go = function (path) {
@@ -167,7 +137,7 @@ function TargetsIoHeaderDirective () {
 
 
             if(product) {
-                if (checkProductState($state) && !$stateParams.dashboardName ) {
+                if (checkProductState($rootScope.currentState) && !$stateParams.dashboardName ) {
 
 
 
@@ -182,7 +152,7 @@ function TargetsIoHeaderDirective () {
                         $scope.$$childTail.dashboard = null;
                         $scope.$$childTail.dashboardSearchText = null;
 
-                        $state.go('viewProduct', {productName: Products.selected.name});
+                        $state.go('viewProduct', {productName: $scope.product.name});
 
                     });
                 }
@@ -191,13 +161,15 @@ function TargetsIoHeaderDirective () {
                 $scope.dashboardSelected = false;
                 $scope.dashboard = null;
                 $scope.dashboardSearchText = null;
+                $scope.product = null;
+                $scope.productSearchText = null;
 
 
                 $state.go('home');
             }
         }
 
-        function checkProductState($state){
+        function checkProductState(state){
 
             var statesToCheck =[
                 'productReleaseDetails',
@@ -214,7 +186,7 @@ function TargetsIoHeaderDirective () {
 
             _.each(statesToCheck, function(stateToCheck){
 
-                if($state.includes(stateToCheck))stateCheck = false;
+                if(state === stateToCheck)stateCheck = false;
 
             })
 
@@ -228,19 +200,19 @@ function TargetsIoHeaderDirective () {
             if(dashboard) {
                 $scope.dashboardSelected = true;
                 $scope.dashboard = dashboard;
-                if (checkDashboardState($state)) {
+                if (checkDashboardState($rootScope.currentState)) {
                     TestRuns.list = [];
                     $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
                 }
             }else {
                 $scope.dashboardSelected = false;
-                if(checkProductState($state)) {
-                    $state.go('viewProduct', {productName: Products.selected.name});
+                if(checkProductState($rootScope.currentState) && $rootScope.currentState !== 'home' ) {
+                    $state.go('viewProduct', {productName: $scope.product.name});
                 }
             }
         }
 
-        function checkDashboardState($state){
+        function checkDashboardState(state){
 
             var statesToCheck =[
                 'viewGraphs',
@@ -253,14 +225,15 @@ function TargetsIoHeaderDirective () {
                 'benchmarkPreviousBuildTestRun',
                 'benchmarkFixedBaselineTestRun',
                 'addTestRun',
-                'editTestRun'
+                'editTestRun',
+                'testRunSummary'
             ]
 
             var stateCheck = true;
 
             _.each(statesToCheck, function(stateToCheck){
 
-                if($state.includes(stateToCheck))stateCheck = false;
+                if(state === stateToCheck)stateCheck = false;
 
             })
 
@@ -281,11 +254,6 @@ function TargetsIoHeaderDirective () {
 
         }
 
-        $scope.clearMetricFilter = function(){
-
-            $scope.metricFilter = '';
-            Utils.metricFilter = '';
-        };
 
         $scope.filterTestRuns = function (query) {
             var results = query ? $scope.testRuns.filter( createFilterForTestRuns(query) ) : $scope.testRuns;
@@ -363,10 +331,6 @@ function TargetsIoHeaderDirective () {
         };
 
 
-        $scope.updateFilter = function(metricFilter){
-
-            Utils.metricFilter = metricFilter;
-        }
 
         var originatorEv;
         $scope.openMenu = function ($mdOpenMenu, ev) {

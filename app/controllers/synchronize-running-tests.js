@@ -32,7 +32,17 @@ var RunningTestSchema = new mongoose.Schema({
     default: false
   },
   'productName': String,
-  'dashboardName': String
+  'productRelease': {
+    type: String,
+    uppercase: true
+  },
+  'dashboardName': {
+    type: String,
+    uppercase: true
+  },
+  'buildResultsUrl': String,
+  'humanReadableDuration': String,
+  'rampUpPeriod': Number
 
 });
 
@@ -88,6 +98,10 @@ var TestrunSchema = new Schema({
     type: String,
     uppercase: true
   },
+  'productRelease': {
+    type: String,
+    uppercase: true
+  },
   'dashboardName': {
     type: String,
     uppercase: true
@@ -118,6 +132,10 @@ var TestrunSchema = new Schema({
   'benchmarkResultFixedOK': Boolean,
   'benchmarkResultPreviousOK': Boolean,
   'buildResultsUrl': String,
+  'annotations': String,
+  'rampUpPeriod': {
+    type: Number
+  },
   'metrics': [testRunMetricSchema]
 }, { toObject: { getters: true } });
 TestrunSchema.virtual('startEpoch').get(function () {
@@ -145,7 +163,7 @@ var Testrun = mongoose.model('Testrun');
 
 
   /* start polling every minute */
-  setInterval(synchronizeRunningTestRuns, 30 * 1000);
+  setInterval(synchronizeRunningTestRuns, 60 * 1000);
 
 
 
@@ -189,13 +207,18 @@ let saveTestRun = function (runningTest){
     let testRun = new Testrun({
 
       productName: runningTest.productName,
+      productRelease: runningTest.productRelease,
       dashboardName: runningTest.dashboardName,
       testRunId: runningTest.testRunId,
       start: runningTest.start,
       end: runningTest.end,
       rampUpPeriod: runningTest.rampUpPeriod,
       completed: runningTest.completed,
-      humanReadableDuration: humanReadbleDuration(runningTest.end.getTime() - runningTest.start.getTime())
+      humanReadableDuration: humanReadbleDuration(runningTest.end.getTime() - runningTest.start.getTime()),
+      buildResultsUrl: runningTest.buildResultsUrl,
+      meetsRequirement: null,
+      benchmarkResultFixedOK: null,
+      benchmarkResultPreviousOK: null
 
     });
 

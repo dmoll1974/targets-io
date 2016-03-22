@@ -2,7 +2,7 @@
 
     <div flex="10" class="md-toolbar-tools">
         <h1>
-            <a ng-click="goHome()" >TARGETS-IO</a>
+            <a class="pointer" ng-click="goHome()" >TARGETS-IO</a>
         </h1>
     </div>
     <div flex="85" layout="row" layout-align="left center">
@@ -81,20 +81,20 @@
             </div>
         </div>
 
-        <div layout="row" layout-align="start center" ng-show="$state.includes('viewGraphs') || $state.includes('viewLiveGraphs')" >
-            <div>
-                <md-input-container class="targetsio-header-text" >
-                    <label class="targetsio-header-text">Filter metrics</label>
-                    <input class="targetsio-header-text" ng-model="metricFilter" ng-change="updateFilter(metricFilter)">
-                </md-input-container>
-            </div>
-            <div>
-                <md-icon  ng-if="metricFilter && metricFilter !==''" md-svg-src="images/assets/ic_clear_white_24px.svg"
-                         data-ng-click="clearMetricFilter()">
-                </md-icon>
-            </div>
+        <!--<div layout="row" layout-align="start center" ng-show="$state.includes('viewGraphs') || $state.includes('viewLiveGraphs')" >-->
+            <!--<div>-->
+                <!--<md-input-container class="targetsio-header-text" >-->
+                    <!--<label class="targetsio-header-text">Filter metrics</label>-->
+                    <!--<input class="targetsio-header-text" ng-model="metricFilter" ng-change="updateFilter(metricFilter)">-->
+                <!--</md-input-container>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<md-icon  ng-if="metricFilter && metricFilter !==''" md-svg-src="images/assets/ic_clear_white_24px.svg"-->
+                         <!--data-ng-click="clearMetricFilter()">-->
+                <!--</md-icon>-->
+            <!--</div>-->
 
-        </div>
+        <!--</div>-->
     </div>
     <div flex="5" layout="row" layout-align="end center">
         <md-menu class="md-toolbar-tools">

@@ -2,33 +2,48 @@
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
     <div fix-to-top="fix-to-top" class="graphs-header">
 
-        <div layout="row"  flex layout-align="space-between center" flex>
-            <div layout="row" layout-align="space-between center" flex>
+        <div layout="row"  flex >
+            <div layout="row" flex="25" layout="row" layout-align="start center">
                 <div>
-                <span>
-                    <a data-ng-href="/#!/browse/{{productName}}/">{{productName}}</a>  /
-                    <a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}/">{{dashboardName}}</a>
-                </span>
+                    <span>
+                        <a data-ng-href="/#!/browse/{{productName}}/">{{productName}}</a>  /
+                        <a data-ng-href="/#!/browse/{{productName}}/{{dashboardName}}/">{{dashboardName}}</a>
+                    </span>
                 </div>
-                <div layout="row" layout-align="start center">
-                        <span>Time range</span>
-                        <md-select class="md-padding time-range-selector" ng-model="zoomRange">
-                            <md-option ng-repeat="zoomOption in zoomOptions" value="{{zoomOption.value}}">
-                                {{zoomOption.label}}
-                            </md-option>
-                        </md-select>
-                </div>
+
             </div>
 
 
-            <div layout="row" layout-align="end center" flex>
-               <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="zoomLock" >
+            <div layout="row" flex="55" layout-align="space-between center">
+                <div layout="row" layout-align="start center">
+                    <span>Time range</span>
+                    <md-select class="md-padding time-range-selector" ng-model="zoomRange">
+                        <md-option ng-repeat="zoomOption in zoomOptions" value="{{zoomOption.value}}">
+                            {{zoomOption.label}}
+                        </md-option>
+                    </md-select>
+                </div>
+                <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="zoomLock" >
                    Apply zoom to all graphs
                </md-switch>
                <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
-               <md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>
+               <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
+                <!--<div layout="row" layout-align="start center">-->
+                <div>
+                    <md-input-container class="targetsio-header-text">
+                        <label>Filter metrics</label>
+                        <input ng-model="metricFilter">
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-icon  ng-if="metricFilter && metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                              data-ng-click="clearMetricFilter()">
+                    </md-icon>
+                </div>
+
+                <!--</div>-->
             </div>
-            <div layout="row" layout-align="end center" flex>
+            <div layout="row" layout-align="end center" flex="20">
 
                 <md-menu>
                     <md-button aria-label="Open edit menu" class="md-icon-button"

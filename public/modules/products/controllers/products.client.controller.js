@@ -16,13 +16,13 @@ angular.module('products').controller('ProductsController', [
   'Dashboards',
   function ($scope, $rootScope, $stateParams, $state, $location, $modal, $interval, Products, ConfirmModal, SideMenu, TestRuns, Events, Dashboards) {
 
-    setTimeout(function(){
-      $scope.productName = $stateParams.productName;
+    //setTimeout(function(){
+    //  $scope.productName = $stateParams.productName;
       /* reset selected dashboard when accessing this page */
       Dashboards.selected = {};
-      testRunPolling();
-      //var polling = $interval(testRunPolling, 30000);
-    }, 1);
+    //  testRunPolling();
+    //  //var polling = $interval(testRunPolling, 30000);
+    //}, 1);
 
 
 /* Products to trigger update of header scope in cas of deeplink */
@@ -31,56 +31,7 @@ angular.module('products').controller('ProductsController', [
 
     });
 
-    $scope.showNumberOfTestRuns = 10;
 
-    $scope.$watch('showNumberOfTestRuns', function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        testRunPolling();
-      }
-    });
-
-    $scope.numberOfRowOptions = [
-      {value: 10},
-      {value: 20},
-      {value: 30},
-      {value: 40}
-    ];
-
-
-
-
-
-    var testRunPolling = function(){
-      TestRuns.listTestRunsForProduct($scope.productName).success(function (testRuns) {
-
-        $scope.testRuns= [];
-        $scope.testRuns= testRuns;
-        $scope.numberOfTestRuns = testRuns.length;
-        $scope.totalDuration = TestRuns.calculateTotalDuration(testRuns);
-        $scope.productReleases = getProductReleases(testRuns);
-
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-
-    };
-
-
-
-
-
-    function getProductReleases(testRuns){
-
-      var productReleases = [];
-
-      _.each(testRuns, function(testRun){
-
-        if(testRun.productRelease && productReleases.map(function(productRelease){return productRelease.release}).indexOf(testRun.productRelease) === -1)
-          productReleases.push({release: testRun.productRelease, date: testRun.end});
-      })
-
-      return productReleases;
-    }
 
     $scope.testRunDetails = function (productName, dashboardName, testRunId) {
       $state.go('viewGraphs', {

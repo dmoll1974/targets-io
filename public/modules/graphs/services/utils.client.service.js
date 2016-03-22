@@ -9,7 +9,7 @@ angular.module('graphs').service('Utils', ['$http', function ($http) {
       metricFilter: '',
       zoomLock: true,
       graphType: '',
-      zoomRange: '',
+      zoomRange: '-10min',
       zoomFrom: '',
       zoomUntil: '',
       showLegend: true,
@@ -31,8 +31,8 @@ angular.module('graphs').service('Utils', ['$http', function ($http) {
         Utils.selectedIndex = '';
         Utils.metricFilter = '';
         Utils.zoomLock = true;
-        Utils.graphType = '';
-        Utils.zoomRange = '';
+        //Utils.graphType = '';
+        Utils.zoomRange = '-10min';
         Utils.zoomFrom = '';
         Utils.zoomUntil = '';
         Utils.showLegend = true;

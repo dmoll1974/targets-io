@@ -22,28 +22,17 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.completedTestRunsOnly = true;
 
 
-    $scope.showNumberOfTestRuns = 10;
-    $scope.page = 1;
+    $scope.loadNumberOfTestRuns = 10;
 
     $scope.numberOfRowOptions = [
       {value: 10},
-      {value: 20},
-      {value: 30},
-      {value: 40}
+      {value: 25},
+      {value: 50},
+      {value: 75},
+      {value: 100}
     ];
 
-    $scope.$watch('showNumberOfTestRuns', function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        testRunPolling();
-      }
-    });
 
-    $scope.nextPage = function(page){
-
-      $scope.page = page;
-      testRunPolling();
-
-    }
 
     $scope.showAnnotations = function ($event, testRun) {
 
@@ -98,12 +87,19 @@ angular.module('testruns').controller('TestrunsController', [
 
     };
 
+    $scope.updateNumberOfTestRuns = function(){
+
+      $scope.loading = true;
+
+      testRunPolling();
+
+    }
 
     /* refresh test runs every 15 seconds */
 
 
     var testRunPolling = function () {
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.showNumberOfTestRuns, $scope.page).success(function (response) {
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (response) {
 
         $scope.runningTest = response.runningTest;
 

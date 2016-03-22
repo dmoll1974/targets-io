@@ -111,7 +111,7 @@ function ReleaseTestRunSummaryDirective () {
             .highlightAction(true)
             .position('bottom left')
             .parent(angular.element(element))
-            .hideDelay(6000);
+            .hideDelay(3000);
 
         $mdToast.show(toast.content('Scroll down to view test run summary details ...')).then(function(response) {
 

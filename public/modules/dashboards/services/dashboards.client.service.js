@@ -49,7 +49,7 @@ angular.module('dashboards').factory('Dashboards', [
     function clone() {
       return $http.get('/clone/dashboards/' + Dashboards.selected._id).success(function (dashboard) {
         Dashboards.selected = dashboard;
-        Dashboards.defaultTag = getDefault(Dashboards.selected.tags);
+        Dashboards.defaultTag = getDefaultTag(Dashboards.selected.tags);
       });
     }
     function update(dashboard) {

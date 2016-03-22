@@ -13,7 +13,26 @@ function ProductReleasesDirective () {
   return directive;
 
   /* @ngInject */
-  function ProductReleasesDirectiveController ($scope, $state, Products, Dashboards, $filter, $rootScope) {
+  function ProductReleasesDirectiveController ($scope, $state, $stateParams, Products, Dashboards, TestRuns, $filter, $rootScope) {
+
+    $scope.productReleases =[];
+
+    $scope.loadingReleases = true;
+
+    TestRuns.listProductReleasesFromTestRuns($stateParams.productName).success(function(releases){
+
+      $scope.loadingReleases = false;
+
+      _.each(releases, function(release){
+
+        if(release !== "")
+          $scope.productReleases.push({id: release});
+
+      });
+
+    });
+
+
 
 
     $scope.releaseDetails = function(productRelease){
@@ -21,7 +40,7 @@ function ProductReleasesDirective () {
       Products.selected = $scope.product;
       Products.selected.productRelease = productRelease;
 
-      $state.go('productReleaseDetails', {productName: $scope.product.name, productRelease: productRelease.release });
+      $state.go('productReleaseDetails', {productName: $scope.product.name, productRelease: productRelease });
 
     }
   }
