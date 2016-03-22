@@ -244,7 +244,7 @@ function deleteTestRunById(req, res) {
  * select test runs for product
  */
 function testRunsForProduct(req, res) {
-  Testrun.find({productName: req.params.productName, completed: true}).sort({eventTimestamp: 1}).limit(req.params.limit).exec(function (err, testRuns) {
+  Testrun.find({productName: req.params.productName, completed: true}).sort({end: -1}).limit(req.params.limit).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
@@ -265,7 +265,7 @@ function testRunsForProduct(req, res) {
  * get distinct releases for product
  */
 function productReleasesFromTestRuns(req, res) {
-  Testrun.find({productName: req.params.productName}).distinct('productRelease', function (err, releases) {
+  Testrun.find({productName: req.params.productName}).distinct('productRelease').sort().exec(function (err, releases) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
