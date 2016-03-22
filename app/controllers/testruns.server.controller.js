@@ -339,16 +339,13 @@ function testRunsForProductRelease(req, res) {
  */
 function testRunsForDashboard(req, res) {
 
-  /* first check if we can get test runs from test run cache */
 
-  getTestRunsFromCache(req.params.productName, req.params.dashboardName)
-  .then(function(testRuns){
+  var response = {};
+  response.numberOfRunningTests = 0;
+  response.runningTest = false;
 
-    var response = {};
-    response.numberOfRunningTests = 0;
-    response.runningTest = false;
+  response.totalNumberOftestRuns = testRuns.length;
 
-    response.totalNumberOftestRuns = testRuns.length;
   var query = {
     $and: [
       { productName: req.params.productName },
@@ -364,27 +361,7 @@ function testRunsForDashboard(req, res) {
     } else {
 
 
-
-      //response.totalNumberOftestRuns = testRuns.length;
-      //
-      ///* Only return paginated test runs */
-      //
-      //let page = req.params.page;
-      //let limit = req.params.limit;
-      //let paginatedTestRuns = [];
-      //
-      //_.each(testRuns, function(testRun, index){
-      //
-      //  if(index >= (page - 1) * (limit)  && index <= (page * limit) - 1){
-      //
-      //    paginatedTestRuns.push(testRun);
-      //  }
-      //
-      //});
-      //
-      //response.testRuns = paginatedTestRuns;
-
-      response.testRuns = testRuns;
+    response.testRuns = testRuns;
 
     /* Check for running tests */
     RunningTest.find({
@@ -430,45 +407,6 @@ function testRunsForDashboard(req, res) {
   });
 }
 
-let getTestRunsFromCache = function(productName, dashboardName){
-
-    return new Promise((resolve, reject) => {
-      var key = productName + dashboardName;
-
-      TestRunCache.findOne({key: key}).exec(function(err, cacheItem){
-
-        if (err)
-          reject(err);
-        else {
-
-          if(cacheItem){
-
-            console.log('got test runs from cache!');
-            resolve(cacheItem.value);
-
-          }else{
-
-            console.log('no test runs in cache!');
-
-            Testrun.find({
-              $and: [
-                {productName: productName},
-                {dashboardName: dashboardName}
-              ]
-            }).sort({end: -1}).exec(function (err, testRuns) {
-              if (err) {
-                reject(err);
-              } else {
-
-                resolve(testRuns);
-
-              }
-          });
-        }
-      }
-    });
-  });
-}
 
 function testRunById(req, res) {
   Testrun.findOne({
