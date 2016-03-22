@@ -343,7 +343,6 @@ function testRunsForDashboard(req, res) {
   response.numberOfRunningTests = 0;
   response.runningTest = false;
 
-  response.totalNumberOftestRuns = testRuns.length;
 
   var query = {
     $and: [
