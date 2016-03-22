@@ -40,7 +40,7 @@ function ProductReleasesDirective () {
       Products.selected = $scope.product;
       Products.selected.productRelease = productRelease;
 
-      $state.go('productReleaseDetails', {productName: $scope.product.name, productRelease: productRelease });
+      $state.go('productReleaseDetails', {productName: $scope.product.name, productRelease: productRelease.id });
 
     }
   }
