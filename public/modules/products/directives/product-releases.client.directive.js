@@ -26,7 +26,7 @@ function ProductReleasesDirective () {
       _.each(releases, function(release){
 
         if(release !== "")
-          $scope.productReleases.push(release);
+          $scope.productReleases.push({id: release});
 
       });
 

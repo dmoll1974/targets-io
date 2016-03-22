@@ -8,8 +8,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="release in productReleases" class="hover-row" data-ng-click="releaseDetails(release)">
-                    <td class="pointer" >{{release}}</td>
+                <tr ng-repeat="release in productReleases | orderBy:'id':true" class="hover-row" data-ng-click="releaseDetails(release)">
+                    <td class="pointer" >{{release.id}}</td>
                 </tr>
             </tbody>
         </table>
