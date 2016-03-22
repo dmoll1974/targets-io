@@ -17,7 +17,6 @@ var mongoose = require('mongoose'),
     Metric = db.model('Metric'),
     async = require('async'),
     RunningTest = db.model('RunningTest'),
-    TestRunCache = cacheDb.model('TestRunCache'),
     ss = require('simple-statistics');
 
 
