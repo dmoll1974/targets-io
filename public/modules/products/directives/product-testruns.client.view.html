@@ -10,6 +10,7 @@
                     <th>Start</th>
                     <th>End</th>
                     <th>Duration</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +22,42 @@
                     <td class="pointer">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                     </td>
                     <td class="pointer">{{testRun.humanReadableDuration}}
+                    </td>
+                    <td>
+                    <td data-ng-if="!(runningTest && $index < numberOfRunningTests)">
+                        <md-menu style="padding-top: 0px; padding-bottom: 0px;">
+                            <div aria-label="Open test run menu" class="md-icon-button"
+                                 ng-click="openMenu($mdOpenMenu, $event)">
+                                <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_24px.svg"></md-icon>
+                                <md-tooltip>
+                                    Test run menu
+                                </md-tooltip>
+                            </div>
+                            <md-menu-content width="4">
+
+                                <md-menu-item data-ng-if="testRun.buildResultsUrl">
+                                    <md-button data-ng-click="go(testRun.buildResultsUrl)">
+                                        <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
+                                        View in CI server
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-divider></md-menu-divider>
+                                <md-menu-item>
+                                    <md-button  data-ng-click="editTestRun(testRun)">
+                                        <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
+                                        Edit test run
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button  data-ng-click="viewTestRunSummary(testRun)">
+                                        <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
+                                        View test run summary
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
                     </td>
                 </tr>
             </tbody>

@@ -13,7 +13,7 @@ function ProductTestRunsDirective () {
   return directive;
 
   /* @ngInject */
-  function ProductTestRunsDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, $filter, $rootScope, $interval, TestRuns) {
+  function ProductTestRunsDirectiveController ($scope, $state, $stateParams, $window, Templates, Dashboards, $filter, $rootScope, $interval, TestRuns) {
 
     /* By default, show completed test runs only */
     $scope.completedTestRunsOnly = true;
@@ -64,6 +64,35 @@ function ProductTestRunsDirective () {
     ];
 
 
+    var originatorEv;
+    $scope.openMenu = function ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
+
+    $scope.go = function (url) {
+      //$window.location.href = url;
+      $window.open(url, '_blank');
+    };
+
+
+    $scope.editTestRun = function (testRun){
+
+      TestRuns.selected = testRun;
+      $state.go('editTestRun',{productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId});
+
+    }
+
+    $scope.viewTestRunSummary = function(testRun){
+
+
+      $state.go('testRunSummary', {
+        'productName': testRun.productName,
+        'dashboardName': testRun.dashboardName,
+        'testRunId': testRun.testRunId
+      });
+
+    }
 
 
 
