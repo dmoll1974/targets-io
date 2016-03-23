@@ -280,7 +280,7 @@ function productReleasesFromTestRuns(req, res) {
  * select test runs for product release
  */
 function testRunsForProductRelease(req, res) {
-  Testrun.find({$and:[{productName: req.params.productName}, {productRelease: req.params.productRelease}]}).sort({end: 1}).exec(function (err, testRuns) {
+  Testrun.find({$and:[{productName: req.params.productName}, {productRelease: req.params.productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
