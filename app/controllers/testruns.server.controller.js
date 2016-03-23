@@ -71,7 +71,9 @@ function update (req, res) {
 
       testRun.start = req.body.start;
       testRun.end = req.body.end;
+      testRun.productName = req.body.productName;
       testRun.productRelease = req.body.productRelease;
+      testRun.dashboardName = req.body.dashboardName;
       testRun.testRunId = req.body.testRunId;
       testRun.completed = req.body.completed;
       testRun.buildResultsUrl = req.body.buildResultsUrl;
