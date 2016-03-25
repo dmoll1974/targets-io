@@ -428,6 +428,11 @@ angular.module('testruns').controller('TestrunsController', [
     };
     $scope.refreshTestrun = function (testRun) {
 
+      /* stop polling during refresh */
+
+      $interval.cancel(polling);
+
+
       var selectedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
 
       $scope.testRuns[selectedTestRunIndex].meetsRequirement = 'pending';
@@ -437,6 +442,11 @@ angular.module('testruns').controller('TestrunsController', [
       TestRuns.refreshTestrun($stateParams.productName, $stateParams.dashboardName, $scope.testRuns[selectedTestRunIndex].testRunId).success(function (testRun) {
         $scope.testRuns[selectedTestRunIndex] = testRun;
         $scope.testRuns[selectedTestRunIndex].busy = false;
+
+        /* start polling again after refresh */
+
+        var polling = $interval(testRunPolling, 15000);
+
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
