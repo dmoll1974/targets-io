@@ -9,11 +9,11 @@ var mongoose = require('mongoose'), errorHandler = require('./errors.server.cont
 exports.create = function (req, res) {
   var metric = new Metric(req.body);
   metric.user = req.user;
-  metric.save(function (err) {
+  metric.save(function (err, savedMetric) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
-      res.jsonp(metric);
+      res.jsonp(savedMetric);
     }
   });
 };

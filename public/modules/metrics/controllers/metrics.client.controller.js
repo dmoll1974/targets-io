@@ -133,32 +133,38 @@ angular.module('metrics').controller('MetricsController', [
             Dashboards.update(Dashboards.selected).success(function (dashboard) {
             });
       });
+
       $scope.metric.productName = $stateParams.productName;
       $scope.metric.dashboardName = $stateParams.dashboardName;
       $scope.currentRequirement = '';
       $scope.currentBenchmark = '';
+
       Metrics.create($scope.metric).success(function (metric) {
+
         /* reset cloned metric */
         Metrics.clone = {};
-        var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
-        var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
+
+        //var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
+        //var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
         /* if requirement or benchmark values have changed, update test runs */
-        if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
+        //if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
+        //
+        //  var toast = $mdToast.simple()
+        //      .action('OK')
+        //      .highlightAction(true)
+        //      .position('top center')
+        //      .hideDelay(3000);
+        //
+        //  $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
 
-          var toast = $mdToast.simple()
-              .action('OK')
-              .highlightAction(true)
-              .position('top center')
-              .hideDelay(3000);
+          //});
+          //$scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, metric._id, updateRequirements, updateBenchmarks).success(function (testRuns) {
+          //  TestRuns.list = testRuns;
+          //});
+        //}
 
-          $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
-
-          });
-          $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
-            TestRuns.list = testRuns;
-          });
-        }
         $state.go('viewDashboard', {productName:  $stateParams.productName, dashboardName: $stateParams.dashboardName});
+
       });
     };
     // Remove existing Metric
@@ -200,35 +206,35 @@ angular.module('metrics').controller('MetricsController', [
         });
 
 
-        var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
-        var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
-
-        /* if requirement or benchmark vlaues have changed, update test runs */
-        if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
-
-          var toast = $mdToast.simple()
-              .action('OK')
-              .highlightAction(true)
-              .position('top center')
-              .hideDelay(3000);
-
-          $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
-
-          });
-
-          $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
-            TestRuns.list = testRuns;
-            if ($rootScope.previousStateParams)
-              $state.go($rootScope.previousState, $rootScope.previousStateParams);
-            else
-              $state.go($rootScope.previousState);
-          });
-        } else {
+        //var updateRequirements = $scope.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
+        //var updateBenchmarks = $scope.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
+        //
+        ///* if requirement or benchmark vlaues have changed, update test runs */
+        //if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
+        //
+        //  var toast = $mdToast.simple()
+        //      .action('OK')
+        //      .highlightAction(true)
+        //      .position('top center')
+        //      .hideDelay(3000);
+        //
+        //  $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
+        //
+        //  });
+        //
+        //  $scope.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
+        //    TestRuns.list = testRuns;
+        //    if ($rootScope.previousStateParams)
+        //      $state.go($rootScope.previousState, $rootScope.previousStateParams);
+        //    else
+        //      $state.go($rootScope.previousState);
+        //  });
+        //} else {
           if ($rootScope.previousStateParams)
             $state.go($rootScope.previousState, $rootScope.previousStateParams);
           else
             $state.go($rootScope.previousState);
-        }
+        //}
       });
     };
     // Find a list of Metrics
@@ -259,7 +265,7 @@ angular.module('metrics').controller('MetricsController', [
       });
     };
     $scope.clone = function () {
-      $scope.metric._id = undefined;
+      delete $scope.metric['_id'];
       Metrics.clone = $scope.metric;
       $state.go('addMetric', {
         'productName': $stateParams.productName,
