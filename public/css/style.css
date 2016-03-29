@@ -405,3 +405,8 @@ md-menu.md-open-menu-container.dashboard-menu{
 
     max-height: 1000px !important;
 }
+
+div.boxedGraph{
+
+    border: dotted;
+}
