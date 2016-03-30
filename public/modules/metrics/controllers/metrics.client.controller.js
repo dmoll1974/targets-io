@@ -265,8 +265,12 @@ angular.module('metrics').controller('MetricsController', [
       });
     };
     $scope.clone = function () {
-      delete $scope.metric['_id'];
+
       Metrics.clone = $scope.metric;
+
+      delete Metrics.clone['_id'];
+      Metrics.clone.dashboardId = Dashboards.selected._id;
+
       $state.go('addMetric', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName
