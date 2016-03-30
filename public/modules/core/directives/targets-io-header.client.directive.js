@@ -130,6 +130,7 @@ function TargetsIoHeaderDirective () {
         $scope.goToDashboardHome = function(product, dashboard){
 
             TestRuns.list = [];
+            Dashboards.selectedTab = 0;
             $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
         };
 
