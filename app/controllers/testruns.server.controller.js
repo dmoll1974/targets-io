@@ -682,88 +682,99 @@ function getDataForTestrun(testRun) {
         console.log(err);
       var metrics = [];
       async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
-        let targets = [];
-        let value;
-        let start;
-        /* if dashboard has startSteadyState configured and metric type = gradient use steady state period only */
 
-        if(dashboard.startSteadyState && metric.type === 'Gradient'){
+        if(metric.requirementValue || metric.benchmarkValue) {
 
-          start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000);
+          let targets = [];
+          let value;
+          let start;
+          /* if dashboard has startSteadyState configured and metric type = gradient use steady state period only */
 
-        }else {
+          if (dashboard.startSteadyState && metric.type === 'Gradient') {
 
-          /* if include ramp up is false, add ramp up period to start of test run */
-          start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
+            start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000);
 
-        }
-        async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
-          graphite.getGraphiteData(Math.round(start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
-            _.each(body, function (bodyTarget) {
+          } else {
 
-              /* save value based on metric type */
+            /* if include ramp up is false, add ramp up period to start of test run */
+            start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
 
-              switch(metric.type){
-
-                case 'Average':
-
-                  value = calculateAverage(bodyTarget.datapoints);
-                  break;
-
-                case 'Maximum':
-
-                  value = calculateMaximum(bodyTarget.datapoints);
-                  break;
-
-                case 'Minimum':
-
-                  value = calculateMinimum(bodyTarget.datapoints);
-                  break;
-
-                case 'Last':
-
-                  value = getLastDatapoint(bodyTarget.datapoints);
-                  break;
-
-                case 'Gradient':
-
-                  value = calculateLinearFit(bodyTarget.datapoints);
-                  break;
-
-              }
-
-
-              /* if target has values other than null values only, store it */
-              if(value !== null) {
-                targets.push({
-                  target: bodyTarget.target,
-                  value: value
-                });
-              }
-            });
-            callbackTarget();
-        });
-        }, function (err) {
-          if (err)
-            return next(err);
-          if(targets.length > 0) {
-            metrics.push({
-              _id: metric._id,
-              tags: metric.tags,
-              alias: metric.alias,
-              type: metric.type,
-              benchmarkValue: metric.benchmarkValue,
-              benchmarkOperator: metric.benchmarkOperator,
-              requirementValue: metric.requirementValue,
-              requirementOperator: metric.requirementOperator,
-              targets: targets
-            });
-
-            targets = [];
           }
+          async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
+
+            graphite.getGraphiteData(Math.round(start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
+              _.each(body, function (bodyTarget) {
+
+                /* save value based on metric type */
+
+                switch (metric.type) {
+
+                  case 'Average':
+
+                    value = calculateAverage(bodyTarget.datapoints);
+                    break;
+
+                  case 'Maximum':
+
+                    value = calculateMaximum(bodyTarget.datapoints);
+                    break;
+
+                  case 'Minimum':
+
+                    value = calculateMinimum(bodyTarget.datapoints);
+                    break;
+
+                  case 'Last':
+
+                    value = getLastDatapoint(bodyTarget.datapoints);
+                    break;
+
+                  case 'Gradient':
+
+                    value = calculateLinearFit(bodyTarget.datapoints);
+                    break;
+
+                }
+
+
+                /* if target has values other than null values only, store it */
+                if (value !== null) {
+                  targets.push({
+                    target: bodyTarget.target,
+                    value: value
+                  });
+                }
+              });
+              callbackTarget();
+            });
+          }, function (err) {
+            if (err)
+              return next(err);
+            if (targets.length > 0) {
+              metrics.push({
+                _id: metric._id,
+                tags: metric.tags,
+                alias: metric.alias,
+                type: metric.type,
+                benchmarkValue: metric.benchmarkValue,
+                benchmarkOperator: metric.benchmarkOperator,
+                requirementValue: metric.requirementValue,
+                requirementOperator: metric.requirementOperator,
+                targets: targets
+              });
+
+              targets = [];
+            }
+
+            callbackMetric();
+
+
+          });
+        }else{
 
           callbackMetric();
-        });
+
+        }
       }, function (err) {
         if (err) {
           reject(err);
