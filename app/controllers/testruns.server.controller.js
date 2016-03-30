@@ -850,9 +850,13 @@ function getLastDatapoint(datapoints){
 
   for(var d=datapoints.length-1;d>=0;--d){
 
-
     if(datapoints[d][0]!= null)
-      return  Math.round((datapoints[d][0])*100)/100;
+
+    /* if no valid number is calculated, return null*/
+
+      var result = !isNaN(Math.round((datapoints[d][0])*100)/100) ? Math.round((datapoints[d][0])*100)/100 : null;
+      return result;
+
   }
 }
 function calculateLinearFit(datapoints){
@@ -878,7 +882,11 @@ function calculateLinearFit(datapoints){
   //console.log('line(0): ' + line(0));
   //console.log('line(data.length-1): ' + line(data.length-1));
 
-  return Math.round(((((line(data.length-1)-line(0))/ line(0)) / data.length) * 100 * 100)* 100) / 100;
+  /* if no valid number is calculated, return null*/
+
+  var result = !isNaN(Math.round(((((line(data.length-1)-line(0))/ line(0)) / data.length) * 100 * 100)* 100) / 100) ? Math.round(((((line(data.length-1)-line(0))/ line(0)) / data.length) * 100 * 100)* 100) / 100 : null;
+
+  return result;
 
 }
 
