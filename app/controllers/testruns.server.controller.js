@@ -44,6 +44,7 @@ function addTestRun(req, res){
   let testRun = new Testrun(req.body);
 
   testRun.humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+  testRun.meetsRequirement = null;
 
   testRun.save(function(err, testRun){
 
@@ -529,16 +530,26 @@ function refreshTestrun(req, res) {
       newTestRun.dashboardName = testRun.dashboardName;
       newTestRun.testRunId = testRun.testRunId;
       newTestRun.completed = testRun.completed;
+      newTestRun.annotations = testRun.annotations;
       newTestRun.humanReadableDuration = testRun.humanReadableDuration;
       newTestRun.rampUpPeriod = testRun.rampUpPeriod;
       newTestRun.buildResultsUrl = testRun.buildResultsUrl;
 
       testRun.remove(function(err){
 
-        benchmarkAndPersistTestRunById(newTestRun)
-        .then(function(updatedTestRun){
-          res.jsonp(updatedTestRun);
-        });
+        newTestRun.save(function(err, savedNewTestRun){
+
+          if (err){
+            return res.status(400).send({ message: 'Error while saving newTestRun:' + err.stack });
+          }else {
+
+            benchmarkAndPersistTestRunById(savedNewTestRun)
+                .then(function (updatedTestRun) {
+                  res.jsonp(updatedTestRun);
+                });
+          }
+        })
+
       })
     }
   });
