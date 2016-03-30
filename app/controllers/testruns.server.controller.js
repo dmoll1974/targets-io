@@ -43,16 +43,18 @@ function addTestRun(req, res){
 
   let testRun = new Testrun(req.body);
 
+  testRun.humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+
   testRun.save(function(err, testRun){
 
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
-      benchmarkAndPersistTestRunById(testRun)
-      .then(function(testRun){
+      //benchmarkAndPersistTestRunById(testRun)
+      //.then(function(testRun){
         res.jsonp(testRun);
-      });
+      //});
     }
 
   });
