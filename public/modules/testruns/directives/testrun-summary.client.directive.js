@@ -21,6 +21,7 @@ function TestRunSummaryDirective () {
     $scope.testRunSummary = {};
     $scope.testRunSummary.requirements = [];
     $scope.editMode = false;
+    $scope.hideGraphs = false;
 
     TestRunSummary.getTestRunSummary($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRunSummary) {
 

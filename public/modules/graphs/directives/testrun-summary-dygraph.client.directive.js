@@ -210,6 +210,17 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       _.each(dygraphData.data, function(dataline){
 
             dataline[0] = new Date(dataline[0]);
+
+          /* set null values to NaN to show holes in graphs */
+          _.each(dataline, function(datalineItem){
+
+            if (datalineItem[0] === null) {
+              datalineItem[0] = NaN;
+            }
+
+          })
+
+
       })
 
       return dygraphData;
@@ -272,8 +283,8 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
             TestRuns.getTestRunById($scope.testrun.productName, $scope.testrun.dashboardName, $scope.testrun.testRunId).success(function (testRun) {
               TestRuns.selected = testRun;
-              var from = Utils.zoomFrom ? Utils.zoomFrom : TestRuns.selected.startEpoch;
-              var until = Utils.zoomUntil ? Utils.zoomUntil : TestRuns.selected.endEpoch;
+              var from = /*Utils.zoomFrom ? Utils.zoomFrom : */TestRuns.selected.startEpoch;
+              var until =/* Utils.zoomUntil ? Utils.zoomUntil :*/ TestRuns.selected.endEpoch;
 
               processGraph(from, until);
 

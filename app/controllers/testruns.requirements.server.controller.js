@@ -101,7 +101,7 @@ function setMetricRequirementResults(targets) {
 }
 function evaluateRequirement(value, requirementOperator, requirementValue) {
   var requirementResult;
-  if (requirementOperator === '<' && value > requirementValue || requirementOperator === '>' && value < requirementValue) {
+  if (requirementOperator === '<' && value >= requirementValue || requirementOperator === '>' && value <= requirementValue) {
     var requirementResult = false;
   } else {
     var requirementResult = true;

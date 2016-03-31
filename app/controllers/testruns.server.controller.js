@@ -43,16 +43,19 @@ function addTestRun(req, res){
 
   let testRun = new Testrun(req.body);
 
+  testRun.humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+  testRun.meetsRequirement = null;
+
   testRun.save(function(err, testRun){
 
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
-      benchmarkAndPersistTestRunById(testRun)
-      .then(function(testRun){
+      //benchmarkAndPersistTestRunById(testRun)
+      //.then(function(testRun){
         res.jsonp(testRun);
-      });
+      //});
     }
 
   });
@@ -71,7 +74,9 @@ function update (req, res) {
 
       testRun.start = req.body.start;
       testRun.end = req.body.end;
+      testRun.productName = req.body.productName;
       testRun.productRelease = req.body.productRelease;
+      testRun.dashboardName = req.body.dashboardName;
       testRun.testRunId = req.body.testRunId;
       testRun.completed = req.body.completed;
       testRun.buildResultsUrl = req.body.buildResultsUrl;
@@ -280,7 +285,7 @@ function productReleasesFromTestRuns(req, res) {
  * select test runs for product release
  */
 function testRunsForProductRelease(req, res) {
-  Testrun.find({$and:[{productName: req.params.productName}, {productRelease: req.params.productRelease}]}).sort({end: 1}).exec(function (err, testRuns) {
+  Testrun.find({$and:[{productName: req.params.productName}, {productRelease: req.params.productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
@@ -450,16 +455,26 @@ function refreshTestrun(req, res) {
       newTestRun.dashboardName = testRun.dashboardName;
       newTestRun.testRunId = testRun.testRunId;
       newTestRun.completed = testRun.completed;
+      newTestRun.annotations = testRun.annotations;
       newTestRun.humanReadableDuration = testRun.humanReadableDuration;
       newTestRun.rampUpPeriod = testRun.rampUpPeriod;
       newTestRun.buildResultsUrl = testRun.buildResultsUrl;
 
       testRun.remove(function(err){
 
-        benchmarkAndPersistTestRunById(newTestRun)
-        .then(function(updatedTestRun){
-          res.jsonp(updatedTestRun);
-        });
+        newTestRun.save(function(err, savedNewTestRun){
+
+          if (err){
+            return res.status(400).send({ message: 'Error while saving newTestRun:' + err.stack });
+          }else {
+
+            benchmarkAndPersistTestRunById(savedNewTestRun)
+                .then(function (updatedTestRun) {
+                  res.jsonp(updatedTestRun);
+                });
+          }
+        })
+
       })
     }
   });
@@ -593,88 +608,99 @@ function getDataForTestrun(testRun) {
         console.log(err);
       var metrics = [];
       async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
-        let targets = [];
-        let value;
-        let start;
-        /* if dashboard has startSteadyState configured and metric type = gradient use steady state period only */
 
-        if(dashboard.startSteadyState && metric.type === 'Gradient'){
+        if(metric.requirementValue || metric.benchmarkValue) {
 
-          start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000);
+          let targets = [];
+          let value;
+          let start;
+          /* if dashboard has startSteadyState configured and metric type = gradient use steady state period only */
 
-        }else {
+          if (dashboard.startSteadyState && metric.type === 'Gradient') {
 
-          /* if include ramp up is false, add ramp up period to start of test run */
-          start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
+            start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000);
 
-        }
-        async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
-          graphite.getGraphiteData(Math.round(start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
-            _.each(body, function (bodyTarget) {
+          } else {
 
-              /* save value based on metric type */
+            /* if include ramp up is false, add ramp up period to start of test run */
+            start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
 
-              switch(metric.type){
-
-                case 'Average':
-
-                  value = calculateAverage(bodyTarget.datapoints);
-                  break;
-
-                case 'Maximum':
-
-                  value = calculateMaximum(bodyTarget.datapoints);
-                  break;
-
-                case 'Minimum':
-
-                  value = calculateMinimum(bodyTarget.datapoints);
-                  break;
-
-                case 'Last':
-
-                  value = getLastDatapoint(bodyTarget.datapoints);
-                  break;
-
-                case 'Gradient':
-
-                  value = calculateLinearFit(bodyTarget.datapoints);
-                  break;
-
-              }
-
-
-              /* if target has values other than null values only, store it */
-              if(value !== null) {
-                targets.push({
-                  target: bodyTarget.target,
-                  value: value
-                });
-              }
-            });
-            callbackTarget();
-        });
-        }, function (err) {
-          if (err)
-            return next(err);
-          if(targets.length > 0) {
-            metrics.push({
-              _id: metric._id,
-              tags: metric.tags,
-              alias: metric.alias,
-              type: metric.type,
-              benchmarkValue: metric.benchmarkValue,
-              benchmarkOperator: metric.benchmarkOperator,
-              requirementValue: metric.requirementValue,
-              requirementOperator: metric.requirementOperator,
-              targets: targets
-            });
-
-            targets = [];
           }
+          async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
+
+            graphite.getGraphiteData(Math.round(start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
+              _.each(body, function (bodyTarget) {
+
+                /* save value based on metric type */
+
+                switch (metric.type) {
+
+                  case 'Average':
+
+                    value = calculateAverage(bodyTarget.datapoints);
+                    break;
+
+                  case 'Maximum':
+
+                    value = calculateMaximum(bodyTarget.datapoints);
+                    break;
+
+                  case 'Minimum':
+
+                    value = calculateMinimum(bodyTarget.datapoints);
+                    break;
+
+                  case 'Last':
+
+                    value = getLastDatapoint(bodyTarget.datapoints);
+                    break;
+
+                  case 'Gradient':
+
+                    value = calculateLinearFit(bodyTarget.datapoints);
+                    break;
+
+                }
+
+
+                /* if target has values other than null values only, store it */
+                if (value !== null) {
+                  targets.push({
+                    target: bodyTarget.target,
+                    value: value
+                  });
+                }
+              });
+              callbackTarget();
+            });
+          }, function (err) {
+            if (err)
+              return next(err);
+            if (targets.length > 0) {
+              metrics.push({
+                _id: metric._id,
+                tags: metric.tags,
+                alias: metric.alias,
+                type: metric.type,
+                benchmarkValue: metric.benchmarkValue,
+                benchmarkOperator: metric.benchmarkOperator,
+                requirementValue: metric.requirementValue,
+                requirementOperator: metric.requirementOperator,
+                targets: targets
+              });
+
+              targets = [];
+            }
+
+            callbackMetric();
+
+
+          });
+        }else{
 
           callbackMetric();
-        });
+
+        }
       }, function (err) {
         if (err) {
           reject(err);
@@ -751,9 +777,13 @@ function getLastDatapoint(datapoints){
 
   for(var d=datapoints.length-1;d>=0;--d){
 
-
     if(datapoints[d][0]!= null)
-      return  Math.round((datapoints[d][0])*100)/100;
+
+    /* if no valid number is calculated, return null*/
+
+      var result = !isNaN(Math.round((datapoints[d][0])*100)/100) ? Math.round((datapoints[d][0])*100)/100 : null;
+      return result;
+
   }
 }
 function calculateLinearFit(datapoints){
@@ -779,7 +809,11 @@ function calculateLinearFit(datapoints){
   //console.log('line(0): ' + line(0));
   //console.log('line(data.length-1): ' + line(data.length-1));
 
-  return Math.round(((((line(data.length-1)-line(0))/ line(0)) / data.length) * 100 * 100)* 100) / 100;
+  /* if no valid number is calculated, return null*/
+
+  var result = !isNaN(Math.round(((((line(data.length-1)-line(0))/ line(0)) / data.length) * 100 * 100)* 100) / 100) ? Math.round(((((line(data.length-1)-line(0))/ line(0)) / data.length) * 100 * 100)* 100) / 100 : null;
+
+  return result;
 
 }
 

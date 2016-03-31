@@ -104,10 +104,15 @@
 
         </div>
 
-        <h3>Metrics</h3>
+        <div layout="row" layout-align="space-between">
+            <h3>Metrics</h3>
+            <md-switch class="md-primary" ng-show="editMode" md-no-ink aria-label="Hide graphs" ng-model="hideGraphs" ng-class="{'switch-label-disabled': hideGraphs === false }">
+                Hide graphs
+            </md-switch>
+        </div>
 
         <md-content class="md-padding" layout="column" flex="75" >
-            <div  data-ng-repeat="metric in testRunSummary.metrics | testRunSummary " >
+            <div ng-class="{boxedGraph: hideGraphs}" data-ng-repeat="metric in testRunSummary.metrics | testRunSummary " >
                 <div layout="row" layout-align="space-between center">
                     <h4 class="md-padding" data-ng-click="editMetric(metric._id)">{{metric.alias}}</h4>
                     <md-button ng-if="editMode && $index > 0" class="md-icon-button" data-ng-click="moveUp(metric)">
@@ -129,7 +134,7 @@
                     <p>{{metric.summaryText}}</p>
                 </div>
 
-                <testrun-summary-dygraph class="md-padding" metric="metric" testrun="testRunSummary"></testrun-summary-dygraph>
+                <testrun-summary-dygraph ng-show="hideGraphs === false" class="md-padding" metric="metric" testrun="testRunSummary"></testrun-summary-dygraph>
 
             </div>
         </md-content>
