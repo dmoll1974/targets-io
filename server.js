@@ -32,7 +32,7 @@ global.db = mongoose.createConnection(config.db, function(err) {
 // Bootstrap cacheDb connection
 global.cacheDb = mongoose.createConnection(config.cacheDb, function(err) {
 	if (err) {
-		console.error('Could not connect to cacheDb!');
+		console.error('Could not connected to cacheDb!');
 		console.log(err);
 	}else{
 
