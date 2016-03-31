@@ -13,8 +13,8 @@ var init = require('./config/init')(),
  * Main application entry file.
  * Please note that the order of loading is important.
  */
-console.log ("mongoDb connect to: " + config.db)
-console.log ("memcached host: " + config.memcachedHost)
+//console.log ("mongoDb connect to: " + config.db)
+//console.log ("memcached host: " + config.memcachedHost)
 console.log ("graphite host: " + config.graphiteHost)
 
 
@@ -23,6 +23,9 @@ global.db = mongoose.createConnection(config.db, function(err) {
 	if (err) {
 		console.error(chalk.red('Could not connect to db!'));
 		console.log(chalk.red(err));
+	}else{
+
+		console.log("mongoDb connected to: " + config.db);
 	}
 });
 
@@ -31,6 +34,9 @@ global.cacheDb = mongoose.createConnection(config.cacheDb, function(err) {
 	if (err) {
 		console.error('Could not connect to cacheDb!');
 		console.log(err);
+	}else{
+
+		console.log("Cache mongoDb connected to: " + config.cacheDb);
 	}
 });
 
