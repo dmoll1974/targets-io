@@ -139,16 +139,21 @@ function upload(req, res) {
     if (err)
       console.log(err);
     console.log('Releases removed');
-    if(releases) {
-      _.each(releases, function (importRelease) {
 
-        var releaseDoc = new Release(importRelease);
+    /* Drop indeces */
+    Release.collection.dropAllIndexes(function (err, results) {
 
-        releaseDoc.save(function (err) {
+      if(releases) {
+        _.each(releases, function (importRelease) {
+
+          var releaseDoc = new Release(importRelease);
+
+          releaseDoc.save(function (err) {
+          });
+
         });
-
-      });
-    }
+      }
+    });
   });
 
   /* Remove existing Gatling Details*/
