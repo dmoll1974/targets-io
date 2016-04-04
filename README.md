@@ -7,7 +7,7 @@ Any metric stored in Graphite can be benchmarked between test runs, to provide a
 
 **Demo**
 
-To set up a local demo environment take the following steps (instructions for linux Ubuntu, use this [Vagrantfile](https://github.com/dmoll1974/targets-io/blob/master/Vagrantfile) to generate a box):
+To set up a local demo environment take the following steps (instructions for linux Ubuntu. If you use this [Vagrantfile](https://github.com/dmoll1974/targets-io/blob/master/Vagrantfile) to generate a box, you can skip the first to steps):
 
 - [Install docker](http://docs.docker.com/linux/step_one/)  
 - [Install docker compose](https://github.com/docker/compose/releases)
