@@ -58,7 +58,7 @@ var ReleaseSchema = new Schema({
 });
 
 ReleaseSchema.index({
-  productName: 1,
+  name: 1,
   productRelease: 1
  }, { unique: true });
 db.model('Release', ReleaseSchema);
