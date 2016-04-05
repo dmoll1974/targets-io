@@ -683,7 +683,7 @@ function getDataForTestrun(testRun) {
       var metrics = [];
       async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
 
-        if(metric.requirementValue || metric.benchmarkValue) {
+        if(metric.requirementValue !== null || metric.benchmarkValue !== null) {
 
           let targets = [];
           let value;

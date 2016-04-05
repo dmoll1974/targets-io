@@ -254,7 +254,7 @@ angular.module('metrics').controller('MetricsController', [
         }
 
         /* set benchmark and requirement toggles */
-        if ($scope.metric.requirementValue)
+        if ($scope.metric.requirementValue !== null)
           $scope.enableRequirement = true;
         if ($scope.metric.benchmarkValue)
           $scope.enableBenchmarking = true;
