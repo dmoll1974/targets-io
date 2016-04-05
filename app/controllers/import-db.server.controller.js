@@ -141,7 +141,7 @@ function upload(req, res) {
     console.log('Releases removed');
 
     /* Drop indeces */
-    Release.collection.dropAllIndexes(function (err, results) {
+    //Release.collection.dropAllIndexes(function (err, results) {
 
       if(releases) {
         _.each(releases, function (importRelease) {
@@ -153,7 +153,7 @@ function upload(req, res) {
 
         });
       }
-    });
+    //});
   });
 
   /* Remove existing Gatling Details*/
