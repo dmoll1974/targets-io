@@ -63,7 +63,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
     };
     /* update Tags form graph */
     /* update Tags form graph */
-    $scope.updateTags = function () {
+    $scope.updateTags = function (tag) {
       $scope.showTags = false;
       Metrics.update($scope.metric).success(function (metric) {
         Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, metric.tags, function (updated) {
@@ -75,11 +75,10 @@ angular.module('graphs').controller('HighchartsLiveController', [
             });
           }
         });
-        $state.go('viewGraphs', {
+        $state.go('viewLiveGraphs', {
           'productName': $stateParams.productName,
           'dashboardName': $stateParams.dashboardName,
-          'testRunId': $stateParams.testRunId,
-          tag: metric.tags[metric.tags.length - 1].text
+          tag: tag  //metric.tags[metric.tags.length - 1].text
         });
       });
     };
