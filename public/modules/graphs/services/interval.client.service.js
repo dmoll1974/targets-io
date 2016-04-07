@@ -20,5 +20,7 @@ angular.module('graphs').factory('Interval', [function () {
       _.each(Interval.active, function (intervalObject) {
         clearInterval(intervalObject.intervalId);
       });
+
+      Interval.active = [];
     }
   }]);
