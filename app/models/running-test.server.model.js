@@ -42,7 +42,9 @@ var RunningTestSchema = new mongoose.Schema({
         uppercase: true
     },
     'buildResultsUrl': String,
-    'humanReadableDuration': String
+    'humanReadableDuration': String,
+    'rampUpPeriod': Number
+
 
 
 });

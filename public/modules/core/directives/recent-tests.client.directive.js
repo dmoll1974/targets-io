@@ -16,6 +16,8 @@ function RecentTestsDirective () {
     /* @ngInject */
     function RecentTestsDirectiveController ($scope, $state, $interval, TestRuns) {
 
+        $scope.completedTestRunsOnly = true;
+
         var pollRecentTests = function(){
             TestRuns.getRecentTestruns().success(function(recentTests){
 

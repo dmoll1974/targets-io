@@ -6,23 +6,25 @@ targetsio:
    - .:/code
   links:
    - graphite
-   - memcached
    - db
   environment:
      MONGO_SERVICE_HOST: "db"
      MONGO_SERVICE_PORT: "27017"
+     MONGO_CACHE_SERVICE_HOST: "db"
+     MONGO_CACHE_SERVICE_PORT: "27018"
      MEMCACHED_SERVICE_HOST: "memcached"
      MEMCACHED_SERVICE_PORT: "11211"
      GRAPHITE_SERVICE_HOST: "graphite"
      GRAPHITE_SERVICE_PORT: "80"
   mem_limit: 1000000000 
 db:
-  image: mongo:2.6.11
+  image: dmoll1974/targets-io-mongo
   ports:
    - "27017:27017"
+   - "27018:27018"
   volumes:
    - /var/lib/targets-io/mongo:/data/db
-  command: --smallfiles 
+  privileged: true
   mem_limit: 1000000000
 graphite:
   image: dmoll1974/targets-io-graphite
@@ -33,14 +35,6 @@ graphite:
   volumes:
    - /var/lib/targets-io/graphite/log:/var/log
    - /var/lib/targets-io/graphite/storage:/opt/graphite/storage
-memcached:
-  image: sameersbn/memcached:latest
-  ports:
-   - "11211:11211"
-  environment:
-   CACHE_SIZE: 1024
-   EXTRA_OPTS: "-I 10m"
-  mem_limit: 1000000000 
 dropwizard:
   image: dmoll1974/targets-io-dropwizard
   ports:

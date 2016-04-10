@@ -17,10 +17,37 @@ var ReleaseSchema = new Schema({
     uppercase: true
   },
   'date': Date,
+  'releaseTestRuns':[
+    {
+      productName: String,
+      dashboardName: String,
+      testRunId: String,
+      end: Date, // hack this to sort the index in the release details page
+      requirements: [
+        {
+          stakeholder: String,
+          description: String,
+          result: Boolean
+        }
+      ]
+    }
+  ],
+  releaseLinks :[
+    {
+      description: String,
+      url: String,
+      linkText: String,
+      openInNewTab: {
+        type: Boolean,
+        default: true
+      }
+    }
+  ],
   'requirements': [{
     stakeholder : String,
     description : String,
     result : Boolean,
+
     relatedTestRuns: [ {
       productName: String,
       dashboardName: String,
@@ -31,7 +58,7 @@ var ReleaseSchema = new Schema({
 });
 
 ReleaseSchema.index({
-  productName: 1,
+  name: 1,
   productRelease: 1
  }, { unique: true });
 mongoose.model('Release', ReleaseSchema);

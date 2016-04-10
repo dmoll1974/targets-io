@@ -63,6 +63,14 @@ function createTestrunSummary(req, res){
 
   var testRunSummary = new TestrunSummary(req.body);
 
+  //_.each(testRunSummary.metrics, function(metric){
+  //
+  //  _.each(metric.dygraphData.data, function(dataline){
+  //
+  //      dataline[0] = new Date(dataline[0]);
+  //  })
+  //})
+
   testRunSummary.save(function(err, savesTestRunSummary){
 
     if (err) {

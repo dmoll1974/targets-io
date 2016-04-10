@@ -1,5 +1,8 @@
 <div layout="column">
     <h3>Recent test runs (last 24 hours)</h3>
+    <md-checkbox ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
+        Show completed test runs only
+    </md-checkbox>
     <table class="table">
         <thead>
         <tr>
@@ -31,7 +34,7 @@
             <td></td>
         </tr>
         <tbody>
-        <tr ng-repeat="recentTest in recentTests | orderBy:'-end'" class="hover-row" ui-sref="viewDashboard({productName: recentTest.productName, dashboardName: recentTest.dashboardName})">
+        <tr ng-repeat="recentTest in recentTests | orderBy:'-end' | filter: {completed: completedTestRunsOnly ? true : '' }" class="pointer hover-row" ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})">
             <td>
                 {{recentTest.productName}}
             </td>

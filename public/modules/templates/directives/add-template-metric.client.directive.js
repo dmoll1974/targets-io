@@ -50,7 +50,36 @@ function AddTemplateMetricDirective () {
           }
       });
 
+      /* values for form drop downs*/
+      $scope.metricTypes = [
+          'Average',
+          'Maximum',
+          'Minimum',
+          'Last',
+          'Gradient'
+      ];
 
+
+      $scope.metricUnits = [
+          'None',
+          'Count',
+          'Errors',
+          'Mb',
+          'Milliseconds',
+          'Percentage',
+          'Responses',
+          'Bytes/second',
+          'CPUsec',
+          'Users',
+          'Custom'
+      ];
+
+      $scope.addCustomUnit = function(){
+
+          $scope.metricUnits.push($scope.metric.customUnit)
+          $scope.metric.unit = $scope.metric.customUnit;
+
+      }
 
       $scope.variables = Templates.selected.variables;
 

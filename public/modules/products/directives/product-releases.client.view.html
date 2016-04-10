@@ -1,17 +1,15 @@
-<div data-ng-controller="ProductsController">
+<div>
     <div layout="column">
         <table class="table">
             <thead>
                 <tr>
                     <th>Release</th>
-                    <th>Date</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr dir-paginate="release in productReleases | orderBy:'date':true |  itemsPerPage: showNumberOfreleases" class="hover-row" data-ng-click="releaseDetails(release)">
-                    <td class="pointer" >{{release.release}}</td>
-                    <td class="pointer" >{{release.date | date:'EEEE, dd-M-yyyy'}}  </td>
+                <tr ng-repeat="release in productReleases | orderBy:'id':true" class="hover-row" data-ng-click="releaseDetails(release)">
+                    <td class="pointer" >{{release.id}}</td>
                 </tr>
             </tbody>
         </table>
@@ -30,7 +28,7 @@
                     boundary-links="true">
              </dir-pagination-controls>
         </div>
-        <div flex="50" class="container" ng-if="loading">
+        <div flex="50" class="container" ng-if="loadingReleases">
             <md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>
             <div class="bottom-block">
                 <span>Loading releases ...</span>

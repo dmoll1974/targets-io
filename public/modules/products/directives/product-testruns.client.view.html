@@ -1,5 +1,5 @@
 <!--<div data-ng-controller="TestrunsController" data-ng-init="listTestRunsForDashboard()">-->
-<div data-ng-controller="ProductsController">
+<div>
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div layout="column">
         <table class="table">
@@ -10,6 +10,7 @@
                     <th>Start</th>
                     <th>End</th>
                     <th>Duration</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -22,25 +23,72 @@
                     </td>
                     <td class="pointer">{{testRun.humanReadableDuration}}
                     </td>
+                    <td>
+                    <td data-ng-if="!(runningTest && $index < numberOfRunningTests)">
+                        <md-menu style="padding-top: 0px; padding-bottom: 0px;">
+                            <div aria-label="Open test run menu" class="md-icon-button"
+                                 ng-click="openMenu($mdOpenMenu, $event)">
+                                <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_24px.svg"></md-icon>
+                                <md-tooltip>
+                                    Test run menu
+                                </md-tooltip>
+                            </div>
+                            <md-menu-content width="4">
+
+                                <md-menu-item data-ng-if="testRun.buildResultsUrl">
+                                    <md-button data-ng-click="go(testRun.buildResultsUrl)">
+                                        <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
+                                        View in CI server
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-divider></md-menu-divider>
+                                <md-menu-item>
+                                    <md-button  data-ng-click="editTestRun(testRun)">
+                                        <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
+                                        Edit test run
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button  data-ng-click="viewTestRunSummary(testRun)">
+                                        <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
+                                        View test run summary
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+                    </td>
                 </tr>
             </tbody>
         </table>
+        <!--<div  layout="row" layout-align="end center">-->
+            <!--<md-input-container ng-hide="(numberOfTestRuns < showNumberOfTestRuns) && (showNumberOfTestRuns === '10')">-->
+                <!--<label>Rows</label>-->
+                <!--<md-select ng-model="showNumberOfTestRuns">-->
+                    <!--<md-option ng-repeat="numberOfRowOption in numberOfRowOptions" value="{{numberOfRowOption.value}}">-->
+                        <!--{{numberOfRowOption.value}}-->
+                    <!--</md-option>-->
+                <!--</md-select>-->
+            <!--</md-input-container>-->
+            <!--<dir-pagination-controls-->
+                    <!--max-size="8"-->
+                    <!--direction-links="true"-->
+                    <!--boundary-links="true">-->
+             <!--</dir-pagination-controls>-->
+        <!--</div>-->
         <div  layout="row" layout-align="end center">
-            <md-input-container ng-hide="(numberOfTestRuns < showNumberOfTestRuns) && (showNumberOfTestRuns === '10')">
+            <md-input-container>
                 <label>Rows</label>
-                <md-select ng-model="showNumberOfTestRuns">
+                <md-select ng-model="loadNumberOfTestRuns" ng-change="updateNumberOfTestRuns()">
                     <md-option ng-repeat="numberOfRowOption in numberOfRowOptions" value="{{numberOfRowOption.value}}">
                         {{numberOfRowOption.value}}
                     </md-option>
                 </md-select>
             </md-input-container>
-            <dir-pagination-controls
-                    max-size="8"
-                    direction-links="true"
-                    boundary-links="true">
-             </dir-pagination-controls>
         </div>
-        <div flex="50" class="container" ng-if="loading">
+
+        <div flex="50" class="container" ng-if="loadingTestRuns">
             <md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>
             <div class="bottom-block">
                 <span>Loading test runs ...</span>

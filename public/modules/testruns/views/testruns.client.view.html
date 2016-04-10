@@ -51,15 +51,15 @@
                 <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.humanReadableDuration}}
                 </td>
                 <td data-ng-if="!(runningTest && $index < numberOfRunningTests)" header-class="text-center" class="text-center pointer"
-                    data-ng-click="testRunRequirements($index)"><span
+                    data-ng-click="testRunRequirements(testRun)"><span
                         ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>
                 </td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.previousBuild}}"
-                    class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark($index)"><span
+                    class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark(testRun)"><span
                         ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
                 </td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.baseline}}"
-                    class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark($index)"><span
+                    class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark(testRun)"><span
                         ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
                 </td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)">
@@ -129,22 +129,34 @@
             </tr>
             </tbody>
         </table>
+        <!--<div  layout="row" layout-align="end center">-->
+            <!--<md-input-container ng-hide="(totalNumberOftestRuns < showNumberOfTestRuns) && (showNumberOfTestRuns === '10')">-->
+                <!--<label>Rows</label>-->
+                <!--<md-select ng-model="showNumberOfTestRuns">-->
+                    <!--<md-option ng-repeat="numberOfRowOption in numberOfRowOptions" value="{{numberOfRowOption.value}}">-->
+                        <!--{{numberOfRowOption.value}}-->
+                    <!--</md-option>-->
+                <!--</md-select>-->
+            <!--</md-input-container>-->
+            <!--<dir-pagination-controls-->
+                    <!--max-size="8"-->
+                    <!--direction-links="true"-->
+                    <!--boundary-links="true"-->
+                    <!--on-page-change="nextPage(newPageNumber)" >-->
+            <!--</dir-pagination-controls>-->
+        <!--</div>-->
+
         <div  layout="row" layout-align="end center">
-            <md-input-container ng-hide="(totalNumberOftestRuns < showNumberOfTestRuns) && (showNumberOfTestRuns === '10')">
+            <md-input-container>
                 <label>Rows</label>
-                <md-select ng-model="showNumberOfTestRuns">
+                <md-select ng-model="loadNumberOfTestRuns" ng-change="updateNumberOfTestRuns()">
                     <md-option ng-repeat="numberOfRowOption in numberOfRowOptions" value="{{numberOfRowOption.value}}">
                         {{numberOfRowOption.value}}
                     </md-option>
                 </md-select>
             </md-input-container>
-            <dir-pagination-controls
-                    max-size="8"
-                    direction-links="true"
-                    boundary-links="true"
-                    on-page-change="nextPage(newPageNumber)" >
-            </dir-pagination-controls>
         </div>
+
         <div flex="50" class="container" ng-if="loading">
             <md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>
             <div class="bottom-block">

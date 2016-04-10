@@ -16,11 +16,13 @@ var mongoose = require('mongoose'),
     Benchmarks = require('./testruns.benchmarks.server.controller'),
     Metric = mongoose.model('Metric'),
     async = require('async'),
-    RunningTest = mongoose.model('RunningTest');
+    RunningTest = mongoose.model('RunningTest'),
+    ss = require('simple-statistics');
 
 
 
 
+exports.productReleasesFromTestRuns = productReleasesFromTestRuns;
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
 exports.testRunsForProduct = testRunsForProduct;
@@ -41,16 +43,19 @@ function addTestRun(req, res){
 
   let testRun = new Testrun(req.body);
 
+  testRun.humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+  testRun.meetsRequirement = null;
+
   testRun.save(function(err, testRun){
 
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
-      benchmarkAndPersistTestRunById(testRun)
-      .then(function(testRun){
+      //benchmarkAndPersistTestRunById(testRun)
+      //.then(function(testRun){
         res.jsonp(testRun);
-      });
+      //});
     }
 
   });
@@ -69,10 +74,13 @@ function update (req, res) {
 
       testRun.start = req.body.start;
       testRun.end = req.body.end;
+      testRun.productName = req.body.productName;
       testRun.productRelease = req.body.productRelease;
+      testRun.dashboardName = req.body.dashboardName;
       testRun.testRunId = req.body.testRunId;
       testRun.completed = req.body.completed;
       testRun.buildResultsUrl = req.body.buildResultsUrl;
+      testRun.rampUpPeriod = req.body.rampUpPeriod;
       testRun.annotations = req.body.annotations;
       testRun.humanReadableDuration = humanReadbleDuration(new Date(req.body.end).getTime() - new Date(req.body.start).getTime());
 
@@ -241,7 +249,7 @@ function deleteTestRunById(req, res) {
  * select test runs for product
  */
 function testRunsForProduct(req, res) {
-  Testrun.find({productName: req.params.productName}).sort({eventTimestamp: 1}).exec(function (err, testRuns) {
+  Testrun.find({productName: req.params.productName, completed: true}).sort({end: -1}).limit(req.params.limit).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
@@ -257,11 +265,27 @@ function testRunsForProduct(req, res) {
     }
   });
 }
+
+/**
+ * get distinct releases for product
+ */
+function productReleasesFromTestRuns(req, res) {
+  Testrun.find({productName: req.params.productName}).distinct('productRelease').sort().exec(function (err, releases) {
+    if (err) {
+      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+    } else {
+
+
+      res.jsonp(releases);
+
+    }
+  });
+}
 /**
  * select test runs for product release
  */
 function testRunsForProductRelease(req, res) {
-  Testrun.find({$and:[{productName: req.params.productName}, {productRelease: req.params.productRelease}]}).sort({eventTimestamp: 1}).exec(function (err, testRuns) {
+  Testrun.find({$and:[{productName: req.params.productName}, {productRelease: req.params.productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
@@ -332,31 +356,33 @@ function testRunsForDashboard(req, res) {
 
 
 
-  Testrun.find(query).sort({end: -1 }).exec(function(err, testRuns) {
+  Testrun.find(query).sort({end: -1 }).limit(req.params.limit).exec(function(err, testRuns) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
 
 
-      response.totalNumberOftestRuns = testRuns.length;
+      //response.totalNumberOftestRuns = testRuns.length;
+      //
+      ///* Only return paginated test runs */
+      //
+      //let page = req.params.page;
+      //let limit = req.params.limit;
+      //let paginatedTestRuns = [];
+      //
+      //_.each(testRuns, function(testRun, index){
+      //
+      //  if(index >= (page - 1) * (limit)  && index <= (page * limit) - 1){
+      //
+      //    paginatedTestRuns.push(testRun);
+      //  }
+      //
+      //});
+      //
+      //response.testRuns = paginatedTestRuns;
 
-      /* Only return paginated test runs */
-
-      let page = req.params.page;
-      let limit = req.params.limit;
-      let paginatedTestRuns = [];
-
-      _.each(testRuns, function(testRun, index){
-
-        if(index >= (page - 1) * (limit)  && index <= (page * limit) - 1){
-
-          paginatedTestRuns.push(testRun);
-        }
-
-      });
-
-      response.testRuns = paginatedTestRuns;
+      response.testRuns = testRuns;
 
     /* Check for running tests */
       RunningTest.find({
@@ -500,18 +526,30 @@ function refreshTestrun(req, res) {
       newTestRun.start = testRun.start;
       newTestRun.end = testRun.end;
       newTestRun.productName = testRun.productName;
+      newTestRun.productRelease = testRun.productRelease;
       newTestRun.dashboardName = testRun.dashboardName;
       newTestRun.testRunId = testRun.testRunId;
       newTestRun.completed = testRun.completed;
+      newTestRun.annotations = testRun.annotations;
       newTestRun.humanReadableDuration = testRun.humanReadableDuration;
+      newTestRun.rampUpPeriod = testRun.rampUpPeriod;
       newTestRun.buildResultsUrl = testRun.buildResultsUrl;
 
       testRun.remove(function(err){
 
-        benchmarkAndPersistTestRunById(newTestRun)
-        .then(function(updatedTestRun){
-          res.jsonp(updatedTestRun);
-        });
+        newTestRun.save(function(err, savedNewTestRun){
+
+          if (err){
+            return res.status(400).send({ message: 'Error while saving newTestRun:' + err.stack });
+          }else {
+
+            benchmarkAndPersistTestRunById(savedNewTestRun)
+                .then(function (updatedTestRun) {
+                  res.jsonp(updatedTestRun);
+                });
+          }
+        })
+
       })
     }
   });
@@ -523,40 +561,21 @@ exports.getTestRunById = function (productName, dashboardName, testRunId, callba
       { dashboardName: dashboardName },
       { testRunId: testRunId }
     ]
-  }).sort('-end').exec(function (err, testRun) {
+  }).exec(function (err, testRun) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
       if (testRun) {
         callback(testRun);
       } else {
-        Event.find({
-          $and: [
-            { productName: productName },
-            { dashboardName: dashboardName },
-            { testRunId: testRunId }
-          ]
-        }).sort('-end').exec(function (err, events) {
-          if (err) {
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-          } else {
-            if (events.length > 0) {
-              createTestrunFromEvents(productName, dashboardName, events, function(testRun){
-                benchmarkAndPersistTestRunById(productName, dashboardName, testRun[0], function(persistedTestRun){
-                  callback(persistedTestRun);
-                });
-              });
-            } else {
-              callback(null);
-            }
-          }
-        });
+
+        callback();
       }
     }
   });
 };
 
-let removeAndSaveTestRun = function(testRun){
+let upsertTestRun = function(testRun){
 
   return new Promise((resolve, reject) => {
 
@@ -592,7 +611,7 @@ function benchmarkAndPersistTestRunById(testRun) {
     .then(Requirements.setRequirementResultsForTestRun)
     .then(Benchmarks.setBenchmarkResultsPreviousBuildForTestRun)
     .then(Benchmarks.setBenchmarkResultsFixedBaselineForTestRun)
-    .then(removeAndSaveTestRun)
+    .then(upsertTestRun)
     .then(function(completedTestrun){
       resolve(completedTestrun);
     })
@@ -663,44 +682,99 @@ function getDataForTestrun(testRun) {
         console.log(err);
       var metrics = [];
       async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
-        let targets = [];
-        let value;
-        async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
-          graphite.getGraphiteData(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
-            _.each(body, function (bodyTarget) {
 
-              value = calculateAverage(bodyTarget.datapoints);
-              /* if target has values other than null values only, store it */
-              if(value !== null) {
-                targets.push({
-                  target: bodyTarget.target,
-                  value: value
-                });
-              }
-            });
-            callbackTarget();
-        });
-        }, function (err) {
-          if (err)
-            return next(err);
-          if(targets.length > 0) {
-            metrics.push({
-              _id: metric._id,
-              tags: metric.tags,
-              alias: metric.alias,
-              type: metric.type,
-              benchmarkValue: metric.benchmarkValue,
-              benchmarkOperator: metric.benchmarkOperator,
-              requirementValue: metric.requirementValue,
-              requirementOperator: metric.requirementOperator,
-              targets: targets
-            });
+        if(metric.requirementValue !== null || metric.benchmarkValue !== null) {
 
-            targets = [];
+          let targets = [];
+          let value;
+          let start;
+          /* if dashboard has startSteadyState configured and metric type = gradient use steady state period only */
+
+          if (dashboard.startSteadyState && metric.type === 'Gradient') {
+
+            start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000);
+
+          } else {
+
+            /* if include ramp up is false, add ramp up period to start of test run */
+            start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
+
           }
+          async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
+
+            graphite.getGraphiteData(Math.round(start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
+              _.each(body, function (bodyTarget) {
+
+                /* save value based on metric type */
+
+                switch (metric.type) {
+
+                  case 'Average':
+
+                    value = calculateAverage(bodyTarget.datapoints);
+                    break;
+
+                  case 'Maximum':
+
+                    value = calculateMaximum(bodyTarget.datapoints);
+                    break;
+
+                  case 'Minimum':
+
+                    value = calculateMinimum(bodyTarget.datapoints);
+                    break;
+
+                  case 'Last':
+
+                    value = getLastDatapoint(bodyTarget.datapoints);
+                    break;
+
+                  case 'Gradient':
+
+                    value = calculateLinearFit(bodyTarget.datapoints);
+                    break;
+
+                }
+
+
+                /* if target has values other than null values only, store it */
+                if (value !== null) {
+                  targets.push({
+                    target: bodyTarget.target,
+                    value: value
+                  });
+                }
+              });
+              callbackTarget();
+            });
+          }, function (err) {
+            if (err)
+              return next(err);
+            if (targets.length > 0) {
+              metrics.push({
+                _id: metric._id,
+                tags: metric.tags,
+                alias: metric.alias,
+                type: metric.type,
+                benchmarkValue: metric.benchmarkValue,
+                benchmarkOperator: metric.benchmarkOperator,
+                requirementValue: metric.requirementValue,
+                requirementOperator: metric.requirementOperator,
+                targets: targets
+              });
+
+              targets = [];
+            }
+
+            callbackMetric();
+
+
+          });
+        }else{
 
           callbackMetric();
-        });
+
+        }
       }, function (err) {
         if (err) {
           reject(err);
@@ -744,6 +818,78 @@ function calculateAverage(datapoints) {
   else
     return null;
 }
+
+function calculateMaximum(datapoints){
+
+  var maximum = 0;
+
+  for(var d=0;d<datapoints.length;d++){
+
+    if (datapoints[d][0] > maximum)
+      maximum = datapoints[d][0];
+  }
+
+  return maximum;
+}
+
+function calculateMinimum(datapoints){
+
+  var minimum = Infinity;
+
+  for(var d=0;d<datapoints.length;d++){
+
+    if (datapoints[d][0] < minimum)
+      minimum = datapoints[d][0];
+  }
+
+  return minimum;
+}
+
+function getLastDatapoint(datapoints){
+
+
+  for(var d=datapoints.length-1;d>=0;--d){
+
+    if(datapoints[d][0]!= null)
+
+    /* if no valid number is calculated, return null*/
+
+      var result = !isNaN(Math.round((datapoints[d][0])*100)/100) ? Math.round((datapoints[d][0])*100)/100 : null;
+      return result;
+
+  }
+}
+function calculateLinearFit(datapoints){
+
+  var data = [];
+
+  for(var j=0;j< datapoints.length;j++){
+
+    if(datapoints[j][0] !== null) {
+      data.push([j, datapoints[j][0]]);
+    }
+  }
+
+  var line = ss.linear_regression()
+      .data(data)
+      .line()
+
+  var gradient = ss.linear_regression()
+      .data(data)
+      .m()
+  //console.log('stijgings percentage: ' + (line(data.length-1)-line(0))/ line(0)) / data.length * 100;
+  //console.log('gradient: ' + gradient * 100);
+  //console.log('line(0): ' + line(0));
+  //console.log('line(data.length-1): ' + line(data.length-1));
+
+  /* if no valid number is calculated, return null*/
+
+  var result = !isNaN(Math.round(((((line(data.length-1)-line(0))/ line(0)) / data.length) * 100 * 100)* 100) / 100) ? Math.round(((((line(data.length-1)-line(0))/ line(0)) / data.length) * 100 * 100)* 100) / 100 : null;
+
+  return result;
+
+}
+
 
 function TempSaveTestruns(testruns,  callback) {
 
@@ -800,121 +946,7 @@ function saveTestrun(testrun, metrics, callback) {
     });
   });
 }
-function getPreviousBuild(productName, dashboardName, testrunId, callback) {
-  var previousBuild;
-  Event.find({
-    $and: [
-      { productName: productName },
-      { dashboardName: dashboardName }
-    ]
-  }).sort({ eventTimestamp: -1 }).exec(function (err, events) {
-    if (err) {
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    } else {
-      createTestrunFromEvents(productName, dashboardName, events, function (testruns) {
-        _.each(testruns, function (testrun, i) {
-          if (testrun.testRunId === testrunId) {
-            if (i + 1 === testruns.length) {
-              return null;
-            } else {
-              previousBuild = testruns[i + 1].testRunId;
-              return previousBuild;
-            }
-          }
-        });
-        callback(previousBuild);
-      });
-    }
-  });
-}
-function createTestrunFromEvents(productName, dashboardName, events, callback) {
-  var testRuns = [];
-  var baseline;
-  var dashboardBaseline;
-  Product.findOne({ name: productName }).exec(function (err, product) {
-    if (err)
-      console.log(err);
-    Dashboard.findOne({
-      $and: [
-        { productId: product._id },
-        { name: dashboardName }
-      ]
-    }).exec(function (err, dashboard) {
-      if (err) {
-        console.log(err);
-      } else {
-        dashboardBaseline = dashboard.baseline ? dashboard.baseline : baseline;
-        for (var i = 0; i < events.length; i++) {
-          if (events[i].eventDescription === 'start') {
-            for (var j = 0; j < events.length; j++) {
-              if (events[j].eventDescription === 'end' && events[j].testRunId == events[i].testRunId) {
-                /* If no baseline has been set for this dashboard, set the first test run as baseline*/
-                if (!dashboardBaseline && !baseline) {
-                  baseline = events[i].testRunId;
-                  dashboardBaseline = events[i].testRunId;
-                } else {
-                  baseline = dashboardBaseline;
-                }
-                if (events[i].buildResultsUrl) {
-                  testRuns.push({
-                    start: events[i].eventTimestamp,
-                    startEpoch: events[i].eventTimestamp.getTime(),
-                    end: events[j].eventTimestamp,
-                    endEpoch: events[j].eventTimestamp.getTime(),
-                    productName: events[i].productName,
-                    dashboardName: events[i].dashboardName,
-                    testRunId: events[i].testRunId,
-                    buildResultsUrl: events[i].buildResultsUrl,
-                    eventIds: [
-                      events[i].id,
-                      events[j].id
-                    ],
-                    //meetsRequirement: null,
-                    //benchmarkResultFixedOK: null,
-                    //benchmarkResultPreviousOK: null,
-                    baseline: baseline
-                  });
-                } else {
-                  testRuns.push({
-                    start: events[i].eventTimestamp,
-                    startEpoch: events[i].eventTimestamp.getTime(),
-                    end: events[j].eventTimestamp,
-                    endEpoch: events[j].eventTimestamp.getTime(),
-                    productName: events[i].productName,
-                    dashboardName: events[i].dashboardName,
-                    testRunId: events[i].testRunId,
-                    eventIds: [
-                      events[i].id,
-                      events[j].id
-                    ],
-                    //meetsRequirement: null,
-                    //benchmarkResultFixedOK: null,
-                    //benchmarkResultPreviousOK: null,
-                    baseline: baseline
-                  });
-                }
-                break;
-              }
-            }
-          }
-        }
-        /* If no baseline has been set for this dashboard, set the first test run as baseline*/
-        if (!dashboard.baseline && testRuns) {
-          dashboard.baseline = dashboardBaseline;
-          dashboard.save(function (err) {
-            if (err) {
-              console.log(err);
-            } else {
-              callback(testRuns);
-            }
-          });
-        } else {
-          callback(testRuns);
-        }
-      }
-    });
-  });
-}
+
 function updateAllDashboardTestRuns(req, res){
 
   var regExpDashboardName = new RegExp(req.params.oldDashboardName, 'igm');

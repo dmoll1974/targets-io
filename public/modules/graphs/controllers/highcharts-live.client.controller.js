@@ -16,6 +16,9 @@ angular.module('graphs').controller('HighchartsLiveController', [
   'Events',
   'Utils',
   function ($scope, Interval, $stateParams, $state, Graphite, TestRuns, Metrics, Dashboards, Tags, $q, $http, $log, Events, Utils) {
+    
+
+    
     /* Zero copied logic */
     $scope.clipClicked = function () {
       $scope.showUrl = false;
@@ -40,7 +43,8 @@ angular.module('graphs').controller('HighchartsLiveController', [
     Utils.zoomLock = true;
 
     /* set graphType */
-    Utils.graphType =  'live-graph';
+    Utils.graphType =  'graphs-live';
+    $scope.graphType =  'graphs-live';
 
     /* set Tags form graph */
     $scope.setTags = function () {
@@ -59,7 +63,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
     };
     /* update Tags form graph */
     /* update Tags form graph */
-    $scope.updateTags = function () {
+    $scope.updateTags = function (tag) {
       $scope.showTags = false;
       Metrics.update($scope.metric).success(function (metric) {
         Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, metric.tags, function (updated) {
@@ -71,11 +75,10 @@ angular.module('graphs').controller('HighchartsLiveController', [
             });
           }
         });
-        $state.go('viewGraphs', {
+        $state.go('viewLiveGraphs', {
           'productName': $stateParams.productName,
           'dashboardName': $stateParams.dashboardName,
-          'testRunId': $stateParams.testRunId,
-          tag: metric.tags[metric.tags.length - 1].text
+          tag: tag  //metric.tags[metric.tags.length - 1].text
         });
       });
     };
@@ -103,7 +106,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
     /* generate deeplink to share metric graph */
     $scope.setMetricShareUrl = function (metric) {
 
-      $scope.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '?';
+      $scope.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?';
 
       if (Utils.zoomFrom) {
         $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
@@ -160,7 +163,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
     $scope.$watch(function (scope) {
       return Utils.zoomFrom;
     }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
+      if (newVal !== oldVal && oldVal) {
         Interval.clearAll();
         var from = Utils.zoomFrom ? Utils.zoomFrom : TestRuns.selected.startEpoch;
         var until = Utils.zoomUntil ? Utils.zoomUntil : TestRuns.selected.endEpoch;

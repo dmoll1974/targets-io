@@ -7,11 +7,11 @@ angular.module('metrics').config([
     $stateProvider.state('listMetrics', {
       url: '/metrics/:dashboardId',
       templateUrl: 'modules/metrics/views/list-metrics.client.view.html'
-    }).state('createMetric', {
-      url: '/add/metric/:productName/:dashboardName',
+    }).state('addMetric', {
+      url: '/add/metric/:productName/:dashboardName/',
       templateUrl: 'modules/metrics/views/create-metric.client.view.html'
     }).state('editMetric', {
-      url: '/edit/metric/:productName/:dashboardName/:metricId',
+      url: '/edit/metric/:productName/:dashboardName/:metricId/',
       templateUrl: 'modules/metrics/views/edit-metric.client.view.html'
     });
   }

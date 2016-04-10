@@ -30,7 +30,7 @@ function updateRequirementResults(testRun) {
               {dashboardName: updatedTestRun.dashboardName},
               {testRunId: updatedTestRun.testRunId}
             ]
-          }, {benchchmarkResultFixedOK: updatedTestRun.benchmarkResultFixedOK}
+          }, {meetsRequirement: updatedTestRun.meetsRequirement, metrics: updatedTestRun.metrics}
           , {upsert: true}, function (err, savedTestRun) {
             if (err) {
               reject(err);
@@ -101,13 +101,14 @@ function setMetricRequirementResults(targets) {
 }
 function evaluateRequirement(value, requirementOperator, requirementValue) {
   var requirementResult;
-  if (requirementOperator === '<' && value > requirementValue || requirementOperator === '>' && value < requirementValue) {
+  if (requirementOperator === '<' && value >= requirementValue || requirementOperator === '>' && value <= requirementValue) {
     var requirementResult = false;
   } else {
     var requirementResult = true;
   }
   return requirementResult;
 }
+
 function setTargetRequirementResults(targets, requirementOperator, requirementValue) {
   var updatedTargets = [];
   _.each(targets, function (target) {

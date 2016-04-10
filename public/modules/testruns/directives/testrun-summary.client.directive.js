@@ -21,6 +21,7 @@ function TestRunSummaryDirective () {
     $scope.testRunSummary = {};
     $scope.testRunSummary.requirements = [];
     $scope.editMode = false;
+    $scope.hideGraphs = false;
 
     TestRunSummary.getTestRunSummary($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRunSummary) {
 
@@ -232,69 +233,134 @@ function TestRunSummaryDirective () {
       });
     }
 
-    $scope.saveTestRunSummary = function(){
 
-      /* set summaryIndeces in current order of the scope */
+    $scope.submitTestRunSummary = function(){
 
+      if($scope.editMode === false) {
 
-      _.each($scope.testRunSummary.metrics, function(metric, i){
-
-        metric.summaryIndex = i;
-
-      })
+        /* set summaryIndeces in current order of the scope */
 
 
+        _.each($scope.testRunSummary.metrics, function(metric, i){
+
+          metric.summaryIndex = i;
+
+        })
 
 
-      TestRunSummary.addTestRunSummary($scope.testRunSummary).success(function(savedTestRunSummary){
+        if ($scope.summarySaved === false) {
 
 
-          $scope.summarySaved = true;
+          TestRunSummary.addTestRunSummary($scope.testRunSummary).success(function(savedTestRunSummary){
 
-          var toast = $mdToast.simple()
-              .action('OK')
-              .highlightAction(true)
-              .position('top center')
-              .parent(angular.element('#summary-buttons'))
-              .hideDelay(6000);
 
-          $mdToast.show(toast.content('Test run summary saved')).then(function(response) {
+            $scope.summarySaved = true;
 
-          });
+            var toast = $mdToast.simple()
+                .action('OK')
+                .highlightAction(true)
+                .position('top center')
+                .parent(angular.element('#summary-buttons'))
+                .hideDelay(6000);
 
-      })
+            $mdToast.show(toast.content('Test run summary saved')).then(function(response) {
+
+            });
+
+          })
+
+        } else {
+
+
+
+          TestRunSummary.updateTestRunSummary($scope.testRunSummary).success(function(updatedTestRunSummary){
+
+
+            $scope.summarySaved = true;
+            $scope.editMode = false;
+
+            var toast = $mdToast.simple()
+                .action('OK')
+                .highlightAction(true)
+                .position('top center')
+                .parent(angular.element('#summary-buttons'))
+                .hideDelay(6000);
+
+            $mdToast.show(toast.content('Test run summary updated')).then(function(response) {
+
+            });
+
+          })
+
+        }
+      }
+
+
     }
 
-    $scope.updateTestRunSummary = function(){
-
-      /* set summaryIndeces in current order of the scope */
-
-
-      _.each($scope.testRunSummary.metrics, function(metric, i){
-
-        metric.summaryIndex = i;
-
-      })
-
-      TestRunSummary.updateTestRunSummary($scope.testRunSummary).success(function(updatedTestRunSummary){
-
-
-          $scope.summarySaved = true;
-          $scope.editMode = false;
-
-          var toast = $mdToast.simple()
-              .action('OK')
-              .highlightAction(true)
-              .position('top center')
-              .parent(angular.element('#summary-buttons'))
-              .hideDelay(6000);
-
-          $mdToast.show(toast.content('Test run summary updated')).then(function(response) {
-
-          });
-
-      })
-    };
+    //$scope.saveTestRunSummary = function(){
+    //
+    //  /* set summaryIndeces in current order of the scope */
+    //
+    //
+    //  _.each($scope.testRunSummary.metrics, function(metric, i){
+    //
+    //    metric.summaryIndex = i;
+    //
+    //  })
+    //
+    //
+    //
+    //
+    //  TestRunSummary.addTestRunSummary($scope.testRunSummary).success(function(savedTestRunSummary){
+    //
+    //
+    //      $scope.summarySaved = true;
+    //
+    //      var toast = $mdToast.simple()
+    //          .action('OK')
+    //          .highlightAction(true)
+    //          .position('top center')
+    //          .parent(angular.element('#summary-buttons'))
+    //          .hideDelay(6000);
+    //
+    //      $mdToast.show(toast.content('Test run summary saved')).then(function(response) {
+    //
+    //      });
+    //
+    //  })
+    //}
+    //
+    //$scope.updateTestRunSummary = function(){
+    //
+    //  /* set summaryIndeces in current order of the scope */
+    //
+    //
+    //  _.each($scope.testRunSummary.metrics, function(metric, i){
+    //
+    //    metric.summaryIndex = i;
+    //
+    //  })
+    //
+    //  TestRunSummary.updateTestRunSummary($scope.testRunSummary).success(function(updatedTestRunSummary){
+    //
+    //
+    //      $scope.summarySaved = true;
+    //      $scope.editMode = false;
+    //
+    //      var toast = $mdToast.simple()
+    //          .action('OK')
+    //          .highlightAction(true)
+    //          .position('top center')
+    //          .parent(angular.element('#summary-buttons'))
+    //          .hideDelay(6000);
+    //
+    //      $mdToast.show(toast.content('Test run summary updated')).then(function(response) {
+    //
+    //      });
+    //
+    //  })
+    //};
 
 
     $scope.openDeleteModal = function (size, testRunSummary) {

@@ -14,10 +14,11 @@ function ProductReleaseDetailsDirective () {
 
 
   /* @ngInject */
-  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, $mdToast) {
+  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, $mdToast, $location, $anchorScroll) {
 
     $scope.editMode = false;
-
+    $scope.testRunIndexItems = [];
+    $scope.releaseTestRunsIndex = [];
 
     var originatorEv;
     $scope.openMenu = function ($mdOpenMenu, ev) {
@@ -33,6 +34,17 @@ function ProductReleaseDetailsDirective () {
           $scope.product = productRelease;
           $scope.releaseSaved = true;
 
+
+          /* add test runs to index */
+          _.each($scope.product.releaseTestRuns, function (testRun) {
+
+            Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
+
+                $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
+
+            });
+          });
+
         }else {
 
           $scope.releaseSaved = false;
@@ -45,22 +57,31 @@ function ProductReleaseDetailsDirective () {
             /* get test runs for release */
             TestRuns.listTestRunsForProductRelease($scope.product.name, $stateParams.productRelease).success(function (testRuns) {
 
+              $scope.product.releaseTestRuns = testRuns;
 
               /* match test runs to requirements */
 
-              _.each($scope.product.requirements, function (requirement, i) {
+              _.each($scope.product.releaseTestRuns, function (testRun) {
 
-                $scope.product.requirements[i].relatedTestRuns = [];
+                /* add test runs to index */
 
-                _.each(requirement.relatedDashboards, function (dashboard) {
+                Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
 
-                  _.each(testRuns, function (testRun) {
+                  $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
 
-                    if (testRun.dashboardName === dashboard) $scope.product.requirements[i].relatedTestRuns.push({
-                      productName: testRun.productName,
-                      dashboardName: testRun.dashboardName,
-                      testRunId: testRun.testRunId
-                    });
+                });
+
+
+                testRun.requirements = [];
+
+                _.each($scope.product.requirements, function (requirement, i) {
+
+                  _.each(requirement.relatedDashboards, function (dashboard) {
+
+                    if (testRun.dashboardName === dashboard) {
+                      testRun.requirements.push(requirement);
+                      testRun.description = dashboard.description;
+                    }
 
                   })
 
@@ -74,9 +95,22 @@ function ProductReleaseDetailsDirective () {
     });
 
 
-    $scope.toggleRequirementResult = function (index){
 
-      $scope.product.requirements[index].result = !$scope.product.requirements[index].result;
+    $scope.addLink = function(){
+
+      Products.selectedRelease = $scope.product;
+      $state.go('addProductReleaseLink', {productName: $stateParams.productName, productRelease: $stateParams.productRelease});
+
+    }
+
+    $scope.removeLink = function(index){
+
+      $scope.product.releaseLinks.splice(index,1);
+    }
+
+    $scope.toggleRequirementResult = function (parentIndex, index){
+
+      $scope.product.releaseTestRuns[parentIndex].requirements[index].result = !$scope.product.releaseTestRuns[parentIndex].requirements[index].result;
     }
 
     $scope.submitProductRelease = function(){
@@ -103,6 +137,11 @@ function ProductReleaseDetailsDirective () {
       }
 
 
+    }
+
+    $scope.scrollTo = function(id) {
+      $location.hash(id);
+      $anchorScroll();
     }
 
     $scope.openDeleteModal = function (size, product) {

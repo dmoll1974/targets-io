@@ -17,6 +17,21 @@ angular.module('graphs').controller('GraphsController', [
   function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
 
 
+
+    /* Releative interval options in live graphs */
+
+    $scope.zoomOptions = [
+      {value: '-10min' , label: 'Last 10 minutes'},
+      {value: '-30min' , label: 'Last 30 minutes'},
+      {value: '-1h', label: 'Last hour'},
+      {value: '-3h', label: 'Last 3 hours'},
+      {value: '-6h', label: 'Last 6 hours'},
+      {value: '-12h', label: 'Last 12 hours'},
+      {value: '-1d', label: 'Last day'},
+      {value: '-2d', label: 'Last 2 days'},
+      {value: '-3d', label: 'Last 3 days'}
+    ];
+
     /* initiaize menu */
 
     var originatorEv;
@@ -26,7 +41,7 @@ angular.module('graphs').controller('GraphsController', [
     };
 
 
-    $scope.numberOfColumns = Utils.numberOfColums;
+    $scope.numberOfColumns = Utils.numberOfColumns;
     $scope.flex = 100 / $scope.numberOfColumns;
     $scope.showLegend = true;
 
@@ -49,6 +64,15 @@ angular.module('graphs').controller('GraphsController', [
       }
     });
 
+    $scope.$watch(function (scope) {
+      return Utils.metricFilter;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        $scope.metricFilter =  Utils.metricFilter;
+      }
+    });
+
     $scope.toggleNumberOfColums = function(numberOfColumns){
 
       switch(numberOfColumns){
@@ -64,7 +88,7 @@ angular.module('graphs').controller('GraphsController', [
 
           $scope.numberOfColumns = 2;
           $scope.flex = 100 / $scope.numberOfColumns;
-          Utils.showLegend = false;
+          Utils.showLegend = true;
           break;
 
         case 3:
@@ -75,7 +99,7 @@ angular.module('graphs').controller('GraphsController', [
           break;
       }
 
-      Utils.numberOfColums = $scope.numberOfColumns;
+      Utils.numberOfColumns = $scope.numberOfColumns;
       $scope.init();
 
     }
@@ -85,7 +109,7 @@ angular.module('graphs').controller('GraphsController', [
 
       $scope.metricFilter = metric.alias;
       $scope.numberOfColumns = 1;
-      Utils.numberOfColums = $scope.numberOfColumns;
+      Utils.numberOfColumns = $scope.numberOfColumns;
       $scope.init();
     }
 
@@ -98,6 +122,11 @@ angular.module('graphs').controller('GraphsController', [
     $scope.clipClicked = function () {
       $scope.showViewUrl = false;
     };
+
+    $scope.$on('$destroy', function () {
+      /* reset metricFilter when leaving graphs view */
+      Utils.metricFilter = '';
+    });
 
     $scope.hasFlash = function () {
       var hasFlash = false;
@@ -148,13 +177,15 @@ angular.module('graphs').controller('GraphsController', [
 
       switch(graphsType){
 
-        case 'testrun':
-          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag;
-          break;
+
         case 'graphs-live':
-          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag;
+          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/';
+          break;
+        case 'testrun':
+          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag +  '/';
 
       }
+
       if (Utils.zoomFrom || $state.params.selectedSeries || Utils.metricFilter) {
         $scope.viewShareUrl = $scope.viewShareUrl + '?';
       }
@@ -246,6 +277,7 @@ angular.module('graphs').controller('GraphsController', [
         if ($stateParams.testRunId) {
           TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
             TestRuns.selected = testRun;
+            $scope.testRun = testRun;
           });
         }
       });
@@ -287,10 +319,16 @@ angular.module('graphs').controller('GraphsController', [
       });
       return metrics;
     }
-    /* default zoom range for live graphs is -10m */
-    $scope.zoomRange = Utils.zoomRange !== '' ? Utils.zoomRange : '-10min';
+    /* get zoom range  */
+    $scope.zoomRange = Utils.zoomRange;
 
-    Utils.zoomRange = $scope.zoomRange;
+    /* watch zoomRange */
+    $scope.$watch('zoomRange', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        Utils.zoomRange = $scope.zoomRange;
+      }
+    });
+
     
     /* Set active tab */
     $scope.isActive = function (tag) {

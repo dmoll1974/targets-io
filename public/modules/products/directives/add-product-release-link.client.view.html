@@ -1,0 +1,41 @@
+<div class="page-header">
+    <h1>Add link</h1>
+</div>
+<form name="linkForm">
+    <div layout="column">
+        <div layout="column">
+            <md-input-container class="md-block" flex required>
+                <label>Description</label>
+                <input name="linkDescription" ng-model="link.description">
+                <div ng-messages="linkForm.linkDescription.$error"
+                     ng-if="linkForm.$submitted || linkForm.linkDescription.$touched">
+                    <div ng-message="required">Description is required.</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block" flex required>
+                <label>Url</label>
+                <input name="linkUrl" ng-model="link.url">
+                <div ng-messages="linkForm.linkUrl.$error"
+                     ng-if="linkForm.$submitted || linkForm.linkUrl.$touched">
+                    <div ng-message="required">Url is required.</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block" flex required>
+                <label>Display text</label>
+                <input name="linkText" ng-model="link.linkText">
+                <div ng-messages="linkForm.linkText.$error"
+                     ng-if="linkForm.$submitted || linkForm.linkText.$touched">
+                    <div ng-message="required">Display text is required.</div>
+                </div>
+            </md-input-container>
+            <md-switch class="md-primary" md-no-ink aria-label="Open in new tab" ng-model="link.openInNewTab"  ng-class="{'switch-label-disabled': link.openInNewTab === false }">
+                Open in new tab
+            </md-switch>
+
+        </div>
+        <div layout="row">
+            <md-button md-no-ink class="md-primary" ng-click="linkForm.$valid && create(link)">Submit</md-button>
+            <md-button data-ng-click="cancel()">Cancel</md-button>
+        </div>
+    </div>
+</form>

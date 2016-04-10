@@ -4,12 +4,42 @@
  */
 var mongoose = require('mongoose'), Schema = mongoose.Schema, config = require('../../config/config');
 
+var Mixed = Schema.Types.Mixed;
+
+var data = new Schema({
+
+
+
+});
+
+
 var testRunSummaryMetricSchema = new Schema({
   'alias': String,
   'type': String,
   'tags': [{ text: String }],
-  'data': [],
-  'legendData': [],
+  'dygraphData': {
+    'annotations': [{
+      attachAtBottom: Boolean,
+      series: String,
+      shortText: String,
+      text: String,
+      x: Number
+    }],
+    'data': [{ type: Mixed, default: []} ],
+    'labels': [String],
+    'legendData': [{
+      avg: Number,
+      id: Number,
+      max: Number,
+      min: Number,
+      name: String,
+      numberOfValidDatapoints: Number,
+      visible: Boolean
+    }],
+    'graphNumberOfValidDatapoints': Number,
+    'maxValue': Number
+  },
+  'unit': String,
   'includeInSummary': Boolean,
   'summaryText': String,
   'summaryIndex': Number,

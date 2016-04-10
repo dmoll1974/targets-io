@@ -1,0 +1,98 @@
+<md-content layout="column" flex>
+    <md-content>
+        <md-button ng-if="graphZoomed" class="md-icon-button pull-right" ng-click="resetZoom()">
+            <md-icon md-svg-src="images/assets/ic_refresh_black_18px.svg"></md-icon>
+            <md-tooltip>
+                Reset zoom
+            </md-tooltip>
+        </md-button>
+    </md-content>
+    <div flex class="dygraph-div"  style="width:100%; margin-top: 20px;"></div>
+</md-content>
+<md-progress-linear ng-show="showProgressBar" md-mode="indeterminate" style="margin-left: 50px; width:95%;" ></md-progress-linear>
+
+<div layout="row" layout-align="space-between start" ng-if="showLegend">
+    <div  ng-if="metric.graphNumberOfValidDatapoints > 0" class="datagrid" style="margin-top: 20px; margin-left: 40px; ">
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" ng-model="selectAll" ng-change="setAllSeriesSelected(selectAll)">
+                </th>
+                <th>
+
+                </th>
+                <th>
+                    Metric
+                </th>
+                <th>
+                    Min
+                </th>
+                <th>
+                    Max
+                </th>
+                <th>
+                    Avg
+                </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="legendItem in metric.legendData" ng-if="legendItem.numberOfValidDatapoints > 0" class="hover-row pointer" ng-mousemove="highlightSeries(legendItem.name)" ng-class="{'legend-highlighted': (legendItem.highlighted === true)}">
+                <td>
+                    <input type="checkbox" ng-model="legendItem.visible"  ng-change="updateSelectedSeries()" >
+                </td>
+                <td>
+                    <i class="fa fa-circle" ng-style="{color: legendItem.color}"  ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)"></i>
+                </td>
+                <td  ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
+                    {{legendItem.name}}
+                </td>
+                <td  ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
+                    {{legendItem.min}}
+                </td>
+                <td ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
+                    {{legendItem.max}}
+                </td>
+                <td ng-click="selectSeriesToggle(legendItem)" ng-dblclick="selectOtherSeriesToggle(legendItem)">
+                    {{legendItem.avg}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div    class="datagrid" ng-if="metric.annotations.length > 0" style="margin-top: 20px; margin-left: 40px; ">
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    Event
+                </th>
+                <th>
+                    Timestamp
+                </th>
+                <th>
+                    Description
+                </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="annotation in metric.annotations">
+
+                <td>
+                    {{annotation.shortText}}
+                </td>
+                <td>
+                    {{annotation.x | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                </td>
+                <td>
+                    {{annotation.text}}
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

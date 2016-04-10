@@ -81,6 +81,9 @@ var TestrunSchema = new Schema({
   'benchmarkResultPreviousOK': Boolean,
   'buildResultsUrl': String,
   'annotations': String,
+  'rampUpPeriod': {
+      type: Number
+  },
   'metrics': [testRunMetricSchema]
 }, { toObject: { getters: true } });
 

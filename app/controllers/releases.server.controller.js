@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 
 
 exports.create = create;
-exports.update = update;
+exports.upsert = upsert;
 exports.delete = deleteRelease;
 exports.get = getRelease;
 
@@ -53,35 +53,22 @@ function getTemplateByName(req, res) {
  * Update a Release
  */
 
-function update(req, res){
+function upsert(req, res){
 
-
-    Release.findOne({$and:[
-        {name: req.body.name},
-        {productRelease: req.body.productRelease}
-
-    ]}).exec(function(err, release){
-
-        if (err) {
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-        } else{
-
-            release.requirements = req.body.requirements;
-
-            release.save(function(err, savedRelease){
-
+    Release.findOneAndUpdate({
+        $and:[
+            {name: req.body.name},
+            {productRelease: req.body.productRelease}
+        ]
+    }, {releaseLinks: req.body.releaseLinks, releaseTestRuns: req.body.releaseTestRuns}, {upsert: true}, function (err, release) {
                 if (err) {
                     return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
                 } else {
 
-                    res.jsonp(savedRelease);
+                    res.jsonp(release);
 
                 }
-            });
-        }
-
-    })
-
+    });
 
 };
 

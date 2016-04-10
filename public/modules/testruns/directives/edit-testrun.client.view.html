@@ -3,7 +3,7 @@
         <h1>Edit Test Run</h1>
     </div>
     <!--<div class="col-md-12">-->
-    <form name="testrunForm">
+    <form name="testrunForm" autocomplete="off" >
         <div layout="column">
             <div layout="column">
                 <div layout="row">
@@ -13,7 +13,7 @@
                         <label>start</label>
                         <input name="start" type="text" ng-model="testrun.start" required/>
                         <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss"
-                               ng-model="testrun.start" is-open="isOpenStart"/>
+                               ng-model="testrun.start" is-open="isOpenStart">
 
                         <div ng-messages="testrunForm.start.$error"
                              ng-if="testrunForm.$submitted || testrunForm.start.$touched">
@@ -40,6 +40,10 @@
                     <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
                              data-ng-click="openCalendar($event, 'end')"></md-icon>
                 </div>
+                <md-input-container flex>
+                    <label>Ramp up period in seconds</label>
+                    <input ng-model="testrun.rampUpPeriod">
+                </md-input-container>
                 <md-input-container
                         md-is-error="testrunForm.testrunProductName.$invalid && (testrunForm.$submitted || testrunForm.testrunProductName.$dirty)"
                         flex>
@@ -55,7 +59,7 @@
                         md-is-error="testrunForm.testrunProductRelease.$invalid && (testrunForm.$submitted || testrunForm.testrunProductRelease.$dirty)"
                         flex>
                     <label>Product release</label>
-                    <input name="testrunProductRelease" ng-model="testrun.productRelease" required>
+                    <input name="testrunProductRelease" ng-model="testrun.productRelease">
 
                     <div ng-messages="testrunForm.testrunProductRelease.$error"
                          ng-if="testrunForm.$submitted || testrunForm.testrunProductRelease.$touched">
@@ -77,7 +81,7 @@
                         md-is-error="testrunForm.testRunId.$invalid && (testrunForm.$submitted || testrunForm.testRunId.$dirty)"
                         flex>
                     <label>Testrun ID</label>
-                    <input name="testRunId" ng-model="testrun.testRunId"
+                    <input autocomplete="off" name="testRunId" ng-model="testrun.testRunId"
                            typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8"
                            record-availability-validator="/testrun/{{testrun.productName}}/{{testrun.dashboardName}}" required>
 

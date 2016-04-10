@@ -9,11 +9,11 @@ angular.module('graphs').service('Utils', [function () {
       metricFilter: '',
       zoomLock: true,
       graphType: '',
-      zoomRange: '',
+      zoomRange: '-10min',
       zoomFrom: '',
       zoomUntil: '',
       showLegend: true,
-      numberOfColums: 1,
+      numberOfColumns: 2,
       reset: reset
 
     };
@@ -24,12 +24,12 @@ angular.module('graphs').service('Utils', [function () {
         Utils.selectedIndex = '';
         Utils.metricFilter = '';
         Utils.zoomLock = true;
-        Utils.graphType = '';
-        Utils.zoomRange = '';
+        //Utils.graphType = '';
+        Utils.zoomRange = '-10min';
         Utils.zoomFrom = '';
         Utils.zoomUntil = '';
         Utils.showLegend = true;
-        Utils.numberOfColums = 1;
+        Utils.numberOfColumns = 2;
 
     }
     function dynamicSortTags(sortOrderParam) {
@@ -38,8 +38,13 @@ angular.module('graphs').service('Utils', [function () {
             sortOrder = -1;
         }
         return function (a, b) {
-            var result = a.tags[0].text < b.tags[0].text ? -1 : a.tags[0].text > b.tags[0].text ? 1 : 0;
-            return result * sortOrder;
+            if(a.tags[0] && b.tags[0]) {
+                var result = a.tags[0].text < b.tags[0].text ? -1 : a.tags[0].text > b.tags[0].text ? 1 : 0;
+                return result * sortOrder;
+            }else{
+                var result = a.alias < b.alias ? -1 : a.alias > b.alias ? 1 : 0;
+                return result * sortOrder;
+            }
         };
     }
 

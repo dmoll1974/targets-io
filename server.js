@@ -2,6 +2,7 @@
 /**
  * Module dependencies.
  */
+
 var init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose'),
@@ -26,7 +27,7 @@ var db = mongoose.connect(config.db, function(err) {
 });
 
 if(cluster.isMaster) {
-	var numWorkers = require('os').cpus().length;
+	var numWorkers = (require('os').cpus().length - 1 > 0) ? require('os').cpus().length - 1 : 1; /* save one core for daemon, unless there is only one core */
 
 	console.log('Master cluster setting up ' + numWorkers + ' workers...');
 

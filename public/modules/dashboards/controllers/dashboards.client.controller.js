@@ -16,8 +16,9 @@ angular.module('dashboards').controller('DashboardsController', [
   'SideMenu',
   'Templates',
   'Events',
+  'Utils',
   '$q',
-  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, $q) {
+  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, Utils, $q) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -42,17 +43,6 @@ angular.module('dashboards').controller('DashboardsController', [
 
     };
 
-    $scope.addTestRun = function (){
-
-      $state.go('addTestRun',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});
-
-    }
-
-    $scope.manageTags = function(){
-
-      $state.go('manageDashboardTags',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});
-
-    }
 
     $scope.mergeTemplate = function(index){
 
@@ -67,16 +57,26 @@ angular.module('dashboards').controller('DashboardsController', [
 
       if (Dashboards.selected.productName !== $stateParams.productName || Dashboards.selected.name !== $stateParams.dashboardName) {
 
+        /* reset all test run related state */
+        TestRuns.list = [];
+        TestRuns.runningTest = '';
+        TestRuns.numberOfRunningTests = '';
+        //Utils.reset();
+        //Utils.zoomFrom = '';
+        //Utils.zoomUntil = '';
+
         Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
           $scope.dashboard = Dashboards.selected;
           $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
         });
       }
     }else{
-      Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
-        $scope.dashboard = Dashboards.selected;
-        $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
-      });
+      if($stateParams.dashboardName) {
+        Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+          $scope.dashboard = Dashboards.selected;
+          $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+        });
+      }
     }
 
     $scope.$watch(function (scope) {
@@ -97,11 +97,6 @@ angular.module('dashboards').controller('DashboardsController', [
       }
     });
 
-    var originatorEv;
-    $scope.openMenu = function ($mdOpenMenu, ev) {
-      originatorEv = ev;
-      $mdOpenMenu(ev);
-    };
 
     $scope.$watch(function () {
       $scope.filteredMetrics = $scope.$eval("dashboard.metrics | filter:filterMetrics");
@@ -158,7 +153,7 @@ angular.module('dashboards').controller('DashboardsController', [
     //$scope.authentication = Authentication;
     $scope.addMetric = function () {
       //            console.log('add/metric/' + $stateParams.productName + '/' + $stateParams.dashboardName)
-      $state.go('createMetric', {
+      $state.go('addMetric', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName
       });
@@ -170,74 +165,42 @@ angular.module('dashboards').controller('DashboardsController', [
       //dashboard.name = this.name;
       //dashboard.description = this.description;
       //dashboard.useInBenchmark = this.useInBenchmark;
-      Dashboards.create($scope.dashboard, $stateParams.productName).then(function (response) {
+      Dashboards.create($scope.dashboard, $stateParams.productName).success(function (dashboard) {
         /* Refresh sidebar */
+
+        Dashboards.selected = dashboard;
+
         Products.fetch().success(function (products) {
-          $scope.products = Products.items;
+
+          Products.items = products;
+
+          $scope.products = products;
+
+
           SideMenu.addProducts(products);
-          /* reset Test runs*/
+
+            /* reset Test runs*/
           TestRuns.list = [];
+
           $state.go('viewDashboard', {
             productName: $stateParams.productName,
-            dashboardName: response.data.name
+            dashboardName: Dashboards.selected.name
           });
-          $scope.productForm.$setPristine();  //
-                                              //// Clear form fields
-                                              //$scope.name = '';
-                                              //$scope.description = '';
-                                              //$scope.productName = '';
+
+          $scope.dashboardForm.$setPristine();  //
+
         });
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
-      });
-    };
-    $scope.edit = function () {
-      $state.go('editDashboard', {
-        'productName': $stateParams.productName,
-        'dashboardName': $stateParams.dashboardName
       });
     };
 
-    $scope.clone = function () {
-      Dashboards.clone().success(function (dashboard) {
-        /* Refresh sidebar */
-        Products.fetch().success(function (products) {
-          SideMenu.addProducts(products);
-          $scope.products = Products.items;
-        });
-        $state.go('editDashboard', {
-          'productName': $stateParams.productName,
-          'dashboardName': dashboard.name
-        });
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-    $scope.viewLiveGraphs = function () {
-      $state.go('viewLiveGraphs', {
-        'productName': $stateParams.productName,
-        'dashboardName': $stateParams.dashboardName,
-        tag: Dashboards.getDefaultTag(Dashboards.selected.tags)
-      });
-    };
-    // Remove existing Dashboard
-    $scope.remove = function (dashboard) {
-      if (dashboard) {
-        dashboard.$remove();
-        for (var i in $scope.dashboards) {
-          if ($scope.dashboards[i] === dashboard) {
-            $scope.dashboards.splice(i, 1);
-          }
-        }
-      } else {
-        $scope.dashboard.$remove(function () {
-          $location.path('dashboards');
-        });
-      }
-    };
+
     // Update existing Dashboard
     $scope.update = function () {
       Dashboards.update($scope.dashboard).success(function (dashboard) {
+
+        Dashboards.selected = dashboard;
 
         TestRuns.updateAllTestRunsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function(testruns) {
 
@@ -249,25 +212,23 @@ angular.module('dashboards').controller('DashboardsController', [
 
             /* Refresh sidebar */
             Products.fetch().success(function (products) {
-              SideMenu.addProducts(products);
-              $scope.products = Products.items;
+
+              Products.items = products;
+
+              $scope.products = products;
+
+              $state.go('viewDashboard', {
+                'productName': $stateParams.productName,
+                'dashboardName': $scope.dashboard.name
+              });
             });
-            $state.go('viewDashboard', {
-              'productName': $stateParams.productName,
-              'dashboardName': $scope.dashboard.name
-            });
+
           });
         });
       });
     };
 
-    $scope.addTemplate = function(){
 
-      Templates.selected = Dashboards.selected;
-      $state.go('addTemplate');
-
-
-    }
     $scope.init = function () {
       /* reset form*/
       //$scope.dashboardForm.$setPristine();
@@ -282,20 +243,6 @@ angular.module('dashboards').controller('DashboardsController', [
       else
         $state.go($rootScope.previousState);
     };
-    // Find existing Dashboard
-    //$scope.findOne = function () {
-    //  Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
-    //    $scope.dashboard = Dashboards.selected;
-    //    $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
-    //    Products.get($stateParams.productName).success(function (product) {
-    //      Products.selected = product;
-    //      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
-    //              $scope.testRuns = testRuns;
-    //      });
-    //    });
-    //  });
-    //};
-
 
     $scope.openDeleteMetricModal = function (size, index) {
       Metrics.selected = $scope.dashboard.metrics[index];
@@ -318,6 +265,8 @@ angular.module('dashboards').controller('DashboardsController', [
         $log.info('Modal dismissed at: ' + new Date());
       });
     };
+
+
     $scope.openDeleteSelectedMetricsModal = function (size) {
 
       ConfirmModal.itemType = 'Delete ';
@@ -355,26 +304,6 @@ angular.module('dashboards').controller('DashboardsController', [
       });
 
     };
-    $scope.openDeleteDashboardModal = function (size) {
-      ConfirmModal.itemType = 'Delete dashboard ';
-      ConfirmModal.selectedItemId = Dashboards.selected._id;
-      ConfirmModal.selectedItemDescription = Dashboards.selected.name;
-      var modalInstance = $modal.open({
-        templateUrl: 'ConfirmDelete.html',
-        controller: 'ModalInstanceController',
-        size: size  //,
-      });
-      modalInstance.result.then(function () {
-        Dashboards.delete(Dashboards.selected._id).success(function (dashboard) {
-          /* Refresh sidebar */
-          Products.fetch().success(function (products) {
-            SideMenu.addProducts(products);
-            $scope.products = Products.items;
-          });
-          $state.go('viewProduct', { 'productName': $stateParams.productName });
-        });
-      }, function () {
-      });
-    };
+
   }
 ]);

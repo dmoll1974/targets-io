@@ -22,28 +22,17 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.completedTestRunsOnly = true;
 
 
-    $scope.showNumberOfTestRuns = 10;
-    $scope.page = 1;
+    $scope.loadNumberOfTestRuns = 10;
 
     $scope.numberOfRowOptions = [
       {value: 10},
-      {value: 20},
-      {value: 30},
-      {value: 40}
+      {value: 25},
+      {value: 50},
+      {value: 75},
+      {value: 100}
     ];
 
-    $scope.$watch('showNumberOfTestRuns', function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        testRunPolling();
-      }
-    });
 
-    $scope.nextPage = function(page){
-
-      $scope.page = page;
-      testRunPolling();
-
-    }
 
     $scope.showAnnotations = function ($event, testRun) {
 
@@ -98,12 +87,19 @@ angular.module('testruns').controller('TestrunsController', [
 
     };
 
+    $scope.updateNumberOfTestRuns = function(){
+
+      $scope.loading = true;
+
+      testRunPolling();
+
+    }
 
     /* refresh test runs every 15 seconds */
 
 
     var testRunPolling = function () {
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.showNumberOfTestRuns, $scope.page).success(function (response) {
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (response) {
 
         $scope.runningTest = response.runningTest;
 
@@ -285,8 +281,7 @@ angular.module('testruns').controller('TestrunsController', [
       // Make sure that the interval is destroyed too
       $interval.cancel(spinner);
       $interval.cancel(polling);
-      /* make sure Testruns.list is empty*/
-      TestRuns.list = [];
+
     });
     
     var originatorEv;
@@ -296,23 +291,19 @@ angular.module('testruns').controller('TestrunsController', [
     };
 
     $scope.go = function (url) {
-      $window.location.href = url;
+      //$window.location.href = url;
+      $window.open(url, '_blank');
     };
 
-    $scope.$watch(function (scope) {
-      return Dashboards.selected._id;
-    }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
-        $scope.dashboard = Dashboards.selected;
-        $scope.testRuns = [];
-        TestRuns.list = [];
-        TestRuns.runningTest = '';
-        TestRuns.numberOfRunningTests = '';
-        Utils.reset();
-
-      }
-    });
+    //$scope.$watch(function (scope) {
+    //  return Dashboards.selected._id;
+    //}, function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //    $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+    //    $scope.dashboard = Dashboards.selected;
+    //
+    //  }
+    //});
     //$scope.$watch(function (scope) {
     //  return TestRuns.list;
     //}, function (newVal, oldVal) {
@@ -368,33 +359,33 @@ angular.module('testruns').controller('TestrunsController', [
       });
     }
 
-    $scope.testRunFixedBaselineBenchmark = function (index) {
-      TestRuns.selected = $scope.testRuns[index];
-      var benchmarkFixedResult = $scope.testRuns[index].benchmarkResultFixedOK ? 'passed' : 'failed';
+    $scope.testRunFixedBaselineBenchmark = function (testRun) {
+      TestRuns.selected = testRun;
+      var benchmarkFixedResult = testRun.benchmarkResultFixedOK ? 'passed' : 'failed';
       $state.go('benchmarkFixedBaselineTestRun', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName,
-        'testRunId': $scope.testRuns[index].testRunId,
+        'testRunId': testRun.testRunId,
         'benchmarkResult': benchmarkFixedResult
       });
     };
-    $scope.testRunPreviousBuildBenchmark = function (index) {
-      TestRuns.selected = $scope.testRuns[index];
-      var benchmarkPreviousResult = $scope.testRuns[index].benchmarkResultPreviousOK ? 'passed' : 'failed';
+    $scope.testRunPreviousBuildBenchmark = function (testRun) {
+      TestRuns.selected = testRun;
+      var benchmarkPreviousResult = testRun.benchmarkResultPreviousOK ? 'passed' : 'failed';
       $state.go('benchmarkPreviousBuildTestRun', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName,
-        'testRunId': $scope.testRuns[index].testRunId,
+        'testRunId': testRun.testRunId,
         'benchmarkResult': benchmarkPreviousResult
       });
     };
-    $scope.testRunRequirements = function (index) {
-      TestRuns.selected = $scope.testRuns[index];
-      var requirementsResult = $scope.testRuns[index].meetsRequirement ? 'passed' : 'failed';
+    $scope.testRunRequirements = function (testRun) {
+      TestRuns.selected = testRun;
+      var requirementsResult = testRun.meetsRequirement ? 'passed' : 'failed';
       $state.go('requirementsTestRun', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName,
-        'testRunId': $scope.testRuns[index].testRunId,
+        'testRunId': testRun.testRunId,
         'requirementsResult': requirementsResult
       });
     };
@@ -437,6 +428,11 @@ angular.module('testruns').controller('TestrunsController', [
     };
     $scope.refreshTestrun = function (testRun) {
 
+      /* stop polling during refresh */
+
+      $interval.cancel(polling);
+
+
       var selectedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
 
       $scope.testRuns[selectedTestRunIndex].meetsRequirement = 'pending';
@@ -446,6 +442,11 @@ angular.module('testruns').controller('TestrunsController', [
       TestRuns.refreshTestrun($stateParams.productName, $stateParams.dashboardName, $scope.testRuns[selectedTestRunIndex].testRunId).success(function (testRun) {
         $scope.testRuns[selectedTestRunIndex] = testRun;
         $scope.testRuns[selectedTestRunIndex].busy = false;
+
+        /* start polling again after refresh */
+
+        var polling = $interval(testRunPolling, 15000);
+
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });

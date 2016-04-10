@@ -40,14 +40,15 @@ angular.module('core').controller('SidebarController', [
       SideMenu.productFilter = '';
     };
     Products.fetch().success(function (products) {
+      Products.items = products;
       SideMenu.addProducts(products);
     });
-    $scope.$watch(function (scope) {
-      return Products.items;
-    }, function () {
-      $scope.products = Products.items;
-      SideMenu.addProducts(Products.items);
-    });
+    //$scope.$watch(function (scope) {
+    //  return Products.items;
+    //}, function () {
+    //  $scope.products = Products.items;
+    //  SideMenu.addProducts(Products.items);
+    //});
     $scope.$watch(function (scope) {
       return SideMenu.productFilter;
     }, function () {

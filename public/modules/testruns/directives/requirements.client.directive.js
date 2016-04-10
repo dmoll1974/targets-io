@@ -20,6 +20,26 @@
       $scope.productName = $stateParams.productName;
       $scope.dashboardName = $stateParams.dashboardName;
 
+      /* if selected metric is passed, hiderow unless this is the selected metric */
+
+      //$scope.$watch('tableParams', function (newVal, oldVal) {
+      //  if (newVal !== oldVal) {
+      //
+      //    if ($state.params.selectedMetric) {
+      //
+      //      _.each($scope.$groups, function (group) {
+      //
+      //        if (group.value !== $state.params.selectedMetric) {
+      //
+      //          group.$hideRows = true;
+      //        }
+      //      })
+      //    }
+      //  }
+      //});
+
+      if ($state.params.selectedMetric) $scope.selectedMetric = $state.params.selectedMetric;
+
       $scope.back = function(){
 
         if ($rootScope.previousStateParams)
@@ -76,6 +96,7 @@
               /* sort metrics*/
               testRun.metrics = testRun.metrics.sort(Utils.dynamicSortTags(''));
               _.each(testRun.metrics, function (metric) {
+
                 /* sort targets*/
                 metric.targets = metric.targets.sort(Utils.dynamicSort('target'));
                 /* only show metrics failed / passed requirements */
@@ -99,7 +120,10 @@
                 }
               });
               var orderedData = params.sorting() ? $filter('orderBy')(data, $scope.tableParams.orderBy()) : data;
+
+
               // update table params
+
               params.total(data.length);
               $defer.resolve(data);
             }, 500);

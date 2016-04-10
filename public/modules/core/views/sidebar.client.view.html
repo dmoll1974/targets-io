@@ -28,7 +28,8 @@
                         md-is-locked-open="$mdMedia('gt-sm')">
                 <md-content role="navigation" md-scroll-shrink>
                     <ul class="side-menu">
-                        <li ng-repeat="section in vm.menu.sections | currentProductToTop:productFilter" class="parent-list-item"
+                        <!--<li ng-repeat="section in vm.menu.sections | currentProductToTop:productFilter" class="parent-list-item"-->
+                        <li ng-repeat="section in vm.menu.sections | filter:productFilter" class="parent-list-item"
                             ng-class="{'parentActive' : vm.isSectionSelected(section)}">
                             <h2 class="menu-heading" ng-if="section.type === 'heading'"
                                 id="heading_{{section.name}}">
