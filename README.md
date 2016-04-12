@@ -3,7 +3,17 @@
 
 Dashboard app for organising, analysing, and benchmarking of test results of performance tests executed with Gatling Tool or JMeter.
 The load related metrics are stored in Graphite along with for instance resource usage metrics of the application under test.
-Any metric stored in Graphite can be benchmarked between test runs, to provide automated feedback on the performance of an application.
+Any metric stored in Graphite can be benchmarked between test runs, to provide automated assertions on the performance of an application when running tests from a continuous integration pipeline. 
+
+**Benchmarking**
+
+The targets-io dashboard can automatically benchmark test results to prevent you from spending a lot of time analysing your continuous performance test runs. The dashboard does the following benchmarks:
+
+- Requirements: check if the results meet the requirements set for a metric. 
+- Benchmark to previous test run: check if metric deviations, compared to the last test run, stay within configured allowed deviation. This benchmark will give you immediate feedback on the last commits on your code.
+- Benchmark to fixed baseline: check if metric deviations, compared to fixed baseline (for instance your current live version), stay within configured allowed deviation.
+ 
+The requirements / benchmark thresholds can be set on any of the metrics you have configured in your dashboard. 
 
 **Demo**
 
@@ -58,15 +68,7 @@ To see a demo of the automated assertion of benchmark results, some additional s
 - Rerun the the DEMO-GATLING-BENCHMARKING-MULTIJOB multi-job
 - When the Jenkins build passes it means all your configured requirements / benchmark thresholds (see explanation below) have passed for this run. If the job fails, check the DEMO-GATLING-GET-BENCHMARKING-RESULTS job logs to find out why :-)
 
-**Benchmarking**
 
-The targets-io dashboard can automatically benchmark test results to prevent you from spending a lot of time analysing your continuous performance test runs. The dashboard does the following benchmarks:
-
-- Requirements: check if the results meet the requirements set for a metric. 
-- Benchmark to previous test run: check if metric deviations, compared to the last test run, stay within configured allowed deviation. This benchmark will give you immediate feedback on the last commits on your code.
-- Benchmark to fixed baseline: check if metric deviations, compared to fixed baseline (for instance your current live version), stay within configured allowed deviation.
- 
-The requirements / benchmark thresholds can be set on any of the metrics you have configured in your dashboard. To check or modify these, go to the METRICS CONFIGURATION section of the dashboard.
 
 
 **Libraries / Dependencies**
