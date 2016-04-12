@@ -122,11 +122,11 @@
                 <tr ng-repeat="productRequirement in productrequirements">
                     <td>{{productRequirement.stakeholder}}</td>
                     <td>{{productRequirement.description}}</td>
-                    <td class="pointer center"  ng-model="productRequirement.result">
-                        <span ng-if="edit === true" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
+                    <td class="center"  ng-model="productRequirement.result">
+                        <span ng-if="edit === true" class="pointer" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
                               data-ng-click="toggleRequirementResult($index)"  >
                         </span>
-                        <span ng-if="edit === false" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'">
+                        <span ng-if="edit === false" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'" title="Enter edit mode to toggle result">
                         </span>
                     </td>
                 </tr>
