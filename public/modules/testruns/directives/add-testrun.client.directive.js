@@ -72,7 +72,9 @@ function AddTestrunDirective () {
 
       });
 
-      TestRuns.addTestRun($scope.testrun).then(function (testrun) {
+      TestRuns.addTestRun($scope.testrun).success(function (testrun) {
+
+        TestRuns.list.unshift(testrun);
 
         if ($rootScope.previousStateParams)
           $state.go($rootScope.previousState, $rootScope.previousStateParams);

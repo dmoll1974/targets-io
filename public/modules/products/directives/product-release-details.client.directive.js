@@ -220,7 +220,7 @@ function ProductReleaseDetailsDirective () {
       if($scope.updated === true && !$rootScope.currentState.includes('addProductReleaseLink') && !$rootScope.currentState.includes('productReleaseDetails')){
 
         ConfirmModal.itemType = 'Save changes to ';
-        ConfirmModal.selectedItemDescription = $scope.product.productRelease;
+        ConfirmModal.selectedItemDescription = $scope.product.name + ' ' + $scope.product.productRelease;
         var modalInstance = $modal.open({
           templateUrl: 'ConfirmDelete.html',
           controller: 'ModalInstanceController',
@@ -230,6 +230,9 @@ function ProductReleaseDetailsDirective () {
           submitProductRelease();
 
         }, function () {
+
+          /* return to previous state*/
+          $state.go($rootScope.previousState, $rootScope.previousStateParams);
         });
       }
     });

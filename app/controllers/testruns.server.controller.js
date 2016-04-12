@@ -52,10 +52,10 @@ function addTestRun(req, res){
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
-      //benchmarkAndPersistTestRunById(testRun)
-      //.then(function(testRun){
+      benchmarkAndPersistTestRunById(testRun)
+      .then(function(testRun){
         res.jsonp(testRun);
-      //});
+      });
     }
 
   });
