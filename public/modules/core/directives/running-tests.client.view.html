@@ -27,10 +27,10 @@
         </tr>
         <tbody>
         <tr ng-repeat="runningTest in runningTests" class="hover-row pointer" >
-            <td ui-sref="viewProduct({productName: recentTest.productName})" title="Open product">
+            <td ui-sref="viewProduct({productName: runningTest.productName})" title="Open product">
                 {{runningTest.productName}}
             </td>
-            <td ui-sref="viewDashboard({productName: recentTest.productName, dashboardName: recentTest.dashboardName})" title="Open dashboard">
+            <td ui-sref="viewDashboard({productName: runningTest.productName, dashboardName: runningTest.dashboardName})" title="Open dashboard">
                 {{runningTest.dashboardName}}
             </td>
             <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})" title="Open live graphs">
