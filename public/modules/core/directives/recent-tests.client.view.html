@@ -1,5 +1,10 @@
 <div layout="column">
     <h3>Recent test runs (last 24 hours)</h3>
+    <md-select class="md-padding time-range-selector" ng-model="recentTestPeriod">
+        <md-option ng-repeat="recentTestPeriodOption in recentTestPeriodOptions" value="{{recentTestPeriod.value}}">
+            {{zoomOption.label}}
+        </md-option>
+    </md-select>
     <md-checkbox ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
         Show completed test runs only
     </md-checkbox>

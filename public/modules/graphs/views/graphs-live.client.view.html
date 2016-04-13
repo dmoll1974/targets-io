@@ -3,7 +3,7 @@
     <div fix-to-top="fix-to-top" class="graphs-header">
 
         <div layout="row"  flex >
-            <div layout="row" flex="25" layout="row" layout-align="start center">
+            <div layout="row" flex="15" layout="row" layout-align="start center">
                 <div>
                     <span>
                         <a data-ng-href="/#!/browse/{{productName}}/">{{productName}}</a>  /
@@ -18,7 +18,7 @@
                 <div layout="row" layout-align="start center">
                     <span>Time range</span>
                     <md-select class="md-padding time-range-selector" ng-model="zoomRange">
-                        <md-option ng-repeat="zoomOption in zoomOptions" ng-value="zoomOption" ng-selected="$index === 0">
+                        <md-option ng-repeat="zoomOption in zoomOptions" ng-value="zoomOption" ng-selected="$index === selectedZoomOptionIndex">
                             {{zoomOption.label}}
                         </md-option>
                     </md-select>
@@ -43,7 +43,23 @@
 
                 <!--</div>-->
             </div>
-            <div layout="row" layout-align="end center" flex="20">
+            <div layout="row" layout-align="end center" flex="30">
+                <div  layout="row" layout-align="end center" >
+
+
+                    <button ng-if="showViewUrl && hasFlash()"
+                            tooltip-size="medium" title="Copy graph URL"
+                            tooltip-side="top" clip-copy="viewShareUrl"
+                            clip-click="clipClicked()">Copy
+                    </button>
+                    <input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"
+                           share-graph-url/>
+                    <label title="Share view URL" class="btn default"
+                           ng-click="setViewShareUrl('graphs-live')"><span
+                            class="btn  glyphicon glyphicon-share"></span>
+                    </label>
+
+                </div>
 
                 <md-menu>
                     <md-button aria-label="Open edit menu" class="md-icon-button"
@@ -103,22 +119,7 @@
             <!--</div>-->
 
 
-            <!--<div flex="50" layout="row" layout-align="end center" >-->
 
-
-                <!--<button ng-if="showViewUrl && hasFlash()"-->
-                        <!--tooltip-size="medium" title="Copy graph URL"-->
-                        <!--tooltip-side="top" clip-copy="viewShareUrl"-->
-                        <!--clip-click="clipClicked()">Copy-->
-                <!--</button>-->
-                <!--<input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"-->
-                       <!--share-graph-url/>-->
-                <!--<label title="Share view URL" class="btn default"-->
-                       <!--ng-click="setViewShareUrl('graphs-live')"><span-->
-                        <!--class="btn  glyphicon glyphicon-share"></span>-->
-                <!--</label>-->
-
-            <!--</div>-->
         <!--</div>-->
     </div>
     <md-content layout="row">

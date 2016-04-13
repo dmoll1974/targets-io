@@ -18,8 +18,26 @@ function RecentTestsDirective () {
 
         $scope.completedTestRunsOnly = true;
 
+        /* get recentTestPeriod  */
+        $scope.recentTestPeriod = Utils.recentTestPeriod;
+
+        /* watch zoomRange */
+        $scope.$watch('recentTestPeriod', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                Utils.recentTestPeriod = $scope.recentTestPeriod;
+            }
+        });
+
+
+        $scope.recentTestPeriodOptions = [
+            {value: '-10min' , label: 'Last day'},
+            {value: '-2d', label: 'Last 2 days'},
+            {value: '-3d', label: 'Last 3 days'},
+            {value: '-3d', label: 'Last week'}
+        ];
+
         var pollRecentTests = function(){
-            TestRuns.getRecentTestruns().success(function(recentTests){
+            TestRuns.getRecentTestruns($scope.recentTestPeriod).success(function(recentTests){
 
                 $scope.recentTests = recentTests;
 

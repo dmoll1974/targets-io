@@ -5,7 +5,7 @@
         <div layout="column">
 
             <div layout="row"  flex>
-                <div flex="35" layout="row" layout-align="start center">
+                <div flex="30" layout="row" layout-align="start center">
                     <span>
                     <a data-ng-href="/#!/browse/{{testRun.productName}}/">{{testRun.productName}}</a>  /
                     <a data-ng-href="/#!/browse/{{testRun.productName}}/{{testRun.dashboardName}}/">{{testRun.dashboardName}}</a>
@@ -35,7 +35,21 @@
                     <!--</div>-->
                 </div>
 
-                <div layout="row" layout-align="end center" flex="25">
+                <div layout="row" layout-align="end center" flex="30">
+                    <div  layout="row" layout-align="end center" >
+                        <button ng-if="showViewUrl && hasFlash()"
+                                tooltip-size="medium" title="Copy graph URL"
+                                tooltip-side="top" clip-copy="viewShareUrl"
+                                clip-click="clipClicked()">Copy
+                        </button>
+                        <input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"
+                               share-graph-url/>
+                        <label title="Share view URL" class="btn default"
+                               ng-click="setViewShareUrl('testrun')"><span
+                                class="btn  glyphicon glyphicon-share"></span>
+                        </label>
+
+                    </div>
                     <md-menu>
                         <md-button aria-label="number of columns" class="md-icon-button"
                                    ng-click="openMenu($mdOpenMenu, $event)">

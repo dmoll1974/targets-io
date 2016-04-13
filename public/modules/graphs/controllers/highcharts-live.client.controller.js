@@ -106,7 +106,7 @@ angular.module('graphs').controller('HighchartsLiveController', [
     /* generate deeplink to share metric graph */
     $scope.setMetricShareUrl = function (metric) {
 
-      $scope.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?';
+      $scope.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?zoomRange=' + Utils.zoomRange.value;
 
       if (Utils.zoomFrom) {
         $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
@@ -175,11 +175,11 @@ angular.module('graphs').controller('HighchartsLiveController', [
       Interval.clearIntervalForMetric($scope.metric._id);
     });
     /* reinitialise graph when zoomRange is changed */
-    $scope.$watch('zoomRange', function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        Utils.zoomRange = $scope.zoomRange;
-    }
-    });
+    //$scope.$watch('zoomRange', function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //    Utils.zoomRange = $scope.zoomRange;
+    //}
+    //});
 
   }
 ]);
