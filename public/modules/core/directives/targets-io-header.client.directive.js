@@ -227,7 +227,8 @@ function TargetsIoHeaderDirective () {
                 'benchmarkFixedBaselineTestRun',
                 'addTestRun',
                 'editTestRun',
-                'testRunSummary'
+                'testRunSummary',
+                'visualBenchmark'
             ]
 
             var stateCheck = true;
