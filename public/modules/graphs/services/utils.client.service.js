@@ -9,11 +9,15 @@ angular.module('graphs').service('Utils', [function () {
       metricFilter: '',
       zoomLock: true,
       graphType: '',
-      zoomRange: '-10min',
+      zoomRange: {
+          value: '-10min',
+          label: 'Last 10 minutes'
+      },
       zoomFrom: '',
       zoomUntil: '',
       showLegend: true,
       numberOfColumns: 2,
+      recentTestPeriod: "1",
       reset: reset
 
     };
@@ -25,7 +29,10 @@ angular.module('graphs').service('Utils', [function () {
         Utils.metricFilter = '';
         Utils.zoomLock = true;
         //Utils.graphType = '';
-        Utils.zoomRange = '-10min';
+        Utils.zoomRange = {
+            value: '-10min',
+            label: 'Last 10 minutes'
+        };
         Utils.zoomFrom = '';
         Utils.zoomUntil = '';
         Utils.showLegend = true;

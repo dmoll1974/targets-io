@@ -18,7 +18,7 @@
                 <div layout="row" layout-align="start center">
                     <span>Time range</span>
                     <md-select class="md-padding time-range-selector" ng-model="zoomRange">
-                        <md-option ng-repeat="zoomOption in zoomOptions" value="{{zoomOption.value}}">
+                        <md-option ng-repeat="zoomOption in zoomOptions" ng-value="zoomOption" ng-selected="$index === 0">
                             {{zoomOption.label}}
                         </md-option>
                     </md-select>
