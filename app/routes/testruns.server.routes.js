@@ -9,7 +9,7 @@ module.exports = function (app) {
   app.route('/testruns-product/:productName/:limit').get(testruns.testRunsForProduct);
   app.route('/product-releases/:productName').get(testruns.productReleasesFromTestRuns);
   app.route('/testruns-product-release/:productName/:productRelease').get(testruns.testRunsForProductRelease);
-  app.route('/recent-testruns').get(testruns.recentTestRuns);
+  app.route('/recent-testruns/:numberOfDays').get(testruns.recentTestRuns);
   app.route('/testrun').put(testruns.update);
   app.route('/add-testrun').post(testruns.addTestRun);
 

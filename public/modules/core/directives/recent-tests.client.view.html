@@ -1,13 +1,27 @@
 <div layout="column">
-    <h3>Recent test runs (last 24 hours)</h3>
-    <md-select class="md-padding time-range-selector" ng-model="recentTestPeriod">
-        <md-option ng-repeat="recentTestPeriodOption in recentTestPeriodOptions" value="{{recentTestPeriod.value}}">
-            {{zoomOption.label}}
-        </md-option>
-    </md-select>
-    <md-checkbox ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
-        Show completed test runs only
-    </md-checkbox>
+    <h3>Recent test runs</h3>
+
+    <div layout="row" flex layout-align="space-between center">
+
+        <div layout="row" layout-align="start center">
+            <md-select class="md-padding time-range-selector" ng-model="recentTestPeriod"  ng-change="updaterecentTestRuns()">
+            <md-option ng-repeat="recentTestPeriodOption in recentTestPeriodOptions" value="{{recentTestPeriodOption.value}}" ng-selected="$index === 0">
+                {{recentTestPeriodOption.label}}
+            </md-option>
+            </md-select>
+            <div>
+                <md-input-container class="targetsio-header-text">
+                    <label>Filter test runs</label>
+                    <input ng-model="testRunFilter">
+                </md-input-container>
+                <md-icon ng-if="filterMetrics && filterMetrics !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                         data-ng-click="clearTestRunFilter()"></md-icon>
+            </div>
+        </div>
+        <md-checkbox style="margin-bottom: 0px;" ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
+            Show completed test runs only
+        </md-checkbox>
+    </div>
     <table class="table">
         <thead>
         <tr>
@@ -39,7 +53,7 @@
             <td></td>
         </tr>
         <tbody>
-        <tr ng-repeat="recentTest in recentTests | orderBy:'-end' | filter: {completed: completedTestRunsOnly ? true : '' }" class="pointer hover-row" ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})">
+        <tr ng-repeat="recentTest in filteredRecentTestRuns | orderBy:'-end' | filter: {completed: completedTestRunsOnly ? true : ''}" class="pointer hover-row" ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})">
             <td>
                 {{recentTest.productName}}
             </td>

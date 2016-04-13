@@ -104,8 +104,8 @@ function update (req, res) {
 
 function recentTestRuns(req, res){
 
-  /* Get all test runs from the last 24 hours*/
-  var pastDay = new Date() - 1000 * 60 * 60 * 24;
+  /* Get all test runs from the specified number of days */
+  var pastDay = new Date() - 1000 * 60 * 60 * 24 * req.params.numberOfDays;
 
   Testrun.find({end: {$gte: pastDay}}).exec(function (err, testRuns) {
 

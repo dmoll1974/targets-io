@@ -54,9 +54,9 @@ angular.module('events').factory('TestRuns', [
       return $http.put('/testrun/', testRun);
 
     }
-    function getRecentTestruns(){
+    function getRecentTestruns(numberOfDays){
 
-      return $http.get('/recent-testruns');
+      return $http.get('/recent-testruns/' + numberOfDays);
 
     }
     function listTestRunsForDashboard(productName, dashboardName, limit) {

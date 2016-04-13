@@ -18,22 +18,23 @@ function RecentTestsDirective () {
 
         $scope.completedTestRunsOnly = true;
 
-        /* get recentTestPeriod  */
-        $scope.recentTestPeriod = Utils.recentTestPeriod;
+        $scope.recentTestPeriod = 1;
 
-        /* watch zoomRange */
-        $scope.$watch('recentTestPeriod', function (newVal, oldVal) {
-            if (newVal !== oldVal) {
-                Utils.recentTestPeriod = $scope.recentTestPeriod;
-            }
+        $scope.$watch(function () {
+            $scope.filteredRecentTestRuns = $scope.$eval("recentTests | filter:testRunFilter");
         });
 
+        $scope.clearTestRunFilter = function(){
+
+            $scope.testRunFilter = '';
+
+        };
 
         $scope.recentTestPeriodOptions = [
-            {value: '-10min' , label: 'Last day'},
-            {value: '-2d', label: 'Last 2 days'},
-            {value: '-3d', label: 'Last 3 days'},
-            {value: '-3d', label: 'Last week'}
+            {value: 1 , label: 'Last day'},
+            {value: 2, label: 'Last 2 days'},
+            {value: 3, label: 'Last 3 days'},
+            {value: 7, label: 'Last week'}
         ];
 
         var pollRecentTests = function(){
@@ -48,6 +49,10 @@ function RecentTestsDirective () {
         var polling = $interval(pollRecentTests, 60 * 1000); // poll every minute
 
 
+        $scope.updaterecentTestRuns = function(){
+
+            pollRecentTests();
+        }
 
         $scope.$on('$destroy', function () {
             // Make sure that the interval is destroyed too
