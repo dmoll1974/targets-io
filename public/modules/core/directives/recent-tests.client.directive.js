@@ -18,8 +18,27 @@ function RecentTestsDirective () {
 
         $scope.completedTestRunsOnly = true;
 
+        $scope.recentTestPeriod = 1;
+
+        $scope.$watch(function () {
+            $scope.filteredRecentTestRuns = $scope.$eval("recentTests | filter:testRunFilter");
+        });
+
+        $scope.clearTestRunFilter = function(){
+
+            $scope.testRunFilter = '';
+
+        };
+
+        $scope.recentTestPeriodOptions = [
+            {value: 1 , label: 'Last day'},
+            {value: 2, label: 'Last 2 days'},
+            {value: 3, label: 'Last 3 days'},
+            {value: 7, label: 'Last week'}
+        ];
+
         var pollRecentTests = function(){
-            TestRuns.getRecentTestruns().success(function(recentTests){
+            TestRuns.getRecentTestruns($scope.recentTestPeriod).success(function(recentTests){
 
                 $scope.recentTests = recentTests;
 
@@ -30,6 +49,10 @@ function RecentTestsDirective () {
         var polling = $interval(pollRecentTests, 60 * 1000); // poll every minute
 
 
+        $scope.updaterecentTestRuns = function(){
+
+            pollRecentTests();
+        }
 
         $scope.$on('$destroy', function () {
             // Make sure that the interval is destroyed too

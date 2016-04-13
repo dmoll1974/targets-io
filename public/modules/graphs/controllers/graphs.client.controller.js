@@ -14,7 +14,8 @@ angular.module('graphs').controller('GraphsController', [
   'ConfirmModal',
   'Utils',
   'SideMenu',
-  function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu) {
+  '$timeout',
+  function ($scope, $modal, $rootScope, $state, $stateParams, Dashboards, Graphite, TestRuns, Metrics, $log, Tags, ConfirmModal, Utils, SideMenu, $timeout) {
 
 
 
@@ -32,6 +33,7 @@ angular.module('graphs').controller('GraphsController', [
       {value: '-3d', label: 'Last 3 days'}
     ];
 
+
     /* initiaize menu */
 
     var originatorEv;
@@ -40,6 +42,11 @@ angular.module('graphs').controller('GraphsController', [
       $mdOpenMenu(ev);
     };
 
+
+    /* get zoom range  */
+    //$timeout(function(){
+    //  $scope.zoomRange = Utils.zoomRange;
+    //});
 
     $scope.numberOfColumns = Utils.numberOfColumns;
     $scope.flex = 100 / $scope.numberOfColumns;
@@ -144,11 +151,27 @@ angular.module('graphs').controller('GraphsController', [
       }
     };
 
-    /* Get deeplink zoom params from query string */
+    /* Get deeplink params from query string */
     if ($state.params.zoomFrom)
       Utils.zoomFrom = $state.params.zoomFrom;
+
     if ($state.params.zoomUntil)
       Utils.zoomUntil = $state.params.zoomUntil;
+
+    if ($state.params.zoomRange){
+
+      $scope.selectedZoomOptionIndex = $scope.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf($state.params.zoomRange);
+
+
+      $scope.zoomRange = $scope.zoomOptions[$scope.selectedZoomOptionIndex];
+
+
+    }else{
+      $scope.zoomRange = Utils.zoomRange;
+      $scope.selectedZoomOptionIndex = 0;
+
+    }
+
 
     if ($state.params.metricFilter) {
         $scope.metricFilter = $state.params.metricFilter;
@@ -156,6 +179,7 @@ angular.module('graphs').controller('GraphsController', [
 
       $scope.metricFilter = Utils.metricFilter;
     }
+
     /* watch metricFilter */
     $scope.$watch('metricFilter', function (newVal, oldVal) {
       if (newVal !== oldVal) {
@@ -179,7 +203,7 @@ angular.module('graphs').controller('GraphsController', [
 
 
         case 'graphs-live':
-          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/';
+          $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?zoomRange=' + Utils.zoomRange.value;
           break;
         case 'testrun':
           $scope.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag +  '/';
@@ -319,14 +343,13 @@ angular.module('graphs').controller('GraphsController', [
       });
       return metrics;
     }
-    /* get zoom range  */
-    $scope.zoomRange = Utils.zoomRange;
+
 
     /* watch zoomRange */
     $scope.$watch('zoomRange', function (newVal, oldVal) {
-      if (newVal !== oldVal) {
+      //if (newVal !== oldVal) {
         Utils.zoomRange = $scope.zoomRange;
-      }
+      //}
     });
 
     

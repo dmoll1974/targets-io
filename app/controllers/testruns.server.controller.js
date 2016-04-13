@@ -52,10 +52,10 @@ function addTestRun(req, res){
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
-      //benchmarkAndPersistTestRunById(testRun)
-      //.then(function(testRun){
+      benchmarkAndPersistTestRunById(testRun)
+      .then(function(testRun){
         res.jsonp(testRun);
-      //});
+      });
     }
 
   });
@@ -104,8 +104,8 @@ function update (req, res) {
 
 function recentTestRuns(req, res){
 
-  /* Get all test runs from the last 24 hours*/
-  var pastDay = new Date() - 1000 * 60 * 60 * 24;
+  /* Get all test runs from the specified number of days */
+  var pastDay = new Date() - 1000 * 60 * 60 * 24 * req.params.numberOfDays;
 
   Testrun.find({end: {$gte: pastDay}}).exec(function (err, testRuns) {
 
@@ -609,7 +609,7 @@ function getDataForTestrun(testRun) {
       var metrics = [];
       async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
 
-        if(metric.requirementValue || metric.benchmarkValue) {
+        if(metric.requirementValue !== null || metric.benchmarkValue !== null) {
 
           let targets = [];
           let value;

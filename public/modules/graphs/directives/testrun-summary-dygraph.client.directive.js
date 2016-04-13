@@ -296,7 +296,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
             $scope.zoomRange = Utils.zoomRange;
 
-            var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange;
+            var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange.value;
             var until = Utils.zoomUntil ? Utils.zoomUntil : 'now';
 
             processGraph(from, until);

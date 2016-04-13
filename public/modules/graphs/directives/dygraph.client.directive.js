@@ -239,7 +239,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
           $scope.zoomRange =  Utils.zoomRange;
             
-          var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange;
+          var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange.value;
           var until = Utils.zoomUntil ? Utils.zoomUntil : 'now';
 
           processGraph(from, until);
@@ -334,7 +334,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
             /* if zoomrange execeeds 3h, don't update graph due to bad performance*/
 
-            if(!($scope.zoomRange === '-10min' || $scope.zoomRange === '-30min' || $scope.zoomRange === '-1h' || $scope.zoomRange === '-3h' )){
+            if(!($scope.zoomRange.value === '-10min' || $scope.zoomRange.value === '-30min' || $scope.zoomRange.value === '-1h' || $scope.zoomRange.value === '-3h' )){
               Interval.clearAll();
             }
 

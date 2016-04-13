@@ -1,6 +1,6 @@
 <section>
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
-    <div layout="row" class="md-padding" layout-align="space-between">
+    <div  layout="row"  class="md-padding" layout-align="space-between center">
         <span>
             <a data-ng-href="/#!/browse/{{testRunSummary.productName}}/">{{testRunSummary.productName}}</a>  /
             <a data-ng-href="/#!/browse/{{testRunSummary.productName}}/{{testRunSummary.dashboardName}}/">{{testRunSummary.dashboardName}}</a>  /
@@ -8,14 +8,18 @@
             {{testRunSummary.productRelease}}
             </a>  /  {{testRunSummary.testRunId}}
         </span>
-        <div layout="row" layout-align="end center">
 
-            <md-button ng-if="editMode === true && summarySaved === true" class="md-warn" data-ng-click="openDeleteModal('', testRunSummary)">Discard</md-button>
-            <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode" ng-change="submitTestRunSummary()" ng-class="{'switch-label-disabled': editMode === false }">
+        <div ng-class="{'fix-to-top-summary': editMode, 'md-padding' : editMode}" layout="row" layout-align="end center">
+            <md-button  ng-if="editMode === true && summarySaved === false" md-no-ink class="md-primary" data-ng-click="submitTestRunSummary()">Save</md-button>
+            <md-button  ng-if="editMode === true && summarySaved === true && updated === true;" md-no-ink class="md-primary" data-ng-click="submitTestRunSummary()">Update</md-button>
+            <md-button ng-if="summarySaved === true" class="md-warn" data-ng-click="openDeleteModal('', testRunSummary)">Discard</md-button>
+            <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode"  ng-class="{'switch-label-disabled': editMode === false }">
                 Edit
             </md-switch>
         </div>
+
     </div>
+
     <h2>Summary</h2>
     <md-content>
 
@@ -73,7 +77,7 @@
             <div ng-if="editMode === true" class="md-padding">
                 <md-input-container class="md-block" flex>
                     <label>Annotations</label>
-                    <textarea name="testRunSummaryAnnotations" ng-model="testRunSummary.annotations" columns="1" md-maxlength="500" rows="10"></textarea>
+                    <textarea name="testRunSummaryAnnotations" ng-model="testRunSummary.annotations" columns="1" md-maxlength="500" rows="10" ng-change="markAsUpdated()"></textarea>
                 </md-input-container>
             </div>
             <p ng-if="editMode === false">{{testRunSummary.annotations}}</p>
@@ -127,7 +131,7 @@
                 <div ng-if="editMode === true" class="md-padding">
                     <md-input-container class="md-block" flex>
                         <label>Annotations</label>
-                        <textarea name="summaryText" ng-model="metric.summaryText" columns="1" md-maxlength="500" rows="10"></textarea>
+                        <textarea name="summaryText" ng-model="metric.summaryText" columns="1" md-maxlength="500" rows="10" ng-change="markAsUpdated()"></textarea>
                     </md-input-container>
                 </div>
                 <div ng-if="editMode === false" class="md-padding">
