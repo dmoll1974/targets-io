@@ -53,23 +53,23 @@
             <td></td>
         </tr>
         <tbody>
-        <tr ng-repeat="recentTest in filteredRecentTestRuns | orderBy:'-end' | filter: {completed: completedTestRunsOnly ? true : ''}" class="pointer hover-row" ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})">
-            <td>
+        <tr ng-repeat="recentTest in filteredRecentTestRuns | orderBy:'-end' | filter: {completed: completedTestRunsOnly ? true : ''}" class="pointer hover-row" >
+            <td ui-sref="viewProduct({productName: recentTest.productName})" title="Open product">
                 {{recentTest.productName}}
             </td>
-            <td>
+            <td ui-sref="viewDashboard({productName: recentTest.productName, dashboardName: recentTest.dashboardName})" title="Open dashboard">
                 {{recentTest.dashboardName}}
             </td>
-            <td>
+            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})" title="Open test run">
                 {{recentTest.testRunId}}
             </td>
-            <td>
+            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})" title="Open test run">
                 {{recentTest.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
             </td>
-            <td>
+            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})" title="Open test run">
                 {{recentTest.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
             </td>
-            <td>
+            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})" title="Open test run">
                 {{recentTest.humanReadableDuration}}
             </td>
 
