@@ -34,7 +34,7 @@
             </thead>
             <tbody>
 
-            <tr dir-paginate="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } | itemsPerPage: showNumberOfTestRuns" total-items="totalNumberOftestRuns"
+            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } " total-items="totalNumberOftestRuns"
                 ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index < numberOfRunningTests)}" >
                     <td>
                         <div id="testRunInfo"  layout="row">

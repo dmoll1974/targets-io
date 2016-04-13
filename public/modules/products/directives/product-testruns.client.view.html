@@ -14,7 +14,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr dir-paginate="testRun in testRuns | orderBy:'end':true |  itemsPerPage: showNumberOfTestRuns" class="hover-row" data-ng-click="testRunDetails(testRun.productName, testRun.dashboardName, testRun.testRunId)">
+                <tr ng-repeat="testRun in testRuns | orderBy:'end':true" class="hover-row" data-ng-click="testRunDetails(testRun.productName, testRun.dashboardName, testRun.testRunId)">
                     <td class="pointer" >{{testRun.dashboardName}}</td>
                     <td class="pointer">{{testRun.testRunId}}</td>
                     <td class="pointer">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
