@@ -268,6 +268,23 @@ angular.module('graphs').controller('GraphsController', [
       }
     });
 
+    /* watch zoomLock */
+    $scope.$watch('metricFilter', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        $scope.columnsArray =[];
+        $scope.numberOfMetrics  = numberOfFilteredMetrics($scope.metrics);
+
+        var itemsPerColumn = Math.ceil($scope.numberOfMetrics / $scope.numberOfColumns);
+
+        //Populates the column array
+        for (var i=0; i<$scope.numberOfMetrics; i += itemsPerColumn) {
+          var col = { start: i, end: Math.min(i + itemsPerColumn, $scope.numberOfMetrics) };
+          $scope.columnsArray.push(col);
+        }
+      }
+    });
+
 
     $scope.init = function () {
 
@@ -276,13 +293,13 @@ angular.module('graphs').controller('GraphsController', [
         $scope.metrics = addAccordionState(Dashboards.selected.metrics);
 
         $scope.columnsArray =[];
-        var numberOfMetrics  = numberOfFilteredMetrics($scope.metrics);
+        $scope.numberOfMetrics  = numberOfFilteredMetrics($scope.metrics);
 
-        var itemsPerColumn = Math.ceil(numberOfMetrics / $scope.numberOfColumns);
+        var itemsPerColumn = Math.ceil($scope.numberOfMetrics / $scope.numberOfColumns);
 
         //Populates the column array
-        for (var i=0; i<numberOfMetrics; i += itemsPerColumn) {
-          var col = { start: i, end: Math.min(i + itemsPerColumn, numberOfMetrics) };
+        for (var i=0; i<$scope.numberOfMetrics; i += itemsPerColumn) {
+          var col = { start: i, end: Math.min(i + itemsPerColumn, $scope.numberOfMetrics) };
           $scope.columnsArray.push(col);
         }
 
@@ -313,12 +330,13 @@ angular.module('graphs').controller('GraphsController', [
 
       _.each(metrics, function(metric){
 
-        _.each(metric.tags, function(tag){
+        if(metric.alias === $scope.metricFilter || $scope.metricFilter === '') {
+          _.each(metric.tags, function (tag) {
 
-          if (tag.text === $scope.value) numberOfFilteredMetrics += 1;
+            if (tag.text === $scope.value) numberOfFilteredMetrics += 1;
 
-        });
-
+          });
+        }
         /* if 'ALL' tab is selected show all metrics*/
         if ($scope.value === 'All') numberOfFilteredMetrics += 1;
 
