@@ -6,19 +6,10 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     requestjson = require('request-json'),
     config = require('../../config/config'),
-    Memcached = require('memcached'),
+    GraphiteCache = cacheDb.model('GraphiteCache'),
     GatlingDetails = db.model('GatlingDetails');
 
 exports.getConsoleData = function (req, res) {
-  var memcached = new Memcached(config.memcachedHost);
-  var jenkinsKey = req.body.consoleUrl + req.body.running;
-  memcached.get(jenkinsKey, function (err, result) {
-    if (err)
-      console.error(err);
-    if (result) {
-      console.dir('cache hit jenkins: ' + result);
-      res.jsonp(result);
-    } else {
 
       /* first check if response is available in db */
       GatlingDetails.findOne({consoleUrl: req.body.consoleUrl},function(err, GatlingDetailsResponse) {
@@ -30,16 +21,11 @@ exports.getConsoleData = function (req, res) {
 
           getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, function (consoleData) {
             res.jsonp(consoleData);
-            memcached.set(jenkinsKey, consoleData, 10, function (err, result) {
-              if (err)
-                console.error(err);
-              memcached.end();
-            });
           });
         }
       });
     }
-  });
+
 };
 function getJenkinsData(jenkinsUrl, running, start, end, callback) {
   var consoleResponse = {};
@@ -57,45 +43,39 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback) {
     consoleUrl = jenkinsUrl + 'logText/progressiveText?start=';
     separator = '> ';
   }
-  var memcached = new Memcached(config.memcachedHost);
   var client = requestjson.createClient(jenkinsUrl);
   var testDurationInSeconds, offset;
-  memcached.get(consoleUrl, function (err, result) {
-    if (err)
-      console.error(err);
-    if (result) {
-      console.dir('cache hit, offset: ' + result);
-      if (running === false) {
-        /*no offset needed*/
-        offset = '';
-      } else {
-        offset = result;
-      }
+
+  if (result) {
+    console.dir('cache hit, offset: ' + result);
+    if (running === false) {
+      /*no offset needed*/
+      offset = '';
     } else {
-      if (running === false) {
-        /*no offset needed*/
-        offset = '';
-      } else {
-        /* If screen was never opened before downloading the whole console output file would lead to Jenkins out of memory
-                 * in case of long lasting tests. Instead make an educated guess for a suitable offset based on the test timestamps
-                 */
-        testDurationInSeconds = new Date() / 1000 - start;
-        offset = Math.round(testDurationInSeconds * 500);
-      }
+      offset = result;
     }
-    client.get(consoleUrl + offset, function (err, response, body) {
+  } else {
+    if (running === false) {
+      /*no offset needed*/
+      offset = '';
+    } else {
+      /* If screen was never opened before downloading the whole console output file would lead to Jenkins out of memory
+               * in case of long lasting tests. Instead make an educated guess for a suitable offset based on the test timestamps
+               */
+      testDurationInSeconds = new Date() / 1000 - start;
+      offset = Math.round(testDurationInSeconds * 500);
+    }
+  }
+  client.get(consoleUrl + offset, function (err, response, body) {
       //        if (err) console.error(err);
       console.log(consoleUrl + offset);
       console.log('X-More-Data:' + response.headers['x-more-data']);
+
       if (response.headers['x-text-size'] && running == true) {
-        memcached.set(consoleUrl, response.headers['x-text-size'], 600, function (err, result) {
-          if (err)
-            console.error(err);
-          console.dir('key set ' + consoleUrl + ' : ' + response.headers['x-text-size']);
-          memcached.end();
-        });
+
       }
-      var consoleArray = body.split('Requests');
+
+    var consoleArray = body.split('Requests');
       if (consoleArray.length > 1) {
         var consoleResultsArray = consoleArray[consoleArray.length - 1].split('Simulation finished');
 
@@ -145,5 +125,5 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback) {
       }
 
     });
-  });
+
 }
