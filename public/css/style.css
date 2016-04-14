@@ -454,3 +454,11 @@ div.boxedGraph{
 
     border: dotted;
 }
+
+md-toast.md-error-toast-theme .md-toast-content {
+    background-color: red;
+}
+
+md-toast {
+    left: 35%;
+}
