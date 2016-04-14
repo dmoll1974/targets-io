@@ -45,26 +45,27 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback) {
   var client = requestjson.createClient(jenkinsUrl);
   var testDurationInSeconds, offset;
 
-  if (result) {
-    console.dir('cache hit, offset: ' + result);
-    if (running === false) {
-      /*no offset needed*/
-      offset = '';
-    } else {
-      offset = result;
-    }
-  } else {
-    if (running === false) {
-      /*no offset needed*/
-      offset = '';
-    } else {
-      /* If screen was never opened before downloading the whole console output file would lead to Jenkins out of memory
-               * in case of long lasting tests. Instead make an educated guess for a suitable offset based on the test timestamps
-               */
-      testDurationInSeconds = new Date() / 1000 - start;
-      offset = Math.round(testDurationInSeconds * 500);
-    }
-  }
+  //if (result) {
+  //  console.dir('cache hit, offset: ' + result);
+  //  if (running === false) {
+  //    /*no offset needed*/
+  //    offset = '';
+  //  } else {
+  //    offset = result;
+  //  }
+  //} else {
+  //  if (running === false) {
+  //    /*no offset needed*/
+  //    offset = '';
+  //  } else {
+  //    /* If screen was never opened before downloading the whole console output file would lead to Jenkins out of memory
+  //             * in case of long lasting tests. Instead make an educated guess for a suitable offset based on the test timestamps
+  //             */
+  //    testDurationInSeconds = new Date() / 1000 - start;
+  //    offset = Math.round(testDurationInSeconds * 500);
+  //  }
+  //}
+
   client.get(consoleUrl + offset, function (err, response, body) {
       //        if (err) console.error(err);
       console.log(consoleUrl + offset);
