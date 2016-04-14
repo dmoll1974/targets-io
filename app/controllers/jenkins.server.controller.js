@@ -24,7 +24,6 @@ exports.getConsoleData = function (req, res) {
           });
         }
       });
-    }
 
 };
 function getJenkinsData(jenkinsUrl, running, start, end, callback) {
