@@ -63,7 +63,9 @@ function TargetsIoHeaderDirective () {
                             /* if switching dashboards, reset application state */
                             if($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName && $rootScope.previousStateParams.dashboardName) {
                                 TestRuns.list = [];
+                                /* reset utils variables */
                                 Utils.reset();
+
                             }
 
                             var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($rootScope.currentStateParams.dashboardName);
@@ -203,6 +205,15 @@ function TargetsIoHeaderDirective () {
                 $scope.dashboard = dashboard;
                 if (checkDashboardState($rootScope.currentState)) {
                     TestRuns.list = [];
+
+                    /* reset zoomRange for live graphs */
+                    Utils.zoomRange = {
+                        value: '-10min',
+                        label: 'Last 10 minutes'
+                    };
+                    /* reset utils variables */
+                    Utils.reset();
+
                     $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
                 }
             }else {

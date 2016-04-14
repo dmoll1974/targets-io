@@ -129,7 +129,7 @@
         <md-content layout="row">
             <md-content class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + columnsArray.length}}" layout="column" ng-repeat="column in columnsArray" flex="flex">
                 <accordion close-others="false">
-                    <md-content  data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:metricFilter | slice:column.start:column.end" data-ng-controller="HighchartsController">
+                    <md-content  data-ng-repeat="metric in filteredMetrics | tagsFilter:'tags':value | slice:column.start:column.end" data-ng-controller="HighchartsController">
                         <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
                             <accordion-heading>
                                 <div>{{metric.alias}}</div>
