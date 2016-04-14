@@ -21,9 +21,24 @@ function VisualBenchmarkDirective () {
 
     $scope.benchmarkTestRuns = [];
 
+    $scope.goBack = function(testRun){
+
+      if ($scope.benchmarkType === 'fixedBaseline'){
+
+        $state.go('benchmarkFixedBaselineTestRun', {productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId, benchmarkResult:  $scope.benchmarkResult ? 'passed' : 'failed'})
+
+      }else{
+
+        $state.go('benchmarkPreviousBuildTestRun', {productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId, benchmarkResult:  $scope.benchmarkResult ? 'passed' : 'failed'})
+      }
+
+    }
+
     /* Get selected series params from query string */
 
     TestRuns.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
+
+    $scope.benchmarkType = $state.params.benchmarkType;
 
     $scope.selectedSeries = TestRuns.selectedSeries;
 
@@ -31,10 +46,10 @@ function VisualBenchmarkDirective () {
 
         TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.baselineTestRunId).success(function (baseline) {
 
-          var metricIndex = baseline.metrics.map(function(metric){return metric.alias;}).indexOf(baselineMetric.alias);
-          var targetIndex = baseline.metrics[metricIndex].targets.map(function(target){return target.target}).indexOf($scope.selectedSeries);
+          var baselineMetricIndex = baseline.metrics.map(function(metric){return metric.alias;}).indexOf(baselineMetric.alias);
+          var baselineTargetIndex = baseline.metrics[baselineMetricIndex].targets.map(function(target){return target.target}).indexOf($scope.selectedSeries);
 
-          $scope.benchmarkTestRuns.push({metric: baselineMetric, testrun: baseline, title:'Baseline', value: baseline.metrics[metricIndex].targets[targetIndex].value});
+          $scope.benchmarkTestRuns.push({metric: baselineMetric, testrun: baseline, title:'Baseline', value: baseline.metrics[baselineMetricIndex].targets[baselineTargetIndex].value});
 
           Metrics.get($stateParams.metricId).success(function(benchmarkMetric){
 
@@ -43,12 +58,12 @@ function VisualBenchmarkDirective () {
 
             TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.benchmarkTestRunId).success(function (benchmark) {
 
-              metricIndex = benchmark.metrics.map(function(metric){return metric.alias;}).indexOf(benchmarkMetric.alias);
-              targetIndex = benchmark.metrics[metricIndex].targets.map(function(target){return target.target}).indexOf($scope.selectedSeries);
+              var benchmarkMetricIndex = benchmark.metrics.map(function(metric){return metric.alias;}).indexOf(benchmarkMetric.alias);
+              var benchmarkTargetIndex = benchmark.metrics[benchmarkMetricIndex].targets.map(function(target){return target.target}).indexOf($scope.selectedSeries);
 
-              $scope.benchmarkResult = evaluateBenchmark(benchmark.metrics[metricIndex].targets[targetIndex].value, baseline.metrics[metricIndex].targets[targetIndex].value, benchmarkMetric.benchmarkOperator, benchmarkMetric.benchmarkValue);
+              $scope.benchmarkResult = evaluateBenchmark(benchmark.metrics[benchmarkMetricIndex].targets[benchmarkTargetIndex].value, baseline.metrics[baselineMetricIndex].targets[baselineTargetIndex].value, benchmarkMetric.benchmarkOperator, benchmarkMetric.benchmarkValue);
 
-              $scope.benchmarkTestRuns.push({metric: benchmarkMetric, testrun: benchmark, title:'Benchmark', value: benchmark.metrics[metricIndex].targets[targetIndex].value});
+              $scope.benchmarkTestRuns.push({metric: benchmarkMetric, testrun: benchmark, title:'Benchmark', value: benchmark.metrics[benchmarkMetricIndex].targets[benchmarkTargetIndex].value});
 
               });
 

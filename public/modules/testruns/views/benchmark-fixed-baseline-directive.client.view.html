@@ -40,7 +40,7 @@
             {{target.benchmarkValue}}
         </td>
         <td data-title="'Result'" header-class="text-left">
-            <span title="Go to graph" class="pointer" ui-sref="visualBenchmark({productName: target.productName, dashboardName:target.dashboardName,baselineTestRunId: testRun.baseline, benchmarkTestRunId: testRun.testRunId, selectedSeries: target.target, metricId: target.metricId})"
+            <span title="View graphs" class="pointer" ui-sref="visualBenchmark({productName: target.productName, dashboardName:target.dashboardName,baselineTestRunId: testRun.baseline, benchmarkTestRunId: testRun.testRunId, selectedSeries: target.target, metricId: target.metricId, benchmarkType: 'fixedBaseline' })"
                   ng-class="target.benchmarkResultFixedOK ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
 
             <span title="Configure metric"
