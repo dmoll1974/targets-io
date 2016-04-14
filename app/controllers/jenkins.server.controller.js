@@ -66,14 +66,14 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback) {
   //  }
   //}
 
-  client.get(consoleUrl + offset, function (err, response, body) {
+  client.get(consoleUrl , function (err, response, body) {
       //        if (err) console.error(err);
-      console.log(consoleUrl + offset);
-      console.log('X-More-Data:' + response.headers['x-more-data']);
+      //console.log(consoleUrl);
+      //console.log('X-More-Data:' + response.headers['x-more-data']);
 
-      if (response.headers['x-text-size'] && running == true) {
-
-      }
+      //if (response.headers['x-text-size'] && running == true) {
+      //
+      //}
 
     var consoleArray = body.split('Requests');
       if (consoleArray.length > 1) {
