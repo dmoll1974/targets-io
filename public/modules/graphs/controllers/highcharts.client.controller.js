@@ -132,7 +132,7 @@ angular.module('graphs').controller('HighchartsController', [
           Utils.metricFilter = '';
 
         }
-        if (newVal !== 'All') {
+        if (newVal !== 'All' || $scope.metricFilter !== '') {
           _.each($scope.metrics, function (metric, i) {
             $scope.metrics[i].isOpen = true;
           });

@@ -43,10 +43,6 @@ angular.module('graphs').controller('GraphsController', [
     };
 
 
-    /* get zoom range  */
-    //$timeout(function(){
-    //  $scope.zoomRange = Utils.zoomRange;
-    //});
 
     $scope.numberOfColumns = Utils.numberOfColumns;
     $scope.flex = 100 / $scope.numberOfColumns;
@@ -167,8 +163,13 @@ angular.module('graphs').controller('GraphsController', [
 
 
     }else{
+      /* get zoom range  */
+
       $scope.zoomRange = Utils.zoomRange;
-      $scope.selectedZoomOptionIndex = 0;
+
+      /* set md-select selected item */
+
+      $scope.selectedZoomOptionIndex = $scope.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf($scope.zoomRange.value);
 
     }
 
@@ -182,8 +183,31 @@ angular.module('graphs').controller('GraphsController', [
 
     /* watch metricFilter */
     $scope.$watch('metricFilter', function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        Utils.metricFilter = $scope.metricFilter;
+      if (newVal !== oldVal && (newVal.length > 2 || newVal.length === 0 )) {
+
+        //Utils.metricFilter = $scope.metricFilter;
+
+        $scope.columnsArray =[];
+        $scope.filteredMetrics = filteredMetrics($scope.metrics);
+        
+
+        var itemsPerColumn = Math.ceil( $scope.filteredMetrics.length / $scope.numberOfColumns);
+
+        //Populates the column array
+        for (var i=0; i< $scope.filteredMetrics.length; i += itemsPerColumn) {
+          var col = { start: i, end: Math.min(i + itemsPerColumn,  $scope.filteredMetrics.length) };
+          $scope.columnsArray.push(col);
+        }
+
+        if ($scope.value !== 'All' || $scope.metricFilter !== '') {
+          _.each($scope.metrics, function (metric, i) {
+            $scope.metrics[i].isOpen = true;
+          });
+        }else{
+          _.each($scope.metrics, function (metric, i) {
+            $scope.metrics[i].isOpen = false;
+          });
+        }
       }
     });
 
@@ -269,6 +293,8 @@ angular.module('graphs').controller('GraphsController', [
     });
 
 
+
+
     $scope.init = function () {
 
       Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard) {
@@ -276,13 +302,13 @@ angular.module('graphs').controller('GraphsController', [
         $scope.metrics = addAccordionState(Dashboards.selected.metrics);
 
         $scope.columnsArray =[];
-        var numberOfMetrics  = numberOfFilteredMetrics($scope.metrics);
+        $scope.filteredMetrics  = filteredMetrics($scope.metrics);
 
-        var itemsPerColumn = Math.ceil(numberOfMetrics / $scope.numberOfColumns);
+        var itemsPerColumn = Math.ceil( $scope.filteredMetrics.length / $scope.numberOfColumns);
 
         //Populates the column array
-        for (var i=0; i<numberOfMetrics; i += itemsPerColumn) {
-          var col = { start: i, end: Math.min(i + itemsPerColumn, numberOfMetrics) };
+        for (var i=0; i< $scope.filteredMetrics.length; i += itemsPerColumn) {
+          var col = { start: i, end: Math.min(i + itemsPerColumn,  $scope.filteredMetrics.length) };
           $scope.columnsArray.push(col);
         }
 
@@ -307,24 +333,39 @@ angular.module('graphs').controller('GraphsController', [
       });
     };
 
-    function numberOfFilteredMetrics(metrics){
+    function filteredMetrics(metrics){
 
-      var numberOfFilteredMetrics = 0;
+      var filteredMetrics = [];
+      var metricFilterRegExp = new RegExp($scope.metricFilter, 'i');
 
-      _.each(metrics, function(metric){
+      _.each(metrics, function(metric) {
 
-        _.each(metric.tags, function(tag){
+        if (metricFilterRegExp.test(metric.alias) || $scope.metricFilter === '') {
+          _.each(metric.tags, function (tag) {
 
-          if (tag.text === $scope.value) numberOfFilteredMetrics += 1;
+            if (tag.text === $scope.value) filteredMetrics.push(metric);
 
-        });
+          });
+        }
+        /* if 'ALL' tab is selected show all metrics, except when metricFilter is applied */
 
-        /* if 'ALL' tab is selected show all metrics*/
-        if ($scope.value === 'All') numberOfFilteredMetrics += 1;
+        if ($scope.value === 'All') {
+
+          if ($scope.metricFilter !== '') {
+
+            if (metricFilterRegExp.test(metric.alias)) {
+              filteredMetrics.push(metric)
+            }
+
+          } else {
+
+            filteredMetrics.push(metric)
+          }
+        }
 
       });
 
-      return numberOfFilteredMetrics;
+      return filteredMetrics;
     }
 
     function checkIfTagExists(tag) {

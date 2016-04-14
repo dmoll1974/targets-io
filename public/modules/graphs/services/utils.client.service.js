@@ -36,10 +36,10 @@ angular.module('graphs').service('Utils', ['$http', function ($http) {
         Utils.metricFilter = '';
         Utils.zoomLock = true;
         //Utils.graphType = '';
-        Utils.zoomRange = {
-            value: '-10min',
-            label: 'Last 10 minutes'
-        };
+        //Utils.zoomRange = {
+        //    value: '-10min',
+        //    label: 'Last 10 minutes'
+        //};
         Utils.zoomFrom = '';
         Utils.zoomUntil = '';
         Utils.showLegend = true;

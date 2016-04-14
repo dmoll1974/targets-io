@@ -352,6 +352,29 @@ md-content#column-1-2.graph-column {
     overflow-y: scroll;
 
 }
+md-content#benchmark-0-2.graph-column {
+    position: fixed;
+    top: 30px;
+    bottom: 0px;
+    left: 5px;
+    width: 49.0%;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+}
+
+md-content#benchmark-1-2.graph-column {
+    position: fixed;
+    top: 30px;
+    right: 5px;
+    bottom: 0px;
+    width: 49.0%;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+}
 
 .graph-column:hover{
     overflow-y: auto;
@@ -430,4 +453,12 @@ md-menu.md-open-menu-container.dashboard-menu{
 div.boxedGraph{
 
     border: dotted;
+}
+
+md-toast.md-error-toast-theme .md-toast-content {
+    background-color: red;
+}
+
+md-toast {
+    left: 35%;
 }

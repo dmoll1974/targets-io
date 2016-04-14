@@ -25,6 +25,9 @@ angular.module('testruns').config([
     }).state('testRunSummary', {
       url: '/testrun-summary/:productName/:dashboardName/:testRunId/',
       template: '<testrun-summary></testrun-summary>'
+    }).state('visualBenchmark', {
+      url: '/visual-benchmark/:productName/:dashboardName/:baselineTestRunId/:benchmarkTestRunId/:metricId/:benchmarkType/?selectedSeries',
+      template: '<visual-benchmark></visual-benchmark>'
     });
   }
 ]);

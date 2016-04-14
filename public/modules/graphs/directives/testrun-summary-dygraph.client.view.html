@@ -11,7 +11,7 @@
 </md-content>
 <md-progress-linear ng-show="showProgressBar" md-mode="indeterminate" style="margin-left: 50px; width:95%;" ></md-progress-linear>
 
-<div layout="row" layout-align="space-between start" ng-if="showLegend">
+<div layout="row" layout-align="space-between start" ng-if="showLegend && metric.dygraphData">
     <div  ng-if="metric.graphNumberOfValidDatapoints > 0" class="datagrid" style="margin-top: 20px; margin-left: 40px; ">
         <table>
             <thead>
