@@ -80,6 +80,8 @@ angular.module('metrics').controller('MetricsController', [
     $scope.enableRequirement = false;
     $scope.metric.includeInSummary = false;
 
+
+
     $scope.$watch('enableRequirement', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         if ($scope.enableRequirement === false) {

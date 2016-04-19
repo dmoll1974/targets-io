@@ -3,6 +3,8 @@ module.exports = function (app) {
   var users = require('../../app/controllers/users.server.controller');
   var dashboards = require('../../app/controllers/dashboards.server.controller');
   // Dashboards Routes
+
+  app.route('/get-dashboards-for-product/:productName').get(dashboards.getDashboardsForProduct);
   app.route('/dashboards/:productName').get(dashboards.list).post(dashboards.create);
   //users.requiresLogin,
   app.route('/dashboards/:productName/:dashboardName').get(dashboards.read);

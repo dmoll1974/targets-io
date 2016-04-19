@@ -23,6 +23,49 @@ angular.module('dashboards').controller('DashboardsController', [
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
+
+    /* Get all dashboard names for product */
+
+    Dashboards.getDashboardsForProduct($stateParams.productName).success(function(dashboards){
+
+      $scope.dashboardsForProduct = dashboards;
+
+    });
+
+    $scope.copyMetricsToDashboard = function(dashboard){
+
+      var copyMetricArrayOfPromises = [];
+
+      _.each($scope.dashboard.metrics, function(metric){
+
+        if(metric.selected === true){
+          var metricClone = _.clone(metric);
+
+          metricClone.dashboardId = dashboard._id;
+          metricClone.dashboardName = dashboard.name;
+          metricClone._id = undefined;
+
+
+          copyMetricArrayOfPromises.push(Metrics.create(metricClone));
+          metric.selected = false;
+          $scope.metricSelected = false;
+
+        }
+
+      })
+
+
+      $q.all(copyMetricArrayOfPromises)
+          .then(function () {
+            $state.go('viewDashboard', {
+              productName: $stateParams.productName,
+              dashboardName: dashboard.name
+            });
+          });
+
+
+    }
+
   /* Get templates */
 
     Templates.getAll().success(function(templates){
@@ -30,6 +73,8 @@ angular.module('dashboards').controller('DashboardsController', [
       $scope.templates = templates;
 
     });
+
+
 
     $scope.editMetric = function(metricId){
 
@@ -42,6 +87,7 @@ angular.module('dashboards').controller('DashboardsController', [
       $scope.filterMetrics = '';
 
     };
+
 
 
     $scope.mergeTemplate = function(index){

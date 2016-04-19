@@ -660,7 +660,7 @@ function flushMemcachedForTestRun(testRun, callback){
 
       }
     });
-  })
+  });
 
 }
 

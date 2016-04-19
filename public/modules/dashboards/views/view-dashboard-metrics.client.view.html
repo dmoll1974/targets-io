@@ -23,13 +23,11 @@
 
             <div flex="85"></div>
 
-            <div flex="10">
-                <md-button ng-if="metricSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedMetricsModal('')" style="margin: 0px;" >Delete selected</md-button>
-            </div>
+
         </div>
         <div layout="row">
             <div layout="row" flex="35">
-                <md-input-container flex>
+                <md-input-container style="margin: 0px;" flex>
                     <label>Filter metrics</label>
                     <input ng-model="filterMetrics">
                 </md-input-container>
@@ -37,6 +35,33 @@
                          data-ng-click="clearMetricFilter()"></md-icon>
             </div>
 
+        </div>
+        <div flex>
+            <div layout="row"  layout-align="end center">
+                <md-button ng-class="{'disabled': metricSelected === false }" class="md-accent md-icon-button" ng-click="metricSelected && openDeleteSelectedMetricsModal('')" style="margin: 0px;" >
+                    <md-tooltip>
+                        Delete selected metrics
+                    </md-tooltip>
+                    <md-icon md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
+                </md-button>
+                <md-menu style="margin-right: 5px;">
+                    <div ng-class="{'disabled': metricSelected === false }" aria-label="Copy to dashboard" class="md-icon-button"
+                         ng-click="metricSelected && openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin md-svg-src="images/assets/ic_content_copy_black_24px.svg"></md-icon>
+
+                        <md-tooltip>
+                            Copy selected metrics to dashboard
+                        </md-tooltip>
+                    </div>
+                    <md-menu-content width="4">
+                        <md-menu-item ng-repeat="dashboard in dashboardsForProduct">
+                            <md-button data-ng-click="copyMetricsToDashboard(dashboard)">
+                                {{dashboard.name}}
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
         </div>
         <table class="table">
             <thead>
