@@ -11,7 +11,8 @@ angular.module('metrics').factory('Metrics', [
       create: create,
       selected: {},
       clone: {},
-      removeTag: removeTag
+      removeTag: removeTag,
+      metricFilter: ''
     };
     return Metrics;
     function getFn(metricId) {

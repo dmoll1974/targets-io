@@ -23,32 +23,78 @@ angular.module('dashboards').controller('DashboardsController', [
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
-  /* Get templates */
 
-    Templates.getAll().success(function(templates){
+    /* Get all dashboard names for product */
 
-      $scope.templates = templates;
-
-    });
-
-    $scope.editMetric = function(metricId){
-
-      $state.go('editMetric',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName, metricId: metricId });
-
-    }
-
-    $scope.clearMetricFilter = function(){
-
-      $scope.filterMetrics = '';
-
-    };
-
-
-    $scope.mergeTemplate = function(index){
-
-        Templates.selected = $scope.templates[index];
-        $state.go('mergeTemplate');
-    };
+  //  Dashboards.getDashboardsForProduct($stateParams.productName).success(function(dashboards){
+  //
+  //    $scope.dashboardsForProduct = dashboards;
+  //
+  //  });
+  //
+  //  $scope.copyMetricsToDashboard = function(dashboard){
+  //
+  //    var copyMetricArrayOfPromises = [];
+  //
+  //    _.each($scope.dashboard.metrics, function(metric){
+  //
+  //      if(metric.selected === true){
+  //        var metricClone = _.clone(metric);
+  //
+  //        metricClone.dashboardId = dashboard._id;
+  //        metricClone.dashboardName = dashboard.name;
+  //        metricClone._id = undefined;
+  //
+  //
+  //        copyMetricArrayOfPromises.push(Metrics.create(metricClone));
+  //        metric.selected = false;
+  //        $scope.metricSelected = false;
+  //
+  //      }
+  //
+  //    })
+  //
+  //
+  //    $q.all(copyMetricArrayOfPromises)
+  //        .then(function () {
+  //          $state.go('viewDashboard', {
+  //            productName: $stateParams.productName,
+  //            dashboardName: dashboard.name
+  //          });
+  //        });
+  //
+  //
+  //  }
+  //
+  ///* Get templates */
+  //
+  //  Templates.getAll().success(function(templates){
+  //
+  //    $scope.templates = templates;
+  //
+  //  });
+  //
+  //
+  //
+  //  $scope.editMetric = function(metricId){
+  //
+  //    $state.go('editMetric',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName, metricId: metricId });
+  //
+  //  }
+  //
+  //  $scope.clearMetricFilter = function(){
+  //
+  //    $scope.filterMetrics = '';
+  //
+  //  };
+  //
+  //
+  //
+  //  $scope.mergeTemplate = function(index){
+  //
+  //      Templates.selected = $scope.templates[index];
+  //      $state.go('mergeTemplate');
+  //  };
 
     if(Dashboards.selected !== {}) {
 
@@ -98,38 +144,38 @@ angular.module('dashboards').controller('DashboardsController', [
     });
 
 
-    $scope.$watch(function () {
-      $scope.filteredMetrics = $scope.$eval("dashboard.metrics | filter:filterMetrics");
-    });
+    //$scope.$watch(function () {
+    //  $scope.filteredMetrics = $scope.$eval("dashboard.metrics | filter:filterMetrics");
+    //});
+    //
+    //
+    //$scope.$watch('allMetricsSelected', function (newVal, oldVal) {
+    //    if (newVal !== oldVal) {
+    //      _.each($scope.filteredMetrics, function (metric, i) {
+    //        metric.selected = newVal;
+    //      });
+    //    }
+    //});
 
-
-    $scope.$watch('allMetricsSelected', function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          _.each($scope.filteredMetrics, function (metric, i) {
-            metric.selected = newVal;
-          });
-        }
-    });
-
-    $scope.setMetricsSelected = function(metricSelected){
-
-        if (metricSelected === false){
-
-          $scope.metricSelected = false;
-
-          _.each($scope.dashboard.metrics, function(metric){
-              if(metric.selected === true) $scope.metricSelected = true;
-          })
-
-        }else {
-          $scope.metricSelected = metricSelected;
-        }
-    };
-
-    $scope.setAllMetricsSelected = function(metricSelected){
-
-      $scope.metricSelected = metricSelected;
-    };
+    //$scope.setMetricsSelected = function(metricSelected){
+    //
+    //    if (metricSelected === false){
+    //
+    //      $scope.metricSelected = false;
+    //
+    //      _.each($scope.dashboard.metrics, function(metric){
+    //          if(metric.selected === true) $scope.metricSelected = true;
+    //      })
+    //
+    //    }else {
+    //      $scope.metricSelected = metricSelected;
+    //    }
+    //};
+    //
+    //$scope.setAllMetricsSelected = function(metricSelected){
+    //
+    //  $scope.metricSelected = metricSelected;
+    //};
 
 
     /* Tab controller */
@@ -138,26 +184,29 @@ angular.module('dashboards').controller('DashboardsController', [
     }, function () {
       $scope.selectedIndex = Dashboards.selectedTab;
     });
+
     $scope.setTab = function (newValue) {
       Dashboards.selectedTab = newValue;
     };
-    /* Watch on dashboard */
-    $scope.$watch(function (scope) {
-      return Dashboards.selected;
-    }, function (newVal, oldVal) {
-      $scope.dashboard = Dashboards.selected;
-      SideMenu.productFilter = $stateParams.productName;
 
-    });
+    ///* Watch on dashboard */
+    //$scope.$watch(function (scope) {
+    //  return Dashboards.selected;
+    //}, function (newVal, oldVal) {
+    //  $scope.dashboard = Dashboards.selected;
+    //  SideMenu.productFilter = $stateParams.productName;
+    //
+    //});
 
     //$scope.authentication = Authentication;
-    $scope.addMetric = function () {
-      //            console.log('add/metric/' + $stateParams.productName + '/' + $stateParams.dashboardName)
-      $state.go('addMetric', {
-        'productName': $stateParams.productName,
-        'dashboardName': $stateParams.dashboardName
-      });
-    };
+    //$scope.addMetric = function () {
+    //  //            console.log('add/metric/' + $stateParams.productName + '/' + $stateParams.dashboardName)
+    //  $state.go('addMetric', {
+    //    'productName': $stateParams.productName,
+    //    'dashboardName': $stateParams.dashboardName
+    //  });
+    //};
+
     // Create new Dashboard
     $scope.create = function () {
       // Create new Dashboard object
@@ -244,66 +293,66 @@ angular.module('dashboards').controller('DashboardsController', [
         $state.go($rootScope.previousState);
     };
 
-    $scope.openDeleteMetricModal = function (size, index) {
-      Metrics.selected = $scope.dashboard.metrics[index];
-      ConfirmModal.itemType = 'Delete metric ';
-      ConfirmModal.selectedItemId = Metrics.selected._id;
-      ConfirmModal.selectedItemDescription = Metrics.selected.alias;
-      var modalInstance = $modal.open({
-        templateUrl: 'ConfirmDelete.html',
-        controller: 'ModalInstanceController',
-        size: size  //,
-      });
-      modalInstance.result.then(function () {
-        Metrics.delete(Metrics.selected._id).success(function (metric) {
-          /* refresh dashboard*/
-          Dashboards.get($scope.productName, $scope.dashboardName).success(function (dashboard) {
-            $scope.dashboard = Dashboards.selected;
-          });
-        });
-      }, function () {
-        $log.info('Modal dismissed at: ' + new Date());
-      });
-    };
+    //$scope.openDeleteMetricModal = function (size, index) {
+    //  Metrics.selected = $scope.dashboard.metrics[index];
+    //  ConfirmModal.itemType = 'Delete metric ';
+    //  ConfirmModal.selectedItemId = Metrics.selected._id;
+    //  ConfirmModal.selectedItemDescription = Metrics.selected.alias;
+    //  var modalInstance = $modal.open({
+    //    templateUrl: 'ConfirmDelete.html',
+    //    controller: 'ModalInstanceController',
+    //    size: size  //,
+    //  });
+    //  modalInstance.result.then(function () {
+    //    Metrics.delete(Metrics.selected._id).success(function (metric) {
+    //      /* refresh dashboard*/
+    //      Dashboards.get($scope.productName, $scope.dashboardName).success(function (dashboard) {
+    //        $scope.dashboard = Dashboards.selected;
+    //      });
+    //    });
+    //  }, function () {
+    //    $log.info('Modal dismissed at: ' + new Date());
+    //  });
+    //};
 
 
-    $scope.openDeleteSelectedMetricsModal = function (size) {
-
-      ConfirmModal.itemType = 'Delete ';
-      ConfirmModal.selectedItemId = '';
-      ConfirmModal.selectedItemDescription = 'selected metrics';
-      var modalInstance = $modal.open({
-        templateUrl: 'ConfirmDelete.html',
-        controller: 'ModalInstanceController',
-        size: size  //,
-      });
-      modalInstance.result.then(function () {
-        var deleteMetricArrayOfPromises = [];
-        var i;
-
-        for(i = $scope.dashboard.metrics.length -1; i > -1; i--){
-
-          if($scope.dashboard.metrics[i].selected === true){
-            deleteMetricArrayOfPromises.push(Metrics.delete($scope.dashboard.metrics[i]._id));
-            $scope.dashboard.metrics[i].selected = false;
-            $scope.metricSelected = false;
-            $scope.dashboard.metrics.splice(i,1);
-          }
-        }
-
-
-        $q.all(deleteMetricArrayOfPromises)
-          .then(Dashboards.get($scope.productName, $scope.dashboardName))
-          .then(function (dashboard) {
-                  $scope.allMetricsSelected = false;
-                  $scope.dashboard = Dashboards.selected;
-          });
-
-      }, function () {
-        $log.info('Modal dismissed at: ' + new Date());
-      });
-
-    };
+    //$scope.openDeleteSelectedMetricsModal = function (size) {
+    //
+    //  ConfirmModal.itemType = 'Delete ';
+    //  ConfirmModal.selectedItemId = '';
+    //  ConfirmModal.selectedItemDescription = 'selected metrics';
+    //  var modalInstance = $modal.open({
+    //    templateUrl: 'ConfirmDelete.html',
+    //    controller: 'ModalInstanceController',
+    //    size: size  //,
+    //  });
+    //  modalInstance.result.then(function () {
+    //    var deleteMetricArrayOfPromises = [];
+    //    var i;
+    //
+    //    for(i = $scope.dashboard.metrics.length -1; i > -1; i--){
+    //
+    //      if($scope.dashboard.metrics[i].selected === true){
+    //        deleteMetricArrayOfPromises.push(Metrics.delete($scope.dashboard.metrics[i]._id));
+    //        $scope.dashboard.metrics[i].selected = false;
+    //        $scope.metricSelected = false;
+    //        $scope.dashboard.metrics.splice(i,1);
+    //      }
+    //    }
+    //
+    //
+    //    $q.all(deleteMetricArrayOfPromises)
+    //      .then(Dashboards.get($scope.productName, $scope.dashboardName))
+    //      .then(function (dashboard) {
+    //              $scope.allMetricsSelected = false;
+    //              $scope.dashboard = Dashboards.selected;
+    //      });
+    //
+    //  }, function () {
+    //    $log.info('Modal dismissed at: ' + new Date());
+    //  });
+    //
+    //};
 
   }
 ]);

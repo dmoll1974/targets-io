@@ -193,6 +193,17 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       }
     });
 
+    /* watch showTooltip */
+    $scope.$watch(function (scope) {
+      return Utils.showTooltip;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        $scope.graph.updateOptions({legend: Utils.showTooltip ? 'follow' : 'never'});
+
+      }
+    });
+
     /* If zoom lock is checked, update all graphs when zoom is applied in one */
     $scope.$watch(function (scope) {
       return Utils.zoomFrom;
@@ -256,7 +267,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
             connectSeparatedPoints: true,
             labels: dygraphData.labels,
             axisLabelFontSize: 12,
-            legend: 'never',
+            legend: Utils.showTooltip ? 'follow' : 'never',
             includeZero: true,
             valueRange: $scope.yRange,
             highlightCircleSize: 0,
@@ -270,13 +281,28 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
             axes: {
               x: {
                 axisLabelFormatter: Dygraph.dateAxisLabelFormatter,
-                valueFormatter: Dygraph.dateString_
+                //valueFormatter: Dygraph.dateString_
+                valueFormatter: function(ms) {
+                  return formatDate(new Date(ms));
+                }
               }
             },
             underlayCallback: createUnderlayFormEvents,
             clickCallback: createEventFromClick,
             zoomCallback: zoomGraph
           };
+
+
+          function formatDate(d) {
+            var yyyy = d.getFullYear(),
+                mm = d.getMonth() + 1,
+                dd = d.getDate(),
+                hh = d.getHours(),
+                MM = d.getMinutes(),
+                ss = d.getSeconds();
+
+            return (dd < 10 ? '0' : '') + dd + '-' + (mm < 10 ? '0' : '') + mm +  '-' + yyyy + ' ' + (hh < 10 ? '0' : '') + hh +  ':' + (MM < 10 ? '0' : '') + MM +  ':' + (ss < 10 ? '0' : '') + ss  ;
+          }
 
           $scope.data = dygraphData.data;
           $scope.metric.legendData = dygraphData.legendData;

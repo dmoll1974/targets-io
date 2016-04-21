@@ -1,6 +1,6 @@
 'use strict';
 // service used for Utilty functions
-angular.module('graphs').service('Utils', ['$http', function ($http) {
+angular.module('graphs').service('Utils', [function () {
     var Utils = {
       dynamicSort: dynamicSort,
       dynamicSortMultiple: dynamicSortMultiple,
@@ -16,20 +16,14 @@ angular.module('graphs').service('Utils', ['$http', function ($http) {
       zoomFrom: '',
       zoomUntil: '',
       showLegend: true,
-      flushGraphiteCache:  flushGraphiteCache,
+      showTooltip: false,
       numberOfColumns: 2,
       recentTestPeriod: "1",
       reset: reset
 
     };
-
     return Utils;
 
-    function flushGraphiteCache(){
-
-        return $http.get('/flush-graphite-cache');
-
-    }
     function reset(){
 
         Utils.selectedIndex = '';
