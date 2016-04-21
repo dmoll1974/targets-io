@@ -16,6 +16,7 @@ angular.module('graphs').service('Utils', [function () {
       zoomFrom: '',
       zoomUntil: '',
       showLegend: true,
+      showTooltip: false,
       numberOfColumns: 2,
       recentTestPeriod: "1",
       reset: reset

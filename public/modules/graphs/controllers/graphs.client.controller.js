@@ -46,7 +46,8 @@ angular.module('graphs').controller('GraphsController', [
 
     $scope.numberOfColumns = Utils.numberOfColumns;
     $scope.flex = 100 / $scope.numberOfColumns;
-    $scope.showLegend = true;
+    $scope.showLegend = Utils.showLegend;
+    $scope.showTooltip = Utils.showTooltip;
 
     $scope.toggleLegend = function(){
 
@@ -57,6 +58,15 @@ angular.module('graphs').controller('GraphsController', [
       }
     }
 
+    $scope.toggleTooltip = function(){
+
+      if(Utils.showTooltip === true) {
+        Utils.showTooltip = false;
+      }else {
+        Utils.showTooltip = true;
+      }
+    }
+
     /* toggle showLegend*/
     $scope.$watch(function (scope) {
       return Utils.showLegend;
@@ -64,6 +74,16 @@ angular.module('graphs').controller('GraphsController', [
       if (newVal !== oldVal) {
 
         $scope.showLegend =  Utils.showLegend;
+      }
+    });
+
+    /* toggle showTooltip*/
+    $scope.$watch(function (scope) {
+      return Utils.showTooltip;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        $scope.showTooltip =  Utils.showTooltip;
       }
     });
 
