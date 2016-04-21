@@ -50,6 +50,20 @@ function ProductReleaseDetailsDirective () {
         }else {
 
           $scope.releaseSaved = false;
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top')
+              .hideDelay(30000)
+              //.parent(angular.element('#fixedBaselineToast'))
+              .theme('error-toast');
+
+          $mdToast.show(toast.content('Release report has not been verified / saved!')).then(function (response) {
+
+          });
+
+
           /* get product */
           Products.get($stateParams.productName).success(function (product) {
 
