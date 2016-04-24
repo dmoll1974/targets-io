@@ -4,15 +4,12 @@ angular.module('metrics').config([
   '$stateProvider',
   function ($stateProvider) {
     // Metrics state routing
-    $stateProvider.state('listMetrics', {
-      url: '/metrics/:dashboardId',
-      templateUrl: 'modules/metrics/views/list-metrics.client.view.html'
-    }).state('addMetric', {
+    $stateProvider.state('addMetric', {
       url: '/add/metric/:productName/:dashboardName/',
-      templateUrl: 'modules/metrics/views/create-metric.client.view.html'
+      template: '<add-metric></add-metric>'
     }).state('editMetric', {
       url: '/edit/metric/:productName/:dashboardName/:metricId/',
-      templateUrl: 'modules/metrics/views/edit-metric.client.view.html'
+      template: '<edit-metric></edit-metric>'
     });
   }
 ]);

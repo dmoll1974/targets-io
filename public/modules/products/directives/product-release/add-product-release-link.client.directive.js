@@ -6,7 +6,7 @@ function AddProductReleaseLinkDirective () {
 
   var directive = {
     restrict: 'EA',
-    templateUrl: 'modules/products/directives/add-product-release-link.client.view.html',
+    templateUrl: 'modules/products/directives/product-release/add-product-release-link.client.view.html',
     controller: AddProductReleaseLinkDirectiveController
   };
 

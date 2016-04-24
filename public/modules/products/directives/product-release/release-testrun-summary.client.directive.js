@@ -13,7 +13,7 @@ function ReleaseTestRunSummaryDirective () {
     },
 
     restrict: 'EA',
-    templateUrl: 'modules/products/directives/release-testrun-summary.client.view.html',
+    templateUrl: 'modules/products/directives/product-release/release-testrun-summary.client.view.html',
     controller: ReleaseTestRunSummaryDirectiveController
   };
 

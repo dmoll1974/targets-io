@@ -18,8 +18,12 @@ function DashboardMetricsDirective () {
 
     var vm = this;
 
+    activate();
+
     vm.productName = $stateParams.productName;
     vm.dashboardName = $stateParams.dashboardName;
+    vm.sortType     = 'tags[0].text'; // set the default sort type
+    vm.sortReverse  = false;  // set the default sort order
     vm.dashboard = Dashboards.selected;
     vm.metricFilter = Metrics.metricFilter;
     vm.addMetric = addMetric;
@@ -33,15 +37,18 @@ function DashboardMetricsDirective () {
     vm.cancel = cancel;
     vm.openMenu = openMenu;
 
-    $timeout(function(){
 
-      vm.sortType     = 'tags[0].text'; // set the default sort type
-      vm.sortReverse  = false;  // set the default sort order
+    var originatorEv;
 
-    });
+    function openMenu ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
 
 
-      /* watches*/
+
+
+    /* watches*/
 
       $scope.$watch(function () {
         vm.filteredMetrics = $scope.$eval("vm.dashboard.metrics | filter:vm.metricFilter");
@@ -92,6 +99,7 @@ function DashboardMetricsDirective () {
 
     /* initialise view */
 
+    function activate() {
       /* Get all dashboard names for product */
 
       Dashboards.getDashboardsForProduct($stateParams.productName).success(function (dashboards) {
@@ -109,12 +117,7 @@ function DashboardMetricsDirective () {
 
       });
 
-      var originatorEv;
-
-      function openMenu ($mdOpenMenu, ev) {
-        originatorEv = ev;
-        $mdOpenMenu(ev);
-      };
+    }
 
 
     function addMetric() {
