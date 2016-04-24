@@ -11,7 +11,7 @@ angular.module('graphs').config([
     // Graphs state routing
     $stateProvider.state('viewGraphs', {
       url: '/graphs/:productName/:dashboardName/:testRunId/:tag/?zoomFrom&zoomUntil&selectedSeries&metricFilter',
-      templateUrl: 'modules/graphs/views/graphs.client.view.html'
+      templateUrl: 'modules/graphs/views/graphs-testrun.client.view.html'
     }).state('viewLiveGraphs', {
       url: '/graphs-live/:productName/:dashboardName/:tag/?zoomRange&zoomFrom&zoomUntil&metricFilter',
       templateUrl: 'modules/graphs/views/graphs-live.client.view.html'

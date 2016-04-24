@@ -1,0 +1,90 @@
+<div class="graphs-header">
+    <div layout="column">
+        <div layout="row"  flex>
+            <div flex="30" layout="row" layout-align="start center">
+                <span>
+                <a data-ng-href="/#!/browse/{{testRun.productName}}/">{{testRun.productName}}</a>  /
+                <a data-ng-href="/#!/browse/{{testRun.productName}}/{{testRun.dashboardName}}/">{{testRun.dashboardName}}</a>
+                  /  {{testRun.testRunId}}
+            </span>
+            </div>
+            <div layout="row" flex="40" layout-align="space-between center">
+
+                <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="zoomLock" >
+                    Apply zoom to all graphs
+                </md-switch>
+                <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
+                <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
+                <!--<div layout="row" layout-align="start center">-->
+                    <div>
+                        <md-input-container class="targetsio-header-text">
+                            <label>Filter metrics</label>
+                            <input ng-model="metricFilter">
+                        </md-input-container>
+                    </div>
+                    <div>
+                        <md-icon  ng-if="metricFilter && metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                                  data-ng-click="clearMetricFilter()">
+                        </md-icon>
+                    </div>
+
+                <!--</div>-->
+            </div>
+
+            <div layout="row" layout-align="end center" flex="30">
+                <div  layout="row" layout-align="end center" >
+                    <button ng-if="showViewUrl && hasFlash()"
+                            tooltip-size="medium" title="Copy graph URL"
+                            tooltip-side="top" clip-copy="viewShareUrl"
+                            clip-click="clipClicked()">Copy
+                    </button>
+                    <input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"
+                           share-graph-url/>
+                    <label title="Share view URL" class="btn default"
+                           ng-click="setViewShareUrl('testrun')"><span
+                            class="btn  glyphicon glyphicon-share"></span>
+                    </label>
+
+                </div>
+                <md-menu>
+                    <md-button aria-label="number of columns" class="md-icon-button"
+                               ng-click="openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin class="md-primary" md-svg-src="images/assets/ic_view_week_black_24px.svg"></md-icon>
+                        <md-tooltip>
+                            Number of columns
+                        </md-tooltip>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button data-ng-click="toggleNumberOfColums(1)">
+                                One column view
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button data-ng-click="toggleNumberOfColums(2)">
+                                Two columns view
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button data-ng-click="toggleNumberOfColums(3)">
+                                Three columns view
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <md-switch class="md-primary" md-no-ink aria-label="Show legend" ng-model="showLegend" ng-change="toggleLegend()">
+                    Show legend
+                </md-switch>
+                <md-switch class="md-primary" md-no-ink aria-label="Show tooltip" ng-model="showTooltip" ng-change="toggleTooltip()">
+                    Show tooltip
+                </md-switch>
+            </div>
+        </div>
+    </div>
+    <md-tabs md-selected="selectedIndex" style="padding-bottom: 0px;">
+        <md-tab ng-repeat="tag in tags" ui-sref="viewGraphs(tag.route)">
+            <span>{{tag.text}}</span>
+        </md-tab>
+    </md-tabs>
+
+</div>

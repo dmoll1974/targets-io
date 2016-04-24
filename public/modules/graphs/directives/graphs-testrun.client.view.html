@@ -1,0 +1,69 @@
+<md-content ng-controller="GraphsController" data-ng-init="init()">
+    <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
+    <graphs-header graphs="testrun"></graphs-header>
+    <div gatling-details data-ng-if="gatlingDetails"></div>
+
+    <md-content data-ng-hide="gatlingDetails">
+        <md-content layout="row">
+            <md-content class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + columnsArray.length}}" layout="column" ng-repeat="column in columnsArray" flex="flex">
+                <accordion close-others="false">
+                    <md-content  data-ng-repeat="metric in filteredMetrics | tagsFilter:'tags':value | slice:column.start:column.end" data-ng-controller="HighchartsController">
+                        <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
+                            <accordion-heading>
+                                <div>{{metric.alias}}</div>
+                            </accordion-heading>
+                            <div  ng-if="metric.isOpen">
+                                <span>
+                                    <div class="btn-group">
+                                        <label title="Edit metric" class="btn default" ng-click="editMetric(metric._id)"><span
+                                                class="btn btn-xs glyphicon glyphicon-wrench"></span></label>
+                                        <label title="Edit tags" class="btn default" ng-click="setTags()"><span
+                                                class="btn btn-xs glyphicon glyphicon-tag"></span></label>
+                                        <label title="Share URL" class="btn default"
+                                               ng-click="setMetricShareUrl(metric)"><span
+                                                class="btn btn-xs glyphicon glyphicon-share"></span></label>
+                                        <!--<label ng-if= "numberOfColumns > 1" title="Drilldown" class="btn default"-->
+                                               <!--ng-click="drilldownToMetric(metric)"><span-->
+                                                <!--class="btn btn-xs glyphicon glyphicon-zoom-in"></span></label>-->
+                                    </div>
+                                </span>
+                                <span><input ng-readonly="true" ng-model="metricShareUrl" ng-if="showUrl" style="width:50%;"
+                                             share-graph-url/></span><span><button ng-if="showUrl && hasFlash()"
+                                                                                   tooltip-size="medium" title="Copy graph URL"
+                                                                                   tooltip-side="top" clip-copy="metricShareUrl"
+                                                                                   clip-click="clipClicked()">Copy
+                                     </button></span>
+                                <span>
+                                      <div class="input-group" ng-if="showTags" class="graph-input-tags">
+
+                                          <tags-input data-ng-model="metric.tags" on-tag-removed="tagRemoved($tag)">
+                                              <auto-complete source="loadTags($query)" loadOnDownArrow="true"></auto-complete>
+                                          </tags-input>
+                                            <span class="input-group-btn">
+                                                <button ng-click="updateTags(metric.tags[metric.tags.length - 1].text)" class="btn btn-default" type="button"><span
+                                                        class="btn btn-xs glyphicon glyphicon-ok"></button>
+                                            </span>
+                                      </div>
+                                </span>
+                                <span>
+                                    <label ng-if= "numberOfColumns > 1" title="Expand" class="btn default pull-right"
+                                           ng-click="drilldownToMetric(metric)"><span
+                                            class="btn btn-sm glyphicon  glyphicon-resize-full"></span></label>
+                                </span>
+                                <!--<span>-->
+                                    <!--<label ng-if= "numberOfColumns > 1" title="Reset zoom" class="btn default pull-right"-->
+                                           <!--ng-click="drilldownToMetric(metric)"><span-->
+                                            <!--class="btn btn-sm glyphicon  glyphicon-refresh"></span></label>-->
+                                <!--</span>-->
+
+
+
+                                <dygraph metric="metric"></dygraph>
+
+                            </div>
+                    </accordion-group>
+                </md-content>
+            </accordion>
+        </md-content>
+    </md-content>
+</md-content>

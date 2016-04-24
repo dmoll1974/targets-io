@@ -281,7 +281,7 @@ angular.module('graphs').controller('GraphsController', [
       }
     };
     /* Set product Filter in side menu */
-    SideMenu.productFilter = $stateParams.productName;
+    //SideMenu.productFilter = $stateParams.productName;
     //$scope.$watch('selectedIndex', function (current, old) {
     //  Utils.selectedIndex = current;
     //});
