@@ -43,7 +43,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           scope.graph.ready(function() {
 
             /* if selected series is provided (via deeplink), show this series only */
-            if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === scope.metric.alias) {
+            if (Utils.selectedSeries && Utils.selectedSeries !== '' && Utils.metricFilter === scope.metric.alias) {
 
               /* show / hide selected series in legend */
 
@@ -217,6 +217,17 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       }
     });
 
+    /* stop data polling when accordion is closed */
+    $scope.$watch('metric.isOpen', function (newVal, oldVal) {
+      if (newVal !== oldVal && newVal === false)
+        Interval.clearIntervalForMetric($scope.metric._id);
+    });
+    /* stop data polling when element is destroyed by ng-if */
+    $scope.$on('$destroy', function () {
+      Interval.clearIntervalForMetric($scope.metric._id);
+    });
+
+
     setTimeout(function(){
 
       $scope.graphType =  Utils.graphType;
@@ -323,13 +334,13 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           $scope.showProgressBar = false;
 
           /* if selected series is provided, show this series only */
-          if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === $scope.metric.alias) {
+          if (Utils.selectedSeries && Utils.selectedSeries !== '' && Utils.metricFilter === $scope.metric.alias) {
 
             $scope.selectAll = false;
 
               _.each($scope.metric.legendData, function(legendItem, i){
 
-                if(legendItem.name === TestRuns.selectedSeries ) {
+                if(legendItem.name === Utils.selectedSeries ) {
 
                   $scope.metric.legendData[i].visible = true;
 

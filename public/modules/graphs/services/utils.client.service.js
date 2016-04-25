@@ -19,7 +19,9 @@ angular.module('graphs').service('Utils', [function () {
       showTooltip: false,
       numberOfColumns: 2,
       recentTestPeriod: "1",
-      reset: reset
+      selectedSeries: '',
+
+        reset: reset
 
     };
     return Utils;
