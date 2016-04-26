@@ -1,8 +1,8 @@
 <md-content>
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
     <div layout="column">
-        <div class="graphs-header">
-            <div layout="column">
+        <!--<div class="graphs-header">-->
+            <!--<div layout="column">-->
                 <div layout="row"  flex>
                     <div flex="30" layout="row" layout-align="start center">
                         <span ng-if="vm.graphType === 'testrun'">
@@ -95,8 +95,8 @@
                         </md-switch>
                     </div>
                 </div>
-            </div>
-        </div>
+            <!--</div>-->
+        <!--</div>-->
         <div gatling-details data-ng-if="vm.gatlingDetails"></div>
         <div>
             <md-tabs md-selected="vm.selectedIndex" style="padding-bottom: 0px;">
