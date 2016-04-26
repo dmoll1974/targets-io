@@ -1,54 +1,52 @@
-<md-content data-ng-hide="vm.gatlingDetails">
-    <md-content layout="row">
-        <md-content class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column" ng-repeat="column in vm.columnsArray" flex="flex">
-            <accordion close-others="false">
-                <md-content  data-ng-repeat="metric in vm.filteredMetrics | tagsFilter:'tags':vm.value | slice:vm.column.start:vm.column.end" >
-                    <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
-                        <accordion-heading>
-                            <div>{{metric.alias}}</div>
-                        </accordion-heading>
-                        <div  ng-if="metric.isOpen">
-                            <span>
-                                <div class="btn-group">
-                                    <label title="Edit metric" class="btn default" ng-click="vm.editMetric(metric._id)"><span
-                                            class="btn btn-xs glyphicon glyphicon-wrench"></span></label>
-                                    <label title="Edit tags" class="btn default" ng-click="vm.setTags()"><span
-                                            class="btn btn-xs glyphicon glyphicon-tag"></span></label>
-                                    <label title="Share URL" class="btn default"
-                                           ng-click="vm.setMetricShareUrl(metric)"><span
-                                            class="btn btn-xs glyphicon glyphicon-share"></span></label>
-                                </div>
-                            </span>
-                            <span><input ng-readonly="true" ng-model="vm.metricShareUrl" ng-if="vm.showUrl" style="width:50%;"
-                                         share-graph-url/></span><span><button ng-if="vm.showUrl && vm.hasFlash()"
-                                                                               tooltip-size="medium" title="Copy graph URL"
-                                                                               tooltip-side="top" clip-copy="vm.metricShareUrl"
-                                                                               clip-click="vm.clipClicked()">Copy
-                                 </button></span>
-                            <span>
-                                  <div class="input-group" ng-if="vm.showTags" class="graph-input-tags">
-
-                                      <tags-input data-ng-model="metric.tags" on-tag-removed="vm.tagRemoved($tag)">
-                                          <auto-complete source="vm.loadTags($query)" loadOnDownArrow="true"></auto-complete>
-                                      </tags-input>
-                                        <span class="input-group-btn">
-                                            <button ng-click="vm.updateTags(metric.tags[metric.tags.length - 1].text)" class="btn btn-default" type="button"><span
-                                                    class="btn btn-xs glyphicon glyphicon-ok"></span></button>
-                                        </span>
-                                  </div>
-                            </span>
-                            <span>
-                                <label ng-if= "vm.numberOfColumns > 1" title="Expand" class="btn default pull-right"
-                                       ng-click="vm.drilldownToMetric(metric)"><span
-                                        class="btn btn-sm glyphicon  glyphicon-resize-full"></span></label>
-                            </span>
-
-                            <dygraph metric="metric"></dygraph>
-
+<div layout="row" data-ng-hide="vm.gatlingDetails">
+    <div class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column" ng-repeat="column in vm.columnsArray" flex="flex">
+        <accordion close-others="false">
+            <div  data-ng-repeat="metric in vm.filteredMetrics | tagsFilter:'tags':vm.value | slice:vm.column.start:vm.column.end" >
+                <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
+                    <accordion-heading>
+                        <div>{{metric.alias}}</div>
+                    </accordion-heading>
+                    <div  ng-if="metric.isOpen">
+                        <span>
+                            <div class="btn-group">
+                                <label title="Edit metric" class="btn default" ng-click="vm.editMetric(metric._id)"><span
+                                        class="btn btn-xs glyphicon glyphicon-wrench"></span></label>
+                                <label title="Edit tags" class="btn default" ng-click="vm.setTags()"><span
+                                        class="btn btn-xs glyphicon glyphicon-tag"></span></label>
+                                <label title="Share URL" class="btn default"
+                                       ng-click="vm.setMetricShareUrl(metric)"><span
+                                        class="btn btn-xs glyphicon glyphicon-share"></span></label>
                             </div>
-                    </accordion-group>
-                </md-content>
-            </accordion>
-        </md-content>
-    </md-content>
-</md-content>
+                        </span>
+                        <span><input ng-readonly="true" ng-model="vm.metricShareUrl" ng-if="vm.showUrl" style="width:50%;"
+                                     share-graph-url/></span><span><button ng-if="vm.showUrl && vm.hasFlash()"
+                                                                           tooltip-size="medium" title="Copy graph URL"
+                                                                           tooltip-side="top" clip-copy="vm.metricShareUrl"
+                                                                           clip-click="vm.clipClicked()">Copy
+                             </button></span>
+                        <span>
+                              <div class="input-group" ng-if="vm.showTags" class="graph-input-tags">
+
+                                  <tags-input data-ng-model="metric.tags" on-tag-removed="vm.tagRemoved($tag)">
+                                      <auto-complete source="vm.loadTags($query)" loadOnDownArrow="true"></auto-complete>
+                                  </tags-input>
+                                    <span class="input-group-btn">
+                                        <button ng-click="vm.updateTags(metric.tags[metric.tags.length - 1].text)" class="btn btn-default" type="button"><span
+                                                class="btn btn-xs glyphicon glyphicon-ok"></span></button>
+                                    </span>
+                              </div>
+                        </span>
+                        <span>
+                            <label ng-if= "vm.numberOfColumns > 1" title="Expand" class="btn default pull-right"
+                                   ng-click="vm.drilldownToMetric(metric)"><span
+                                    class="btn btn-sm glyphicon  glyphicon-resize-full"></span></label>
+                        </span>
+
+                        <dygraph metric="metric"></dygraph>
+
+                        </div>
+                </accordion-group>
+            </div>
+        </accordion>
+    </div>
+</div>

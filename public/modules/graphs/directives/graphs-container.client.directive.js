@@ -32,7 +32,6 @@ function GraphsContainerDirective () {
       {value: '-3d', label: 'Last 3 days'}
     ];
 
-
     vm.numberOfColumns = Utils.numberOfColumns;
     vm.flex = 100 / vm.numberOfColumns;
     vm.showLegend = Utils.showLegend;
@@ -41,7 +40,8 @@ function GraphsContainerDirective () {
     vm.metricFilter = Utils.metricFilter;
     vm.showViewUrl = false;
     vm.graphType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
-    
+
+
     vm.toggleLegend = toggleLegend;
     vm.toggleTooltip = toggleTooltip;
     vm.toggleNumberOfColums = toggleNumberOfColums;
@@ -51,6 +51,7 @@ function GraphsContainerDirective () {
     vm.clipClicked = clipClicked;
     vm.drilldownToMetric = drilldownToMetric;
     vm.setViewShareUrl = setViewShareUrl;
+    vm.switchTag = switchTag;
 
 
     activate();
@@ -91,8 +92,8 @@ function GraphsContainerDirective () {
     //});
 
     /* watch metricFilter */
-    $scope.$watch('metricFilter', function (newVal, oldVal) {
-      if (newVal !== oldVal && (newVal.length > 2 || newVal.length === 0 )) {
+    $scope.$watch('vm.metricFilter', function (newVal, oldVal) {
+      if (newVal &&   newVal !== oldVal && (newVal.length > 2 || newVal.length === 0 )) {
 
         vm.columnsArray =[];
         vm.filteredMetrics = filteredMetrics(vm.metrics);
@@ -145,6 +146,7 @@ function GraphsContainerDirective () {
     });
 
     function activate(){
+
 
       /* Get deeplink params from query string */
 
@@ -213,14 +215,15 @@ function GraphsContainerDirective () {
           vm.columnsArray.push(col);
         }
 
-        /* Get tags used in metrics */
-        vm.tags = Tags.setTags(vm.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
-        /* if reloading a non-existing tag is in $statParams */
-        vm.value = checkIfTagExists($stateParams.tag) ? $stateParams.tag : 'All';
+
 
         /* set the tab index */
         setTimeout(function(){
 
+          /* Get tags used in metrics */
+          vm.tags = Tags.setTags(vm.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+          /* if reloading a non-existing tag is in $statParams */
+          vm.value = checkIfTagExists($stateParams.tag) ? $stateParams.tag : 'All';
           vm.selectedIndex = Tags.getTagIndex(vm.value, vm.tags);
 
         });
@@ -444,11 +447,30 @@ function GraphsContainerDirective () {
       activate();
     }
 
-    function cancel() {
-      if ($rootScope.previousStateParams)
-        $state.go($rootScope.previousState, $rootScope.previousStateParams);
-      else
-        $state.go($rootScope.previousState);
+    function switchTag(tag) {
+
+      switch(vm.graphType){
+
+        case 'testrun':
+
+          $state.go('viewGraphs', {
+            'productName': vm.productName,
+            'dashboardName': vm.dashboardName,
+            'testRunId': vm.testRun.testRunId,
+            'tag': tag
+          });
+          break;
+
+        case 'graphs-live':
+
+          $state.go('viewLiveGraphs', {
+            'productName': vm.productName,
+            'dashboardName': vm.dashboardName,
+            'tag': tag
+          });
+
+
+      }
     };
   }
 }

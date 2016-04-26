@@ -8,7 +8,8 @@ function GraphsContentDirective () {
     restrict: 'EA',
     templateUrl: 'modules/graphs/directives/graphs-content.client.view.html',
     controller: GraphsContentDirectiveController,
-    controllerAs: 'vm'
+    controllerAs: 'vm',
+    bindToController: true
   };
 
   return directive;
@@ -22,7 +23,7 @@ function GraphsContentDirective () {
 
     vm.productName = $stateParams.productName;
     vm.dashboardName = $stateParams.dashboardName;
-    vm.graphType = Utils.graphType;
+    //vm.graphType = Utils.graphType;
 
 
     vm.setMetricShareUrl = setMetricShareUrl;

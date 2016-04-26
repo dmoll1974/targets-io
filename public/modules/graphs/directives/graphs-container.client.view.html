@@ -1,109 +1,112 @@
-<md-content ng-controller="GraphsController" data-ng-init="init()">
+<md-content>
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
-    <div class="graphs-header">
-        <div layout="column">
-            <div layout="row"  flex>
-                <div flex="30" layout="row" layout-align="start center">
-                    <span ng-if="vm.graphType === 'testrun'">
-                        <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /
-                        <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>
-                          /  {{vm.testRun.testRunId}}
-                    </span>
-                    <span ng-if="vm.graphType === 'graphs-live'">
-                        <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
-                        <a data-ng-href="/#!/browse/{{vm.productName}}/{{vm.dashboardName}}/">{{vm.dashboardName}}</a>
-                    </span>
-
-                </div>
-                <div layout="row" flex="40" layout-align="space-between center">
-                    <div ng-if="vm.graphType === 'graphs-live'" layout="row" layout-align="start center">
-                        <span>Time range</span>
-                        <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange">
-                            <md-option ng-repeat="zoomOption in vm.zoomOptions" ng-value="zoomOption" ng-selected="$index === vm.selectedZoomOptionIndex">
-                                {{zoomOption.label}}
-                            </md-option>
-                        </md-select>
-                    </div>
-                    <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="vm.zoomLock" >
-                        Apply zoom to all graphs
-                    </md-switch>
-                    <md-button md-no-ink class="md-primary" data-ng-click="vm.resetZoom()">Reset zoom</md-button>
-                    <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
-                    <!--<div layout="row" layout-align="start center">-->
-                        <div>
-                            <md-input-container class="targetsio-header-text">
-                                <label>Filter metrics</label>
-                                <input ng-model="vm.metricFilter">
-                            </md-input-container>
-                        </div>
-                        <div>
-                            <md-icon  ng-if="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
-                                      data-ng-click="vm.clearMetricFilter()">
-                            </md-icon>
-                        </div>
-
-                    <!--</div>-->
-                </div>
-
-                <div layout="row" layout-align="end center" flex="30">
-                    <div  layout="row" layout-align="end center" >
-                        <button ng-if="vm.showViewUrl && vm.hasFlash()"
-                                tooltip-size="medium" title="Copy graph URL"
-                                tooltip-side="top" clip-copy="vm.viewShareUrl"
-                                clip-click="vm.clipClicked()">Copy
-                        </button>
-                        <input flex ng-readonly="true" ng-model="vm.viewShareUrl" ng-if="vm.showViewUrl"
-                               share-graph-url/>
-                        <label title="Share view URL" class="btn default"
-                               ng-click="vm.setViewShareUrl('testrun')"><span
-                                class="btn  glyphicon glyphicon-share"></span>
-                        </label>
+    <div layout="column">
+        <div class="graphs-header">
+            <div layout="column">
+                <div layout="row"  flex>
+                    <div flex="30" layout="row" layout-align="start center">
+                        <span ng-if="vm.graphType === 'testrun'">
+                            <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /
+                            <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>
+                              /  {{vm.testRun.testRunId}}
+                        </span>
+                        <span ng-if="vm.graphType === 'graphs-live'">
+                            <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
+                            <a data-ng-href="/#!/browse/{{vm.productName}}/{{vm.dashboardName}}/">{{vm.dashboardName}}</a>
+                        </span>
 
                     </div>
-                    <md-menu>
-                        <md-button aria-label="number of columns" class="md-icon-button"
-                                   ng-click="vm.openMenu($mdOpenMenu, $event)">
-                            <md-icon md-menu-origin class="md-primary" md-svg-src="images/assets/ic_view_week_black_24px.svg"></md-icon>
-                            <md-tooltip>
-                                Number of columns
-                            </md-tooltip>
-                        </md-button>
-                        <md-menu-content width="4">
-                            <md-menu-item>
-                                <md-button data-ng-click="vm.toggleNumberOfColums(1)">
-                                    One column view
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button data-ng-click="vm.toggleNumberOfColums(2)">
-                                    Two columns view
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button data-ng-click="vm.toggleNumberOfColums(3)">
-                                    Three columns view
-                                </md-button>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
-                    <md-switch class="md-primary" md-no-ink aria-label="Show legend" ng-model="vm.showLegend" ng-change="vm.toggleLegend()">
-                        Show legend
-                    </md-switch>
-                    <md-switch class="md-primary" md-no-ink aria-label="Show tooltip" ng-model="vm.showTooltip" ng-change="vm.toggleTooltip()">
-                        Show tooltip
-                    </md-switch>
+                    <div layout="row" flex="40" layout-align="space-between center">
+                        <div ng-if="vm.graphType === 'graphs-live'" layout="row" layout-align="start center">
+                            <span>Time range</span>
+                            <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange">
+                                <md-option ng-repeat="zoomOption in vm.zoomOptions" ng-value="zoomOption" ng-selected="$index === vm.selectedZoomOptionIndex">
+                                    {{zoomOption.label}}
+                                </md-option>
+                            </md-select>
+                        </div>
+                        <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="vm.zoomLock" >
+                            Apply zoom to all graphs
+                        </md-switch>
+                        <md-button md-no-ink class="md-primary" data-ng-click="vm.resetZoom()">Reset zoom</md-button>
+                        <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
+                        <!--<div layout="row" layout-align="start center">-->
+                            <div>
+                                <md-input-container class="targetsio-header-text">
+                                    <label>Filter metrics</label>
+                                    <input ng-model="vm.metricFilter">
+                                </md-input-container>
+                            </div>
+                            <div>
+                                <md-icon  ng-if="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                                          data-ng-click="vm.clearMetricFilter()">
+                                </md-icon>
+                            </div>
+
+                        <!--</div>-->
+                    </div>
+
+                    <div layout="row" layout-align="end center" flex="30">
+                        <div  layout="row" layout-align="end center" >
+                            <button ng-if="vm.showViewUrl && vm.hasFlash()"
+                                    tooltip-size="medium" title="Copy graph URL"
+                                    tooltip-side="top" clip-copy="vm.viewShareUrl"
+                                    clip-click="vm.clipClicked()">Copy
+                            </button>
+                            <input flex ng-readonly="true" ng-model="vm.viewShareUrl" ng-if="vm.showViewUrl"
+                                   share-graph-url/>
+                            <label title="Share view URL" class="btn default"
+                                   ng-click="vm.setViewShareUrl('testrun')"><span
+                                    class="btn  glyphicon glyphicon-share"></span>
+                            </label>
+
+                        </div>
+                        <md-menu>
+                            <md-button aria-label="number of columns" class="md-icon-button"
+                                       ng-click="vm.openMenu($mdOpenMenu, $event)">
+                                <md-icon md-menu-origin class="md-primary" md-svg-src="images/assets/ic_view_week_black_24px.svg"></md-icon>
+                                <md-tooltip>
+                                    Number of columns
+                                </md-tooltip>
+                            </md-button>
+                            <md-menu-content width="4">
+                                <md-menu-item>
+                                    <md-button data-ng-click="vm.toggleNumberOfColums(1)">
+                                        One column view
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button data-ng-click="vm.toggleNumberOfColums(2)">
+                                        Two columns view
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button data-ng-click="vm.toggleNumberOfColums(3)">
+                                        Three columns view
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                        <md-switch class="md-primary" md-no-ink aria-label="Show legend" ng-model="vm.showLegend" ng-change="vm.toggleLegend()">
+                            Show legend
+                        </md-switch>
+                        <md-switch class="md-primary" md-no-ink aria-label="Show tooltip" ng-model="vm.showTooltip" ng-change="vm.toggleTooltip()">
+                            Show tooltip
+                        </md-switch>
+                    </div>
                 </div>
             </div>
         </div>
+        <div gatling-details data-ng-if="vm.gatlingDetails"></div>
+        <div>
+            <md-tabs md-selected="vm.selectedIndex" style="padding-bottom: 0px;">
+                <md-tab ng-repeat="tag in vm.tags" ng-click="switchTag(tag.route)">
+                    <span>{{tag.text}}</span>
+                </md-tab>
+            </md-tabs>
+        </div>
+        <div>
+            <graphs-content></graphs-content>
+        </div>
     </div>
-    <div gatling-details data-ng-if="vm.gatlingDetails"></div>
-    <md-tabs md-selected="vm.selectedIndex" style="padding-bottom: 0px;">
-        <md-tab ng-if="vm.graphType === 'testrun'" ng-repeat="tag in vm.tags" ui-sref="viewGraphs(tag.route)">
-            <span>{{tag.text}}</span>
-        </md-tab>
-        <md-tab ng-if="vm.graphType === 'graphs-live'" ng-repeat="tag in vm.tags" ui-sref="viewGraphs(tag.route)">
-            <span>{{tag.text}}</span>
-        </md-tab>
-    </md-tabs>
-    <graphs-content></graphs-content>
 </md-content>
