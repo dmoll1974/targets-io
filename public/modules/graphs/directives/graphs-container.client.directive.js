@@ -192,7 +192,7 @@ function GraphsContainerDirective () {
       //Utils.metricFilter = ($state.params.metricFilter) ? decodeURIComponent($state.params.metricFilter) : '';
 
       /* get value form statParams */
-      vm.value = $stateParams.tag;
+      //vm.value = $stateParams.tag;
 
       vm.productName = $stateParams.productName;
       vm.dashboardName = $stateParams.dashboardName;
@@ -200,7 +200,12 @@ function GraphsContainerDirective () {
       vm.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
 
 
-      Dashboards.get($stateParams.productName, $stateParams.dashboardName).then(function (dashboard) {
+      Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+
+
+
+        setTimeout(function(){
+
         vm.dashboard = Dashboards.selected;
         vm.metrics = addAccordionState(Dashboards.selected.metrics);
 
@@ -218,7 +223,8 @@ function GraphsContainerDirective () {
 
 
         /* set the tab index */
-        setTimeout(function(){
+
+
 
           /* Get tags used in metrics */
           vm.tags = Tags.setTags(vm.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);

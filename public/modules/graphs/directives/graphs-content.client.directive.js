@@ -5,11 +5,15 @@ angular.module('graphs').directive('graphsContent', GraphsContentDirective);
 function GraphsContentDirective () {
 
   var directive = {
+    scope: {
+      metrics: '=',
+      colarray: '=',
+      metricfilter: '='
+    },
     restrict: 'EA',
     templateUrl: 'modules/graphs/directives/graphs-content.client.view.html',
     controller: GraphsContentDirectiveController,
-    controllerAs: 'vm',
-    bindToController: true
+    controllerAs: 'vm'
   };
 
   return directive;
@@ -19,12 +23,9 @@ function GraphsContentDirective () {
 
     var vm = this;
 
-    activate();
-
     vm.productName = $stateParams.productName;
     vm.dashboardName = $stateParams.dashboardName;
-    //vm.graphType = Utils.graphType;
-
+    vm.value = $stateParams.tag;
 
     vm.setMetricShareUrl = setMetricShareUrl;
     vm.editMetric = editMetric;
@@ -33,23 +34,44 @@ function GraphsContentDirective () {
     vm.updateTags = updateTags;
     vm.tagRemoved = tagRemoved;
 
+    activate();
+
+
+
 
     /* Open accordion by default, except for the "All" tab */
-    $scope.$watch('value', function (newVal, oldVal) {
+    $scope.$watch('metrics', function (newVal, oldVal) {
 
       if(newVal !== oldVal) {
 
+        vm.filteredMetrics = $scope.metrics;
+        vm.columnsArray = $scope.colarray;
+
+        vm.metricFilter = $scope.metricfilter;
+
         Utils.metricFilter = '';
 
+        //}
+        if (newVal !== 'All' || vm.metricFilter !== '') {
+          _.each(vm.filteredMetrics, function (metric, i) {
+            vm.filteredMetrics[i].isOpen = true;
+          });
+        }
       }
-      if (newVal !== 'All' || vm.metricFilter !== '') {
-        _.each(vm.metrics, function (metric, i) {
-          vm.metrics[i].isOpen = true;
-        });
-      }
-
     });
 
+
+    //$scope.$watch('colarray', function (newVal, oldVal) {
+    //
+    //  if(newVal !== oldVal) {
+    //
+    //    vm.filteredMetrics = $scope.metrics;
+    //    vm.columnsArray = $scope.colarray;
+    //    vm.value = $scope.value;
+    //
+    //  }
+    //
+    //});
 
     function activate(){
 
