@@ -1,0 +1,119 @@
+<div data-ng-controller="DashboardsController">
+    <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
+    <div layout="column">
+
+        <div flex layout="row">
+            <div layout="row" flex="25">
+                <md-input-container style="margin: 0px;" flex>
+                    <label>Filter metrics</label>
+                    <input ng-model="vm.metricFilter">
+                </md-input-container>
+                <md-icon ng-if="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                         data-ng-click="vm.clearMetricFilter()"></md-icon>
+            </div>
+            <div flex="75" layout="row"  layout-align="end center">
+                <md-menu   >
+                    <md-button aria-label="Open edit menu" class="md-icon-button"
+                               ng-click="vm.openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin md-svg-src="images/assets/ic_input_black_24px.svg"></md-icon>
+                        <md-tooltip>
+                            Merge metrics from template
+                        </md-tooltip>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item ng-repeat="template in vm.templates">
+                            <md-button data-ng-click="mergeTemplate($index)">
+                                {{template.name}}: {{template.description}}
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+
+                <md-button ng-class="{'disabled': vm.metricSelected === false }" class="md-accent md-icon-button" ng-click="vm.metricSelected && vm.openDeleteSelectedMetricsModal('')" style="margin: 0px;" >
+                    <md-tooltip>
+                        Delete selected metrics
+                    </md-tooltip>
+                    <md-icon md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
+                </md-button>
+                <md-menu style="margin-right: 5px;">
+                    <div ng-class="{'disabled': vm.metricSelected === false }" aria-label="Copy to dashboard" class="md-icon-button"
+                         ng-click="vm.metricSelected && vm.openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin md-svg-src="images/assets/ic_content_copy_black_24px.svg"></md-icon>
+
+                        <md-tooltip>
+                            Copy selected metrics to dashboard
+                        </md-tooltip>
+                    </div>
+                    <md-menu-content width="4">
+                        <md-menu-item ng-repeat="dashboard in vm.dashboardsForProduct">
+                            <md-button data-ng-click="vm.copyMetricsToDashboard(dashboard)">
+                                {{dashboard.name}}
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th ng-click="vm.sortType = 'alias'; vm.sortReverse = !vm.sortReverse">
+                        Metric
+                        <span ng-show="vm.sortType == 'alias' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.sortType == 'alias' && vm.sortReverse" class="fa fa-caret-up"></span>
+                    </th>
+                    <th ng-click="vm.sortType = 'tags[0].text'; vm.sortReverse = !vm.sortReverse">
+                        Tags
+                        <span ng-show="vm.sortType == 'tags[0].text' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.sortType == 'tags[0].text' && vm.sortReverse" class="fa fa-caret-up"></span>
+                    </th>
+                    <th ng-click="vm.sortType = 'requirementValue'; vm.sortReverse = !vm.sortReverse">
+                        Requirement
+                        <span ng-show="vm.sortType == 'requirementValue' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.sortType == 'requirementValue' && vm.sortReverse" class="fa fa-caret-up"></span>
+                    </th>
+                    <th ng-click="vm.sortType = 'benchmarkValue'; vm.sortReverse = !vm.sortReverse">
+                        Allowed deviation
+                        <span ng-show="vm.sortType == 'benchmarkValue' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.sortType == 'benchmarkValue' && vm.sortReverse" class="fa fa-caret-up"></span>
+                    </th>
+                    <th ng-click="vm.sortType = 'includeInSummary'; vm.sortReverse = !vm.sortReverse">
+                        Testrun summary
+                        <span ng-show="vm.sortType == 'includeInSummary' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.sortType == 'includeInSummary' && vm.sortReverse" class="fa fa-caret-up"></span>
+                    </th>
+                    <th>
+                        <i class="glyphicon glyphicon-plus" data-ng-click="vm.addMetric()"></i></th>
+                    <td>
+                        <md-checkbox md-no-ink aria-label="select all metrics" ng-model="vm.allMetricsSelected" ng-change="vm.setAllMetricsSelected(allMetricsSelected)" style="margin: 0px;">
+                        </md-checkbox>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="metric in vm.filteredMetrics | orderBy:vm.sortType:vm.sortReverse" class="hover-row">
+                <td ng-click="vm.editMetric(metric._id)">
+                   {{metric.alias}}
+                </td>
+                <td ng-click="vm.editMetric(metric._id)">
+                    <span ng-repeat="tag in metric.tags track by $index">{{tag.text}}<span
+                            data-ng-show="!$last">, </span></span>
+                </td>
+                <td ng-click="vm.editMetric(metric._id)"><span>{{metric.requirementOperator}} {{metric.requirementValue}}</span></td>
+                <td ng-click="vm.editMetric(metric._id)"><span data-ng-if="metric.benchmarkOperator">{{metric.benchmarkOperator === '>'?'+':'-'}} {{metric.benchmarkValue}}</span>
+                </td>
+                <td>
+                    <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="metric.includeInSummary === true"></md-icon>
+                </td>
+                <td ng-click="vm.editMetric(metric._id)">
+                </td>
+                <td>
+                    <md-checkbox md-no-ink aria-label="select metric" ng-model="metric.selected"  ng-change="vm.setMetricsSelected(metric.selected)" style="margin: 0px;">
+                    </md-checkbox>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

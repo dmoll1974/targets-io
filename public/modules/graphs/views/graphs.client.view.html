@@ -1,11 +1,10 @@
 <md-content ng-controller="GraphsController" data-ng-init="init()">
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
-    <!--<div fix-to-top="fix-to-top" offsetTop="0" class="graphs-header">-->
     <div class="graphs-header">
         <div layout="column">
 
             <div layout="row"  flex>
-                <div flex="35" layout="row" layout-align="start center">
+                <div flex="30" layout="row" layout-align="start center">
                     <span>
                     <a data-ng-href="/#!/browse/{{testRun.productName}}/">{{testRun.productName}}</a>  /
                     <a data-ng-href="/#!/browse/{{testRun.productName}}/{{testRun.dashboardName}}/">{{testRun.dashboardName}}</a>
@@ -18,8 +17,6 @@
                         Apply zoom to all graphs
                     </md-switch>
                     <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
-                    <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
-                    <!--<div layout="row" layout-align="start center">-->
                         <div>
                             <md-input-container class="targetsio-header-text">
                                 <label>Filter metrics</label>
@@ -32,10 +29,23 @@
                             </md-icon>
                         </div>
 
-                    <!--</div>-->
                 </div>
 
-                <div layout="row" layout-align="end center" flex="25">
+                <div layout="row" layout-align="end center" flex="30">
+                    <div  layout="row" layout-align="end center" >
+                        <button ng-if="showViewUrl && hasFlash()"
+                                tooltip-size="medium" title="Copy graph URL"
+                                tooltip-side="top" clip-copy="viewShareUrl"
+                                clip-click="clipClicked()">Copy
+                        </button>
+                        <input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"
+                               share-graph-url/>
+                        <label title="Share view URL" class="btn default"
+                               ng-click="setViewShareUrl('testrun')"><span
+                                class="btn  glyphicon glyphicon-share"></span>
+                        </label>
+
+                    </div>
                     <md-menu>
                         <md-button aria-label="number of columns" class="md-icon-button"
                                    ng-click="openMenu($mdOpenMenu, $event)">
@@ -65,6 +75,9 @@
                     <md-switch class="md-primary" md-no-ink aria-label="Show legend" ng-model="showLegend" ng-change="toggleLegend()">
                         Show legend
                     </md-switch>
+                    <md-switch class="md-primary" md-no-ink aria-label="Show tooltip" ng-model="showTooltip" ng-change="toggleTooltip()">
+                        Show tooltip
+                    </md-switch>
                 </div>
             </div>
         </div>
@@ -73,41 +86,6 @@
                 <span>{{tag.text}}</span>
             </md-tab>
         </md-tabs>
-        <!--<div layout="row" flex >-->
-            <!--<div layout="row" flex="50" layout-align="start center"  >-->
-                <!--<div flex="90" layout-fill>-->
-                    <!--<md-input-container layout-fill style="padding-bottom: 5px;">-->
-                        <!--<label>Filter metrics</label>-->
-                        <!--<input ng-model="metricFilter">-->
-                    <!--</md-input-container>-->
-                <!--</div>-->
-                <!--<div flex="10">-->
-                    <!--<md-icon style="margin-bottom: 5px;" ng-if="metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"-->
-                             <!--data-ng-click="clearMetricFilter()">-->
-
-                    <!--</md-icon>-->
-                <!--</div>-->
-
-            <!--</div>-->
-
-
-            <!--<div flex="50" layout="row" layout-align="end center" >-->
-
-
-                <!--<button ng-if="showViewUrl && hasFlash()"-->
-                        <!--tooltip-size="medium" title="Copy graph URL"-->
-                        <!--tooltip-side="top" clip-copy="viewShareUrl"-->
-                        <!--clip-click="clipClicked()">Copy-->
-                <!--</button>-->
-                <!--<input flex ng-readonly="true" ng-model="viewShareUrl" ng-if="showViewUrl"-->
-                       <!--share-graph-url/>-->
-                <!--<label title="Share view URL" class="btn default"-->
-                       <!--ng-click="setViewShareUrl('testrun')"><span-->
-                        <!--class="btn  glyphicon glyphicon-share"></span>-->
-                <!--</label>-->
-
-            <!--</div>-->
-        <!--</div>-->
     </div>
     <div gatling-details data-ng-if="gatlingDetails"></div>
 
@@ -115,7 +93,7 @@
         <md-content layout="row">
             <md-content class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + columnsArray.length}}" layout="column" ng-repeat="column in columnsArray" flex="flex">
                 <accordion close-others="false">
-                    <md-content  data-ng-repeat="metric in metrics | tagsFilter:'tags':value | filter:metricFilter | slice:column.start:column.end" data-ng-controller="HighchartsController">
+                    <md-content  data-ng-repeat="metric in filteredMetrics | tagsFilter:'tags':value | slice:column.start:column.end" data-ng-controller="HighchartsController">
                         <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
                             <accordion-heading>
                                 <div>{{metric.alias}}</div>
@@ -130,9 +108,6 @@
                                         <label title="Share URL" class="btn default"
                                                ng-click="setMetricShareUrl(metric)"><span
                                                 class="btn btn-xs glyphicon glyphicon-share"></span></label>
-                                        <!--<label ng-if= "numberOfColumns > 1" title="Drilldown" class="btn default"-->
-                                               <!--ng-click="drilldownToMetric(metric)"><span-->
-                                                <!--class="btn btn-xs glyphicon glyphicon-zoom-in"></span></label>-->
                                     </div>
                                 </span>
                                 <span><input ng-readonly="true" ng-model="metricShareUrl" ng-if="showUrl" style="width:50%;"
@@ -158,14 +133,6 @@
                                            ng-click="drilldownToMetric(metric)"><span
                                             class="btn btn-sm glyphicon  glyphicon-resize-full"></span></label>
                                 </span>
-                                <!--<span>-->
-                                    <!--<label ng-if= "numberOfColumns > 1" title="Reset zoom" class="btn default pull-right"-->
-                                           <!--ng-click="drilldownToMetric(metric)"><span-->
-                                            <!--class="btn btn-sm glyphicon  glyphicon-refresh"></span></label>-->
-                                <!--</span>-->
-
-
-
                                 <dygraph metric="metric"></dygraph>
 
                             </div>

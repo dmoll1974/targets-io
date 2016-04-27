@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://localhost/targets-io-dev',
+	db: 'mongodb://localhost/targets-io',
 
 	graphiteHost: 'http://172.21.42.178',
 	memcachedHost: [ '172.21.42.178:11211'],

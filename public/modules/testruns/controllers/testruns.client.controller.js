@@ -13,7 +13,8 @@ angular.module('testruns').controller('TestrunsController', [
   '$interval',
   '$mdDialog',
   'Utils',
-  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window, $interval, $mdDialog, Utils) {
+  '$mdToast',
+  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window, $interval, $mdDialog, Utils, $mdToast) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -94,6 +95,32 @@ angular.module('testruns').controller('TestrunsController', [
       testRunPolling();
 
     }
+
+
+    /* Check if baseline test run exists */
+
+    Dashboards.get($scope.productName, $scope.dashboardName).success(function(dashboard){
+
+      if(dashboard.useInBenchmark) {
+
+        TestRuns.getTestRunById($scope.productName, $scope.dashboardName, dashboard.baseline).error(function(data, status, header, config) {
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top')
+              .hideDelay(30000)
+              .parent(angular.element('#fixedBaselineToast'))
+              .theme('error-toast');
+
+          $mdToast.show(toast.content('No fixed baseline set!')).then(function (response) {
+
+          });
+
+        });
+
+      }
+    });
 
     /* refresh test runs every 15 seconds */
 

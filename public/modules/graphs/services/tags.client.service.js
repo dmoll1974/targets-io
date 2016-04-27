@@ -39,6 +39,7 @@ angular.module('graphs').factory('Tags', [
                 metricFilter: null,
                 zoomFrom: null,
                 zoomUntil: null,
+                zoomRange: null,
                 selectedSeries: null
 
               }

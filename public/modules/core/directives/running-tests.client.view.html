@@ -26,18 +26,18 @@
             <td></td>
         </tr>
         <tbody>
-        <tr ng-repeat="runningTest in runningTests" class="hover-row pointer" ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})">
-            <td>
+        <tr ng-repeat="runningTest in runningTests" class="hover-row pointer" >
+            <td ui-sref="viewProduct({productName: runningTest.productName})" title="Open product">
                 {{runningTest.productName}}
             </td>
-            <td>
+            <td ui-sref="viewDashboard({productName: runningTest.productName, dashboardName: runningTest.dashboardName})" title="Open dashboard">
                 {{runningTest.dashboardName}}
             </td>
-            <td>
+            <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})" title="Open live graphs">
                 {{runningTest.testRunId}}
             </td>
 
-            <td>
+            <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})" title="Open live graphs">
                 {{runningTest.duration}} ago
             </td>
 

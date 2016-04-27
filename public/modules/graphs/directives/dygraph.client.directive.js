@@ -43,7 +43,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           scope.graph.ready(function() {
 
             /* if selected series is provided (via deeplink), show this series only */
-            if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === scope.metric.alias) {
+            if (Utils.selectedSeries && Utils.selectedSeries !== '' && Utils.metricFilter === scope.metric.alias) {
 
               /* show / hide selected series in legend */
 
@@ -193,6 +193,17 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       }
     });
 
+    /* watch showTooltip */
+    $scope.$watch(function (scope) {
+      return Utils.showTooltip;
+    }, function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        $scope.graph.updateOptions({legend: Utils.showTooltip ? 'follow' : 'never'});
+
+      }
+    });
+
     /* If zoom lock is checked, update all graphs when zoom is applied in one */
     $scope.$watch(function (scope) {
       return Utils.zoomFrom;
@@ -205,6 +216,17 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
       }
     });
+
+    /* stop data polling when accordion is closed */
+    $scope.$watch('metric.isOpen', function (newVal, oldVal) {
+      if (newVal !== oldVal && newVal === false)
+        Interval.clearIntervalForMetric($scope.metric._id);
+    });
+    /* stop data polling when element is destroyed by ng-if */
+    $scope.$on('$destroy', function () {
+      Interval.clearIntervalForMetric($scope.metric._id);
+    });
+
 
     setTimeout(function(){
 
@@ -239,7 +261,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
           $scope.zoomRange =  Utils.zoomRange;
             
-          var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange;
+          var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange.value;
           var until = Utils.zoomUntil ? Utils.zoomUntil : 'now';
 
           processGraph(from, until);
@@ -256,7 +278,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
             connectSeparatedPoints: true,
             labels: dygraphData.labels,
             axisLabelFontSize: 12,
-            legend: 'never',
+            legend: Utils.showTooltip ? 'follow' : 'never',
             includeZero: true,
             valueRange: $scope.yRange,
             highlightCircleSize: 0,
@@ -270,13 +292,28 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
             axes: {
               x: {
                 axisLabelFormatter: Dygraph.dateAxisLabelFormatter,
-                valueFormatter: Dygraph.dateString_
+                //valueFormatter: Dygraph.dateString_
+                valueFormatter: function(ms) {
+                  return formatDate(new Date(ms));
+                }
               }
             },
             underlayCallback: createUnderlayFormEvents,
             clickCallback: createEventFromClick,
             zoomCallback: zoomGraph
           };
+
+
+          function formatDate(d) {
+            var yyyy = d.getFullYear(),
+                mm = d.getMonth() + 1,
+                dd = d.getDate(),
+                hh = d.getHours(),
+                MM = d.getMinutes(),
+                ss = d.getSeconds();
+
+            return (dd < 10 ? '0' : '') + dd + '-' + (mm < 10 ? '0' : '') + mm +  '-' + yyyy + ' ' + (hh < 10 ? '0' : '') + hh +  ':' + (MM < 10 ? '0' : '') + MM +  ':' + (ss < 10 ? '0' : '') + ss  ;
+          }
 
           $scope.data = dygraphData.data;
           $scope.metric.legendData = dygraphData.legendData;
@@ -297,13 +334,13 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           $scope.showProgressBar = false;
 
           /* if selected series is provided, show this series only */
-          if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === $scope.metric.alias) {
+          if (Utils.selectedSeries && Utils.selectedSeries !== '' && Utils.metricFilter === $scope.metric.alias) {
 
             $scope.selectAll = false;
 
               _.each($scope.metric.legendData, function(legendItem, i){
 
-                if(legendItem.name === TestRuns.selectedSeries ) {
+                if(legendItem.name === Utils.selectedSeries ) {
 
                   $scope.metric.legendData[i].visible = true;
 
@@ -334,7 +371,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
             /* if zoomrange execeeds 3h, don't update graph due to bad performance*/
 
-            if(!($scope.zoomRange === '-10min' || $scope.zoomRange === '-30min' || $scope.zoomRange === '-1h' || $scope.zoomRange === '-3h' )){
+            if(!($scope.zoomRange.value === '-10min' || $scope.zoomRange.value === '-30min' || $scope.zoomRange.value === '-1h' || $scope.zoomRange.value === '-3h' )){
               Interval.clearAll();
             }
 

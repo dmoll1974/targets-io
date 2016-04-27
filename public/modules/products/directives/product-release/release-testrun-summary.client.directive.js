@@ -13,7 +13,7 @@ function ReleaseTestRunSummaryDirective () {
     },
 
     restrict: 'EA',
-    templateUrl: 'modules/products/directives/release-testrun-summary.client.view.html',
+    templateUrl: 'modules/products/directives/product-release/release-testrun-summary.client.view.html',
     controller: ReleaseTestRunSummaryDirectiveController
   };
 
@@ -161,7 +161,7 @@ function ReleaseTestRunSummaryDirective () {
 
             dashboardMetric.meetsRequirement = testRunMetric.meetsRequirement;
 
-            var requirementText =  dashboardMetric.requirementOperator == "<" ? dashboardMetric.alias + ' should be lower then ' + dashboardMetric.requirementValue : dashboardMetric.alias + ' should be higher then ' + dashboardMetric.requirementValue;
+            var requirementText =  dashboardMetric.requirementOperator == "<" ? dashboardMetric.alias + ' should be lower than ' + dashboardMetric.requirementValue : dashboardMetric.alias + ' should be higher than ' + dashboardMetric.requirementValue;
 
             var tag = dashboardMetric.tags.length > 0 ? dashboardMetric.tags[0].text : 'All';
 

@@ -3,17 +3,65 @@
 angular.module('metrics').factory('Metrics', [
   '$http', 'Utils',
   function ($http, Utils) {
+
     var Metrics = {
-      //            items : [],
       'get': getFn,
       update: update,
       delete: deleteFn,
       create: create,
       selected: {},
       clone: {},
-      removeTag: removeTag
+      removeTag: removeTag,
+      metricFilter: '',
+      /* values for form drop downs*/
+      metricTypes: [
+        'Average',
+        'Maximum',
+        'Minimum',
+        'Last',
+        'Gradient'
+      ],
+      metricUnits: [
+        'None',
+        'Count',
+        'Errors',
+        'Mb',
+        'Milliseconds',
+        'Percentage',
+        'Responses',
+        'Bytes/second',
+        'CPUsec',
+        'Users',
+        'Custom'
+      ],
+      operatorOptions: [
+        {
+          alias: 'lower than',
+          value: '<'
+        },
+        {
+          alias: 'higher than',
+          value: '>'
+        }
+      ],
+      deviationOptions: [
+        {
+          alias: 'negative deviation',
+          value: '<'
+        },
+        {
+          alias: 'positive deviation',
+          value: '>'
+        },
+        {
+          alias: '',
+          value: ''
+        }
+      ]
     };
+
     return Metrics;
+
     function getFn(metricId) {
       return $http.get('/metrics/' + metricId);
     }

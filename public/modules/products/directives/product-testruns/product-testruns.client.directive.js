@@ -6,7 +6,7 @@ function ProductTestRunsDirective () {
 
   var directive = {
     restrict: 'EA',
-    templateUrl: 'modules/products/directives/product-testruns.client.view.html',
+    templateUrl: 'modules/products/directives/product-testruns/product-testruns.client.view.html',
     controller: ProductTestRunsDirectiveController
   };
 

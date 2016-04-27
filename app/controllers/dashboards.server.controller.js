@@ -86,6 +86,18 @@ exports.delete = function (req, res) {
 /**
  * List of Dashboards
  */
+
+exports.getDashboardsForProduct = function(req, res) {
+
+  Dashboard.find({productId: req.product._id}).sort().exec(function(err, dashboards) {
+
+    res.jsonp(dashboards);
+
+  });
+
+}
+
+
 exports.list = function (req, res) {
   Dashboard.find().sort('-created').populate('metrics').exec(function (err, dashboards) {
     if (err) {

@@ -44,7 +44,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           scope.graph.ready(function() {
 
             /* if selected series is provided (via deeplink), show this series only */
-            if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === scope.metric.alias) {
+            if (Utils.selectedSeries && Utils.selectedSeries !== '' /*&& Utils.metricFilter === scope.metric.alias*/) {
 
               /* show / hide selected series in legend */
 
@@ -257,6 +257,10 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       $scope.metric.dygraphData = dygraphData;
       $scope.metric.data = dygraphData.data;
       $scope.metric.legendData = dygraphData.legendData;
+
+
+
+
       $scope.yRange = ($scope.zoomedYRange) ? $scope.zoomedYRange : [0, dygraphData.maxValue];
 
       /* synchronyze anotations with datapoints */
@@ -272,6 +276,28 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
       $scope.loading = false;
       $scope.showProgressBar = false;
+
+      /* if selected series is provided, show this series only */
+      if (Utils.selectedSeries && Utils.selectedSeries !== '' ) {
+
+        $scope.selectAll = false;
+
+        _.each($scope.metric.legendData, function(legendItem, i){
+
+          if(legendItem.name === Utils.selectedSeries ) {
+
+            $scope.metric.legendData[i].visible = true;
+
+          }else{
+
+            $scope.metric.legendData[i].visible = false;
+
+          }
+
+        })
+
+
+      }
 
     }
 
@@ -296,7 +322,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
             $scope.zoomRange = Utils.zoomRange;
 
-            var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange;
+            var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange.value;
             var until = Utils.zoomUntil ? Utils.zoomUntil : 'now';
 
             processGraph(from, until);

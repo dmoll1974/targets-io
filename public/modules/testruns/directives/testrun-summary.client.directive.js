@@ -20,8 +20,15 @@ function TestRunSummaryDirective () {
 
     $scope.testRunSummary = {};
     $scope.testRunSummary.requirements = [];
-    $scope.editMode = false;
+    /* if coming from edit metric screen, set edit mode and updated to true */
+    $scope.editMode = $rootScope.previousState.includes('editMetric')? true : false;
+    $scope.updated = $rootScope.previousState.includes('editMetric')? true : false;
     $scope.hideGraphs = false;
+
+    $scope.markAsUpdated = function(){
+
+      $scope.updated = true;
+    }
 
     TestRunSummary.getTestRunSummary($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRunSummary) {
 
@@ -126,7 +133,7 @@ function TestRunSummaryDirective () {
 
             dashboardMetric.meetsRequirement = testRunMetric.meetsRequirement;
 
-            var requirementText =  dashboardMetric.requirementOperator == "<" ? dashboardMetric.alias + ' should be lower then ' + dashboardMetric.requirementValue : dashboardMetric.alias + ' should be higher then ' + dashboardMetric.requirementValue;
+            var requirementText =  dashboardMetric.requirementOperator == "<" ? dashboardMetric.alias + ' should be lower than ' + dashboardMetric.requirementValue : dashboardMetric.alias + ' should be higher than ' + dashboardMetric.requirementValue;
 
             var tag = dashboardMetric.tags.length > 0 ? dashboardMetric.tags[0].text : 'All';
 
@@ -234,11 +241,15 @@ function TestRunSummaryDirective () {
     }
 
 
-    $scope.submitTestRunSummary = function(){
+    $scope.submitTestRunSummary = function() {
 
-      if($scope.editMode === false) {
+      submitTestRunSummary();
+    }
 
-        /* set summaryIndeces in current order of the scope */
+
+    function submitTestRunSummary(){
+
+    /* set summaryIndeces in current order of the scope */
 
 
         _.each($scope.testRunSummary.metrics, function(metric, i){
@@ -255,6 +266,7 @@ function TestRunSummaryDirective () {
 
 
             $scope.summarySaved = true;
+            $scope.updated  = false;
 
             var toast = $mdToast.simple()
                 .action('OK')
@@ -277,7 +289,8 @@ function TestRunSummaryDirective () {
 
 
             $scope.summarySaved = true;
-            $scope.editMode = false;
+            $scope.updated  = false;
+
 
             var toast = $mdToast.simple()
                 .action('OK')
@@ -293,74 +306,31 @@ function TestRunSummaryDirective () {
           })
 
         }
-      }
-
 
     }
 
-    //$scope.saveTestRunSummary = function(){
-    //
-    //  /* set summaryIndeces in current order of the scope */
-    //
-    //
-    //  _.each($scope.testRunSummary.metrics, function(metric, i){
-    //
-    //    metric.summaryIndex = i;
-    //
-    //  })
-    //
-    //
-    //
-    //
-    //  TestRunSummary.addTestRunSummary($scope.testRunSummary).success(function(savedTestRunSummary){
-    //
-    //
-    //      $scope.summarySaved = true;
-    //
-    //      var toast = $mdToast.simple()
-    //          .action('OK')
-    //          .highlightAction(true)
-    //          .position('top center')
-    //          .parent(angular.element('#summary-buttons'))
-    //          .hideDelay(6000);
-    //
-    //      $mdToast.show(toast.content('Test run summary saved')).then(function(response) {
-    //
-    //      });
-    //
-    //  })
-    //}
-    //
-    //$scope.updateTestRunSummary = function(){
-    //
-    //  /* set summaryIndeces in current order of the scope */
-    //
-    //
-    //  _.each($scope.testRunSummary.metrics, function(metric, i){
-    //
-    //    metric.summaryIndex = i;
-    //
-    //  })
-    //
-    //  TestRunSummary.updateTestRunSummary($scope.testRunSummary).success(function(updatedTestRunSummary){
-    //
-    //
-    //      $scope.summarySaved = true;
-    //      $scope.editMode = false;
-    //
-    //      var toast = $mdToast.simple()
-    //          .action('OK')
-    //          .highlightAction(true)
-    //          .position('top center')
-    //          .parent(angular.element('#summary-buttons'))
-    //          .hideDelay(6000);
-    //
-    //      $mdToast.show(toast.content('Test run summary updated')).then(function(response) {
-    //
-    //      });
-    //
-    //  })
-    //};
+
+    $scope.$on('$destroy', function () {
+      /* if updates have been made and not saved, prompt the user */
+      if($scope.updated === true && !$rootScope.currentState.includes('editMetric') && !$rootScope.currentState.includes('testRunSummary')){
+
+        ConfirmModal.itemType = 'Save changes to test run summary ';
+        ConfirmModal.selectedItemDescription =  $scope.testRunSummary.testRunId;
+        var modalInstance = $modal.open({
+          templateUrl: 'ConfirmDelete.html',
+          controller: 'ModalInstanceController',
+          size: ''  //,
+        });
+        modalInstance.result.then(function () {
+          submitTestRunSummary()
+        }, function () {
+
+          /* return to previous state*/
+          $state.go($rootScope.previousState, $rootScope.previousStateParams);
+
+        });
+      }
+    });
 
 
     $scope.openDeleteModal = function (size, testRunSummary) {

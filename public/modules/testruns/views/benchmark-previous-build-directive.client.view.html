@@ -40,8 +40,7 @@
             {{target.benchmarkValue}}
         </td>
         <td data-title="'Result'" header-class="text-left">
-            <span title="Go to graph" class="pointer"
-                  ui-sref="viewGraphs({productName: target.productName, dashboardName:target.dashboardName, testRunId: target.testRunId, tag: target.tag, metricFilter: target.metric, selectedSeries: target.target})"
+            <span title="View graphs" class="pointer" ui-sref="visualBenchmark({productName: target.productName, dashboardName:target.dashboardName, baselineTestRunId: testRun.previousBuild, benchmarkTestRunId: testRun.testRunId, selectedSeries: target.target, metricId: target.metricId, benchmarkType: 'previousBuild' })"
                   ng-class="target.benchmarkResultPreviousOK ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
             <span title="Configure metric"
                   ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})"

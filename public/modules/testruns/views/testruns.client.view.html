@@ -3,15 +3,25 @@
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div layout="column">
 
-        <div layout="row">
-            <div flex="90"></div>
-            <div flex="10">
-                <md-button ng-if="testRunSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >Delete selected</md-button>
+        <div layout="row" id="fixedBaselineToast" >
+            <div flex="95">
+                <md-checkbox style="margin-bottom: 0px;" ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
+                    Show completed test runs only
+                </md-checkbox>
+            </div>
+
+            <div flex="5">
+                <md-button style="margin-left: 10px;" ng-class="{'disabled': testRunSelected === false }" class="md-accent md-icon-button" ng-click="testRunSelected && openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >
+                    <md-tooltip>
+                        Delete selected test runs
+                    </md-tooltip>
+                    <md-icon md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
+                </md-button>
+                <!--<md-button md-no-ink class="md-accent" ng-click="openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >Delete selected</md-button>-->
             </div>
         </div>
-        <md-checkbox ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
-            Show completed test runs only
-        </md-checkbox>
+
+
         <table class="table">
             <thead>
             <tr>
@@ -34,7 +44,7 @@
             </thead>
             <tbody>
 
-            <tr dir-paginate="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } | itemsPerPage: showNumberOfTestRuns" total-items="totalNumberOftestRuns"
+            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } " total-items="totalNumberOftestRuns"
                 ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index < numberOfRunningTests)}" >
                     <td>
                         <div id="testRunInfo"  layout="row">
