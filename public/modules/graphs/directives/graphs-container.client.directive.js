@@ -32,6 +32,7 @@ function GraphsContainerDirective () {
       {value: '-3d', label: 'Last 3 days'}
     ];
 
+    vm.value = $stateParams.tag;
     vm.numberOfColumns = Utils.numberOfColumns;
     vm.flex = 100 / vm.numberOfColumns;
     vm.showLegend = Utils.showLegend;
@@ -39,7 +40,7 @@ function GraphsContainerDirective () {
     vm.zoomLock = Utils.zoomLock;
     vm.metricFilter = Utils.metricFilter;
     vm.showViewUrl = false;
-    vm.graphType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
+    vm.graphsType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
 
 
     vm.toggleLegend = toggleLegend;
@@ -47,11 +48,12 @@ function GraphsContainerDirective () {
     vm.toggleNumberOfColums = toggleNumberOfColums;
     vm.isActive = isActive;
     vm.resetZoom = resetZoom;
-    vm.clearMetricFilter = clearMetricFilter;
     vm.clipClicked = clipClicked;
     vm.drilldownToMetric = drilldownToMetric;
     vm.setViewShareUrl = setViewShareUrl;
     vm.switchTag = switchTag;
+    vm.setMetricFilter = setMetricFilter;
+    vm.clearMetricFilter = clearMetricFilter;
 
 
     activate();
@@ -92,44 +94,18 @@ function GraphsContainerDirective () {
     //});
 
     /* watch metricFilter */
-    $scope.$watch('vm.metricFilter', function (newVal, oldVal) {
-      if (newVal &&   newVal !== oldVal && (newVal.length > 2 || newVal.length === 0 )) {
-
-        vm.columnsArray =[];
-        vm.filteredMetrics = filteredMetrics(vm.metrics);
-
-
-        var itemsPerColumn = Math.ceil( vm.filteredMetrics.length / vm.numberOfColumns);
-
-        //Populates the column array
-        for (var i=0; i< vm.filteredMetrics.length; i += itemsPerColumn) {
-          var col = { start: i, end: Math.min(i + itemsPerColumn,  vm.filteredMetrics.length) };
-          vm.columnsArray.push(col);
-        }
-
-        /* open or close accordions */
-        if (vm.value !== 'All' || vm.metricFilter !== '') {
-          _.each(vm.metrics, function (metric, i) {
-            vm.metrics[i].isOpen = true;
-          });
-        }else{
-          _.each(vm.metrics, function (metric, i) {
-            vm.metrics[i].isOpen = false;
-          });
-        }
-      }
-    });
+    //$scope.$watch('vm.metricFilter', function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //
+    //    $timeout(function(){
+    //      vm.metrics = filterOnTag(Dashboards.selected.metrics);
+    //      vm.filteredMetrics  = filterOnMetricFilter(vm.metrics);
+    //      populateColumns();
+    //    });
+    //  }
+    //});
 
 
-    /* watch metricFilter*/
-    $scope.$watch(function (scope) {
-      return Utils.metricFilter;
-    }, function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-
-        vm.metricFilter =  Utils.metricFilter;
-      }
-    });
 
     /* watch zoomRange */
     $scope.$watch('zoomRange', function (newVal, oldVal) {
@@ -200,39 +176,27 @@ function GraphsContainerDirective () {
       vm.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
 
 
+
       Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
 
 
-
-        setTimeout(function(){
-
-        vm.dashboard = Dashboards.selected;
-        vm.metrics = addAccordionState(Dashboards.selected.metrics);
-
-        vm.columnsArray =[];
-        vm.filteredMetrics  = filteredMetrics(vm.metrics);
-
-        var itemsPerColumn = Math.ceil( vm.filteredMetrics.length / vm.numberOfColumns);
-
-        //Populates the column array
-        for (var i=0; i< vm.filteredMetrics.length; i += itemsPerColumn) {
-          var col = { start: i, end: Math.min(i + itemsPerColumn,  vm.filteredMetrics.length) };
-          vm.columnsArray.push(col);
-        }
-
-
-
-        /* set the tab index */
-
-
+          vm.dashboard = Dashboards.selected;
 
           /* Get tags used in metrics */
-          vm.tags = Tags.setTags(vm.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+          vm.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+
           /* if reloading a non-existing tag is in $statParams */
           vm.value = checkIfTagExists($stateParams.tag) ? $stateParams.tag : 'All';
-          vm.selectedIndex = Tags.getTagIndex(vm.value, vm.tags);
 
-        });
+          vm.metrics = filterOnTag(Dashboards.selected.metrics);
+
+          vm.filteredMetrics  = vm.metricFilter !=='' ? filterOnMetricFilter(vm.metrics) : vm.metrics;
+
+          populateColumns();
+
+
+        vm.selectedIndex = Tags.getTagIndex(vm.value, vm.tags);
+
 
         if ($stateParams.testRunId) {
           TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
@@ -244,6 +208,21 @@ function GraphsContainerDirective () {
 
     }
 
+    function populateColumns(){
+
+
+        vm.columnsArray = [];
+
+        var itemsPerColumn = Math.ceil(vm.filteredMetrics.length / vm.numberOfColumns);
+
+        //Populates the column array
+        for (var i = 0; i < vm.filteredMetrics.length; i += itemsPerColumn) {
+          var col = {start: i, end: Math.min(i + itemsPerColumn, vm.filteredMetrics.length)};
+          vm.columnsArray.push(col);
+        }
+
+
+    }
 
     /* Set active tab */
     function isActive(tag) {
@@ -305,40 +284,69 @@ function GraphsContainerDirective () {
       }
     }
 
-    function filteredMetrics(metrics){
+    function filterOnMetricFilter(metrics){
 
-      var filteredMetrics = [];
-      var metricFilterRegExp = new RegExp(vm.metricFilter, 'i');
+      if (vm.metricFilter === ''){
 
-      _.each(metrics, function(metric) {
+        return metrics;
 
-        if (metricFilterRegExp.test(metric.alias) || vm.metricFilter === '') {
-          _.each(metric.tags, function (tag) {
+      }else {
+        var filteredMetrics = [];
+        var metricFilterRegExp = new RegExp(vm.metricFilter, 'i');
 
-            if (tag.text === vm.value) filteredMetrics.push(metric);
 
-          });
-        }
-        /* if 'ALL' tab is selected show all metrics, except when metricFilter is applied */
+        _.each(metrics, function (metric) {
 
-        if (vm.value === 'All') {
+          /* see if alias matches metricFilter */
+          if (metricFilterRegExp.test(metric.alias)) {
 
-          if (vm.metricFilter !== '') {
-
-            if (metricFilterRegExp.test(metric.alias)) {
-              filteredMetrics.push(metric)
-            }
+            metric.isOpen = true;
+            filteredMetrics.push(metric);
 
           } else {
+            /* if not, check if tags match*/
+            for (var i = 0; i < metric.tags.length; i++) {
 
-            filteredMetrics.push(metric)
+              if (metricFilterRegExp.test(metric.tags[i].text)) {
+                metric.isOpen = true;
+                filteredMetrics.push(metric);
+                break;
+              }
+
+            }
           }
-        }
 
-      });
+        });
 
-      return filteredMetrics;
+        return filteredMetrics;
+      }
     }
+
+    function setMetricFilter(){
+
+
+      vm.metricFilter = vm.metricFilterInput;
+      vm.metrics = filterOnTag(Dashboards.selected.metrics);
+      vm.filteredMetrics = [];
+
+      vm.filteredMetrics = filterOnMetricFilter(vm.metrics);
+      populateColumns();
+
+
+
+
+    }
+
+    function clearMetricFilter (){
+
+      vm.filteredMetrics = [];
+      vm.metricFilter = '';
+      vm.metricFilterInput = '';
+      vm.metrics = filterOnTag(Dashboards.selected.metrics);
+      vm.filteredMetrics  = filterOnMetricFilter(vm.metrics);
+      populateColumns();
+
+    };
 
     function checkIfTagExists(tag) {
       var exists = false;
@@ -350,11 +358,39 @@ function GraphsContainerDirective () {
       });
       return exists;
     }
-    function addAccordionState(metrics) {
-      _.each(metrics, function (metric) {
-        metric.isOpen = false;
+
+    function filterOnTag(metrics) {
+
+      var filteredMetrics = [];
+
+
+      _.each(metrics, function(metric) {
+
+        /* if tab is 'All', don't filter, but don't show the graphs */
+
+        if(vm.value === 'All'){
+
+          metric.isOpen = false;
+          filteredMetrics.push(metric)
+
+        }else{
+
+          _.each(metric.tags, function (tag) {
+
+            if (tag.text === vm.value) {
+
+                metric.isOpen = true;
+                filteredMetrics.push(metric);
+
+            }
+
+          });
+        }
+
+
       });
-      return metrics;
+
+      return filteredMetrics;
     }
 
     function resetZoom() {
@@ -364,11 +400,6 @@ function GraphsContainerDirective () {
       //$state.go($state.current, {}, { reload: true });
     };
 
-    function clearMetricFilter (){
-
-      vm.metricFilter = '';
-
-    };
 
     
     /* generate deeplink to share view */
@@ -453,27 +484,22 @@ function GraphsContainerDirective () {
       activate();
     }
 
-    function switchTag(tag) {
+    function switchTag(route) {
 
-      switch(vm.graphType){
+      Utils.metricFilter = '';
+
+      switch(vm.graphsType){
 
         case 'testrun':
 
-          $state.go('viewGraphs', {
-            'productName': vm.productName,
-            'dashboardName': vm.dashboardName,
-            'testRunId': vm.testRun.testRunId,
-            'tag': tag
-          });
+          //route.testRunId = vm.testRun.testRunId;
+
+          $state.go('viewGraphs', route);
           break;
 
         case 'graphs-live':
 
-          $state.go('viewLiveGraphs', {
-            'productName': vm.productName,
-            'dashboardName': vm.dashboardName,
-            'tag': tag
-          });
+          $state.go('viewLiveGraphs', route);
 
 
       }

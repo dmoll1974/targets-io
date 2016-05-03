@@ -5,19 +5,19 @@
             <!--<div layout="column">-->
                 <div layout="row"  flex>
                     <div flex="30" layout="row" layout-align="start center">
-                        <span ng-if="vm.graphType === 'testrun'">
+                        <span ng-if="vm.graphsType === 'testrun'">
                             <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /
                             <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>
                               /  {{vm.testRun.testRunId}}
                         </span>
-                        <span ng-if="vm.graphType === 'graphs-live'">
+                        <span ng-if="vm.graphsType === 'graphs-live'">
                             <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
                             <a data-ng-href="/#!/browse/{{vm.productName}}/{{vm.dashboardName}}/">{{vm.dashboardName}}</a>
                         </span>
 
                     </div>
                     <div layout="row" flex="40" layout-align="space-between center">
-                        <div ng-if="vm.graphType === 'graphs-live'" layout="row" layout-align="start center">
+                        <div ng-if="vm.graphsType === 'graphs-live'" layout="row" layout-align="start center">
                             <span>Time range</span>
                             <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange">
                                 <md-option ng-repeat="zoomOption in vm.zoomOptions" ng-value="zoomOption" ng-selected="$index === vm.selectedZoomOptionIndex">
@@ -32,14 +32,19 @@
                         <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
                         <!--<div layout="row" layout-align="start center">-->
                             <div>
-                                <md-input-container class="targetsio-header-text">
+                                <md-input-container class="targetsio-header-text" ng-keypress="$event.which === 13 && vm.setMetricFilter()">
                                     <label>Filter metrics</label>
-                                    <input ng-model="vm.metricFilter">
+                                    <input ng-model="vm.metricFilterInput">
                                 </md-input-container>
                             </div>
                             <div>
-                                <md-icon  ng-if="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                                <md-icon ng-if="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
                                           data-ng-click="vm.clearMetricFilter()">
+                                </md-icon>
+                            </div>
+                            <div>
+                                <md-icon  ng-if="!vm.metricFilter && vm.metricFilterInput !==''" md-svg-src="images/assets/ic_check_black_36px.svg"
+                                          data-ng-click="vm.setMetricFilter()">
                                 </md-icon>
                             </div>
 
@@ -61,7 +66,7 @@
                             </label>
 
                         </div>
-                        <md-menu>
+                        <md-menu >
                             <md-button aria-label="number of columns" class="md-icon-button"
                                        ng-click="vm.openMenu($mdOpenMenu, $event)">
                                 <md-icon md-menu-origin class="md-primary" md-svg-src="images/assets/ic_view_week_black_24px.svg"></md-icon>
@@ -100,13 +105,19 @@
         <div gatling-details data-ng-if="vm.gatlingDetails"></div>
         <div>
             <md-tabs md-selected="vm.selectedIndex" style="padding-bottom: 0px;">
-                <md-tab ng-repeat="tag in vm.tags" ng-click="switchTag(tag.route)">
+                <md-tab ng-repeat="tag in vm.tags" ng-click="vm.switchTag(tag.route)">
                     <span>{{tag.text}}</span>
                 </md-tab>
             </md-tabs>
         </div>
-        <div>
-            <graphs-content metrics="vm.filteredMetrics" colarray="vm.columnsArray" metricfilter="vm.metricFilter"></graphs-content>
+        <div layout="row"  data-ng-hide="vm.gatlingDetails">
+            <div class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column" ng-repeat="column in vm.columnsArray" flex="vm.flex">
+                <accordion close-others="false">
+                    <div  focus-if data-ng-repeat="metric in vm.filteredMetrics | slice:column.start:column.end" >
+                        <graphs-content ng-if="metric !== null" metric="metric"></graphs-content>
+                    </div>
+                </accordion>
+            </div>
         </div>
     </div>
 </md-content>

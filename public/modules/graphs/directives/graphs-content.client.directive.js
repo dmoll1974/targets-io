@@ -6,9 +6,7 @@ function GraphsContentDirective () {
 
   var directive = {
     scope: {
-      metrics: '=',
-      colarray: '=',
-      metricfilter: '='
+      metric: '='
     },
     restrict: 'EA',
     templateUrl: 'modules/graphs/directives/graphs-content.client.view.html',
@@ -26,6 +24,11 @@ function GraphsContentDirective () {
     vm.productName = $stateParams.productName;
     vm.dashboardName = $stateParams.dashboardName;
     vm.value = $stateParams.tag;
+    vm.filteredMetrics = $scope.metrics;
+    vm.numberOfColumns = $scope.numberofcolumns;
+    vm.graphsType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
+
+
 
     vm.setMetricShareUrl = setMetricShareUrl;
     vm.editMetric = editMetric;
@@ -40,38 +43,28 @@ function GraphsContentDirective () {
 
 
     /* Open accordion by default, except for the "All" tab */
-    $scope.$watch('metrics', function (newVal, oldVal) {
-
-      if(newVal !== oldVal) {
-
-        vm.filteredMetrics = $scope.metrics;
-        vm.columnsArray = $scope.colarray;
-
-        vm.metricFilter = $scope.metricfilter;
-
-        Utils.metricFilter = '';
-
-        //}
-        if (newVal !== 'All' || vm.metricFilter !== '') {
-          _.each(vm.filteredMetrics, function (metric, i) {
-            vm.filteredMetrics[i].isOpen = true;
-          });
-        }
-      }
-    });
-
-
-    //$scope.$watch('colarray', function (newVal, oldVal) {
+    //$scope.$watch('metrics', function (newVal, oldVal) {
     //
     //  if(newVal !== oldVal) {
     //
     //    vm.filteredMetrics = $scope.metrics;
-    //    vm.columnsArray = $scope.colarray;
-    //    vm.value = $scope.value;
+    //    vm.columnsArray =[];
     //
+    //    var itemsPerColumn = Math.ceil( vm.filteredMetrics.length / vm.numberOfColumns);
+    //
+    //    //Populates the column array
+    //    for (var i=0; i< vm.filteredMetrics.length; i += itemsPerColumn) {
+    //      var col = { start: i, end: Math.min(i + itemsPerColumn,  vm.filteredMetrics.length) };
+    //      vm.columnsArray.push(col);
+    //    }
     //  }
-    //
     //});
+
+
+
+
+
+
 
     function activate(){
 
@@ -81,9 +74,11 @@ function GraphsContentDirective () {
     /* generate deeplink to share metric graph */
     function setMetricShareUrl(metric) {
 
-      switch(graphsType){
+      switch(vm.graphsType){
 
         case 'graphs-live':
+
+          vm.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?zoomRange=' + Utils.zoomRange.value;
 
           if (Utils.zoomFrom) {
             $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
@@ -101,7 +96,6 @@ function GraphsContentDirective () {
 
           vm.metricShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag +  '/?';
 
-          vm.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?zoomRange=' + Utils.zoomRange.value;
 
           if (Utils.zoomFrom) {
             vm.metricShareUrl = vm.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
