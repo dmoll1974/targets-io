@@ -23,9 +23,9 @@ function GraphsContentDirective () {
 
     vm.productName = $stateParams.productName;
     vm.dashboardName = $stateParams.dashboardName;
-    vm.value = $stateParams.tag;
-    vm.filteredMetrics = $scope.metrics;
-    vm.numberOfColumns = $scope.numberofcolumns;
+    //vm.value = $stateParams.tag;
+    //vm.filteredMetrics = $scope.metrics;
+    //vm.numberOfColumns = $scope.numberofcolumns;
     vm.graphsType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
 
 
@@ -81,14 +81,14 @@ function GraphsContentDirective () {
           vm.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?zoomRange=' + Utils.zoomRange.value;
 
           if (Utils.zoomFrom) {
-            $scope.metricShareUrl = $scope.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
+            vm.metricShareUrl = vm.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
           }
 
           /* zoom range */
           if (Utils.zoomRange) {
             vm.viewShareUrl = vm.viewShareUrl + '&zoomRange=' + Utils.zoomRange;
           }
-          $scope.metricShareUrl = $scope.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
+          vm.metricShareUrl = vm.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
 
           break;
 

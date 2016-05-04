@@ -32,7 +32,60 @@ function GraphsContainerDirective () {
       {value: '-3d', label: 'Last 3 days'}
     ];
 
-    vm.value = $stateParams.tag;
+    /* Get deeplink params from query string */
+
+    /* If graph has been zoomed */
+    if ($state.params.zoomFrom)
+      Utils.zoomFrom = $state.params.zoomFrom;
+
+    if ($state.params.zoomUntil)
+      Utils.zoomUntil = $state.params.zoomUntil;
+
+    /* get zoomRange for live graphs*/
+    if ($state.params.zoomRange){
+      vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf($state.params.zoomRange);
+      vm.zoomRange = vm.zoomOptions[vm.selectedZoomOptionIndex];
+    }else{
+      vm.zoomRange = Utils.zoomRange;
+      /* set md-select selected item */
+      vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(vm.zoomRange.value);
+    }
+
+    /* get metricFilter */
+    if ($state.params.metricFilter) {
+      vm.metricFilter = $state.params.metricFilter;
+      vm.metricFilterInput = $state.params.metricFilter;
+      Utils.metricFilter = $state.params.metricFilter;
+    }else{
+      vm.metricFilter = Utils.metricFilter;
+    }
+
+    /* get selectedSeries */
+    if ($state.params.selectedSeries) {
+      vm.selectedSeries = $state.params.selectedSeries;
+      Utils.selectedSeries = $state.params.selectedSeries;
+    }else{
+      vm.selectedSeries = Utils.selectedSeries;
+    }
+
+    /* Get selected series params from query string */
+
+    //Utils.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
+
+    /* Get metricFilter params from query string */
+
+    //Utils.metricFilter = ($state.params.metricFilter) ? decodeURIComponent($state.params.metricFilter) : '';
+
+    /* get value form statParams */
+    //vm.value = $stateParams.tag;
+
+    vm.productName = $stateParams.productName;
+    vm.dashboardName = $stateParams.dashboardName;
+
+    vm.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
+
+
+    //vm.value = $stateParams.tag;
     vm.numberOfColumns = Utils.numberOfColumns;
     vm.flex = 100 / vm.numberOfColumns;
     vm.showLegend = Utils.showLegend;
@@ -108,14 +161,14 @@ function GraphsContainerDirective () {
 
 
     /* watch zoomRange */
-    $scope.$watch('zoomRange', function (newVal, oldVal) {
+    $scope.$watch('vm.zoomRange', function (newVal, oldVal) {
       //if (newVal !== oldVal) {
       Utils.zoomRange = vm.zoomRange;
       //}
     });
 
     /* watch zoomLock */
-    $scope.$watch('zoomLock', function (newVal, oldVal) {
+    $scope.$watch('vm.zoomLock', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         Utils.zoomLock = newVal;
       }
@@ -123,57 +176,6 @@ function GraphsContainerDirective () {
 
     function activate(){
 
-
-      /* Get deeplink params from query string */
-
-      /* If graph has been zoomed */
-      if ($state.params.zoomFrom)
-        Utils.zoomFrom = $state.params.zoomFrom;
-
-      if ($state.params.zoomUntil)
-        Utils.zoomUntil = $state.params.zoomUntil;
-
-      /* get zoomRange for live graphs*/
-      if ($state.params.zoomRange){
-          vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf($state.params.zoomRange);
-          vm.zoomRange = vm.zoomOptions[vm.selectedZoomOptionIndex];
-      }else{
-        vm.zoomRange = Utils.zoomRange;
-        /* set md-select selected item */
-        vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(vm.zoomRange.value);
-      }
-
-      /* get metricFilter */
-      if ($state.params.metricFilter) {
-        vm.metricFilter = $state.params.metricFilter;
-        Utils.metricFilter = $state.params.metricFilter;
-      }else{
-        vm.metricFilter = Utils.metricFilter;
-      }
-
-       /* get selectedSeries */
-      if ($state.params.selectedSeries) {
-        vm.selectedSeries = $state.params.selectedSeries;
-        Utils.selectedSeries = $state.params.selectedSeries;
-      }else{
-        vm.selectedSeries = Utils.selectedSeries;
-      }
-
-      /* Get selected series params from query string */
-
-      //Utils.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
-
-      /* Get metricFilter params from query string */
-
-      //Utils.metricFilter = ($state.params.metricFilter) ? decodeURIComponent($state.params.metricFilter) : '';
-
-      /* get value form statParams */
-      //vm.value = $stateParams.tag;
-
-      vm.productName = $stateParams.productName;
-      vm.dashboardName = $stateParams.dashboardName;
-
-      vm.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
 
 
 
@@ -194,8 +196,11 @@ function GraphsContainerDirective () {
 
           populateColumns();
 
+        $timeout(function(){
 
-        vm.selectedIndex = Tags.getTagIndex(vm.value, vm.tags);
+          vm.selectedIndex = Tags.getTagIndex(vm.value, vm.tags);
+
+        })
 
 
         if ($stateParams.testRunId) {
@@ -324,14 +329,8 @@ function GraphsContainerDirective () {
 
     function setMetricFilter(){
 
-
       vm.metricFilter = vm.metricFilterInput;
-      vm.metrics = filterOnTag(Dashboards.selected.metrics);
-      vm.filteredMetrics = [];
-
-      vm.filteredMetrics = filterOnMetricFilter(vm.metrics);
-      populateColumns();
-
+      activate();
 
 
 
@@ -339,13 +338,9 @@ function GraphsContainerDirective () {
 
     function clearMetricFilter (){
 
-      vm.filteredMetrics = [];
       vm.metricFilter = '';
       vm.metricFilterInput = '';
-      vm.metrics = filterOnTag(Dashboards.selected.metrics);
-      vm.filteredMetrics  = filterOnMetricFilter(vm.metrics);
-      populateColumns();
-
+      activate();
     };
 
     function checkIfTagExists(tag) {

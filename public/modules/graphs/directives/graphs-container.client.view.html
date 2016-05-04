@@ -114,7 +114,7 @@
             <div class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column" ng-repeat="column in vm.columnsArray" flex="vm.flex">
                 <accordion close-others="false">
                     <div  focus-if data-ng-repeat="metric in vm.filteredMetrics | slice:column.start:column.end" >
-                        <graphs-content ng-if="metric !== null" metric="metric"></graphs-content>
+                        <graphs-content metric="metric"></graphs-content>
                     </div>
                 </accordion>
             </div>
