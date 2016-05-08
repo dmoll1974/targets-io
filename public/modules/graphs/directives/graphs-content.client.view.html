@@ -38,7 +38,7 @@
                     class="btn btn-sm glyphicon  glyphicon-resize-full"></span></label>
         </span>
 
-        <dygraph metric="metric"></dygraph>
+        <dygraph ng-if="metric.isOpen" metric="metric"></dygraph>
 
         </div>
 </accordion-group>

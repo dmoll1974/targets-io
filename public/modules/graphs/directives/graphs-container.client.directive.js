@@ -58,6 +58,7 @@ function GraphsContainerDirective () {
       Utils.metricFilter = $state.params.metricFilter;
     }else{
       vm.metricFilter = Utils.metricFilter;
+      vm.metricFilterInput = Utils.metricFilter;
     }
 
     /* get selectedSeries */
@@ -93,7 +94,7 @@ function GraphsContainerDirective () {
     vm.zoomLock = Utils.zoomLock;
     vm.metricFilter = Utils.metricFilter;
     vm.showViewUrl = false;
-    vm.graphsType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
+    vm.graphsType = Utils.graphsType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
 
 
     vm.toggleLegend = toggleLegend;
@@ -126,7 +127,7 @@ function GraphsContainerDirective () {
     });
 
 
-    ///* watch showLegend*/
+    /* watch showLegend*/
     //$scope.$watch(function (scope) {
     //  return Utils.showLegend;
     //}, function (newVal, oldVal) {
@@ -135,8 +136,8 @@ function GraphsContainerDirective () {
     //    vm.showLegend =  Utils.showLegend;
     //  }
     //});
-    //
-    ///* watch showTooltip*/
+
+    /* watch showTooltip*/
     //$scope.$watch(function (scope) {
     //  return Utils.showTooltip;
     //}, function (newVal, oldVal) {
@@ -270,22 +271,18 @@ function GraphsContainerDirective () {
     function toggleLegend(){
 
       if(vm.showLegend === true) {
-        vm.showLegend = false;
-        Utils.showLegend = false;
-      }else {
-        vm.showLegend = true;
         Utils.showLegend = true;
+      }else {
+        Utils.showLegend = false;
       }
     }
 
     function toggleTooltip(){
 
       if(vm.showTooltip === true) {
-        vm.showTooltip = false;
-        Utils.showTooltip = false;
-      }else {
-        vm.showTooltip = true;
         Utils.showTooltip = true;
+      }else {
+        Utils.showTooltip = false;
       }
     }
 

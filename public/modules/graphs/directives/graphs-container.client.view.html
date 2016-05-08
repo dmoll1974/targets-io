@@ -4,7 +4,7 @@
         <!--<div class="graphs-header">-->
             <!--<div layout="column">-->
                 <div layout="row"  flex>
-                    <div flex="30" layout="row" layout-align="start center">
+                    <div flex="25" layout="row" layout-align="start center">
                         <span ng-if="vm.graphsType === 'testrun'">
                             <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /
                             <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>
@@ -16,10 +16,10 @@
                         </span>
 
                     </div>
-                    <div layout="row" flex="40" layout-align="space-between center">
+                    <div layout="row" flex="50" layout-align="space-between center">
                         <div ng-if="vm.graphsType === 'graphs-live'" layout="row" layout-align="start center">
                             <span>Time range</span>
-                            <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange">
+                            <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange" style="padding-left: 5px;">
                                 <md-option ng-repeat="zoomOption in vm.zoomOptions" ng-value="zoomOption" ng-selected="$index === vm.selectedZoomOptionIndex">
                                     {{zoomOption.label}}
                                 </md-option>
@@ -30,7 +30,7 @@
                         </md-switch>
                         <md-button md-no-ink class="md-primary" data-ng-click="vm.resetZoom()">Reset zoom</md-button>
                         <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
-                        <!--<div layout="row" layout-align="start center">-->
+                        <div layout="row" layout-align="start center">
                             <div>
                                 <md-input-container class="targetsio-header-text" ng-keypress="$event.which === 13 && vm.setMetricFilter()">
                                     <label>Filter metrics</label>
@@ -48,10 +48,10 @@
                                 </md-icon>
                             </div>
 
-                        <!--</div>-->
+                        </div>
                     </div>
 
-                    <div layout="row" layout-align="end center" flex="30">
+                    <div layout="row" layout-align="end center" flex="25">
                         <div  layout="row" layout-align="end center" >
                             <button ng-if="vm.showViewUrl && vm.hasFlash()"
                                     tooltip-size="medium" title="Copy graph URL"
