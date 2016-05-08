@@ -69,6 +69,13 @@ function GraphsContainerDirective () {
       vm.selectedSeries = Utils.selectedSeries;
     }
 
+    /* reset Utils if not navigating the tabs */
+
+    if ($rootScope.currentState !== $rootScope.previousState){
+
+      Utils.reset();
+    }
+
     /* Get selected series params from query string */
 
     //Utils.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
@@ -82,6 +89,7 @@ function GraphsContainerDirective () {
 
     vm.productName = $stateParams.productName;
     vm.dashboardName = $stateParams.dashboardName;
+    vm.tag = $stateParams.tag;
 
     vm.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
 
@@ -94,7 +102,8 @@ function GraphsContainerDirective () {
     vm.zoomLock = Utils.zoomLock;
     vm.metricFilter = Utils.metricFilter;
     vm.showViewUrl = false;
-    vm.graphsType = Utils.graphsType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
+    vm.graphsType =  $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
+    Utils.graphsType = vm.graphsType;
 
 
     vm.toggleLegend = toggleLegend;
@@ -102,7 +111,8 @@ function GraphsContainerDirective () {
     vm.toggleNumberOfColums = toggleNumberOfColums;
     vm.isActive = isActive;
     vm.resetZoom = resetZoom;
-    vm.clipClicked = clipClicked;
+    vm.hasFlash = hasFlash;
+    vm.clipClicked =clipClicked;
     vm.drilldownToMetric = drilldownToMetric;
     vm.setViewShareUrl = setViewShareUrl;
     vm.switchTag = switchTag;
@@ -124,18 +134,10 @@ function GraphsContainerDirective () {
     $scope.$on('$destroy', function () {
       /* reset metricFilter when leaving graphs view */
       Utils.metricFilter = '';
+
     });
 
 
-    /* watch showLegend*/
-    //$scope.$watch(function (scope) {
-    //  return Utils.showLegend;
-    //}, function (newVal, oldVal) {
-    //  if (newVal !== oldVal) {
-    //
-    //    vm.showLegend =  Utils.showLegend;
-    //  }
-    //});
 
     /* watch showTooltip*/
     //$scope.$watch(function (scope) {
@@ -429,8 +431,8 @@ function GraphsContainerDirective () {
       }
 
       /* if specific metric has been selected */
-      if (Utils.metricFilter !== '') {
-        vm.viewShareUrl = vm.viewShareUrl + '&metricFilter=' + encodeURIComponent(Utils.metricFilter)
+      if (vm.metricFilter !== '') {
+        vm.viewShareUrl = vm.viewShareUrl + '&metricFilter=' + encodeURIComponent(vm.metricFilter);
       }
 
       if (vm.showViewUrl) {
@@ -484,9 +486,10 @@ function GraphsContainerDirective () {
 
         case 'testrun':
 
-          //route.testRunId = vm.testRun.testRunId;
+          route.testRunId = vm.testRun.testRunId;
 
           $state.go('viewGraphs', route);
+
           break;
 
         case 'graphs-live':

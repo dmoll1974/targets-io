@@ -36,6 +36,9 @@ function GraphsContentDirective () {
     vm.setTags = setTags;
     vm.updateTags = updateTags;
     vm.tagRemoved = tagRemoved;
+    vm.hasFlash = hasFlash;
+    vm.clipClicked =clipClicked;
+
 
     activate();
 
@@ -230,6 +233,27 @@ function GraphsContentDirective () {
       }
     };
 
-    
+    function hasFlash() {
+      var hasFlash = false;
+      try {
+        var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+        if (fo) {
+          hasFlash = true;
+          return hasFlash;
+        }
+      } catch (e) {
+        if (navigator.mimeTypes && navigator.mimeTypes['application/x-shockwave-flash'] != undefined && navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin) {
+          hasFlash = true;
+          return hasFlash;
+        }
+      }
+    };
+
+    /* Zero copied logic */
+    function clipClicked() {
+      vm.showUrl = false;
+    };
+
+
   }
 }

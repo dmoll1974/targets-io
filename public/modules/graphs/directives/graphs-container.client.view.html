@@ -16,7 +16,7 @@
                         </span>
 
                     </div>
-                    <div layout="row" flex="50" layout-align="space-between center">
+                    <div layout="row" flex="50" layout-align="start center">
                         <div ng-if="vm.graphsType === 'graphs-live'" layout="row" layout-align="start center">
                             <span>Time range</span>
                             <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange" style="padding-left: 5px;">
@@ -54,6 +54,7 @@
                     <div layout="row" layout-align="end center" flex="25">
                         <div  layout="row" layout-align="end center" >
                             <button ng-if="vm.showViewUrl && vm.hasFlash()"
+                                    class="copy-button"
                                     tooltip-size="medium" title="Copy graph URL"
                                     tooltip-side="top" clip-copy="vm.viewShareUrl"
                                     clip-click="vm.clipClicked()">Copy
