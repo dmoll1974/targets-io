@@ -3,7 +3,7 @@
 angular.module('graphs').directive('dygraph', DygraphDirective);
 
 /* @ngInject */
-function DygraphDirective ($timeout, Interval, TestRuns) {
+function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
   var directive = {
 
@@ -43,17 +43,18 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           scope.graph.ready(function() {
 
             /* if selected series is provided (via deeplink), show this series only */
-            //if (Utils.selectedSeries && Utils.selectedSeries !== '' && Utils.metricFilter === scope.metric.alias) {
-            //
-            //  /* show / hide selected series in legend */
-            //
-            //  _.each(scope.metric.legendData, function (legendItem, i) {
-            //
-            //    scope.graph.setVisibility(legendItem.id, legendItem.visible);
-            //
-            //  })
-            //
-            //}
+            if (Utils.selectedSeries && Utils.selectedSeries !== '' && Utils.metricFilter === scope.metric.alias) {
+
+              /* show / hide selected series in legend */
+
+              _.each(scope.metric.legendData, function (legendItem, i) {
+
+                if(legendItem.name !== Utils.selectedSeries)
+                  scope.graph.setVisibility(legendItem.id, false);
+
+              })
+
+            }
 
             /* if selected series have been set via the legend, set them again after reload or zoom */
             if(scope.selectedSeries){

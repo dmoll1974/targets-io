@@ -34,7 +34,7 @@
     "lodash": "~2.4.1",
     "memcached": "2.2.0",
     "method-override": "~2.3.0",
-    "mongoose": "^3.8.40",
+    "mongoose": "^3.8.23",
     "mongoose-q": "0.0.17",
     "morgan": "~1.4.1",
     "newrelic": "^1.25.3",

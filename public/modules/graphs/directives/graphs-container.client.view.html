@@ -4,8 +4,8 @@
         <!--<div class="graphs-header">-->
             <!--<div layout="column">-->
                 <div layout="row"  flex>
-                    <div flex="25" layout="row" layout-align="start center">
-                        <span ng-if="vm.graphsType === 'testrun'">
+                    <div flex="20" layout="row" layout-align="start center">
+                        <span ng-if="vm.graphsType === 'testrun'" style="white-space: nowrap;">
                             <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /
                             <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>
                               /  {{vm.testRun.testRunId}}
@@ -16,8 +16,8 @@
                         </span>
 
                     </div>
-                    <div layout="row" flex="50" layout-align="start center">
-                        <div ng-if="vm.graphsType === 'graphs-live'" layout="row" layout-align="start center">
+                    <div layout="row" flex="55" layout-align="start center">
+                        <div  layout="row" layout-align="start center" ng-class="{'hidden-time-range': vm.graphsType !== 'graphs-live' }">
                             <span>Time range</span>
                             <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange" style="padding-left: 5px;">
                                 <md-option ng-repeat="zoomOption in vm.zoomOptions" ng-value="zoomOption" ng-selected="$index === vm.selectedZoomOptionIndex">
@@ -62,7 +62,7 @@
                             <input flex ng-readonly="true" ng-model="vm.viewShareUrl" ng-if="vm.showViewUrl"
                                    share-graph-url/>
                             <label title="Share view URL" class="btn default"
-                                   ng-click="vm.setViewShareUrl('testrun')"><span
+                                   ng-click="vm.setViewShareUrl()"><span
                                     class="btn  glyphicon glyphicon-share"></span>
                             </label>
 

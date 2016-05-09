@@ -103,9 +103,9 @@ function GraphsContentDirective () {
           if (Utils.zoomFrom) {
             vm.metricShareUrl = vm.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
           }
-          if ($state.params.selectedSeries) {
-            vm.metricShareUrl = vm.metricShareUrl + '&selectedSeries=' + $state.params.selectedSeries;
-          }
+          //if ($state.params.selectedSeries) {
+          //  vm.metricShareUrl = vm.metricShareUrl + '&selectedSeries=' + $state.params.selectedSeries;
+          //}
 
           vm.metricShareUrl = vm.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
 

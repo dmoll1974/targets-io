@@ -468,3 +468,7 @@ md-toast {
     z-index: 100;
 
 }
+
+.hidden-time-range{
+    visibility:hidden;
+}

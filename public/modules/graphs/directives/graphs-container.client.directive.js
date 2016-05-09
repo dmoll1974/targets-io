@@ -71,7 +71,7 @@ function GraphsContainerDirective () {
 
     /* reset Utils if not navigating the tabs */
 
-    if ($rootScope.currentState !== $rootScope.previousState){
+    if ($rootScope.currentState !== $rootScope.previousState && $rootScope.previousState && !$rootScope.previousState.includes('requirementsTestRun') ){
 
       Utils.reset();
     }
@@ -391,6 +391,7 @@ function GraphsContainerDirective () {
       /*reset zoom*/
       Utils.zoomFrom = '';
       Utils.zoomUntil = '';
+      activate();
       //$state.go($state.current, {}, { reload: true });
     };
 
@@ -398,12 +399,12 @@ function GraphsContainerDirective () {
     
     /* generate deeplink to share view */
 
-    function setViewShareUrl(graphsType) {
+    function setViewShareUrl() {
 
-      switch(graphsType){
+      switch(vm.graphsType){
 
         case 'graphs-live':
-          vm.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?zoomRange=' + Utils.zoomRange.value;
+          vm.viewShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/';
           break;
         case 'testrun':
           vm.viewShareUrl = 'http://' + location.host + '/#!/graphs/' + $stateParams.productName + '/' + $stateParams.dashboardName + '/' + $stateParams.testRunId + '/' + $stateParams.tag +  '/';
@@ -416,17 +417,17 @@ function GraphsContainerDirective () {
       }
       
       /* if graph(s) has been zoomed */
-      if (Utils.zoomFrom && graphsType == 'testrun') {
+      if (Utils.zoomFrom && vm.graphsType == 'testrun') {
         vm.viewShareUrl = vm.viewShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
       }
 
      /* live graphs zoom range */
-      if (Utils.zoomRange && graphsType == 'graphs-live') {
-        vm.viewShareUrl = vm.viewShareUrl + '&zoomRange=' + Utils.zoomRange;
+      if (Utils.zoomRange && vm.graphsType == 'graphs-live') {
+        vm.viewShareUrl = vm.viewShareUrl + '&zoomRange=' + Utils.zoomRange.value;
       }
 
       /* if specific serie hase been selected */
-      if ($state.params.selectedSeries && graphsType == 'testrun') {
+      if ($state.params.selectedSeries && vm.graphsType == 'testrun') {
         vm.viewShareUrl = vm.viewShareUrl + '&selectedSeries=' + $state.params.selectedSeries;
       }
 

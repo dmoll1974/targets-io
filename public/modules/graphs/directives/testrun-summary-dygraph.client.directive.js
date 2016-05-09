@@ -3,7 +3,7 @@
 angular.module('graphs').directive('testrunSummaryDygraph', DygraphDirective);
 
 /* @ngInject */
-function DygraphDirective ($timeout, Interval, TestRuns) {
+function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
   var directive = {
 
