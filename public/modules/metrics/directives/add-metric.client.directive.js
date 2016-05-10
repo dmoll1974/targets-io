@@ -40,7 +40,7 @@ function AddMetricDirective () {
 
     /* watches*/
 
-    $scope.$watch('enableRequirement', function (newVal, oldVal) {
+    $scope.$watch('vm.enableRequirement', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         if (vm.enableRequirement === false) {
           vm.metric.requirementOperator = null;
@@ -48,7 +48,7 @@ function AddMetricDirective () {
         }
       }
     });
-    $scope.$watch('enableBenchmarking', function (newVal, oldVal) {
+    $scope.$watch('vm.enableBenchmarking', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         if (vm.enableBenchmarking === false) {
           vm.metric.benchmarkOperator = null;
