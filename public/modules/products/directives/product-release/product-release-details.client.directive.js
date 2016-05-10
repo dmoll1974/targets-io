@@ -150,6 +150,9 @@ function ProductReleaseDetailsDirective () {
 
       if ($scope.releaseSaved === false) {
 
+        /* clear id to prevent duplicate key errors */
+        $scope.product._id = undefined;
+
         Products.addProductRelease($scope.product).success(function (productRelease) {
 
           $scope.releaseSaved = true;
