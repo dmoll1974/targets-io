@@ -3,7 +3,7 @@
 angular.module('graphs').directive('dygraph', DygraphDirective);
 
 /* @ngInject */
-function DygraphDirective ($timeout, Interval, TestRuns) {
+function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
   var directive = {
 
@@ -43,13 +43,14 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           scope.graph.ready(function() {
 
             /* if selected series is provided (via deeplink), show this series only */
-            if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === scope.metric.alias) {
+            if (Utils.selectedSeries && Utils.selectedSeries !== '' && Utils.metricFilter === scope.metric.alias) {
 
               /* show / hide selected series in legend */
 
               _.each(scope.metric.legendData, function (legendItem, i) {
 
-                scope.graph.setVisibility(legendItem.id, legendItem.visible);
+                if(legendItem.name !== Utils.selectedSeries)
+                  scope.graph.setVisibility(legendItem.id, false);
 
               })
 
@@ -189,7 +190,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
         $scope.showProgressBar = true;
 
-        drawDypraph($scope.graphType);
+        drawDypraph($scope.graphsType);
       }
     });
 
@@ -212,26 +213,44 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
 
         $scope.showProgressBar = true;
 
-        drawDypraph($scope.graphType);
+        drawDypraph($scope.graphsType);
 
       }
     });
 
+    /* stop data polling when accordion is closed */
+    $scope.$watch('metric.isOpen', function (newVal, oldVal) {
+      //if (newVal !== oldVal) {
+        if(newVal === false) {
+          Interval.clearIntervalForMetric($scope.metric._id);
+        }else{
+          $scope.showProgressBar = true;
+          drawDypraph($scope.graphsType);
+        }
+      //}
+
+    });
+    /* stop data polling when element is destroyed by ng-if */
+    $scope.$on('$destroy', function () {
+      Interval.clearIntervalForMetric($scope.metric._id);
+    });
+
+
     setTimeout(function(){
 
-      $scope.graphType =  Utils.graphType;
+      $scope.graphsType =  Utils.graphsType;
       $scope.showProgressBar = true;
 
-      drawDypraph($scope.graphType);
+      drawDypraph($scope.graphsType);
 
     });
 
 
-    function drawDypraph(graphType)  {
+    function drawDypraph(graphsType)  {
 
       $scope.loading = true;
 
-      switch(graphType){
+      switch(graphsType){
 
         case 'testrun':
 
@@ -323,13 +342,13 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           $scope.showProgressBar = false;
 
           /* if selected series is provided, show this series only */
-          if (TestRuns.selectedSeries && TestRuns.selectedSeries !== '' && TestRuns.metricFilter === $scope.metric.alias) {
+          if (Utils.selectedSeries && Utils.selectedSeries !== '' && Utils.metricFilter === $scope.metric.alias) {
 
             $scope.selectAll = false;
 
               _.each($scope.metric.legendData, function(legendItem, i){
 
-                if(legendItem.name === TestRuns.selectedSeries ) {
+                if(legendItem.name === Utils.selectedSeries ) {
 
                   $scope.metric.legendData[i].visible = true;
 
@@ -345,11 +364,11 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
           }
 
           /* in case of live graphs set interval */
-          if($scope.graphType === 'graphs-live' &&  Interval.active.map(function(interval){return interval.metricId}).indexOf($scope.metric._id) === -1){
+          if($scope.graphsType === 'graphs-live' &&  Interval.active.map(function(interval){return interval.metricId}).indexOf($scope.metric._id) === -1){
 
             var intervalId = setInterval(function () {
 
-              drawDypraph($scope.graphType);
+              drawDypraph($scope.graphsType);
 
             }, 10000);
 
@@ -427,7 +446,7 @@ function DygraphDirective ($timeout, Interval, TestRuns) {
       Utils.zoomFrom = Math.round(minDate);
       Utils.zoomUntil= Math.round(maxDate);
       $scope.zoomedYRange = [Math.round(yRange[0][0]),Math.round(yRange[0][1])];
-       drawDypraph($scope.graphType);
+       drawDypraph($scope.graphsType);
     }
 
 

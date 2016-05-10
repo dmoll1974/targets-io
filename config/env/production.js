@@ -40,7 +40,8 @@ module.exports = {
                 'public/lib/zeroclipboard/dist/ZeroClipboard.min.js',
                 'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js',
                 'public/lib/angular-utils-pagination/dirPagination.js',
-                'public/lib/dygraphs/dygraph-combined-dev.js'
+                'public/lib/dygraphs/dygraph-combined-dev.js',
+                'public/lib/ng-focus-if/focusIf.min.js'
 
 
             ]
@@ -54,6 +55,7 @@ module.exports = {
             'public/modules/*/*.js',
             'public/modules/*/*[!tests]*/*.js',
             'public/modules/*/*[!tests]*/*/*.js'
+
         ]
     },
         facebook: {

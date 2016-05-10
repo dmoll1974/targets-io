@@ -114,7 +114,7 @@
                 Hide graphs
             </md-switch>
         </div>
-
+        <p ng-if="testRunSummary.metrics.length === 0">No metrics configured to include in test run summary, please check metric configuration.</p>
         <md-content class="md-padding" layout="column" flex="75" >
             <div ng-class="{boxedGraph: hideGraphs}" data-ng-repeat="metric in testRunSummary.metrics | testRunSummary " >
                 <div layout="row" layout-align="space-between center">
