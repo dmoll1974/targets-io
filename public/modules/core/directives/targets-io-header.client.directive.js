@@ -343,6 +343,27 @@ function TargetsIoHeaderDirective () {
 
         };
 
+        $scope.goToTestRunSummary = function(){
+
+            $state.go('testRunSummary', {
+                'productName': $stateParams.productName,
+                'dashboardName': $stateParams.dashboardName,
+                'testRunId': $stateParams.testRunId
+            });
+
+        }
+
+        $scope.editTestRun = function(){
+
+            $state.go('editTestRun', {
+                'productName': $stateParams.productName,
+                'dashboardName': $stateParams.dashboardName,
+                'testRunId': $stateParams.testRunId
+            });
+
+        }
+
+
 
 
         var originatorEv;

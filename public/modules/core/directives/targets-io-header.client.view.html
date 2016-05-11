@@ -79,6 +79,22 @@
                     </md-tooltip>
                 </md-button>
             </div>
+            <div ng-if="$state.includes('viewGraphs')">
+                <md-button  class="md-icon-button" data-ng-click="goToTestRunSummary()">
+                    <md-icon md-svg-src="images/assets/ic_assignment_white_24px.svg"></md-icon>
+                    <md-tooltip>
+                        Go to test run summary
+                    </md-tooltip>
+                </md-button>
+            </div>
+            <div ng-if="$state.includes('viewGraphs')">
+                <md-button  class="md-icon-button" data-ng-click="editTestRun()">
+                    <md-icon md-svg-src="images/assets/ic_edit_white_24px.svg"></md-icon>
+                    <md-tooltip>
+                        Edit test run
+                    </md-tooltip>
+                </md-button>
+            </div>
         </div>
 
         <!--<div layout="row" layout-align="start center" ng-show="$state.includes('viewGraphs') || $state.includes('viewLiveGraphs')" >-->
