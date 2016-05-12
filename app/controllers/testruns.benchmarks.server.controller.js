@@ -75,10 +75,10 @@ function updateFixedBaselineBenchmark(req, res) {
     /* Save updated test run */
 
     Testrun.findOneAndUpdate({$and:[
-          {productName: testRunToUpdate.productName},
-          {dashboardName: testRunToUpdate.dashboardName},
-          {testRunId: testRunToUpdate.testRunId}
-        ]}, {benchchmarkResultFixedOK: testRun.benchmarkResultFixedOK}
+          {productName: updatedBenchmark.productName},
+          {dashboardName: updatedBenchmark.dashboardName},
+          {testRunId: updatedBenchmark.testRunId}
+        ]}, {benchmarkResultFixedOK: updatedBenchmark.benchmarkResultFixedOK}
         , {upsert:true}, function(err, savedTestRun){
           if(err !== null) {
             console.log(err);

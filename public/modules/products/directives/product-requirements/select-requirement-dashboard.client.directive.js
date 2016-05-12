@@ -9,7 +9,7 @@ function SelectRequirementDashboardDirective () {
       dashboard: '='
     },
     restrict: 'EA',
-    templateUrl: 'modules/products/directives/select-requirement-dashboard.client.view.html',
+    templateUrl: 'modules/products/directives/product-requirements/select-requirement-dashboard.client.view.html',
     controller: SelectRequirementDashboardDirectiveController//,
     //controllerAs: 'ctrlWilyExportData'
   };

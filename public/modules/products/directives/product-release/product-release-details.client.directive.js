@@ -6,7 +6,7 @@ function ProductReleaseDetailsDirective () {
 
   var directive = {
     restrict: 'EA',
-    templateUrl: 'modules/products/directives/product-release-details.client.view.html',
+    templateUrl: 'modules/products/directives/product-release/product-release-details.client.view.html',
     controller: ProductReleaseDetailsDirectiveController
   };
 
@@ -149,6 +149,9 @@ function ProductReleaseDetailsDirective () {
     function  submitProductRelease() {
 
       if ($scope.releaseSaved === false) {
+
+        /* clear id to prevent duplicate key errors */
+        $scope.product._id = undefined;
 
         Products.addProductRelease($scope.product).success(function (productRelease) {
 

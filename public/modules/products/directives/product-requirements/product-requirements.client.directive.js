@@ -6,7 +6,7 @@ function ProductRequirementsDirective () {
 
   var directive = {
     restrict: 'EA',
-    templateUrl: 'modules/products/directives/product-requirements.client.view.html',
+    templateUrl: 'modules/products/directives/product-requirements/product-requirements.client.view.html',
     controller: ProductRequirementsDirectiveController
   };
 

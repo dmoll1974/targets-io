@@ -20,7 +20,7 @@
             <div>
                 <product-menu></product-menu>
             </div>
-            <md-autocomplete
+            <md-autocomplete tabindex="1"
                     md-selected-item="product"
                     md-search-text="productSearchText"
                     md-items="product in filterProducts(productSearchText)"
@@ -48,7 +48,8 @@
             <div ng-if="product">
                 <dashboard-menu></dashboard-menu>
             </div>
-            <md-autocomplete ng-show="product"
+            <md-autocomplete tabindex="1"
+                            ng-show="product"
                              md-selected-item="dashboard"
                              md-search-text="dashboardSearchText"
                              md-items="dashboard in filterDashboards(dashboardSearchText)"
@@ -76,6 +77,22 @@
                     <md-icon md-svg-src="images/assets/ic_assessment_white_24px.svg"></md-icon>
                     <md-tooltip>
                         Live graphs
+                    </md-tooltip>
+                </md-button>
+            </div>
+            <div ng-if="$state.includes('viewGraphs')">
+                <md-button  class="md-icon-button" data-ng-click="goToTestRunSummary()">
+                    <md-icon md-svg-src="images/assets/ic_assignment_white_24px.svg"></md-icon>
+                    <md-tooltip>
+                        Go to test run summary
+                    </md-tooltip>
+                </md-button>
+            </div>
+            <div ng-if="$state.includes('viewGraphs')">
+                <md-button  class="md-icon-button" data-ng-click="editTestRun()">
+                    <md-icon md-svg-src="images/assets/ic_edit_white_24px.svg"></md-icon>
+                    <md-tooltip>
+                        Edit test run
                     </md-tooltip>
                 </md-button>
             </div>

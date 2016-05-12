@@ -27,8 +27,6 @@
                    Apply zoom to all graphs
                </md-switch>
                <md-button md-no-ink class="md-primary" data-ng-click="resetZoom()">Reset zoom</md-button>
-               <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
-                <!--<div layout="row" layout-align="start center">-->
                 <div>
                     <md-input-container class="targetsio-header-text">
                         <label>Filter metrics</label>
@@ -40,8 +38,6 @@
                               data-ng-click="clearMetricFilter()">
                     </md-icon>
                 </div>
-
-                <!--</div>-->
             </div>
             <div layout="row" layout-align="end center" flex="30">
                 <div  layout="row" layout-align="end center" >
@@ -104,26 +100,7 @@
             </md-tab>
         </md-tabs>
 
-        <!--<div layout="row" flex >-->
-            <!--<div layout="row" flex="50" layout-align="start top"  >-->
-                <!--<div flex="90" layout-fill>-->
-                    <!--<md-input-container layout-fill style="padding-bottom: 5px;">-->
-                        <!--<label>Filter metrics</label>-->
-                        <!--<input ng-model="metricFilter">-->
-                    <!--</md-input-container>-->
-                <!--</div>-->
-                <!--<div flex="10">-->
-                    <!--<md-icon style="margin-bottom: 5px;" ng-if="metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"-->
-                         <!--data-ng-click="clearMetricFilter()">-->
 
-                    <!--</md-icon>-->
-                <!--</div>-->
-
-            <!--</div>-->
-
-
-
-        <!--</div>-->
     </div>
     <md-content layout="row">
         <md-content class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + columnsArray.length}}" layout="column" ng-repeat="column in columnsArray" flex="flex">

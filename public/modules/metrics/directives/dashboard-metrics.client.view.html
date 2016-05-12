@@ -22,7 +22,7 @@
                     </md-button>
                     <md-menu-content width="4">
                         <md-menu-item ng-repeat="template in vm.templates">
-                            <md-button data-ng-click="mergeTemplate($index)">
+                            <md-button data-ng-click="vm.mergeTemplate($index)">
                                 {{template.name}}: {{template.description}}
                             </md-button>
                         </md-menu-item>
@@ -85,7 +85,7 @@
                     <th>
                         <i class="glyphicon glyphicon-plus" data-ng-click="vm.addMetric()"></i></th>
                     <td>
-                        <md-checkbox md-no-ink aria-label="select all metrics" ng-model="vm.allMetricsSelected" ng-change="vm.setAllMetricsSelected(allMetricsSelected)" style="margin: 0px;">
+                        <md-checkbox md-no-ink aria-label="select all metrics" ng-model="vm.allMetricsSelected" ng-change="vm.setAllMetricsSelected(vm.allMetricsSelected)" style="margin: 0px;">
                         </md-checkbox>
                     </td>
                 </tr>

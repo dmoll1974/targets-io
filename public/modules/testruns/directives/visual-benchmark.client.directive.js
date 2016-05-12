@@ -36,11 +36,11 @@ function VisualBenchmarkDirective () {
 
     /* Get selected series params from query string */
 
-    TestRuns.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
+    Utils.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
 
     $scope.benchmarkType = $state.params.benchmarkType;
 
-    $scope.selectedSeries = TestRuns.selectedSeries;
+    $scope.selectedSeries = Utils.selectedSeries;
 
       Metrics.get($stateParams.metricId).success(function(baselineMetric){
 

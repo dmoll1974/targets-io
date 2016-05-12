@@ -329,7 +329,7 @@ html, body {
 }
 
 
-md-content#column-0-2.graph-column {
+div#column-0-2.graph-column {
     position: fixed;
     top: 200px;
     bottom: 0px;
@@ -341,7 +341,7 @@ md-content#column-0-2.graph-column {
 
 }
 
-md-content#column-1-2.graph-column {
+div#column-1-2.graph-column {
     position: fixed;
     top: 200px;
     right: 5px;
@@ -461,4 +461,14 @@ md-toast.md-error-toast-theme .md-toast-content {
 
 md-toast {
     left: 35%;
+}
+
+.copy-button{
+
+    z-index: 100;
+
+}
+
+.hidden-time-range{
+    visibility:hidden;
 }
