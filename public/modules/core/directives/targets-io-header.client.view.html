@@ -20,7 +20,7 @@
             <div>
                 <product-menu></product-menu>
             </div>
-            <md-autocomplete
+            <md-autocomplete tabindex="1"
                     md-selected-item="product"
                     md-search-text="productSearchText"
                     md-items="product in filterProducts(productSearchText)"
@@ -48,7 +48,8 @@
             <div ng-if="product">
                 <dashboard-menu></dashboard-menu>
             </div>
-            <md-autocomplete ng-show="product"
+            <md-autocomplete tabindex="1"
+                            ng-show="product"
                              md-selected-item="dashboard"
                              md-search-text="dashboardSearchText"
                              md-items="dashboard in filterDashboards(dashboardSearchText)"
