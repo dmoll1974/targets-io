@@ -59,11 +59,12 @@ function AddMetricDirective () {
 
     function activate(){
 
-      if(Metrics.clone === {}){
+      if(Metrics.clone === undefined){
 
         vm.metric = {};
         vm.metric.dashboardId = Dashboards.selected._id;
-        vm.metric.targets = [''];
+        vm.metric.targets = [];
+        vm.metric.targets.push('');
         vm.enableBenchmarking = false;
         vm.enableRequirement = false;
         vm.metric.includeInSummary = false;
@@ -125,7 +126,7 @@ function AddMetricDirective () {
       Metrics.create(vm.metric).success(function (metric) {
 
         /* reset cloned metric */
-        Metrics.clone = {};
+        Metrics.clone = undefined;
 
         //var updateRequirements = vm.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
         //var updateBenchmarks = vm.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;

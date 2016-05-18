@@ -10,7 +10,7 @@ angular.module('metrics').factory('Metrics', [
       delete: deleteFn,
       create: create,
       selected: {},
-      clone: {},
+      clone: undefined,
       removeTag: removeTag,
       metricFilter: '',
       /* values for form drop downs*/
