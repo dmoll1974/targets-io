@@ -62,7 +62,10 @@ angular.module('graphs').factory('Tags', [
       });
       tags.sort(Utils.dynamicSort('text'));
       //if available, add Gatling-details tab
-      if (TestRuns.selected && TestRuns.selected.buildResultsUrl) {
+
+      var bambooRegexp = new RegExp("bamboo"); /* hack to exclude bamboo url's for now, since this is not supported yet */
+
+      if (TestRuns.selected && !bambooRegexp.test(TestRuns.selected.buildResultsUrl)) {
         tags.unshift({
           text: 'Gatling',
           route: {
