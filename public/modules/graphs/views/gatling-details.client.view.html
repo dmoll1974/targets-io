@@ -8,7 +8,7 @@
 <div loading-container="tableParams.settings().$loading" ng-if="isSet(0)">
     <table ng-table="tableParams" show-filter="true" class="table">
         <tbody>
-        <tr ng-repeat="transaction in $data">
+                <tr ng-repeat="transaction in $data">
             <td data-title="'Request'" filter="{ 'request': 'text' }" sortable="'request'">
                 {{transaction.request}}
             </td>
@@ -26,7 +26,7 @@
     </table>
 </div>
 <div loading-container="tableParams.settings().$loading" ng-if="isSet(1)">
-    <table ng-table="tableParams" show-filter="true" class="table">
+        <table ng-table="tableParams" show-filter="true" class="table">
         <tbody>
         <tr ng-repeat="transaction in $data">
             <td data-title="'Errors'" filter="{ 'error': 'text' }" sortable="'error'">
@@ -41,4 +41,9 @@
         </tr>
         </tbody>
     </table>
+
+
+</div>
+<div ng-if="noDataAvailable">
+    <span>No data available at <a ng-href="{{buildResultsUrl}}console">{{buildResultsUrl}}console</a></span>
 </div>

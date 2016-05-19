@@ -17,6 +17,9 @@
     /* @ngInject */
     function GatlingDetailsController($scope, $timeout, $filter, $stateParams, GatlingConsoleDetails, TestRuns, ngTableParams) {
       $scope.tabNumber = 0;
+
+
+
       $scope.setTab = function (newValue) {
         $scope.tabNumber = newValue;
         $scope.tableParams.filter({});
@@ -27,6 +30,7 @@
       };
       TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
         TestRuns.selected = testRun;
+        $scope.buildResultsUrl = TestRuns.selected.buildResultsUrl;
         $scope.tableParams = new ngTableParams({
           page: 1,
           // show first page
@@ -53,7 +57,10 @@
                 // set new data
                 $defer.resolve(orderedData);
               }, 500);
-            });
+            }).error(function(data, status, header, config) {
+              // no console data available
+              $scope.noDataAvailable = true;
+            });;
           }
         });
       });
