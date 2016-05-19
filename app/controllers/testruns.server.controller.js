@@ -829,7 +829,7 @@ function calculateMaximum(datapoints){
       maximum = datapoints[d][0];
   }
 
-  return maximum;
+  return Math.round(maximum * 100)/100;
 }
 
 function calculateMinimum(datapoints){
