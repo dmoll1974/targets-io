@@ -19,8 +19,7 @@ exports.getConsoleData = function (req, res) {
 
         } else {
 
-          getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, function (consoleData) {
-            res.jsonp(consoleData);
+
           getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, function (response) {
 
             if(response.status === 'fail'){
