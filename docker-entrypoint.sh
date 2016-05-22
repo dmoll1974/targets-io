@@ -43,6 +43,16 @@ if [ -z "$GRAPHITE_SERVICE_PORT" ]; then
 
 			exit 1
 fi
+if [ -z "$JENKINS_USER" ]; then
+			echo >&2 'error: Need to set JENKINS_USER'
+
+			exit 1
+fi
+if [ -z "$JENKINS_PASSWORD" ]; then
+			echo >&2 'error: Need to set JENKINS_PASSWORD'
+
+			exit 1
+fi
 
 MONGO_URL=mongodb://$MONGO_SERVICE_HOST:$MONGO_SERVICE_PORT MONGO_CACHE_URL=mongodb://$MONGO_CACHE_SERVICE_HOST:$MONGO_CACHE_SERVICE_PORT  GRAPHITE_HOST=http://$GRAPHITE_SERVICE_HOST:$GRAPHITE_SERVICE_PORT  bash -c "forever -c 'node --harmony' server.js"
 
