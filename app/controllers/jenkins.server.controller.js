@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
     requestjson = require('request-json'),
     config = require('../../config/config'),
     GraphiteCache = cacheDb.model('GraphiteCache'),
-    GatlingDetails = db.model('GatlingDetails');
+    GatlingDetails = db.model('GatlingDetails'),
+    config = require('../../config/config');
 
 exports.getConsoleData = function (req, res) {
 
@@ -52,6 +53,7 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback) {
     separator = '> ';
   }
   var client = requestjson.createClient(jenkinsUrl);
+  client.setBasicAuth(config.jenkinsUser, config.jenkinsPassword);
   var testDurationInSeconds, offset;
 
   //if (result) {

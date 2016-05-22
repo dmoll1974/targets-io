@@ -6,6 +6,8 @@ module.exports = {
     db: process.env.MONGO_URL + '/targets-io',
     cacheDb: process.env.MONGO_CACHE_URL + '/graphite-cache',
     memcachedHost: [process.env.MEMCACHED_HOST],
+    jenkinsUser: process.env.JENKINS_USER,
+    jenkinsPassword: process.env.JENKINS_PASSWORD,
     assets: {
         lib: {
             css: [
