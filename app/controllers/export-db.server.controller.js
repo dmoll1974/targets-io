@@ -1,4 +1,4 @@
-//'use strict';
+'use strict';
 /**
  * Module dependencies.
  */
@@ -17,101 +17,141 @@ var mongoose = require('mongoose'),
 
 var wstream = fs.createWriteStream('myOutput.txt');
 module.exports.dbExport = function (req, res) {
-    var started = false;
 
-    function start(response) {
-        response.setHeader('Content-disposition', 'attachment; filename=targets-io.dump');
-        response.write('var products = [\n');
-        started = true;
-    }
+    res.setHeader('Content-disposition', 'attachment; filename=targets-io.dump');
+    res.write('{\n');
+    res.write('"products": [');
 
-    Product.find().lean().stream().on('data', function (product) {
-        if (!started) {
-            start(res);
-        }
-        res.write(JSON.stringify(product) + ',\n');
+    Product.find().lean().stream({
+            transform: () => {
+                let index = 0;
+                return (data) => {
+                    return (!(index++) ? '' : ',') + JSON.stringify(data);
+                };
+            }() // invoke
+        })
+
+        .on('data', function (product) {
+
+        res.write(product + '\n');
     }).on('close', function () {
-        res.write('];\n\n');
-        res.write('var dashboards = [\n');
-        Dashboard.find().lean().stream().on('data', function (dashboard) {
-            if (!started) {
-                start(res);
-            }
-            res.write(JSON.stringify(dashboard) + ',\n');
+        res.write('],\n');
+        res.write('"dashboards": [');
+
+        Dashboard.find().lean().stream({
+            transform: () => {
+                let index = 0;
+                return (data) => {
+                    return (!(index++) ? '' : ',') + JSON.stringify(data);
+                };
+            }() // invoke
+            })
+            .on('data', function (dashboard) {
+            res.write(dashboard + '\n');
         }).on('close', function () {
-            res.write('];\n\n');
-            res.write('var metrics = [\n');
-            Metric.find().lean().stream().on('data', function (metric) {
-                if (!started) {
-                    start(res);
-                }
-                res.write(JSON.stringify(metric) + ',');
+            res.write('],\n');
+            res.write('"metrics": [');
+
+            Metric.find().lean().stream({
+                transform: () => {
+                    let index = 0;
+                    return (data) => {
+                        return (!(index++) ? '' : ',') + JSON.stringify(data);
+                    };
+                }() // invoke
+                })
+                .on('data', function (metric) {
+                res.write(metric + '\n');
             }).on('close', function () {
-                res.write('];\n\n');
-                res.write('var events = [\n');
-                Event.find().lean().stream().on('data', function (event) {
-                    if (!started) {
-                        start(res);
-                    }
-                    event.hookEnabled = false;
-                    res.write(JSON.stringify(event) + ',');
+                res.write('],\n');
+                res.write('"events": [');
+
+                Event.find().lean().stream({
+                    transform: () => {
+                        let index = 0;
+                        return (data) => {
+                            return (!(index++) ? '' : ',') + JSON.stringify(data);
+                        };
+                    }() // invoke
+                })
+                    .on('data', function (event) {
+                    //event.hookEnabled = false;
+                    res.write(event + '\n');
                 }).on('close', function () {
-                    res.write('];\n\n');
-                    res.write('var testruns = [\n');
-                    Testrun.find().lean().stream().on('data', function (testrun) {
-                        if (!started) {
-                            start(res);
-                        }
-                        res.write(JSON.stringify(testrun) + ',');
+                    res.write('],\n');
+                    res.write('"testruns": [');
+                    Testrun.find().lean().stream({
+                        transform: () => {
+                            let index = 0;
+                            return (data) => {
+                                return (!(index++) ? '' : ',') + JSON.stringify(data);
+                            };
+                        }() // invoke
+                      })
+                        .on('data', function (testrun) {
+                        res.write(testrun + '\n');
                     }).on('close', function () {
-                        res.write('];\n\n');
-                        res.write('var templates = [\n');
-                        Template.find().lean().stream().on('data', function (testrun) {
-                            if (!started) {
-                                start(res);
-                            }
-                            res.write(JSON.stringify(testrun) + ',');
+                        res.write('],\n');
+                        res.write('"templates": [');
+
+                        Template.find().lean().stream({
+                            transform: () => {
+                                let index = 0;
+                                return (data) => {
+                                    return (!(index++) ? '' : ',') + JSON.stringify(data);
+                                };
+                            }() // invoke
+                            })
+                            .on('data', function (template) {
+                            res.write(template + '\n');
                         }).on('close', function () {
-                            res.write('];\n\n');
-                            res.write('var releases = [\n');
-                            Release.find().lean().stream().on('data', function (testrun) {
-                                if (!started) {
-                                    start(res);
-                                }
-                                res.write(JSON.stringify(testrun) + ',');
+                            res.write('],\n');
+                            res.write('"releases": [');
+                            Release.find().lean().stream({
+                                transform: () => {
+                                    let index = 0;
+                                    return (data) => {
+                                        return (!(index++) ? '' : ',') + JSON.stringify(data);
+                                    };
+                                }() // invoke
+                                })
+                                .on('data', function (release) {
+                                res.write(release + '\n');
                             }).on('close', function () {
-                                res.write('];\n\n');
-                                res.write('var testrunSummaries = [\n');
-                                TestrunSummary.find().lean().stream().on('data', function (testrun) {
-                                    if (!started) {
-                                        start(res);
-                                    }
-                                    res.write(JSON.stringify(testrun) + ',');
-                                }).on('close', function () {
-                                    res.write('];\n\n')
-                                    res.write('var gatlingDetails = [\n')
-                                    GatlingDetails.find()
-                                    .lean()
-                                    .stream()
-                                    .on('data', function (gatlingDetails) {
-                                        if (!started) {
-                                            start(res);
-                                        }
-                                        res.write(JSON.stringify(gatlingDetails) + ',');
+                                res.write('],\n');
+                                res.write('"testRunSummeries": [');
+
+                                TestrunSummary.find().lean().stream({
+                                    transform: () => {
+                                        let index = 0;
+                                        return (data) => {
+                                            return (!(index++) ? '' : ',') + JSON.stringify(data);
+                                        };
+                                    }() // invoke
                                     })
-                                    .on('close', function () {
-                                        res.write('];');
-                                        res.write('exports.importProducts = products;');
-                                        res.write('exports.importDashboards = dashboards;');
-                                        res.write('exports.importMetrics = metrics;');
-                                        res.write('exports.importEvents = events;');
-                                        res.write('exports.importTestruns = testruns;');
-                                        res.write('exports.importTemplates = templates;');
-                                        res.write('exports.importTestrunSummaries = testrunSummaries;');
-                                        res.write('exports.importReleases = releases;');
-                                        res.write('exports.importGatlingDetails = gatlingDetails;');
-                                        res.end();
-                                    }).on('error', function (err) {
+                                    .on('data', function (testrunSummary) {
+                                    res.write(testrunSummary + '\n');
+                                }).on('close', function () {
+                                    res.write('],\n');
+                                    res.write('"gatlingDetails": [');
+
+                                    GatlingDetails.find()
+                                        .lean()
+                                        .stream({
+                                            transform: () => {
+                                                let index = 0;
+                                                return (data) => {
+                                                    return (!(index++) ? '' : ',') + JSON.stringify(data);
+                                                };
+                                            }() // invoke
+                                         })
+                                        .on('data', function (gatlingDetails) {
+                                            res.write(gatlingDetails + '\n');
+                                        })
+                                        .on('close', function () {
+                                            res.write(']\n}');
+                                            res.end();
+                                        }).on('error', function (err) {
                                         res.send(500, {
                                             err: err,
                                             msg: 'Failed to get gatlingDetails from db'
