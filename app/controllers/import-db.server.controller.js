@@ -376,7 +376,7 @@ function upload(req, res) {
     }
   });
 
-  }
+}
 function dbImport(req, res) {
   res.render('upload');
 }
