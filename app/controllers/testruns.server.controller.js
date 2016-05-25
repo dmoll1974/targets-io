@@ -753,10 +753,10 @@ function calculateMaximum(datapoints){
   for(var d=0;d<datapoints.length;d++){
 
     if (datapoints[d][0] > maximum)
-      maximum = datapoints[d][0];
+      maximum = Math.round(datapoints[d][0]* 100)/100;
   }
 
-  return Math.round(maximum * 100)/100;
+  return maximum;
 }
 
 function calculateMinimum(datapoints){
