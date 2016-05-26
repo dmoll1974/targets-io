@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var db = require('db'),
+var mongoose = require('mongoose'),
     _ = require('lodash'),
     fs = require('fs'),
     Event = db.model('Event'),
