@@ -7,7 +7,10 @@ var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     TestrunSummary = db.model('TestrunSummary'),
     _ = require('lodash'),
-    Utils = require('./utils.server.controller');
+    Utils = require('./utils.server.controller'),
+    Jenkins = require('./jenkins.server.controller'),
+    GatlingDetails = mongoose.model('GatlingDetails');
+
 
 
 
@@ -63,22 +66,34 @@ function createTestrunSummary(req, res){
 
   var testRunSummary = new TestrunSummary(req.body);
 
-  //_.each(testRunSummary.metrics, function(metric){
-  //
-  //  _.each(metric.dygraphData.data, function(dataline){
-  //
-  //      dataline[0] = new Date(dataline[0]);
-  //  })
-  //})
 
-  testRunSummary.save(function(err, savesTestRunSummary){
+  testRunSummary.save(function(err, savedTestRunSummary){
 
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
-      res.jsonp(savesTestRunSummary);
+      res.jsonp(savedTestRunSummary);
+
+      /* if GatlingDetails have not been persisted yet, do it now!*/
+      GatlingDetails.findOne({consoleUrl: savedTestRunSummary.buildResultsUrl }, function(err, GatlingDetailsResponse) {
+
+        if (!GatlingDetailsResponse) {
+
+
+          Jenkins.getJenkinsData(savedTestRunSummary.buildResultsUrl, false, savedTestRunSummary.start, savedTestRunSummary.end, function (response) {
+
+            if(response.status === 'fail') {
+
+              console.log('Persisting of Gatling data failed due to: ' + response.data.message);
+
+            }
+          });
+        }
+
+      });
+
     }
-  })
+  });
 }
 
 function updateTestrunSummary(req, res){
