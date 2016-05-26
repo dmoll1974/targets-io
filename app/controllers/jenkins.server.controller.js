@@ -99,7 +99,7 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback) {
 
         var consoleArray = body.split('Requests');
         if (consoleArray.length > 1) {
-          var consoleResultsArray = consoleArray[consoleArray.length - 1].split('Simulation finished');
+          var consoleResultsArray = consoleArray[consoleArray.length - 1].split('sending end test run');
 
           var consoleLineArray = consoleResultsArray[0].split(separator);
           //            console.log(body);
