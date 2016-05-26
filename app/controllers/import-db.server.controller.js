@@ -2,19 +2,19 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
+var db = require('db'),
     _ = require('lodash'),
     fs = require('fs'),
-    Event = mongoose.model('Event'),
-    Dashboard = mongoose.model('Dashboard'),
-    Product = mongoose.model('Product'),
-    Metric = mongoose.model('Metric'),
-    Testrun = mongoose.model('Testrun'),
-    GatlingDetails = mongoose.model('GatlingDetails'),
+    Event = db.model('Event'),
+    Dashboard = db.model('Dashboard'),
+    Product = db.model('Product'),
+    Metric = db.model('Metric'),
+    Testrun = db.model('Testrun'),
+    GatlingDetails = db.model('GatlingDetails'),
     async = require('async'),
-    Template = mongoose.model('Template'),
-    Release = mongoose.model('Release'),
-    TestrunSummary = mongoose.model('TestrunSummary'),
+    Template = db.model('Template'),
+    Release = db.model('Release'),
+    TestrunSummary = db.model('TestrunSummary'),
     testRunsModule = require('./testruns.server.controller'),
     jsonfile = require('jsonfile');
 
