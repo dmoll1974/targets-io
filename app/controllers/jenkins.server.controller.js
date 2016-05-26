@@ -48,7 +48,7 @@ exports.getConsoleData = function (req, res) {
     }
   });
 };
-function getJenkinsData(jenkinsUrl, running, start, end, callback) {
+exports.getJenkinsData = function(jenkinsUrl, running, start, end, callback) {
   var consoleResponse = {};
   var consoleData = [];
   var errorData = [];
