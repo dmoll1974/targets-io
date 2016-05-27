@@ -62,7 +62,7 @@ exports.getJenkinsData = function(jenkinsUrl, running, start, end, callback) {
     separator = '&gt; ';
   } else {
     consoleUrl = jenkinsUrl + 'logText/progressiveText?start=';
-    separator = '> ';
+    separator = '> ';100
   }
   var memcached = new Memcached(config.memcachedHost);
   var client = requestjson.createClient(jenkinsUrl);
@@ -93,7 +93,7 @@ exports.getJenkinsData = function(jenkinsUrl, running, start, end, callback) {
     client.get(consoleUrl + offset, function (err, response, body) {
       //        if (err) console.error(err);
       console.log(consoleUrl + offset);
-      console.log('X-More-Data:' + response.headers['x-more-data']);
+      // console.log('X-More-Data:' + response.headers['x-more-data']);
       //if (response.headers['x-text-size'] && running == true) {
       //  memcached.set(consoleUrl, response.headers['x-text-size'], 600, function (err, result) {
       //    if (err)
