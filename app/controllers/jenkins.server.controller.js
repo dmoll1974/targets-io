@@ -10,6 +10,9 @@ var mongoose = require('mongoose'),
     GatlingDetails = db.model('GatlingDetails'),
     config = require('../../config/config');
 
+exports.getJenkinsData = getJenkinsData;
+
+
 exports.getConsoleData = function (req, res) {
 
       /* first check if response is available in db */
@@ -36,7 +39,7 @@ exports.getConsoleData = function (req, res) {
       });
 
 };
-exports.getJenkinsData = function(jenkinsUrl, running, start, end, callback) {
+function getJenkinsData (jenkinsUrl, running, start, end, callback) {
   var consoleResponse = {};
   var consoleData = [];
   var errorData = [];
