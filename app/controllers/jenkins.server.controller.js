@@ -93,7 +93,7 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
       }
     }
     client.get(consoleUrl + offset, function (err, response, body) {
-      //        if (err) console.error(err);
+       if (err) console.error(err);
       console.log(consoleUrl + offset);
       // console.log('X-More-Data:' + response.headers['x-more-data']);
       //if (response.headers['x-text-size'] && running == true) {
