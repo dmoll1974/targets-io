@@ -102,6 +102,9 @@ exports.getJenkinsData = function(jenkinsUrl, running, start, end, callback) {
       //    memcached.end();
       //  });
       //}
+      
+      console.log('response.statusCode' + response.statusCode);
+      
       if(response.statusCode !== 200){
 
         consoleResponse.status = 'fail';
