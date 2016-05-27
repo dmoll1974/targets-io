@@ -9,6 +9,8 @@ var mongoose = require('mongoose'),
     Memcached = require('memcached'),
     GatlingDetails = mongoose.model('GatlingDetails');
 
+exports.getJenkinsData = getJenkinsData;
+
 exports.getConsoleData = function (req, res) {
   var memcached = new Memcached(config.memcachedHost);
   var jenkinsKey = req.body.consoleUrl + req.body.running;
@@ -48,7 +50,7 @@ exports.getConsoleData = function (req, res) {
     }
   });
 };
-exports.getJenkinsData = function(jenkinsUrl, running, start, end, callback) {
+function getJenkinsData (jenkinsUrl, running, start, end, callback) {
   var consoleResponse = {};
   var consoleData = [];
   var errorData = [];
