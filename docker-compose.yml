@@ -29,26 +29,26 @@ services:
     networks:
       - my-net
     volumes:
-     - /home/marathon/var/lib/targets-io/mongo:/data/db
+     - /var/lib/targets-io/mongo:/data/db
     restart: always
   graphite:
     image: dmoll1974/targets-io-graphite
     networks:
       - my-net
     ports:
-     - "88:80"
+     - "8090:80"
      - "2003:2003"
      - "8125:8125"
     volumes:
-     - /home/marathon/var/lib/targets-io/graphite/log:/var/log
-     - /home/marathon/var/lib/targets-io/graphite/storage:/opt/graphite/storage
+     - /var/lib/targets-io/graphite/log:/var/log
+     - /var/lib/targets-io/graphite/storage:/opt/graphite/storage
     restart: always
   jenkins:
-    image: jenkins
+    image: dmoll1974/targets-io-jenkins
     networks:
       - my-net
     ports:
-     - "8088:8080"
+     - "8070:8080"
     restart: always
   redis:
     image: redis
