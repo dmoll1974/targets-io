@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     request = require('request'),
     requestjson = require('request-json'),
-    cache = require('./redis.server.controller')
+    cache = require('./redis.server.controller'),
     config = require('../../config/config');
 
 exports.getGraphiteData = getGraphiteData;
