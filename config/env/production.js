@@ -4,7 +4,8 @@ module.exports = {
 
     graphiteHost: process.env.GRAPHITE_HOST,
     db: process.env.MONGO_URL + '/targets-io',
-    memcachedHost: [process.env.MEMCACHED_HOST],
+    redisHost: process.env.REDIS_SERVICE_HOST,
+    redisPort: process.env.REDIS_SERVICE_PORT,
     assets: {
         lib: {
             css: [

@@ -7,15 +7,11 @@ services:
      - "3000:3000"
     networks:
       - my-net
-    links:
-     - graphite
-     - db
-     - memcached
     environment:
        MONGO_SERVICE_HOST: "db"
        MONGO_SERVICE_PORT: "27017"
-       MEMCACHED_SERVICE_HOST: "memcached"
-       MEMCACHED_SERVICE_PORT: "11211"
+       REDIS_SERVICE_HOST: "redis"
+       REDIS_SERVICE_PORT: "6379"
        GRAPHITE_SERVICE_HOST: "graphite"
        GRAPHITE_SERVICE_PORT: "80"
     restart: always
@@ -44,22 +40,15 @@ services:
     image: jenkins
     networks:
       - my-net
-    links:
-     - graphite
-     - targetsio
     ports:
      - "8088:8080"
     restart: always
-  memcached:
-    image: sameersbn/memcached:latest
+  redis:
+    image: redis
     networks:
       - my-net
     ports:
-     - "11211:11211"
-    environment:
-     CACHE_SIZE: 1024
-     EXTRA_OPTS: "-I 10m"
-    mem_limit: 1000000000
+     - "6379:6379"
     restart: always
 networks:
   my-net:
