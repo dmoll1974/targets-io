@@ -19,6 +19,8 @@ services:
     image: dmoll1974/targets-io-demo-meanjs
     ports:
      - "3001:3000"
+    environment:
+       DB_1_PORT_27017_TCP_ADDR: "db:27017"
     networks:
       - my-net
     restart: always
