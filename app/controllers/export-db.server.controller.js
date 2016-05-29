@@ -18,7 +18,7 @@ var mongoose = require('mongoose'),
 var wstream = fs.createWriteStream('myOutput.txt');
 module.exports.dbExport = function (req, res) {
 
-    res.setHeader('Content-disposition', 'attachment; filename=targets-io.dump');
+    res.setHeader('Content-disposition', 'attachment; filename=targets-io.json');
     res.write('{\n');
     res.write('"products": [');
 

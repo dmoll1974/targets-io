@@ -4,11 +4,14 @@
  */
 var redis = require('redis'),
     config = require('../../config/config'),
+    _ = require('lodash'),
     md5 = require('MD5');
 
 exports.createKey = createKey;
 exports.setCache = setCache;
 exports.getCache = getCache;
+exports.flushCache = flushCache;
+
 
 
 var client = redis.createClient(config.redisPort, config.redisHost, {no_ready_check: true});
@@ -18,33 +21,37 @@ client.on('connect', function() {
   console.log('Redis host' + config.redisHost + ':' + config.redisPort );
 });
 
-function setCache(key, object, expiry, callback){
+function setCache(key, array, expiry, callback){
 
-  client.hmset(key, object, function(err, result){
+  client.set(key, JSON.stringify(array));
+  client.expire(key, expiry);
+  callback();
 
-    if(err){
-
-      console.log(err)
-    }else{
-
-      client.expire(key, expiry);
-      callback();
-    }
-
-
-  });
 
 }
 
 function getCache(key, callback){
 
-  client.hmget(key, function(err, object){
+  client.get(key, function(err, object){
 
     if(err){
       console.log(err);
     }else{
 
       callback(object);
+    }
+  });
+}
+
+function flushCache(key, callback){
+
+  client.del(key, function(err, reply){
+
+    if(err){
+      console.log(err);
+    }else{
+
+      callback();
     }
   });
 }

@@ -11,8 +11,6 @@ var mongoose = require('mongoose'),
     config = require('../../config/config');
 
 exports.getGraphiteData = getGraphiteData;
-exports.flushMemcachedKey = flushMemcachedKey;
-exports.createMemcachedKey = createMemcachedKey;
 
 /**
  * Find metrics
@@ -82,10 +80,9 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
     });
   } else {
     /* first check cache */
-    cache.getCache(cacheKey, function (err, result) {
-      if (err)
-        console.error('cache error: ' + err);
-      if (result && !err) {
+    cache.getCache(cacheKey, function (result) {
+
+      if (result) {
         console.dir('cache hit: ' + cacheKey);
         callback(result);
       } else {
@@ -122,14 +119,4 @@ function createUrl(from, until, targets, maxDataPoints) {
     graphiteTargetUrl += '&target=' + targets;
   }
   return graphiteTargetUrl;
-}
-function flushMemcachedKey(key, callback) {
-  var memcached = new Memcached(config.memcachedHost);
-  memcached.del(key, function (err, result) {
-    if (err)
-      callback(err);
-    console.info('deleted key: ' + key + ' : ' + result);
-    callback();
-  });
-  memcached.end();  // as we are 100% certain we are not going to use the connection again, we are going to end it
 }
