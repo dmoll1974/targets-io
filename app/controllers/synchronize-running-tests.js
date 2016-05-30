@@ -223,13 +223,13 @@ let saveTestRun = function (runningTest){
     });
 
 
-    testRun.save(function (err, savedTestRun) {
+    runningTest.remove(function (err) {
 
       if (err) {
         reject(err);
       } else {
 
-        runningTest.remove(function (err) {
+        testRun.save(function (err, savedTestRun) {
           if (err) {
             reject(err);
           } else {
