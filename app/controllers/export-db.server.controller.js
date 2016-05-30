@@ -13,6 +13,7 @@ var mongoose = require('mongoose'),
     GatlingDetails = mongoose.model('GatlingDetails'),
     Release = mongoose.model('Release'),
     TestrunSummary = mongoose.model('TestrunSummary'),
+    RunningTest = mongoose.model('RunningTest'),
     Template = mongoose.model('Template');
 
 var wstream = fs.createWriteStream('myOutput.txt');
@@ -133,71 +134,89 @@ module.exports.dbExport = function (req, res) {
                                     res.write(testrunSummary + '\n');
                                 }).on('close', function () {
                                     res.write('],\n');
-                                    res.write('"gatlingDetails": [');
-
-                                    GatlingDetails.find()
-                                        .lean()
-                                        .stream({
-                                            transform: () => {
-                                                let index = 0;
-                                                return (data) => {
-                                                    return (!(index++) ? '' : ',') + JSON.stringify(data);
-                                                };
-                                            }() // invoke
-                                         })
-                                        .on('data', function (gatlingDetails) {
-                                            res.write(gatlingDetails + '\n');
+                                    res.write('"runningTests": [');
+                                    RunningTest.find().lean().stream({
+                                        transform: () => {
+                                            let index = 0;
+                                            return (data) => {
+                                                return (!(index++) ? '' : ',') + JSON.stringify(data);
+                                            };
+                                        }() // invoke
                                         })
-                                        .on('close', function () {
-                                            res.write(']\n}');
-                                            res.end();
+                                    .on('data', function (runningTest) {
+                                    res.write(runningTest + '\n');
+                                    }).on('close', function () {
+                                        res.write('],\n');
+                                        res.write('"gatlingDetails": [');
+
+                                        GatlingDetails.find()
+                                            .lean()
+                                            .stream({
+                                                transform: () => {
+                                                    let index = 0;
+                                                    return (data) => {
+                                                        return (!(index++) ? '' : ',') + JSON.stringify(data);
+                                                    };
+                                                }() // invoke
+                                             })
+                                            .on('data', function (gatlingDetails) {
+                                                res.write(gatlingDetails + '\n');
+                                            })
+                                            .on('close', function () {
+                                                res.write(']\n}');
+                                                res.end();
+                                            }).on('error', function (err) {
+                                            res.send(500, {
+                                                err: err,
+                                                msg: 'Failed to get gatlingDetails from db'
+                                            });
+                                        });
                                         }).on('error', function (err) {
-                                        res.send(500, {
-                                            err: err,
-                                            msg: 'Failed to get gatlingDetails from db'
+                                            res.send(500, {err: err,
+                                                msg: 'Failed to get runningTests from db'
+                                            });
+                                        });
+                                    }).on('error', function (err) {
+                                        res.send(500, {err: err,
+                                            msg: 'Failed to get testrunSummaries from db'
                                         });
                                     });
                                 }).on('error', function (err) {
                                     res.send(500, {err: err,
-                                        msg: 'Failed to get testrunSummaries from db'
+                                        msg: 'Failed to get releases from db'
                                     });
                                 });
                             }).on('error', function (err) {
                                 res.send(500, {err: err,
-                                    msg: 'Failed to get releases from db'
+                                    msg: 'Failed to get templates from db'
                                 });
                             });
                         }).on('error', function (err) {
                             res.send(500, {err: err,
-                                msg: 'Failed to get templates from db'
+                                msg: 'Failed to get test runs from db'
                             });
                         });
                     }).on('error', function (err) {
                         res.send(500, {err: err,
-                            msg: 'Failed to get test runs from db'
+                            msg: 'Failed to get events from db'
                         });
                     });
                 }).on('error', function (err) {
-                    res.send(500, {err: err,
-                        msg: 'Failed to get events from db'
+                    res.send(500, {
+                        err: err,
+                        msg: 'Failed to get metrics from db'
                     });
                 });
             }).on('error', function (err) {
                 res.send(500, {
                     err: err,
-                    msg: 'Failed to get metrics from db'
+                    msg: 'Failed to get dashboards from db'
                 });
             });
         }).on('error', function (err) {
             res.send(500, {
                 err: err,
-                msg: 'Failed to get dashboards from db'
+                msg: 'Failed to get products from db'
             });
         });
-    }).on('error', function (err) {
-        res.send(500, {
-            err: err,
-            msg: 'Failed to get products from db'
-        });
-    });
 };

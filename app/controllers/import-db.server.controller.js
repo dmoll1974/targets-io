@@ -15,6 +15,7 @@ var mongoose = require('mongoose'),
     Template = mongoose.model('Template'),
     Release = mongoose.model('Release'),
     TestrunSummary = mongoose.model('TestrunSummary'),
+    RunningTest = mongoose.model('RunningTest'),
     testRunsModule = require('./testruns.server.controller'),
     jsonfile = require('jsonfile');
 
@@ -151,6 +152,27 @@ function upload(req, res) {
             var releaseDoc = new Release(importRelease);
 
             releaseDoc.save(function (err) {
+            });
+
+          });
+        }
+        //});
+      });
+      
+      /* Remove existing runningTests and import from file */
+
+      RunningTest.remove({}, function (err) {
+        if (err)
+          console.log(err);
+        console.log('RunningTests removed');
+
+
+        if (importItems.runningTests) {
+          _.each(importItems.runningTests, function (importRunningTest) {
+
+            var runningTestDoc = new RunningTest(importRunningTest);
+
+            runningTestDoc.save(function (err) {
             });
 
           });
