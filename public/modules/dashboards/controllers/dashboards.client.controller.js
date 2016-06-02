@@ -18,7 +18,8 @@ angular.module('dashboards').controller('DashboardsController', [
   'Events',
   'Utils',
   '$q',
-  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, Utils, $q) {
+  '$interval',
+  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, Utils, $q, $interval) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -187,6 +188,10 @@ angular.module('dashboards').controller('DashboardsController', [
 
     $scope.setTab = function (newValue) {
       Dashboards.selectedTab = newValue;
+      /* stop test run polling*/
+      if(newValue !== 0 )
+        $interval.cancel(Utils.polling);
+
     };
 
     ///* Watch on dashboard */

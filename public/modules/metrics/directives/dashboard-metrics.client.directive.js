@@ -43,6 +43,7 @@ function DashboardMetricsDirective () {
     function openMenu ($mdOpenMenu, ev) {
       originatorEv = ev;
       $mdOpenMenu(ev);
+
     };
 
 

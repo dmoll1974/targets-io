@@ -15,6 +15,7 @@ angular.module('graphs').service('Utils', [function () {
       },
       zoomFrom: undefined,
       zoomUntil: undefined,
+      polling: undefined,
       showLegend: true,
       showTooltip: false,
       numberOfColumns: 2,

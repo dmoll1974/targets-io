@@ -190,7 +190,7 @@ angular.module('testruns').controller('TestrunsController', [
 
     };
 
-    var polling = $interval(testRunPolling, 15000);
+    Utils.polling = $interval(testRunPolling, 15000);
 
     setTimeout(function(){
       /* only get test runs from db when neccessary */
@@ -307,14 +307,16 @@ angular.module('testruns').controller('TestrunsController', [
     $scope.$on('$destroy', function () {
       // Make sure that the interval is destroyed too
       $interval.cancel(spinner);
-      $interval.cancel(polling);
+      $interval.cancel(Utils.polling);
 
     });
     
     var originatorEv;
     $scope.openMenu = function ($mdOpenMenu, ev) {
+      $interval.cancel(Utils.polling);
       originatorEv = ev;
       $mdOpenMenu(ev);
+
     };
 
     $scope.go = function (url) {
@@ -457,7 +459,7 @@ angular.module('testruns').controller('TestrunsController', [
 
       /* stop polling during refresh */
 
-      $interval.cancel(polling);
+      $interval.cancel(Utils.polling);
 
 
       var selectedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
@@ -472,7 +474,7 @@ angular.module('testruns').controller('TestrunsController', [
 
         /* start polling again after refresh */
 
-        var polling = $interval(testRunPolling, 15000);
+        Utils.polling = $interval(testRunPolling, 15000);
 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
