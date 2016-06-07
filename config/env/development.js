@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+	isDevelopment: true,
 	db: 'mongodb://localhost/targets-io',
 
 	graphiteHost: 'http://172.21.42.178',
