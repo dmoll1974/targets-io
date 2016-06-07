@@ -172,7 +172,7 @@ mongoose.model('Testrun', TestrunSchema);
 
 var db = connect();
 
-var connect = function() {
+function connect() {
   // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
   var options = {
     user: process.env.dbUsername,

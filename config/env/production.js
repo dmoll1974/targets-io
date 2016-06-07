@@ -1,12 +1,17 @@
 'use strict';
 
 module.exports = {
-
+    isProduction: true,
+    logLevel: 'error',
     graphiteHost: process.env.GRAPHITE_HOST,
     db: process.env.MONGO_URL,
     dbUsername: process.env.MONGO_USER,
     dbPassword: process.env.MONGO_PASSWORD,
     memcachedHost: [process.env.MEMCACHED_HOST],
+    graylog : {
+        host: 'graylog.ae1.klm.com',
+        port: 12201
+    },
     assets: {
         lib: {
             css: [

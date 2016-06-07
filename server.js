@@ -8,9 +8,32 @@ var init = require('./config/init')(),
 	mongoose = require('mongoose'),
 	chalk = require('chalk'),
 	cluster = require('cluster'),
+	winston = require('winston'),
 	mongoSetup = require('./mongo-setup');
 
 
+ //Better logging
+winston.remove(winston.transports.Console);
+if (config.isDevelopment) {
+	// only log to console in development environment
+	winston.add(winston.transports.Console, {
+		timestamp: true,
+		colorize: !config.isProduction,
+		level: config.logLevel
+	});
+}
+
+if (config.graylog) {
+
+	winston.add(require('winston-graylog2'), {
+		name: 'Graylog',
+		graylog: {
+			servers: [{host: config.graylog.host, port: config.graylog.port}],
+			facility: 'targets-io'
+		}/*,
+		staticMeta: {environment: config.environment, source: os.hostname()}*/
+	});
+}
 
 /**
  * Main application entry file.
@@ -59,7 +82,10 @@ if(cluster.isMaster) {
 		process.execArgv.push('--debug=' + (40894));
 	}
 
-	var env = { mongoUrl: config.db };
+	var env = { mongoUrl: config.db,
+				dbUsername: config.dbUsername,
+				dbPassword: config.dbPassword,
+	};
 
 	var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
 
