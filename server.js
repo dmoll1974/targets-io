@@ -82,10 +82,10 @@ if(cluster.isMaster) {
 		process.execArgv.push('--debug=' + (40894));
 	}
 
-	var env = { mongoUrl: config.db,
-				dbUsername: config.dbUsername,
-				dbPassword: config.dbPassword,
-	};
+	var env = 	{	mongoUrl: config.db,
+					dbUsername: config.dbUsername,
+					dbPassword: config.dbPassword
+				};
 
 	var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
 
