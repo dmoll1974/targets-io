@@ -62,7 +62,7 @@ function TargetsIoHeaderDirective () {
 
                             /* if switching dashboards, reset application state */
                             if($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName && $rootScope.previousStateParams.dashboardName) {
-                                TestRuns.list = [];
+                                //TestRuns.list = [];
                                 /* reset utils variables */
                                 Utils.reset();
 
