@@ -39,7 +39,7 @@ if (config.graylog) {
  * Main application entry file.
  * Please note that the order of loading is important.
  */
-console.log ("mongoDb connect to: " + config.db)
+console.log ("mongoDb connect to: " + config.db + " with credentials: " + config.dbUsername + "/" +  config.dbPassword);
 console.log ("memcached host: " + config.memcachedHost)
 console.log ("graphite host: " + config.graphiteHost)
 
