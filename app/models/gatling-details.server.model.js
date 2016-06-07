@@ -9,7 +9,11 @@ var Schema = mongoose.Schema;
 var gatlingDetailsSchema = new mongoose.Schema({
   "consoleUrl": String,
   "response": Object
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 
 gatlingDetailsSchema.index({ consoleUrl: 1}, { unique: true });
 

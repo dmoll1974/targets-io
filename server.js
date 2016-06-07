@@ -7,7 +7,10 @@ var init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose'),
 	chalk = require('chalk'),
-	cluster = require('cluster');
+	cluster = require('cluster'),
+	mongoSetup = require('./mongo-setup');
+
+
 
 /**
  * Main application entry file.
@@ -19,12 +22,14 @@ console.log ("graphite host: " + config.graphiteHost)
 
 
 // Bootstrap db connection
-var db = mongoose.connect(config.db, function(err) {
-	if (err) {
-		console.error(chalk.red('Could not connect to MongoDB!'));
-		console.log(chalk.red(err));
-	}
-});
+//var db = mongoose.connect(config.db, function(err) {
+//	if (err) {
+//		console.error(chalk.red('Could not connect to MongoDB!'));
+//		console.log(chalk.red(err));
+//	}
+//});
+
+var db = mongoSetup.connect();
 
 if(cluster.isMaster) {
 	var numWorkers = (require('os').cpus().length - 1 > 0) ? require('os').cpus().length - 1 : 1; /* save one core for daemon, unless there is only one core */

@@ -55,7 +55,11 @@ var ReleaseSchema = new Schema({
 
     } ]
   }]
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 
 ReleaseSchema.index({
   name: 1,
