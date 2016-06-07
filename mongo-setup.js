@@ -10,8 +10,8 @@ var mongoSetup = module.exports;
 mongoSetup.connect = function() {
     // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
     var options = {
-        user: config.dbUsername,
-        pass: config.dbPassword,
+        //user: config.dbUsername,
+        //pass: config.dbPassword,
         server: {
             poolSize: 100,
             auto_reconnect: true, // already default, but explicit
@@ -23,6 +23,7 @@ mongoSetup.connect = function() {
         }
     };
 
+    var mongoUrl = '"mongodb://' + config.dbUsername + ':' + config.dbPassword + '@' + config.db;
 
 
     mongoose.connection.once('open', function() {
@@ -47,6 +48,6 @@ mongoSetup.connect = function() {
     });
 
 
-    return mongoose.connect(config.db, options);
+    return mongoose.connect(mongoUrl, options);
 
 };

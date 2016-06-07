@@ -82,7 +82,7 @@ if(cluster.isMaster) {
 		process.execArgv.push('--debug=' + (40894));
 	}
 
-	var env = 	{	mongoUrl: config.db,
+	var env = 	{	db: config.db,
 					dbUsername: config.dbUsername,
 					dbPassword: config.dbPassword
 				};

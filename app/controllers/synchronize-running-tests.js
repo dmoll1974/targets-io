@@ -175,8 +175,8 @@ var db = connect();
 function connect() {
   // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
   var options = {
-    user: process.env.dbUsername,
-    pass: process.env.dbPassword,
+    //user: process.env.dbUsername,
+    //pass: process.env.dbPassword,
     server: {
       poolSize: 20,
       auto_reconnect: true, // already default, but explicit
@@ -188,6 +188,7 @@ function connect() {
     }
   };
 
+  var mongoUrl = '"mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
 
 
   mongoose.connection.once('open', function() {
@@ -212,7 +213,7 @@ function connect() {
   });
 
 
-  return mongoose.connect(process.env.mongoUrl, options);
+  return mongoose.connect(mongoUrl, options);
 
 };
 
