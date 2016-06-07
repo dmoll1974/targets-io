@@ -23,6 +23,8 @@ mongoSetup.connect = function() {
         }
     };
 
+
+
     mongoose.connection.once('open', function() {
         console.log('Connected to MongoDB server with mongoose.');
     });
@@ -43,6 +45,7 @@ mongoSetup.connect = function() {
             });
         });
     });
+
 
     return mongoose.connect(config.db, options);
 
