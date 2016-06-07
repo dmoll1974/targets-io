@@ -113,6 +113,8 @@ module.exports = function(db) {
 		store: new mongoStore({
 			db: db.connection.db,
 			collection: config.sessionCollection
+		}, function () {
+			console.log("db connection open");
 		})
 	}));
 
