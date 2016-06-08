@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = {
-	isDevelopment: true,
-	db: 'mongodb://localhost/targets-io',
-
+	db: 'KLM123444:27017,KLM123444:27018,KLM123444:27019/targetsIoDb?replicaSet=rs0',
+	dbUsername: 'bla',
+	dbPassword: 'bla',
 	graphiteHost: 'http://172.21.42.178',
 	memcachedHost: [ '172.21.42.178:11211'],
 
