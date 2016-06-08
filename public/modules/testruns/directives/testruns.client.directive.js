@@ -65,7 +65,7 @@ function TestrunsDirective () {
     $scope.openMenu = openMenu;
 
 
-      /* watches */
+    /* watches */
 
     $scope.$watch('$scope.loading', function (current, old) {
       if (current !== old) {
@@ -86,7 +86,7 @@ function TestrunsDirective () {
               j++;
             console.log('bla');
           }, 100, 0, true);
-        }else{
+        } else {
 
           $interval.cancel(spinner);
 
@@ -94,14 +94,6 @@ function TestrunsDirective () {
       }
     });
 
-    ///* Watch on dashboard */
-    //$scope.$watch(function (scope) {
-    //  return Testruns.list;
-    //}, function (newVal, oldVal) {
-    //  $scope.dashboard = Dashboards.selected;
-    //  SideMenu.productFilter = $stateParams.productName;
-    //
-    //});
 
     $scope.$watch('$scope.allTestRunsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
@@ -119,17 +111,22 @@ function TestrunsDirective () {
     });
 
 
-  /*socket.io*/
+    /*socket.io*/
 
-    mySocket.on('connect', function(data) {
-      //mySocket.emit('join', 'Hello World from client');
-      console.log(this.io.engine.id);
+    var room = $scope.productName + '-' + $scope.dashboardName;
+
+    mySocket.on('connect', function (data) {
+
+      mySocket.emit('room', room);
+      console.log('Joined room: ' + room);
 
     });
 
-    mySocket.on('message', function(data) {
+    mySocket.on('message', function (data) {
       console.log('event:' + data.event);
       console.log('testrun:' + data.testrun.testRunId);
+
+      $scope.testRuns.splice($scope.numberOfRunningTests, 0, data.testrun);
     });
 
     /* initialise */
@@ -140,30 +137,23 @@ function TestrunsDirective () {
 
 
 
-        /* only get test runs from db when neccessary */
+      /* only get test runs from db when neccessary */
       /* if switching dashboards, reset application state */
-      if(($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName && $rootScope.previousStateParams.dashboardName) || !$rootScope.previousStateParams.dashboardName) {
-      //if (TestRuns.list.length > 0) {
+      if (($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName && $rootScope.previousStateParams.dashboardName) || !$rootScope.previousStateParams.dashboardName) {
 
 
-          $scope.loading = true;
-          return testRunPolling();
+        $scope.loading = true;
+          testRunPolling();
 
 
       } else {
 
-          $scope.testRuns = [];
-          $scope.testRuns.push(TestRuns.list);
-          _.each(TestRuns.list, function(testRun){
-
-              $scope.testRuns.push(testRun);
-
-          });
+        $scope.testRuns = [];
+        $scope.testRuns = TestRuns.list;
         $scope.runningTest = (TestRuns.runningTest) ? TestRuns.runningTest : false;
         $scope.numberOfRunningTests = (TestRuns.runningTest) ? TestRuns.runningTest : 0;
 
       }
-      //}, 1);
 
 
       /* Check if baseline test run exists */
@@ -192,17 +182,12 @@ function TestrunsDirective () {
       });
 
     }
-      /* initialise polling */
-    //  Utils.polling = $interval(testRunPolling, 15000);
-    //}
-
-    /* refresh test runs every 15 seconds */
 
 
-     function testRunPolling() {
+    function testRunPolling() {
 
 
-       TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (response) {
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (response) {
 
         $scope.runningTest = response.runningTest;
 
@@ -210,47 +195,45 @@ function TestrunsDirective () {
 
         $scope.totalNumberOftestRuns = response.totalNumberOftestRuns;
 
-        if($scope.testRuns > 0) {
-          /* get testRun Id's that might be selected */
-          var selectedTestRunIds = getSelectedTestRunIds($scope.testRuns);
+        //if ($scope.testRuns > 0) {
+        //  /* get testRun Id's that might be selected */
+        //  var selectedTestRunIds = getSelectedTestRunIds($scope.testRuns);
+        //}
+
+        /* reset test runs */
+        $scope.testRuns = [];
+        $scope.testRuns = response.testRuns;
+
+
+        /* set selected testruns if necessary */
+        //if (selectedTestRunIds > 0) {
+        //
+        //  _.each($scope.testRuns, function (testRun) {
+        //
+        //    _.each(selectedTestRunIds, function (selectedTestRunId) {
+        //
+        //      if (testRun.testRunId === selectedTestRunId) {
+        //
+        //        testRun.selected = true;
+        //      }
+        //    });
+        //
+        //  });
+        //}
+
+        /* Set end value to 'Running' for running test(s)*/
+
+        for (var i = 0; i < $scope.numberOfRunningTests; i++) {
+
+          $scope.testRuns[i].end = 'Running ...';
         }
 
-          /* reset test runs */
-          $scope.testRuns = [];
-
-         $scope.testRuns = response.testRuns;
-
-
-            /* set selected testruns if necessary */
-            if (selectedTestRunIds > 0) {
-
-              _.each($scope.testRuns, function (testRun) {
-
-                _.each(selectedTestRunIds, function (selectedTestRunId) {
-
-                  if (testRun.testRunId === selectedTestRunId) {
-
-                    testRun.selected = true;
-                  }
-                });
-
-              });
-            }
-
-            /* Set end value to 'Running' for running test(s)*/
-
-            for (var i = 0; i < $scope.numberOfRunningTests; i++) {
-
-              $scope.testRuns[i].end = 'Running ...';
-            }
-
-            $scope.loading = false;
+        $scope.loading = false;
 
 
         TestRuns.list = response.testRuns;
         TestRuns.runningTest = response.runningTest;
         TestRuns.numberOfRunningTests = response.numberOfRunningTests;
-
 
 
       });
@@ -259,19 +242,19 @@ function TestrunsDirective () {
 
 
     /* get testRun Id's that might be selected */
-    function getSelectedTestRunIds(testRuns){
+    function getSelectedTestRunIds(testRuns) {
       var selectedTestRunIds = [];
       var testRunsSelected = false;
 
       _.each(testRuns, function (testRun) {
 
-          if (testRun.selected === true) {
+        if (testRun.selected === true) {
 
-            selectedTestRunIds.push(testRun.testRunId);
-            testRunsSelected = true;
-          }
+          selectedTestRunIds.push(testRun.testRunId);
+          testRunsSelected = true;
+        }
 
-        });
+      });
 
       return selectedTestRunIds;
 
@@ -279,6 +262,7 @@ function TestrunsDirective () {
 
 
     var originatorEv;
+
     function openMenu($mdOpenMenu, ev) {
       $interval.cancel(Utils.polling);
       originatorEv = ev;
@@ -303,7 +287,7 @@ function TestrunsDirective () {
       });
     };
 
-    function viewTestRunSummary(testRun){
+    function viewTestRunSummary(testRun) {
 
 
       $state.go('testRunSummary', {
@@ -315,7 +299,7 @@ function TestrunsDirective () {
     }
 
 
-    function liveGraphs(testRun){
+    function liveGraphs(testRun) {
 
       $state.go('viewLiveGraphs', {
         'productName': $stateParams.productName,
@@ -336,7 +320,7 @@ function TestrunsDirective () {
       });
     };
 
-    function testRunPreviousBuildBenchmark (testRun) {
+    function testRunPreviousBuildBenchmark(testRun) {
       TestRuns.selected = testRun;
       var benchmarkPreviousResult = testRun.benchmarkResultPreviousOK ? 'passed' : 'failed';
       $state.go('benchmarkPreviousBuildTestRun', {
@@ -408,7 +392,7 @@ function TestrunsDirective () {
             $scope.testRunSelected = false;
             $scope.testRuns[i].selected = false;
             $scope.testRuns.splice(i, 1);
-            if(TestRuns.list[i]) TestRuns.list.splice(i, 1);
+            if (TestRuns.list[i]) TestRuns.list.splice(i, 1);
           }
 
         }
@@ -435,7 +419,9 @@ function TestrunsDirective () {
       $interval.cancel(Utils.polling);
 
 
-      var selectedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
+      var selectedTestRunIndex = $scope.testRuns.map(function (currentTestRun) {
+        return currentTestRun._id.toString();
+      }).indexOf(testRun._id.toString());
 
       $scope.testRuns[selectedTestRunIndex].meetsRequirement = 'pending';
       $scope.testRuns[selectedTestRunIndex].benchmarkResultPreviousOK = 'pending';
@@ -454,34 +440,36 @@ function TestrunsDirective () {
       });
     };
 
-    function setAllTestRunsSelected(testRunSelected){
+    function setAllTestRunsSelected(testRunSelected) {
 
       $scope.testRunSelected = testRunSelected;
     };
 
 
-    function setTestRunsSelected(testRunSelected){
+    function setTestRunsSelected(testRunSelected) {
 
-      if (testRunSelected === false){
+      if (testRunSelected === false) {
 
         $scope.testRunSelected = false;
 
-        _.each($scope.testRuns, function(testRun){
-          if(testRun.selected === true) $scope.testRunSelected = true;
+        _.each($scope.testRuns, function (testRun) {
+          if (testRun.selected === true) $scope.testRunSelected = true;
         })
 
-      }else {
+      } else {
         $scope.testRunSelected = testRunSelected;
       }
     };
 
-    function markAsComplete(testRun){
+    function markAsComplete(testRun) {
 
       testRun.completed = true;
-      TestRuns.update(testRun).success(function(updatedTestRun){
+      TestRuns.update(testRun).success(function (updatedTestRun) {
 
-        if(updatedTestRun){
-          var updatedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(updatedTestRun._id.toString());
+        if (updatedTestRun) {
+          var updatedTestRunIndex = $scope.testRuns.map(function (currentTestRun) {
+            return currentTestRun._id.toString();
+          }).indexOf(updatedTestRun._id.toString());
           $scope.testRuns[updatedTestRunIndex] = updatedTestRun;
           $scope.completedTestRunsOnly = true;
 
@@ -499,16 +487,21 @@ function TestrunsDirective () {
           }, function (errorResponse) {
             $scope.error = errorResponse.data.message;
           });
-        };
+        }
+        ;
 
       });
     }
 
 
-    function editTestRun (testRun){
+    function editTestRun(testRun) {
 
       TestRuns.selected = testRun;
-      $state.go('editTestRun',{productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId});
+      $state.go('editTestRun', {
+        productName: testRun.productName,
+        dashboardName: testRun.dashboardName,
+        testRunId: testRun.testRunId
+      });
 
     }
 
@@ -561,5 +554,5 @@ function TestrunsDirective () {
       }
 
     }
-
+  }
 }

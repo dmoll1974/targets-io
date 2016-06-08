@@ -595,8 +595,10 @@ let upsertTestRun = function(testRun){
         reject(err);
       } else {
         var io = global.io;
-        console.log('emitting message from socket');
-        io.sockets.emit('message', {event: 'saved', testrun: savedTestRun});
+        var room = savedTestRun.productName + '-' + savedTestRun.dashboardName;
+
+        console.log('emitting message to room: ' + room);
+        io.sockets.in(room).emit('message', {event: 'saved', testrun: savedTestRun});
 
         resolve(savedTestRun);
       }

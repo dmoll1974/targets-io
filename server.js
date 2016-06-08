@@ -114,13 +114,15 @@ if(cluster.isMaster) {
 
 	io.adapter(redis_io({host: "172.21.42.150", port: 6379 }));
 
-	io.on('connection', function(client) {
+	io.on('connection', function(socket) {
 		console.log('Client connected...');
 
-		//client.on('join', function(data) {
-		//	console.log(data);
-		//	client.emit('messages', 'Hello from server');
-		//});
+		// once a client has connected, we expect to get a ping from them saying what room they want to join
+		socket.on('room', function(room) {
+
+			socket.join(room);
+
+		});
 	});
 
 

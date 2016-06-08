@@ -4,13 +4,13 @@
 
         <div layout="row" id="fixedBaselineToast" >
             <div flex="95">
-                <md-checkbox style="margin-bottom: 0px;" ng-model="vm.completedTestRunsOnly" aria-label="Show completed test runs only">
+                <md-checkbox style="margin-bottom: 0px;" ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
                     Show completed test runs only
                 </md-checkbox>
             </div>
 
             <div flex="5">
-                <md-button style="margin-left: 10px;" ng-class="{'disabled': vm.testRunSelected === false }" class="md-accent md-icon-button" ng-click="vm.testRunSelected && vm.openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >
+                <md-button style="margin-left: 10px;" ng-class="{'disabled': testRunSelected === false }" class="md-accent md-icon-button" ng-click="testRunSelected && openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >
                     <md-tooltip>
                         Delete selected test runs
                     </md-tooltip>
@@ -28,55 +28,55 @@
                 <th>End</th>
                 <th>Duration</th>
                 <th>Requirements</th>
-                <th data-ng-if="vm.showBenchmarks">Previous Build</th>
-                <th data-ng-if="vm.showBenchmarks">Fixed Baseline</th>
-                <th data-ng-if="vm.showBenchmarks">
+                <th data-ng-if="showBenchmarks">Previous Build</th>
+                <th data-ng-if="showBenchmarks">Fixed Baseline</th>
+                <th data-ng-if="showBenchmarks">
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
                 </th>
                 <th></th>
                 <th>
-                    <md-checkbox md-no-ink aria-label="select all test runs" ng-model="vm.allTestRunsSelected" ng-change="vm.setAllTestRunsSelected(allTestRunsSelected)" style="margin: 0px;">
+                    <md-checkbox md-no-ink aria-label="select all test runs" ng-model="allTestRunsSelected" ng-change="setAllTestRunsSelected(allTestRunsSelected)" style="margin: 0px;">
                     </md-checkbox>
                 </th>
             </tr>
             </thead>
             <tbody>
 
-            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: vm.completedTestRunsOnly ? true : '' } "
-                ng-class="{'warning': (testRun.testRunId === vm.dashboard.baseline && vm.dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (vm.runningTest && $index < vm.numberOfRunningTests)}" >
+            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } "
+                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index < numberOfRunningTests)}" >
                     <td>
                         <div id="testRunInfo"  layout="row">
-                            <div class="pointer" data-ng-click="(vm.runningTest && $index < vm.numberOfRunningTests) ? vm.liveGraphs(testRun) : vm.testRunDetails(testRun)">{{testRun.testRunId}}</div>
-                            <div   ng-if="testRun.annotations" class="fa fa-info-circle info-hover" data-ng-click="vm.showAnnotations($event, testRun)" style="margin-left: 10px;"></div>
+                            <div class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.testRunId}}</div>
+                            <div   ng-if="testRun.annotations" class="fa fa-info-circle info-hover" data-ng-click="showAnnotations($event, testRun)" style="margin-left: 10px;"></div>
                         </div>
                     </td>
-                <td class="pointer" data-ng-click="(vm.runningTest && $index < vm.numberOfRunningTests) ? vm.liveGraphs(testRun) : vm.testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
-                <td class="pointer" data-ng-click="(vm.runningTest && $index < vm.numberOfRunningTests) ? vm.liveGraphs(testRun) : vm.testRunDetails(testRun)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
-                    <md-progress-linear data-ng-if="vm.runningTest && $index < vm.numberOfRunningTests" flex md-mode="indeterminate"></md-progress-linear>
+                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                    <md-progress-linear data-ng-if="runningTest && $index < numberOfRunningTests" flex md-mode="indeterminate"></md-progress-linear>
 
                 </td>
-                <td class="pointer" data-ng-click="(vm.runningTest && $index < vm.numberOfRunningTests) ? vm.liveGraphs(testRun) : vm.testRunDetails(testRun)">{{testRun.humanReadableDuration}}
+                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.humanReadableDuration}}
                 </td>
-                <td data-ng-if="!(vm.runningTest && $index < vm.numberOfRunningTests)" header-class="text-center" class="text-center pointer"
-                    data-ng-click="vm.testRunRequirements(testRun)"><span
+                <td data-ng-if="!(runningTest && $index < numberOfRunningTests)" header-class="text-center" class="text-center pointer"
+                    data-ng-click="testRunRequirements(testRun)"><span
                         ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>
                 </td>
-                <td data-ng-if="vm.showBenchmarks && !(vm.runningTest && $index < vm.numberOfRunningTests)" header-class="text-center" title="{{testRun.previousBuild}}"
-                    class="text-center pointer" data-ng-click="vm.testRunPreviousBuildBenchmark(testRun)"><span
+                <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.previousBuild}}"
+                    class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark(testRun)"><span
                         ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
                 </td>
-                <td data-ng-if="vm.showBenchmarks && !(vm.runningTest && $index < vm.numberOfRunningTests)" header-class="text-center" title="{{testRun.baseline}}"
-                    class="text-center pointer" data-ng-click="vm.testRunFixedBaselineBenchmark(testRun)"><span
+                <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.baseline}}"
+                    class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark(testRun)"><span
                         ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
                 </td>
-                <td data-ng-if="vm.showBenchmarks && !(vm.runningTest && $index < vm.numberOfRunningTests)">
-                    <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="testRun.testRunId === vm.dashboard.baseline"></md-icon>
+                <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)">
+                    <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="testRun.testRunId === dashboard.baseline"></md-icon>
                 </td>
-                <td data-ng-if="!(vm.runningTest && $index < vm.numberOfRunningTests)">
+                <td data-ng-if="!(runningTest && $index < numberOfRunningTests)">
                     <md-menu style="padding-top: 0px; padding-bottom: 0px;">
                         <div aria-label="Open test run menu" class="md-icon-button"
-                                   ng-click="vm.openMenu($mdOpenMenu, $event)">
+                                   ng-click="openMenu($mdOpenMenu, $event)">
                             <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_24px.svg"></md-icon>
                             <md-tooltip>
                                 Test run menu
@@ -84,39 +84,39 @@
                         </div>
                         <md-menu-content width="4">
                             <md-menu-item>
-                                <md-button data-ng-click="vm.refreshTestrun(testRun)">
+                                <md-button data-ng-click="refreshTestrun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_refresh_black_36px.svg"
                                              md-menu-align-target></md-icon>
                                     Refresh test run
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item data-ng-if="vm.showBenchmarks && testRun.testRunId !== vm.dashboard.baseline && testRun.completed === true">
-                                <md-button data-ng-click="vm.setTestRunAsBaseline(testRun.testRunId)">
+                            <md-menu-item data-ng-if="showBenchmarks && testRun.testRunId !== dashboard.baseline && testRun.completed === true">
+                                <md-button data-ng-click="setTestRunAsBaseline(testRun.testRunId)">
                                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
                                     Set as baseline
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item data-ng-if="testRun.buildResultsUrl">
-                                <md-button data-ng-click="vm.go(testRun.buildResultsUrl)">
+                                <md-button data-ng-click="go(testRun.buildResultsUrl)">
                                     <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
                                     View in CI server
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item data-ng-if="testRun.completed === false">
-                                <md-button data-ng-click="vm.markAsComplete(testRun)">
+                                <md-button data-ng-click="markAsComplete(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
                                     Mark test run as complete
                                 </md-button>
                             </md-menu-item>
                             <md-menu-divider></md-menu-divider>
                             <md-menu-item>
-                                <md-button  data-ng-click="vm.editTestRun(testRun)">
+                                <md-button  data-ng-click="editTestRun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
                                     Edit test run
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button  data-ng-click="vm.viewTestRunSummary(testRun)">
+                                <md-button  data-ng-click="viewTestRunSummary(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
                                     View test run summary
                                 </md-button>
@@ -124,8 +124,8 @@
                         </md-menu-content>
                     </md-menu>
                 </td>
-                <td data-ng-if="!(vm.runningTest && $index < vm.numberOfRunningTests)">
-                    <md-checkbox md-no-ink aria-label="select test run" ng-model="vm.testRun.selected"  ng-change="vm.setTestRunsSelected(testRun.selected)" style="margin: 0px;">
+                <td data-ng-if="!(runningTest && $index < numberOfRunningTests)">
+                    <md-checkbox md-no-ink aria-label="select test run" ng-model="testRun.selected"  ng-change="setTestRunsSelected(testRun.selected)" style="margin: 0px;">
                     </md-checkbox>
                 </td>
             </tr>
@@ -135,15 +135,15 @@
         <div  layout="row" layout-align="end center">
             <md-input-container>
                 <label>Rows</label>
-                <md-select ng-model="vm.loadNumberOfTestRuns" ng-change="vm.updateNumberOfTestRuns()">
-                    <md-option ng-repeat="numberOfRowOption in vm.numberOfRowOptions" value="{{numberOfRowOption.value}}">
+                <md-select ng-model="loadNumberOfTestRuns" ng-change="updateNumberOfTestRuns()">
+                    <md-option ng-repeat="numberOfRowOption in numberOfRowOptions" value="{{numberOfRowOption.value}}">
                         {{numberOfRowOption.value}}
                     </md-option>
                 </md-select>
             </md-input-container>
         </div>
 
-        <div flex="50" class="container" ng-if="vm.loading">
+        <div flex="50" class="container" ng-if="loading">
             <md-progress-circular md-mode="indeterminate" md-diameter="48"></md-progress-circular>
             <div class="bottom-block">
                 <span>Loading test runs ...</span>
