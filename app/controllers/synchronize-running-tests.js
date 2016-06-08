@@ -44,7 +44,11 @@ var RunningTestSchema = new mongoose.Schema({
   'humanReadableDuration': String,
   'rampUpPeriod': Number
 
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 
 RunningTestSchema.index({
   testRunId: 1,
@@ -64,7 +68,11 @@ var testRunTargetSchema = new Schema({
   'value': Number,
   'benchmarkPreviousValue': Number,
   'benchmarkFixedValue': Number
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 mongoose.model('TestrunTarget', testRunTargetSchema);
 var testRunMetricSchema = new Schema({
   'alias': String,
@@ -88,7 +96,11 @@ var testRunMetricSchema = new Schema({
   },
   'annotation': String,
   'targets': [testRunTargetSchema]
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 mongoose.model('TestrunMetric', testRunMetricSchema);
 /**
  * Testrun Schema
@@ -137,7 +149,12 @@ var TestrunSchema = new Schema({
     type: Number
   },
   'metrics': [testRunMetricSchema]
-}, { toObject: { getters: true } });
+},
+    {
+      toObject: { getters: true },
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    } );
 TestrunSchema.virtual('startEpoch').get(function () {
   return this.start.getTime();
 });
@@ -151,12 +168,56 @@ TestrunSchema.index({
 mongoose.model('Testrun', TestrunSchema);
 
 
-var db = mongoose.connect(process.env.mongoUrl, function(err) {
-  if (err) {
-    console.error(chalk.red('Could not connect to MongoDB!'));
-    console.log(chalk.red(err));
-  }
-});
+
+
+var db = connect();
+
+function connect() {
+  // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+  var options = {
+    //user: process.env.dbUsername,
+    //pass: process.env.dbPassword,
+    server: {
+      poolSize: 20,
+      auto_reconnect: true, // already default, but explicit
+      reconnectTries: 30, // already default, explicit
+      socketOptions: {
+        keepAlive: 100000, // less then 120s configured on mongo side
+        connectTimeoutMS: 10000
+      }
+    }
+  };
+
+  var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
+
+
+  mongoose.connection.once('open', function() {
+    console.log('Connected to MongoDB server with mongoose.');
+  });
+
+  mongoose.connection.on('error', function (err) { console.log("Connect error: " + err) });
+
+  mongoose.connection.on('disconnected', () => {
+    // http://mongoosejs.com/docs/connections.html
+    console.log('Disconnected MongoDB with mongoose, will autoreconnect a number of times');
+  });
+
+  // If the Node process ends, gracefully close the Mongoose connection
+  ['SIGINT', 'SIGTERM'].forEach(signal => {
+    process.on(signal, function cleanup() {
+      mongoose.connection.close(() => {
+        console.log('Mongoose default connection disconnected through app termination');
+        process.exit(0);
+      });
+    });
+  });
+
+
+  return mongoose.connect(mongoUrl, options);
+
+};
+
+
 
 var RunningTest = mongoose.model('RunningTest');
 var Testrun = mongoose.model('Testrun');

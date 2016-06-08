@@ -11,7 +11,11 @@ var testRunTargetSchema = new Schema({
   'value': Number,
   'benchmarkPreviousValue': Number,
   'benchmarkFixedValue': Number
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 mongoose.model('TestrunTarget', testRunTargetSchema);
 var testRunMetricSchema = new Schema({
   'alias': String,
@@ -36,7 +40,11 @@ var testRunMetricSchema = new Schema({
   'annotation': String,
   'targets': [testRunTargetSchema]
 
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 mongoose.model('TestrunMetric', testRunMetricSchema);
 /**
  * Testrun Schema
@@ -85,7 +93,10 @@ var TestrunSchema = new Schema({
       type: Number
   },
   'metrics': [testRunMetricSchema]
-}, { toObject: { getters: true } });
+}, { toObject: { getters: true } ,
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 
 TestrunSchema.virtual('startEpoch').get(function () {
   return this.start.getTime();

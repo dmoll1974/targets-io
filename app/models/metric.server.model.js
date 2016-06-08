@@ -58,7 +58,11 @@ var metricSchema = new mongoose.Schema({
     type: String,
     default: 'None'
   }
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 
 metricSchema.pre('remove', function (next) {
   this.model('Dashboard').update({ _id: this.dashboardId }, { $pull: { metrics: this._id } }, { multi: true }, next);

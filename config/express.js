@@ -15,9 +15,9 @@ var fs = require('fs'),
 	cookieParser = require('cookie-parser'),
 	helmet = require('helmet'),
 	passport = require('passport'),
-	mongoStore = require('connect-mongo')({
-		session: session
-	}),
+	//mongoStore = require('connect-mongo')({
+	//	session: session
+	//}),
 	flash = require('connect-flash'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
@@ -113,6 +113,8 @@ module.exports = function(db) {
 	//	store: new mongoStore({
 	//		db: db.connection.db,
 	//		collection: config.sessionCollection
+	//	}, function () {
+	//		console.log("db connection open");
 	//	})
 	//}));
 

@@ -8,8 +8,32 @@ var init = require('./config/init')(),
 	mongoose = require('mongoose'),
 	chalk = require('chalk'),
 	cluster = require('cluster'),
-   sticky = require('sticky-session');
+	winston = require('winston'),
+	mongoSetup = require('./mongo-setup');
 
+
+ //Better logging
+winston.remove(winston.transports.Console);
+if (config.isDevelopment) {
+	// only log to console in development environment
+	winston.add(winston.transports.Console, {
+		timestamp: true,
+		colorize: !config.isProduction,
+		level: config.logLevel
+	});
+}
+
+if (config.graylog) {
+
+	winston.add(require('winston-graylog2'), {
+		name: 'Graylog',
+		graylog: {
+			servers: [{host: config.graylog.host, port: config.graylog.port}],
+			facility: 'targets-io'
+		}/*,
+		staticMeta: {environment: config.environment, source: os.hostname()}*/
+	});
+}
 
 /**
  * Main application entry file.
@@ -21,12 +45,14 @@ console.log ("graphite host: " + config.graphiteHost)
 
 
 // Bootstrap db connection
-var db = mongoose.connect(config.db, function(err) {
-	if (err) {
-		console.error(chalk.red('Could not connect to MongoDB!'));
-		console.log(chalk.red(err));
-	}
-});
+//var db = mongoose.connect(config.db, function(err) {
+//	if (err) {
+//		console.error(chalk.red('Could not connect to MongoDB!'));
+//		console.log(chalk.red(err));
+//	}
+//});
+
+var db = mongoSetup.connect();
 
 if(cluster.isMaster) {
 	var numWorkers = (require('os').cpus().length - 1 > 0) ? require('os').cpus().length - 1 : 1; /* save one core for daemon, unless there is only one core */
@@ -56,7 +82,10 @@ if(cluster.isMaster) {
 		process.execArgv.push('--debug=' + (40894));
 	}
 
-	var env = { mongoUrl: config.db };
+	var env = 	{	db: config.db,
+					dbUsername: config.dbUsername,
+					dbPassword: config.dbPassword
+				};
 
 	var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
 

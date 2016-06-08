@@ -2,13 +2,18 @@
 
 set -e
 
-if [ -z "$MONGO_SERVICE_HOST" ]; then
-			echo >&2 'error: Need to set MONGO_SERVICE_HOST'
+if [ -z "$MONGO_URL" ]; then
+			echo >&2 'error: Need to set MONGO_URL'
 
 			exit 1
 fi
-if [ -z "$MONGO_SERVICE_PORT" ]; then
-			echo >&2 'error: Need to set MONGO_SERVICE_PORT'
+if [ -z "$MONGO_USER" ]; then
+			echo >&2 'error: Need to set MONGO_USER'
+
+			exit 1
+fi
+if [ -z "$MONGO_PASSWORD" ]; then
+			echo >&2 'error: Need to set MONGO_PASSWORD'
 
 			exit 1
 fi
@@ -33,5 +38,5 @@ if [ -z "$GRAPHITE_SERVICE_PORT" ]; then
 			exit 1
 fi
 
-MONGO_URL=mongodb://$MONGO_SERVICE_HOST:$MONGO_SERVICE_PORT  MEMCACHED_HOST=$MEMCACHED_SERVICE_HOST:$MEMCACHED_SERVICE_PORT GRAPHITE_HOST=http://$GRAPHITE_SERVICE_HOST:$GRAPHITE_SERVICE_PORT  bash -c "forever -c 'node --harmony' server.js"
+MEMCACHED_HOST=$MEMCACHED_SERVICE_HOST:$MEMCACHED_SERVICE_PORT GRAPHITE_HOST=http://$GRAPHITE_SERVICE_HOST:$GRAPHITE_SERVICE_PORT  bash -c "forever -c 'node --harmony' server.js"
 

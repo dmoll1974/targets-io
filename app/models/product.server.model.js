@@ -25,6 +25,10 @@ var ProductSchema = new mongoose.Schema({
           default: false
       }
   } ]
-});
+},
+    {
+        read: 'primary',
+        safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 ProductSchema.index({ name: 1 }, { unique: true });
 mongoose.model('Product', ProductSchema);

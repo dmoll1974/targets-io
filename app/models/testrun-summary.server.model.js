@@ -44,7 +44,12 @@ var testRunSummaryMetricSchema = new Schema({
   'summaryText': String,
   'summaryIndex': Number,
   'targets': [String]
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
+
 mongoose.model('TestrunSummaryMetric', testRunSummaryMetricSchema);
 /**
  * Testrun-summary Schema
@@ -91,7 +96,11 @@ var TestrunSummarySchema = new Schema({
     requirementText : String,
     meetsRequirement : Boolean
   }]
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 
 TestrunSummarySchema.index({
   testRunId: 1,
