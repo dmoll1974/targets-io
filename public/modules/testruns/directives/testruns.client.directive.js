@@ -20,24 +20,24 @@ function TestrunsDirective () {
 
     var vm = this;
 
-    vm.productName = $stateParams.productName;
-    vm.dashboardName = $stateParams.dashboardName;
+    $scope.productName = $stateParams.productName;
+    $scope.dashboardName = $stateParams.dashboardName;
 
     /* spinner stuff */
 
     var j = 0, counter = 0;
     var spinner;
-    vm.modes = [];
-    vm.determinateValue = 30;
+    $scope.modes = [];
+    $scope.determinateValue = 30;
 
 
     /* By default, show completed test runs only */
-    vm.completedTestRunsOnly = true;
+    $scope.completedTestRunsOnly = true;
 
 
-    vm.loadNumberOfTestRuns = 10;
+    $scope.loadNumberOfTestRuns = 10;
 
-    vm.numberOfRowOptions = [
+    $scope.numberOfRowOptions = [
       {value: 10},
       {value: 25},
       {value: 50},
@@ -46,41 +46,41 @@ function TestrunsDirective () {
     ];
 
 
-    vm.showAnnotations = showAnnotations;
-    vm.updateNumberOfTestRuns = updateNumberOfTestRuns;
-    vm.editTestRun = editTestRun;
-    vm.markAsComplete = markAsComplete;
-    vm.setTestRunsSelected = setTestRunsSelected;
-    vm.setAllTestRunsSelected = setAllTestRunsSelected;
-    vm.refreshTestrun = refreshTestrun;
-    vm.openDeleteSelectedTestRunsModal = openDeleteSelectedTestRunsModal;
-    vm.setTestRunAsBaseline = setTestRunAsBaseline;
-    vm.testRunRequirements = testRunRequirements;
-    vm.testRunPreviousBuildBenchmark = testRunPreviousBuildBenchmark;
-    vm.testRunFixedBaselineBenchmark = testRunFixedBaselineBenchmark;
-    vm.liveGraphs = liveGraphs;
-    vm.viewTestRunSummary = viewTestRunSummary;
-    vm.testRunDetails = testRunDetails;
-    vm.go = go;
-    vm.openMenu = openMenu;
+    $scope.showAnnotations = showAnnotations;
+    $scope.updateNumberOfTestRuns = updateNumberOfTestRuns;
+    $scope.editTestRun = editTestRun;
+    $scope.markAsComplete = markAsComplete;
+    $scope.setTestRunsSelected = setTestRunsSelected;
+    $scope.setAllTestRunsSelected = setAllTestRunsSelected;
+    $scope.refreshTestrun = refreshTestrun;
+    $scope.openDeleteSelectedTestRunsModal = openDeleteSelectedTestRunsModal;
+    $scope.setTestRunAsBaseline = setTestRunAsBaseline;
+    $scope.testRunRequirements = testRunRequirements;
+    $scope.testRunPreviousBuildBenchmark = testRunPreviousBuildBenchmark;
+    $scope.testRunFixedBaselineBenchmark = testRunFixedBaselineBenchmark;
+    $scope.liveGraphs = liveGraphs;
+    $scope.viewTestRunSummary = viewTestRunSummary;
+    $scope.testRunDetails = testRunDetails;
+    $scope.go = go;
+    $scope.openMenu = openMenu;
 
 
       /* watches */
 
-    $scope.$watch('vm.loading', function (current, old) {
+    $scope.$watch('$scope.loading', function (current, old) {
       if (current !== old) {
         if (current === true) {
           // Iterate every 100ms, non-stop
           spinner = $interval(function () {
             // Increment the Determinate loader
-            vm.determinateValue += 1;
-            if (vm.determinateValue > 100) {
-              vm.determinateValue = 30;
+            $scope.determinateValue += 1;
+            if ($scope.determinateValue > 100) {
+              $scope.determinateValue = 30;
             }
             // Incrementally start animation the five (5) Indeterminate,
             // themed progress circular bars
-            if (j < 5 && !vm.modes[j] && vm.loading) {
-              vm.modes[j] = 'indeterminate';
+            if (j < 5 && !$scope.modes[j] && $scope.loading) {
+              $scope.modes[j] = 'indeterminate';
             }
             if (counter++ % 4 == 0)
               j++;
@@ -103,9 +103,9 @@ function TestrunsDirective () {
     //
     //});
 
-    $scope.$watch('vm.allTestRunsSelected', function (newVal, oldVal) {
+    $scope.$watch('$scope.allTestRunsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        _.each(vm.testRuns, function (testRun, i) {
+        _.each($scope.testRuns, function (testRun, i) {
           testRun.selected = newVal;
         });
       }
@@ -146,33 +146,33 @@ function TestrunsDirective () {
       //if (TestRuns.list.length > 0) {
 
 
-          vm.loading = true;
+          $scope.loading = true;
           return testRunPolling();
 
 
-        } else {
+      } else {
 
-          vm.testRuns = [];
-          vm.testRuns.push(TestRuns.list);
+          $scope.testRuns = [];
+          $scope.testRuns.push(TestRuns.list);
           _.each(TestRuns.list, function(testRun){
 
-              vm.testRuns.push(testRun);
+              $scope.testRuns.push(testRun);
 
           });
-        vm.runningTest = (TestRuns.runningTest) ? TestRuns.runningTest : false;
-        vm.numberOfRunningTests = (TestRuns.runningTest) ? TestRuns.runningTest : 0;
+        $scope.runningTest = (TestRuns.runningTest) ? TestRuns.runningTest : false;
+        $scope.numberOfRunningTests = (TestRuns.runningTest) ? TestRuns.runningTest : 0;
 
-        }
+      }
       //}, 1);
 
 
       /* Check if baseline test run exists */
 
-      Dashboards.get(vm.productName, vm.dashboardName).success(function (dashboard) {
+      Dashboards.get($scope.productName, $scope.dashboardName).success(function (dashboard) {
 
         if (dashboard.useInBenchmark) {
 
-          TestRuns.getTestRunById(vm.productName, vm.dashboardName, dashboard.baseline).error(function (data, status, header, config) {
+          TestRuns.getTestRunById($scope.productName, $scope.dashboardName, dashboard.baseline).error(function (data, status, header, config) {
 
             var toast = $mdToast.simple()
                 .action('OK')
@@ -191,9 +191,10 @@ function TestrunsDirective () {
         }
       });
 
-      /* initialise polling */
-      Utils.polling = $interval(testRunPolling, 15000);
     }
+      /* initialise polling */
+    //  Utils.polling = $interval(testRunPolling, 15000);
+    //}
 
     /* refresh test runs every 15 seconds */
 
@@ -201,35 +202,29 @@ function TestrunsDirective () {
      function testRunPolling() {
 
 
-       return TestRuns.listTestRunsForDashboard(vm.productName, vm.dashboardName, vm.loadNumberOfTestRuns).success(function (response) {
+       TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (response) {
 
-        vm.runningTest = response.runningTest;
+        $scope.runningTest = response.runningTest;
 
-        vm.numberOfRunningTests = response.numberOfRunningTests;
+        $scope.numberOfRunningTests = response.numberOfRunningTests;
 
-        vm.totalNumberOftestRuns = response.totalNumberOftestRuns;
+        $scope.totalNumberOftestRuns = response.totalNumberOftestRuns;
 
-        if(vm.testRuns > 0) {
+        if($scope.testRuns > 0) {
           /* get testRun Id's that might be selected */
-          var selectedTestRunIds = getSelectedTestRunIds(vm.testRuns);
+          var selectedTestRunIds = getSelectedTestRunIds($scope.testRuns);
         }
 
           /* reset test runs */
-          vm.testRuns = [];
+          $scope.testRuns = [];
 
-
-
-            _.each(response.testRuns, function(testRun){
-
-              vm.testRuns.push(testRun);
-
-            });
+         $scope.testRuns = response.testRuns;
 
 
             /* set selected testruns if necessary */
             if (selectedTestRunIds > 0) {
 
-              _.each(vm.testRuns, function (testRun) {
+              _.each($scope.testRuns, function (testRun) {
 
                 _.each(selectedTestRunIds, function (selectedTestRunId) {
 
@@ -244,13 +239,12 @@ function TestrunsDirective () {
 
             /* Set end value to 'Running' for running test(s)*/
 
-            for (var i = 0; i < vm.numberOfRunningTests; i++) {
+            for (var i = 0; i < $scope.numberOfRunningTests; i++) {
 
-              vm.testRuns[i].end = 'Running ...';
+              $scope.testRuns[i].end = 'Running ...';
             }
 
-            vm.loading = false;
-            return vm.testRuns;
+            $scope.loading = false;
 
 
         TestRuns.list = response.testRuns;
@@ -369,14 +363,14 @@ function TestrunsDirective () {
       Dashboards.selected.baseline = baseline;
       Dashboards.update(Dashboards.selected).success(function (dashboard) {
         Dashboards.selected = dashboard;
-        vm.dashboard = dashboard;
+        $scope.dashboard = dashboard;
         var baselineSet = false;
-        _.each(vm.testRuns, function (testRun, index) {
+        _.each($scope.testRuns, function (testRun, index) {
           /* Only update test runs more recent than baseline */
           if (testRun.testRunId === baseline)
             baselineSet = true;
           if (testRun.testRunId !== baseline && baselineSet == false) {
-            vm.testRuns[index].benchmarkResultFixedOK = 'pending';
+            $scope.testRuns[index].benchmarkResultFixedOK = 'pending';
             testRun.baseline = baseline;
             arrayOfPromises.push(TestRuns.updateFixedBaseline(testRun).then(function (testRun) {
             }));
@@ -385,10 +379,10 @@ function TestrunsDirective () {
         $q.all(arrayOfPromises).then(function (results) {
           /* refresh test runs*/
           setTimeout(function () {
-            TestRuns.listTestRunsForDashboard(vm.productName, vm.dashboardName).success(function (testRuns) {
+            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
               TestRuns.list = testRuns;
             }, function (errorResponse) {
-              vm.error = errorResponse.data.message;
+              $scope.error = errorResponse.data.message;
             });
           }, 100);
         });
@@ -407,13 +401,13 @@ function TestrunsDirective () {
 
         var deleteTestRunsArrayOfPromises = [];
         var i;
-        for (i = vm.testRuns.length - 1; i > -1; i--) {
+        for (i = $scope.testRuns.length - 1; i > -1; i--) {
 
-          if (vm.testRuns[i].selected === true) {
-            deleteTestRunsArrayOfPromises.push(TestRuns.delete(vm.productName, vm.dashboardName, vm.testRuns[i].testRunId));
-            vm.testRunSelected = false;
-            vm.testRuns[i].selected = false;
-            vm.testRuns.splice(i, 1);
+          if ($scope.testRuns[i].selected === true) {
+            deleteTestRunsArrayOfPromises.push(TestRuns.delete($scope.productName, $scope.dashboardName, $scope.testRuns[i].testRunId));
+            $scope.testRunSelected = false;
+            $scope.testRuns[i].selected = false;
+            $scope.testRuns.splice(i, 1);
             if(TestRuns.list[i]) TestRuns.list.splice(i, 1);
           }
 
@@ -441,28 +435,28 @@ function TestrunsDirective () {
       $interval.cancel(Utils.polling);
 
 
-      var selectedTestRunIndex = vm.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
+      var selectedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(testRun._id.toString());
 
-      vm.testRuns[selectedTestRunIndex].meetsRequirement = 'pending';
-      vm.testRuns[selectedTestRunIndex].benchmarkResultPreviousOK = 'pending';
-      vm.testRuns[selectedTestRunIndex].benchmarkResultFixedOK = 'pending';
-      vm.testRuns[selectedTestRunIndex].busy = true;
-      TestRuns.refreshTestrun($stateParams.productName, $stateParams.dashboardName, vm.testRuns[selectedTestRunIndex].testRunId).success(function (testRun) {
-        vm.testRuns[selectedTestRunIndex] = testRun;
-        vm.testRuns[selectedTestRunIndex].busy = false;
+      $scope.testRuns[selectedTestRunIndex].meetsRequirement = 'pending';
+      $scope.testRuns[selectedTestRunIndex].benchmarkResultPreviousOK = 'pending';
+      $scope.testRuns[selectedTestRunIndex].benchmarkResultFixedOK = 'pending';
+      $scope.testRuns[selectedTestRunIndex].busy = true;
+      TestRuns.refreshTestrun($stateParams.productName, $stateParams.dashboardName, $scope.testRuns[selectedTestRunIndex].testRunId).success(function (testRun) {
+        $scope.testRuns[selectedTestRunIndex] = testRun;
+        $scope.testRuns[selectedTestRunIndex].busy = false;
 
         /* start polling again after refresh */
 
         Utils.polling = $interval(testRunPolling, 15000);
 
       }, function (errorResponse) {
-        vm.error = errorResponse.data.message;
+        $scope.error = errorResponse.data.message;
       });
     };
 
     function setAllTestRunsSelected(testRunSelected){
 
-      vm.testRunSelected = testRunSelected;
+      $scope.testRunSelected = testRunSelected;
     };
 
 
@@ -470,14 +464,14 @@ function TestrunsDirective () {
 
       if (testRunSelected === false){
 
-        vm.testRunSelected = false;
+        $scope.testRunSelected = false;
 
-        _.each(vm.testRuns, function(testRun){
-          if(testRun.selected === true) vm.testRunSelected = true;
+        _.each($scope.testRuns, function(testRun){
+          if(testRun.selected === true) $scope.testRunSelected = true;
         })
 
       }else {
-        vm.testRunSelected = testRunSelected;
+        $scope.testRunSelected = testRunSelected;
       }
     };
 
@@ -487,23 +481,23 @@ function TestrunsDirective () {
       TestRuns.update(testRun).success(function(updatedTestRun){
 
         if(updatedTestRun){
-          var updatedTestRunIndex = vm.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(updatedTestRun._id.toString());
-          vm.testRuns[updatedTestRunIndex] = updatedTestRun;
-          vm.completedTestRunsOnly = true;
+          var updatedTestRunIndex = $scope.testRuns.map(function(currentTestRun) { return currentTestRun._id.toString(); }).indexOf(updatedTestRun._id.toString());
+          $scope.testRuns[updatedTestRunIndex] = updatedTestRun;
+          $scope.completedTestRunsOnly = true;
 
-          vm.testRuns[updatedTestRunIndex].meetsRequirement = 'pending';
-          vm.testRuns[updatedTestRunIndex].benchmarkResultPreviousOK = 'pending';
-          vm.testRuns[updatedTestRunIndex].benchmarkResultFixedOK = 'pending';
-          vm.testRuns[updatedTestRunIndex].busy = true;
+          $scope.testRuns[updatedTestRunIndex].meetsRequirement = 'pending';
+          $scope.testRuns[updatedTestRunIndex].benchmarkResultPreviousOK = 'pending';
+          $scope.testRuns[updatedTestRunIndex].benchmarkResultFixedOK = 'pending';
+          $scope.testRuns[updatedTestRunIndex].busy = true;
 
-          TestRuns.refreshTestrun($stateParams.productName, $stateParams.dashboardName, vm.testRuns[updatedTestRunIndex].testRunId).success(function (testRun) {
-            vm.testRuns[updatedTestRunIndex] = testRun;
-            vm.testRuns[updatedTestRunIndex].busy = false;  ///* refresh screen*/
+          TestRuns.refreshTestrun($stateParams.productName, $stateParams.dashboardName, $scope.testRuns[updatedTestRunIndex].testRunId).success(function (testRun) {
+            $scope.testRuns[updatedTestRunIndex] = testRun;
+            $scope.testRuns[updatedTestRunIndex].busy = false;  ///* refresh screen*/
             //setTimeout(function(){
             //    $state.go($state.current, {}, {reload: true});
             //},1);
           }, function (errorResponse) {
-            vm.error = errorResponse.data.message;
+            $scope.error = errorResponse.data.message;
           });
         };
 
@@ -521,7 +515,7 @@ function TestrunsDirective () {
 
     function updateNumberOfTestRuns() {
 
-      vm.loading = true;
+      $scope.loading = true;
 
       testRunPolling();
 
@@ -568,5 +562,4 @@ function TestrunsDirective () {
 
     }
 
-  }
 }
