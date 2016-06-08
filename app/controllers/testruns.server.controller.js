@@ -17,6 +17,7 @@ var mongoose = require('mongoose'),
     Metric = mongoose.model('Metric'),
     async = require('async'),
     RunningTest = mongoose.model('RunningTest'),
+    cache = require('./redis.server.controller'),
     ss = require('simple-statistics');
 
 
@@ -651,7 +652,7 @@ function flushMemcachedForTestRun(testRun, callback){
 
                 _.each(metric.targets, function(target){
 
-                  graphite.flushMemcachedKey(graphite.createMemcachedKey(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target), function(){
+                  cache.flushCache(cache.createKey(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target), function(){
 
                     });
                 });

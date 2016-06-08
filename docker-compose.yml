@@ -1,57 +1,65 @@
-targetsio:
-  image: dmoll1974/targets-io
-  ports:
-   - "3000:3000"
-  volumes:
-   - .:/code
-  links:
-   - graphite
-   - db
-  environment:
-     MONGO_SERVICE_HOST: "db"
-     MONGO_SERVICE_PORT: "27017"
-     MONGO_CACHE_SERVICE_HOST: "db"
-     MONGO_CACHE_SERVICE_PORT: "27018"
-     MEMCACHED_SERVICE_HOST: "memcached"
-     MEMCACHED_SERVICE_PORT: "11211"
-     GRAPHITE_SERVICE_HOST: "graphite"
-     GRAPHITE_SERVICE_PORT: "80"
-  mem_limit: 1000000000 
-db:
-  image: dmoll1974/targets-io-mongo
-  ports:
-   - "27017:27017"
-   - "27018:27018"
-  volumes:
-   - /var/lib/targets-io/mongo:/data/db
-  privileged: true
-  mem_limit: 1000000000
-graphite:
-  image: dmoll1974/targets-io-graphite
-  ports:
-   - "8090:80"
-   - "2003:2003"
-   - "8125:8125"
-  volumes:
-   - /var/lib/targets-io/graphite/log:/var/log
-   - /var/lib/targets-io/graphite/storage:/opt/graphite/storage
-dropwizard:
-  image: dmoll1974/targets-io-dropwizard
-  ports:
-   - "8080:8080"
-  mem_limit: 1000000000
-jmxtrans:
-  image: dmoll1974/targets-io-jmxtrans
-  links:
-   - graphite
-   - dropwizard
-  mem_limit: 1000000000 
-jenkins:
-  image: dmoll1974/targets-io-jenkins
-  ports:
-   - "8070:8080"
-  links:
-   - graphite
-   - dropwizard
-   - targetsio
-  mem_limit: 3000000000
+version: "2"
+
+services:
+  targetsio:
+    image: dmoll1974/targets-io
+    ports:
+     - "3000:3000"
+    networks:
+      - my-net
+    environment:
+       MONGO_SERVICE_HOST: "db"
+       MONGO_SERVICE_PORT: "27017"
+       REDIS_SERVICE_HOST: "redis"
+       REDIS_SERVICE_PORT: "6379"
+       GRAPHITE_SERVICE_HOST: "graphite"
+       GRAPHITE_SERVICE_PORT: "80"
+    restart: always
+  mean:
+    image: dmoll1974/targets-io-demo-meanjs
+    ports:
+     - "3001:3000"
+    environment:
+       DB_1_PORT_27017_TCP_ADDR: "db:27017"
+    networks:
+      - my-net
+    restart: always
+  db:
+    image: mongo:3.0
+    ports:
+     - "27017:27017"
+    networks:
+      - my-net
+    volumes:
+     - /var/lib/targets-io/mongo:/data/db
+    restart: always
+  graphite:
+    image: dmoll1974/targets-io-graphite
+    networks:
+      - my-net
+    ports:
+     - "8090:80"
+     - "2003:2003"
+     - "8125:8125"
+    volumes:
+     - /var/lib/targets-io/graphite/log:/var/log
+     - /var/lib/targets-io/graphite/storage:/opt/graphite/storage
+    restart: always
+  jenkins:
+    image: dmoll1974/targets-io-jenkins
+    networks:
+      - my-net
+    ports:
+     - "8070:8080"
+    restart: always
+  redis:
+    image: redis
+    networks:
+      - my-net
+    ports:
+     - "6379:6379"
+    restart: always
+networks:
+  my-net:
+    driver: bridge
+

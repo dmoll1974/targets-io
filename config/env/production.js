@@ -12,6 +12,8 @@ module.exports = {
         host: 'graylog.ae1.klm.com',
         port: 12201
     },
+    redisHost: process.env.REDIS_SERVICE_HOST,
+    redisPort: process.env.REDIS_SERVICE_PORT,
     assets: {
         lib: {
             css: [

@@ -17,13 +17,13 @@ if [ -z "$MONGO_PASSWORD" ]; then
 
 			exit 1
 fi
-if [ -z "$MEMCACHED_SERVICE_HOST" ]; then
-			echo >&2 'error: Need to set MEMCACHED_SERVICE_HOST'
+if [ -z "$REDIS_SERVICE_HOST" ]; then
+			echo >&2 'error: Need to set REDIS_SERVICE_HOST'
 
 			exit 1
 fi
-if [ -z "$MEMCACHED_SERVICE_PORT" ]; then
-			echo >&2 'error: Need to set MEMCACHED_SERVICE_PORT'
+if [ -z "$REDIS_SERVICE_PORT" ]; then
+			echo >&2 'error: Need to set REDIS_SERVICE_PORT'
 
 			exit 1
 fi

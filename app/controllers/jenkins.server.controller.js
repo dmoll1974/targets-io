@@ -50,9 +50,7 @@ exports.getConsoleData = function (req, res) {
     }
   });
 };
-
-
-function getJenkinsData(jenkinsUrl, running, start, end, callback) {
+function getJenkinsData (jenkinsUrl, running, start, end, callback) {
   var consoleResponse = {};
   var consoleData = [];
   var errorData = [];
@@ -95,9 +93,9 @@ function getJenkinsData(jenkinsUrl, running, start, end, callback) {
       }
     }
     client.get(consoleUrl + offset, function (err, response, body) {
-      //        if (err) console.error(err);
+       if (err) console.error(err);
       console.log(consoleUrl + offset);
-      console.log('X-More-Data:' + response.headers['x-more-data']);
+      // console.log('X-More-Data:' + response.headers['x-more-data']);
       //if (response.headers['x-text-size'] && running == true) {
       //  memcached.set(consoleUrl, response.headers['x-text-size'], 600, function (err, result) {
       //    if (err)

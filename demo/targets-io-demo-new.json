@@ -1,0 +1,2439 @@
+{
+  "products": [
+    {
+      "_id": "57443c8d92c2551b0022506c",
+      "name": "FOO",
+      "description": "bla",
+      "requirements": [],
+      "dashboards": [
+        "57443c9692c2551b0022506d"
+      ],
+      "__v": 0
+    },
+    {
+      "_id": "573440d4d968a51a00b17657",
+      "description": "Jmeter demo",
+      "name": "JMETER",
+      "dashboards": [
+        "5613cc4ab0c6100f006be1e9",
+        "5613cc4ab0c6100f006be1ea",
+        "5615097e18fd4d3200b8a906",
+        "5615805f1140630e009671f7",
+        "5627828d2dae360e001af61b",
+        "5637926ef1947f0e007d9f72",
+        "5703b4f53016a92100c3d807",
+        "570411fe3016a92100c3d82a",
+        "570ca8d5bb5a2f190022b3dc",
+        "570ca8d5bb5a2f190022b3dd",
+        "570fe7cf627aa9190061aec5",
+        "570fe7cf627aa9190061aec6",
+        "573440d4d968a51a00b17659",
+        "573440d4d968a51a00b1765a"
+      ],
+      "__v": 0
+    },
+    {
+      "_id": "573440d4d968a51a00b17658",
+      "description": "Demo product",
+      "name": "GATLING",
+      "requirements": [
+        {
+          "stakeholder": "Operations",
+          "description": "The infrastructure capacity should be sufficient to accommodate a 100% growth in load ",
+          "_id": "570fed4c627aa9190061afb5",
+          "result": false,
+          "relatedDashboards": [
+            "STRESS"
+          ]
+        },
+        {
+          "stakeholder": "Product Owner",
+          "description": "Application performance should meet the response times requirements under expected peak load.",
+          "_id": "570fed8f627aa9190061afb6",
+          "result": false,
+          "relatedDashboards": [
+            "LOAD"
+          ]
+        }
+      ],
+      "dashboards": [
+        "55ea16ecf709a10b00c31016",
+        "55eb2f1af709a10b00c31068",
+        "55f07351e971230c00d34937",
+        "55f07351e971230c00d34938",
+        "55f936792851ab0c007e10b7",
+        "55fd5e3976c24bc2602eae10",
+        "55fd5edd76c24bc2602eaea4",
+        "5610d00cbcb2e33509a96cbe",
+        "5610d03abcb2e33509a96cc6",
+        "5610d03abcb2e33509a96cc7",
+        "5613bfdd5360fc1000577322",
+        "5613bfdd5360fc1000577323",
+        "5615097e18fd4d3200b8a904",
+        "5615097e18fd4d3200b8a905",
+        "5615805f1140630e009671f5",
+        "5615805f1140630e009671f6",
+        "5627828d2dae360e001af619",
+        "5627828d2dae360e001af61a",
+        "5637926ef1947f0e007d9f70",
+        "5637926ef1947f0e007d9f71",
+        "5703b4f53016a92100c3d805",
+        "5703b4f53016a92100c3d806",
+        "570ca8d5bb5a2f190022b3df",
+        "570fb850ca77391900414356",
+        "570fe37bb8c65f2b0077250d",
+        "570fe7cf627aa9190061aec2",
+        "570fe7cf627aa9190061aec3",
+        "570fe7cf627aa9190061aec4",
+        "573440d4d968a51a00b1765b",
+        "573440d4d968a51a00b1765c",
+        "573440d4d968a51a00b1765d"
+      ],
+      "__v": 0
+    }
+  ],
+  "dashboards": [
+    {
+      "_id": "573440d4d968a51a00b1765d",
+      "description": "Stress test",
+      "name": "STRESS",
+      "productId": "573440d4d968a51a00b17658",
+      "tags": [
+        {
+          "text": "Load",
+          "default": true,
+          "_id": "570fb85bca77391900414367"
+        },
+        {
+          "text": "JVM",
+          "default": false,
+          "_id": "570fb85bca77391900414366"
+        },
+        {
+          "text": "Database",
+          "default": false,
+          "_id": "570fb85bca77391900414365"
+        },
+        {
+          "text": "CPU",
+          "default": false,
+          "_id": "570fb85bca77391900414364"
+        },
+        {
+          "text": "Frontend",
+          "default": false,
+          "_id": "570fb85bca77391900414363"
+        },
+        {
+          "text": "JDBC",
+          "default": false,
+          "_id": "570fb85bca77391900414362"
+        },
+        {
+          "text": "Garbage Collection",
+          "default": false,
+          "_id": "570fb85bca77391900414361"
+        },
+        {
+          "text": "Heap",
+          "default": false,
+          "_id": "570fb85bca77391900414360"
+        },
+        {
+          "text": "Sessions",
+          "default": false,
+          "_id": "570fb85bca7739190041435f"
+        },
+        {
+          "text": "Threads",
+          "default": false,
+          "_id": "570fb85bca7739190041435e"
+        },
+        {
+          "text": "Performance",
+          "default": false,
+          "_id": "570fe1ffb8c65f2b007724fa"
+        }
+      ],
+      "includeRampUp": true,
+      "useInBenchmark": false,
+      "baseline": "GATLING-1.0-STRESS-20160414_1530",
+      "granularity": 15,
+      "metrics": [
+        "570fb850ca77391900414358",
+        "570fb850ca77391900414359",
+        "570fb850ca7739190041435a",
+        "570fe820627aa9190061aeea",
+        "570fe820627aa9190061aeeb",
+        "570fe820627aa9190061aeec",
+        "570fe821627aa9190061aeed",
+        "570fe821627aa9190061aeee",
+        "570fe821627aa9190061aeef",
+        "570fe821627aa9190061aef0"
+      ],
+      "__v": 0
+    },
+    {
+      "_id": "573440d4d968a51a00b17659",
+      "description": "Demo test",
+      "name": "LOAD",
+      "productId": "573440d4d968a51a00b17657",
+      "tags": [
+        {
+          "text": "Load",
+          "default": true,
+          "_id": "5613cc4bb0c6100f006be1f4"
+        },
+        {
+          "text": "JVM",
+          "default": false,
+          "_id": "5613cc4bb0c6100f006be1f3"
+        },
+        {
+          "text": "Database",
+          "default": false,
+          "_id": "5613cc4bb0c6100f006be1f2"
+        },
+        {
+          "text": "CPU",
+          "default": false,
+          "_id": "5613cc4bb0c6100f006be1f1"
+        },
+        {
+          "text": "Frontend",
+          "default": false,
+          "_id": "5613cc4bb0c6100f006be1f0"
+        },
+        {
+          "text": "JDBC",
+          "default": false,
+          "_id": "5613cc4bb0c6100f006be1ef"
+        },
+        {
+          "text": "Garbage Collection",
+          "default": false,
+          "_id": "5613cc4bb0c6100f006be1ee"
+        },
+        {
+          "text": "Heap",
+          "default": false,
+          "_id": "5613cc4bb0c6100f006be1ed"
+        },
+        {
+          "text": "Sessions",
+          "default": false,
+          "_id": "5613cc4bb0c6100f006be1ec"
+        },
+        {
+          "text": "Threads",
+          "default": false,
+          "_id": "5613cc4bb0c6100f006be1eb"
+        }
+      ],
+      "useInBenchmark": true,
+      "baseline": "test- 1444138603",
+      "granularity": 15,
+      "metrics": [
+        "5613cca4b0c6100f006be201",
+        "5613ce43b0c6100f006be204",
+        "5613cf62b0c6100f006be208",
+        "5613cffcb0c6100f006be209",
+        "5613d039b0c6100f006be20a",
+        "5613d062b0c6100f006be20b",
+        "5613d081b0c6100f006be20c",
+        "5615097e18fd4d3200b8a907",
+        "5615097e18fd4d3200b8a908",
+        "5615097e18fd4d3200b8a909",
+        "5615097e18fd4d3200b8a90a",
+        "5615097e18fd4d3200b8a90b",
+        "5615097e18fd4d3200b8a90c",
+        "5615097e18fd4d3200b8a90d",
+        "5615805f1140630e009671f8",
+        "5615805f1140630e009671f9",
+        "5615805f1140630e009671fa",
+        "5615805f1140630e009671fb",
+        "5615805f1140630e009671fc",
+        "5615805f1140630e009671fd",
+        "5615805f1140630e009671fe",
+        "5627828d2dae360e001af623",
+        "5627828d2dae360e001af624",
+        "5627828d2dae360e001af625",
+        "5627828d2dae360e001af626",
+        "5627828d2dae360e001af627",
+        "5627828d2dae360e001af628",
+        "5627828d2dae360e001af629",
+        "5637926ef1947f0e007d9f7a",
+        "5637926ef1947f0e007d9f7b",
+        "5637926ef1947f0e007d9f7c",
+        "5637926ef1947f0e007d9f7d",
+        "5637926ef1947f0e007d9f7e",
+        "5637926ef1947f0e007d9f7f",
+        "5637926ef1947f0e007d9f80"
+      ],
+      "__v": 0
+    },
+    {
+      "_id": "573440d4d968a51a00b1765a",
+      "description": "Demo dashboard for Jmeter",
+      "name": "DEMO",
+      "productId": "573440d4d968a51a00b17657",
+      "tags": [
+        {
+          "text": "Load",
+          "default": true,
+          "_id": "5704120c3016a92100c3d83b"
+        },
+        {
+          "text": "JVM",
+          "default": false,
+          "_id": "5704120c3016a92100c3d83a"
+        },
+        {
+          "text": "Database",
+          "default": false,
+          "_id": "5704120c3016a92100c3d839"
+        },
+        {
+          "text": "CPU",
+          "default": false,
+          "_id": "5704120c3016a92100c3d838"
+        },
+        {
+          "text": "Frontend",
+          "default": false,
+          "_id": "5704120c3016a92100c3d837"
+        },
+        {
+          "text": "JDBC",
+          "default": false,
+          "_id": "5704120c3016a92100c3d836"
+        },
+        {
+          "text": "Garbage Collection",
+          "default": false,
+          "_id": "5704120c3016a92100c3d835"
+        },
+        {
+          "text": "Heap",
+          "default": false,
+          "_id": "5704120c3016a92100c3d834"
+        },
+        {
+          "text": "Sessions",
+          "default": false,
+          "_id": "5704120c3016a92100c3d833"
+        },
+        {
+          "text": "Threads",
+          "default": false,
+          "_id": "5704120c3016a92100c3d832"
+        }
+      ],
+      "includeRampUp": false,
+      "useInBenchmark": false,
+      "baseline": null,
+      "granularity": 15,
+      "metrics": [
+        "570411fe3016a92100c3d82b",
+        "570411fe3016a92100c3d82c",
+        "570411fe3016a92100c3d82d",
+        "570411fe3016a92100c3d82e",
+        "570411fe3016a92100c3d82f",
+        "570411fe3016a92100c3d830",
+        "570411fe3016a92100c3d831"
+      ],
+      "__v": 0
+    },
+    {
+      "_id": "573440d4d968a51a00b1765b",
+      "description": "Nightly build load test",
+      "name": "NIGHTLY",
+      "productId": "573440d4d968a51a00b17658",
+      "tags": [
+        {
+          "text": "Load",
+          "default": true,
+          "_id": "55eb2f23f709a10b00c31084"
+        },
+        {
+          "text": "JVM",
+          "default": false,
+          "_id": "55eb2f23f709a10b00c31083"
+        },
+        {
+          "text": "DB",
+          "default": false,
+          "_id": "55eb2f23f709a10b00c31082"
+        },
+        {
+          "text": "CPU",
+          "default": false,
+          "_id": "55eb2f23f709a10b00c31081"
+        },
+        {
+          "text": "Frontend",
+          "default": false,
+          "_id": "55eb2f23f709a10b00c31080"
+        },
+        {
+          "text": "JDBC",
+          "default": false,
+          "_id": "55eb2f23f709a10b00c3107f"
+        },
+        {
+          "text": "GC",
+          "default": false,
+          "_id": "55eb2f23f709a10b00c3107e"
+        },
+        {
+          "text": "Heap",
+          "default": false,
+          "_id": "55eb2f23f709a10b00c3107d"
+        },
+        {
+          "text": "Sessions",
+          "default": false,
+          "_id": "55eb2f23f709a10b00c3107c"
+        },
+        {
+          "text": "Threads",
+          "default": false,
+          "_id": "55eb2f23f709a10b00c3107b"
+        },
+        {
+          "text": "Performance",
+          "_id": "55eb3348f709a10b00c31093",
+          "default": false
+        },
+        {
+          "text": "Docker",
+          "_id": "55ec809ef709a10b00c31099",
+          "default": false
+        },
+        {
+          "text": "Memory",
+          "_id": "55ec80b6f709a10b00c3109a",
+          "default": false
+        },
+        {
+          "text": "Network",
+          "_id": "55ec80c3f709a10b00c3109b",
+          "default": false
+        }
+      ],
+      "includeRampUp": false,
+      "useInBenchmark": true,
+      "baseline": "DEMO-GATLING-BENCHMARKING-MULTIJOB-23",
+      "granularity": 15,
+      "metrics": [
+        "55eb2f1af709a10b00c31069",
+        "55eb2f1af709a10b00c3106b",
+        "55eb2f1af709a10b00c3106c",
+        "55eb2f1af709a10b00c3106d",
+        "55eb2f1af709a10b00c3106e",
+        "55eb2f1af709a10b00c3106f",
+        "55eb2f1af709a10b00c31070",
+        "55ec7fbbf709a10b00c31095",
+        "55ec7feaf709a10b00c31096",
+        "55ec8067f709a10b00c31097",
+        "55f07351e971230c00d34939",
+        "55f07351e971230c00d3493a",
+        "55f07351e971230c00d3493b",
+        "55f07351e971230c00d3493c",
+        "55f07351e971230c00d3493d",
+        "55f07351e971230c00d3493e",
+        "55f07351e971230c00d3493f",
+        "55f07351e971230c00d34940",
+        "55f07351e971230c00d34941",
+        "55f07351e971230c00d34942",
+        "55f936792851ab0c007e10c1",
+        "55f936792851ab0c007e10c2",
+        "55f936792851ab0c007e10c3",
+        "55f936792851ab0c007e10c6",
+        "55f936792851ab0c007e10c8",
+        "55f936792851ab0c007e10c9",
+        "55f936792851ab0c007e10ca",
+        "55fd5e3976c24bc2602eae13",
+        "55fd5e3976c24bc2602eae14",
+        "55fd5e3976c24bc2602eae11",
+        "55fd5e3976c24bc2602eae12",
+        "55fd5e3976c24bc2602eae16",
+        "55fd5e3976c24bc2602eae17",
+        "55fd5e3976c24bc2602eae15",
+        "55fd5edd76c24bc2602eaea5",
+        "55fd5edd76c24bc2602eaea6",
+        "55fd5edd76c24bc2602eaea7",
+        "55fd5edd76c24bc2602eaea8",
+        "55fd5edd76c24bc2602eaea9",
+        "55fd5edd76c24bc2602eaeaa",
+        "55fd5edd76c24bc2602eaeab",
+        "5610d00cbcb2e33509a96cbf",
+        "5610d00cbcb2e33509a96cc0",
+        "5610d00cbcb2e33509a96cc1",
+        "5610d00cbcb2e33509a96cc2",
+        "5610d00cbcb2e33509a96cc3",
+        "5610d00cbcb2e33509a96cc4",
+        "5610d00cbcb2e33509a96cc5",
+        "5613bfdd5360fc1000577324",
+        "5613bfdd5360fc1000577325",
+        "5613bfdd5360fc1000577326",
+        "5613bfdd5360fc1000577327",
+        "5613bfdd5360fc1000577328",
+        "5613bfdd5360fc1000577329",
+        "5613bfdd5360fc100057732a",
+        "5615097e18fd4d3200b8a90e",
+        "5615097e18fd4d3200b8a90f",
+        "5615097e18fd4d3200b8a910",
+        "5615097e18fd4d3200b8a911",
+        "5615097e18fd4d3200b8a912",
+        "5615097e18fd4d3200b8a913",
+        "5615097e18fd4d3200b8a914",
+        "5615805f1140630e009671ff",
+        "5615805f1140630e00967200",
+        "5615805f1140630e00967201",
+        "5615805f1140630e00967202",
+        "5615805f1140630e00967203",
+        "5615805f1140630e00967204",
+        "5615805f1140630e00967205",
+        "5627828d2dae360e001af61c",
+        "5627828d2dae360e001af61d",
+        "5627828d2dae360e001af61e",
+        "5627828d2dae360e001af61f",
+        "5627828d2dae360e001af620",
+        "5627828d2dae360e001af621",
+        "5627828d2dae360e001af622",
+        "5637926ef1947f0e007d9f75",
+        "5637926ef1947f0e007d9f76",
+        "5637926ef1947f0e007d9f79",
+        "570fe889627aa9190061af0f",
+        "570fe889627aa9190061af10",
+        "570fe889627aa9190061af11",
+        "570fe889627aa9190061af12",
+        "570fe889627aa9190061af13",
+        "570fe889627aa9190061af14",
+        "570fe88a627aa9190061af15",
+        "570fe88a627aa9190061af16"
+      ],
+      "__v": 0
+    },
+    {
+      "_id": "573440d4d968a51a00b1765c",
+      "description": "Load test",
+      "name": "LOAD",
+      "productId": "573440d4d968a51a00b17658",
+      "tags": [
+        {
+          "text": "Load",
+          "default": true,
+          "_id": "570fe383b8c65f2b0077251e"
+        },
+        {
+          "text": "JVM",
+          "default": false,
+          "_id": "570fe383b8c65f2b0077251d"
+        },
+        {
+          "text": "Database",
+          "default": false,
+          "_id": "570fe383b8c65f2b0077251c"
+        },
+        {
+          "text": "CPU",
+          "default": false,
+          "_id": "570fe383b8c65f2b0077251b"
+        },
+        {
+          "text": "Frontend",
+          "default": false,
+          "_id": "570fe383b8c65f2b0077251a"
+        },
+        {
+          "text": "JDBC",
+          "default": false,
+          "_id": "570fe383b8c65f2b00772519"
+        },
+        {
+          "text": "Garbage Collection",
+          "default": false,
+          "_id": "570fe383b8c65f2b00772518"
+        },
+        {
+          "text": "Heap",
+          "default": false,
+          "_id": "570fe383b8c65f2b00772517"
+        },
+        {
+          "text": "Sessions",
+          "default": false,
+          "_id": "570fe383b8c65f2b00772516"
+        },
+        {
+          "text": "Threads",
+          "default": false,
+          "_id": "570fe383b8c65f2b00772515"
+        },
+        {
+          "text": "Performance",
+          "default": false,
+          "_id": "570feae3627aa9190061af67"
+        },
+        {
+          "text": "APM",
+          "default": false,
+          "_id": "5735aa98885af21f00eb8698"
+        },
+        {
+          "text": "nodejs",
+          "default": false,
+          "_id": "573d8266904a17200073aeca"
+        },
+        {
+          "text": "OperatingSystem",
+          "default": false,
+          "_id": "573e2f042e2b311b00ffca9e"
+        },
+        {
+          "text": "Memory",
+          "default": false,
+          "_id": "573e2f8e2e2b311b00ffcaa1"
+        }
+      ],
+      "includeRampUp": false,
+      "useInBenchmark": false,
+      "baseline": "GATLING-1.0-LOAD-20160414_1852",
+      "granularity": 15,
+      "metrics": [
+        "570fe37bb8c65f2b0077250f",
+        "570fe869627aa9190061af08",
+        "570fe869627aa9190061af09",
+        "570fe869627aa9190061af0a",
+        "570fe869627aa9190061af0b",
+        "570fe869627aa9190061af0c",
+        "570fe86a627aa9190061af0d",
+        "570fe86a627aa9190061af0e",
+        "573a2e0fd968a51a00b17693",
+        "573d82666896971b0053a2e0",
+        "573d9f69d3f1791b004e3273",
+        "573d9f95e29b8420009c4bbb",
+        "573e2de28890ed210088d535",
+        "573e2e5f2e2b311b00ffca9b",
+        "573e2f042e2b311b00ffca9c",
+        "573e2f8e2e2b311b00ffca9f"
+      ],
+      "__v": 5
+    },
+    {
+      "_id": "57443c9692c2551b0022506d",
+      "productId": "57443c8d92c2551b0022506c",
+      "name": "BAR",
+      "description": "bla",
+      "tags": [
+        {
+          "text": "Load",
+          "default": true
+        },
+        {
+          "text": "JVM",
+          "default": false
+        },
+        {
+          "text": "Database",
+          "default": false
+        },
+        {
+          "text": "CPU",
+          "default": false
+        },
+        {
+          "text": "Frontend",
+          "default": false
+        },
+        {
+          "text": "JDBC",
+          "default": false
+        },
+        {
+          "text": "Garbage Collection",
+          "default": false
+        },
+        {
+          "text": "Heap",
+          "default": false
+        },
+        {
+          "text": "Sessions",
+          "default": false
+        },
+        {
+          "text": "Threads",
+          "default": false
+        }
+      ],
+      "includeRampUp": false,
+      "useInBenchmark": false,
+      "baseline": "FOO-1",
+      "granularity": 15,
+      "metrics": [],
+      "__v": 0
+    }
+  ],
+  "metrics": [
+    {
+      "_id": "570411fe3016a92100c3d82e",
+      "productName": "JMETER",
+      "dashboardName": "DEMO",
+      "dashboardId": "573440d4d968a51a00b1765a",
+      "unit": "Count",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Threads",
+          "_id": "5613cc4bb0c6100f006be1eb"
+        },
+        {
+          "text": "JVM",
+          "_id": "5613cc4bb0c6100f006be1f3"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "jmxtrans.dropwizard_8888.threads.ThreadCount"
+      ],
+      "alias": "JVM ThreadCount",
+      "__v": 0
+    },
+    {
+      "_id": "570411fe3016a92100c3d82c",
+      "productName": "JMETER",
+      "dashboardName": "DEMO",
+      "dashboardId": "573440d4d968a51a00b1765a",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "CPU",
+          "_id": "5613cc4bb0c6100f006be1f1"
+        },
+        {
+          "text": "JVM",
+          "_id": "5613cc4bb0c6100f006be1f3"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(asPercent(jmxtrans.dropwizard_8888.OS.ProcessCpuLoad,1),\"ProcessCpuLoad\")",
+        "alias(asPercent(jmxtrans.dropwizard_8888.OS.SystemCpuLoad,1),\"SystemCpuLoad\")"
+      ],
+      "alias": "JVM CPU",
+      "__v": 0
+    },
+    {
+      "_id": "570411fe3016a92100c3d831",
+      "productName": "JMETER",
+      "dashboardName": "DEMO",
+      "dashboardId": "573440d4d968a51a00b1765a",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Performance",
+          "_id": "5613cca4b0c6100f006be202"
+        }
+      ],
+      "requirementOperator": "<",
+      "requirementValue": 1000,
+      "benchmarkOperator": ">",
+      "benchmarkValue": 500,
+      "targets": [
+        "aliasByNode(jmeter.JMETER.*.ok.pct90,2)"
+      ],
+      "alias": "Transaction response times 90 percentile",
+      "__v": 0
+    },
+    {
+      "_id": "570fe889627aa9190061af0f",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "566883f57751be0f00fb06f2"
+        },
+        {
+          "text": "Transactions",
+          "_id": "5668864b7751be0f00fb06fc"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.nightly.demo.allRequests.ok.count,1),\"Passed Transactions per Second\")"
+      ],
+      "alias": "Total Passed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "570411fe3016a92100c3d82b",
+      "productName": "JMETER",
+      "dashboardName": "DEMO",
+      "dashboardId": "573440d4d968a51a00b1765a",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "5613cc4bb0c6100f006be1f4"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(jmeter.JMETER.test.*,3)"
+      ],
+      "alias": "Active threads",
+      "__v": 0
+    },
+    {
+      "_id": "570411fe3016a92100c3d82f",
+      "productName": "JMETER",
+      "dashboardName": "DEMO",
+      "dashboardId": "573440d4d968a51a00b1765a",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "5613cc4bb0c6100f006be1f4"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(jmeter.JMETER.all.ko.count,1), \"Total failed transactions per second\")"
+      ],
+      "alias": "Total failed transactions per second",
+      "__v": 0
+    },
+    {
+      "_id": "570fe889627aa9190061af10",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Users",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "566883f57751be0f00fb06f2"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.nightly.demo.users.allUsers.active,1), \"Concurrent users\")"
+      ],
+      "alias": "Number of concurrent users",
+      "__v": 0
+    },
+    {
+      "_id": "570fe88a627aa9190061af15",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Transactions",
+          "_id": "5668864b7751be0f00fb06fe"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(scaleToSeconds(gatling2.nightly.demo.*.ko.count,1),3)"
+      ],
+      "alias": "Failed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "570fe37bb8c65f2b0077250f",
+      "summaryIndex": 2,
+      "defaultSummaryText": "Under expected peak live load System CPU usage is around 25%",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "APM",
+          "_id": "5735aa98885af21f00eb8697"
+        }
+      ],
+      "requirementOperator": "<",
+      "requirementValue": 50,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "stats.apm.response.code.200",
+        "stats.timers.apm.duration.*"
+      ],
+      "alias": "APM",
+      "__v": 5
+    },
+    {
+      "_id": "570fe869627aa9190061af08",
+      "summaryIndex": 0,
+      "defaultSummaryText": "The load test ran under load of 15 transactions per second, the expected peak live load.",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "unit": "Transactions",
+      "includeInSummary": true,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "565720aeff7e7e0e00ef6c31"
+        }
+      ],
+      "requirementOperator": ">",
+      "requirementValue": 14,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.demo.allRequests.ok.count,1),\"Passed Transactions per Second\")"
+      ],
+      "alias": "Total Passed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "570411fe3016a92100c3d82d",
+      "productName": "JMETER",
+      "dashboardName": "DEMO",
+      "dashboardId": "573440d4d968a51a00b1765a",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Heap",
+          "_id": "5613cc4bb0c6100f006be1ed"
+        },
+        {
+          "text": "JVM",
+          "_id": "5613cc4bb0c6100f006be1f3"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "jmxtrans.dropwizard_8888.heap.HeapMemoryUsage_used"
+      ],
+      "alias": "JVM Heap Memory Used",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f75",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "CPU",
+          "_id": "55eb2f23f709a10b00c31081"
+        },
+        {
+          "text": "JVM",
+          "_id": "55eb2f23f709a10b00c31083"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": ">",
+      "benchmarkValue": 10,
+      "targets": [
+        "alias(asPercent(jmxtrans.dropwizard_8888.OS.ProcessCpuLoad,1),\"ProcessCpuLoad\")",
+        "alias(asPercent(jmxtrans.dropwizard_8888.OS.SystemCpuLoad,1),\"SystemCpuLoad\")"
+      ],
+      "alias": "JVM CPU",
+      "__v": 0
+    },
+    {
+      "_id": "570fe889627aa9190061af11",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Percentage",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "566883f57751be0f00fb06f2"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(asPercent(integral(gatling2.nightly.demo.allRequests.ko.count), integral(gatling2.nightly.demo.allRequests.all.count)),\"Percentage of failed transactions\")"
+      ],
+      "alias": "Percentage of failed transactions",
+      "__v": 0
+    },
+    {
+      "_id": "570fe88a627aa9190061af16",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Transactions",
+          "_id": "5668864b7751be0f00fb06fc"
+        }
+      ],
+      "requirementOperator": ">",
+      "requirementValue": 0,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(scaleToSeconds(gatling2.nightly.demo.*.ok.count,1),3)"
+      ],
+      "alias": "Passed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "570fe869627aa9190061af0c",
+      "summaryIndex": 1,
+      "defaultSummaryText": "Under expected peak live load of 15 transactions per second, transaction response times are below the required 500 ms.",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "unit": "Milliseconds",
+      "includeInSummary": true,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Performance",
+          "_id": "5657241fff7e7e0e00ef6c3c"
+        }
+      ],
+      "requirementOperator": "<",
+      "requirementValue": 500,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(gatling2.demo.*.ok.percentiles99-0,2)"
+      ],
+      "alias": "Transaction Response Times 99 percentile",
+      "__v": 0
+    },
+    {
+      "_id": "570fe820627aa9190061aeeb",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "565720aeff7e7e0e00ef6c31"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.demo.allRequests.ko.count,1),\"Failed Transactions per Second\")"
+      ],
+      "alias": "Total Failed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "570411fe3016a92100c3d830",
+      "productName": "JMETER",
+      "dashboardName": "DEMO",
+      "dashboardId": "573440d4d968a51a00b1765a",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "5613cc4bb0c6100f006be1f4"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(jmeter.JMETER.all.ok.count,1), \"Total passed transactions per second\")"
+      ],
+      "alias": "Total passed transactions per second",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f79",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Mb",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Heap",
+          "_id": "55eb2f23f709a10b00c3107d"
+        },
+        {
+          "text": "JVM",
+          "_id": "55eb2f23f709a10b00c31083"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scale(jmxtrans.dropwizard_8888.heap.HeapMemoryUsage_used,9.5367431640625e-7), \"Mb in Use\")"
+      ],
+      "alias": "JVM Heap Memory Mb inUse",
+      "__v": 0
+    },
+    {
+      "_id": "570fe889627aa9190061af12",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "566883f57751be0f00fb06f2"
+        },
+        {
+          "text": "Transactions",
+          "_id": "5668864b7751be0f00fb06fc"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.nightly.demo.allRequests.ko.count,1),\"Failed Transactions per Second\")"
+      ],
+      "alias": "Total Failed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "570fe869627aa9190061af0b",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "unit": "Percentage",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "565720aeff7e7e0e00ef6c31"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(asPercent(integral(gatling2.demo.allRequests.ko.count), integral(gatling2.demo.allRequests.all.count)),\"Percentage of failed transactions\")"
+      ],
+      "alias": "Percentage of failed transactions",
+      "__v": 0
+    },
+    {
+      "_id": "570fe820627aa9190061aeec",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "Users",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "565720aeff7e7e0e00ef6c31"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.demo.users.allUsers.active,1), \"Concurrent users\")"
+      ],
+      "alias": "Number of concurrent users",
+      "__v": 0
+    },
+    {
+      "_id": "570fe821627aa9190061aeed",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "Percentage",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "565720aeff7e7e0e00ef6c31"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(asPercent(integral(gatling2.demo.allRequests.ko.count), integral(gatling2.demo.allRequests.all.count)),\"Percentage of failed transactions\")"
+      ],
+      "alias": "Percentage of failed transactions",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f7a",
+      "productName": "JMETER",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b17659",
+      "unit": "None",
+      "type": "Average",
+      "tags": [
+        {
+          "text": "CPU",
+          "_id": "5613cc4bb0c6100f006be1f1"
+        },
+        {
+          "text": "JVM",
+          "_id": "5613cc4bb0c6100f006be1f3"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(asPercent(jmxtrans.dropwizard_8888.OS.ProcessCpuLoad,1),\"ProcessCpuLoad\")",
+        "alias(asPercent(jmxtrans.dropwizard_8888.OS.SystemCpuLoad,1),\"SystemCpuLoad\")"
+      ],
+      "alias": "JVM CPU",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f80",
+      "productName": "JMETER",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b17659",
+      "unit": "Transactions",
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "5613cc4bb0c6100f006be1f4"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(jmeter.JMETER.all.ok.count,1), \"Total passed transactions per second\")"
+      ],
+      "alias": "Total passed transactions per second",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f76",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Count",
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Threads",
+          "_id": "55eb2f23f709a10b00c3107b"
+        },
+        {
+          "text": "JVM",
+          "_id": "55eb2f23f709a10b00c31083"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "jmxtrans.dropwizard_8888.threads.ThreadCount"
+      ],
+      "alias": "JVM ThreadCount",
+      "__v": 0
+    },
+    {
+      "_id": "570fe889627aa9190061af13",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Users",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "566883f57751be0f00fb06f2"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.nightly.demo.users.allUsers.active,1), \"Concurrent users\")"
+      ],
+      "alias": "Number of concurrent users",
+      "__v": 0
+    },
+    {
+      "_id": "570fe869627aa9190061af09",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "565720aeff7e7e0e00ef6c31"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.demo.allRequests.ko.count,1),\"Failed Transactions per Second\")"
+      ],
+      "alias": "Total Failed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "570fe86a627aa9190061af0d",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Transactions",
+          "_id": "565723c9ff7e7e0e00ef6c38"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(scaleToSeconds(gatling2.demo.*.ko.count,1),2)"
+      ],
+      "alias": "Failed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "570fb850ca77391900414359",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "Mb",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Heap",
+          "_id": "55eb2f23f709a10b00c3107d"
+        },
+        {
+          "text": "JVM",
+          "_id": "55eb2f23f709a10b00c31083"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scale(jmxtrans.dropwizard_8888.heap.HeapMemoryUsage_used,9.5367431640625e-7), \"Mb in Use\")"
+      ],
+      "alias": "JVM Heap Memory Mb inUse",
+      "__v": 0
+    },
+    {
+      "_id": "570fe821627aa9190061aeef",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Transactions",
+          "_id": "565723c9ff7e7e0e00ef6c38"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(scaleToSeconds(gatling2.demo.*.ko.count,1),2)"
+      ],
+      "alias": "Failed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f7c",
+      "productName": "JMETER",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b17659",
+      "unit": "None",
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Performance",
+          "_id": "5613cca4b0c6100f006be202"
+        }
+      ],
+      "requirementOperator": "<",
+      "requirementValue": 1000,
+      "benchmarkOperator": ">",
+      "benchmarkValue": 500,
+      "targets": [
+        "aliasByNode(jmeter.JMETER.*.ok.pct90,2)"
+      ],
+      "alias": "Transaction response times 90 percentile",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f7d",
+      "productName": "JMETER",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b17659",
+      "unit": "Count",
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Threads",
+          "_id": "5613cc4bb0c6100f006be1eb"
+        },
+        {
+          "text": "JVM",
+          "_id": "5613cc4bb0c6100f006be1f3"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "jmxtrans.dropwizard_8888.threads.ThreadCount"
+      ],
+      "alias": "JVM ThreadCount",
+      "__v": 0
+    },
+    {
+      "_id": "570fe889627aa9190061af14",
+      "productName": "GATLING",
+      "dashboardName": "NIGHTLY",
+      "dashboardId": "573440d4d968a51a00b1765b",
+      "unit": "Milliseconds",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Performance",
+          "_id": "566886097751be0f00fb06fb"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(gatling2.nightly.demo.*.ok.percentiles99-0,3)"
+      ],
+      "alias": "Transaction Response Times 99 percentile",
+      "__v": 0
+    },
+    {
+      "_id": "570fe869627aa9190061af0a",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "unit": "Users",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "565720aeff7e7e0e00ef6c31"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.demo.users.allUsers.active,1), \"Concurrent users\")"
+      ],
+      "alias": "Number of concurrent users",
+      "__v": 0
+    },
+    {
+      "_id": "570fe86a627aa9190061af0e",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Transactions",
+          "_id": "565723f6ff7e7e0e00ef6c3a"
+        }
+      ],
+      "requirementOperator": ">",
+      "requirementValue": 0,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(scaleToSeconds(gatling2.demo.*.ok.count,1),2)"
+      ],
+      "alias": "Passed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "570fb850ca7739190041435a",
+      "defaultSummaryText": "",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "Count",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "JVM",
+          "_id": "55eb2f23f709a10b00c31083"
+        },
+        {
+          "text": "Threads",
+          "_id": "55eb2f23f709a10b00c3107b"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "jmxtrans.dropwizard_8888.threads.ThreadCount"
+      ],
+      "alias": "JVM ThreadCount",
+      "__v": 0
+    },
+    {
+      "_id": "570fe821627aa9190061aef0",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "Transactions",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Transactions",
+          "_id": "565723f6ff7e7e0e00ef6c3a"
+        }
+      ],
+      "requirementOperator": ">",
+      "requirementValue": 0,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(scaleToSeconds(gatling2.demo.*.ok.count,1),2)"
+      ],
+      "alias": "Passed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f7f",
+      "productName": "JMETER",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b17659",
+      "unit": "Transactions",
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "5613cc4bb0c6100f006be1f4"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(jmeter.JMETER.all.ko.count,1), \"Total failed transactions per second\")"
+      ],
+      "alias": "Total failed transactions per second",
+      "__v": 0
+    },
+    {
+      "_id": "570fb850ca77391900414358",
+      "summaryIndex": 2,
+      "defaultSummaryText": "The application is CPU bound under load of 60 transactions per second.",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "None",
+      "includeInSummary": true,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "CPU",
+          "_id": "55eb2f23f709a10b00c31081"
+        },
+        {
+          "text": "JVM",
+          "_id": "55eb2f23f709a10b00c31083"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": ">",
+      "benchmarkValue": 10,
+      "targets": [
+        "alias(asPercent(jmxtrans.dropwizard_8888.OS.ProcessCpuLoad,1),\"ProcessCpuLoad\")",
+        "alias(asPercent(jmxtrans.dropwizard_8888.OS.SystemCpuLoad,1),\"SystemCpuLoad\")"
+      ],
+      "alias": "JVM CPU",
+      "__v": 0
+    },
+    {
+      "_id": "570fe820627aa9190061aeea",
+      "summaryIndex": 0,
+      "defaultSummaryText": "The maximum throughput measured is 60 transactions per second, four times the expected peak live load of 15 transactions per second.",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "Transactions",
+      "includeInSummary": true,
+      "type": "Maximum",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "565720aeff7e7e0e00ef6c31"
+        }
+      ],
+      "requirementOperator": ">",
+      "requirementValue": 30,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scaleToSeconds(gatling2.demo.allRequests.ok.count,1),\"Passed Transactions per Second\")"
+      ],
+      "alias": "Total Passed Transactions per Second",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f7e",
+      "productName": "JMETER",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b17659",
+      "unit": "None",
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Heap",
+          "_id": "5613cc4bb0c6100f006be1ed"
+        },
+        {
+          "text": "JVM",
+          "_id": "5613cc4bb0c6100f006be1f3"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "jmxtrans.dropwizard_8888.heap.HeapMemoryUsage_used"
+      ],
+      "alias": "JVM Heap Memory Used",
+      "__v": 0
+    },
+    {
+      "_id": "570fe821627aa9190061aeee",
+      "summaryIndex": 1,
+      "defaultSummaryText": "Under load of 60 transactions per second, transaction response times start to peak.",
+      "productName": "GATLING",
+      "dashboardName": "STRESS",
+      "dashboardId": "573440d4d968a51a00b1765d",
+      "unit": "Milliseconds",
+      "includeInSummary": true,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Performance",
+          "_id": "5657241fff7e7e0e00ef6c3c"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(gatling2.demo.*.ok.percentiles99-0,2)"
+      ],
+      "alias": "Transaction Response Times 99 percentile",
+      "__v": 0
+    },
+    {
+      "_id": "5637926ef1947f0e007d9f7b",
+      "productName": "JMETER",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b17659",
+      "unit": "None",
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Load",
+          "_id": "5613cc4bb0c6100f006be1f4"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(jmeter.JMETER.test.*,3)"
+      ],
+      "alias": "Active threads",
+      "__v": 0
+    },
+    {
+      "_id": "573a2e0fd968a51a00b17693",
+      "summaryIndex": 2,
+      "defaultSummaryText": "Under expected peak live load System CPU usage is around 25%",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "__v": 0,
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "APM",
+          "_id": "5735aa98885af21f00eb8697"
+        }
+      ],
+      "requirementOperator": "<",
+      "requirementValue": 50,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scale(stats.gauges.apm.mem_peak_usage,9.5367431640625e-7), \"Mem peak usage in Mb\")"
+      ],
+      "alias": "Memory Peak Usage"
+    },
+    {
+      "_id": "573d82666896971b0053a2e0",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "nodejs",
+          "_id": "573d82666896971b0053a2e1"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "node.mean.eventLoopLag"
+      ],
+      "alias": "EventLoopLag",
+      "__v": 0
+    },
+    {
+      "_id": "573d9f69d3f1791b004e3273",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "nodejs",
+          "_id": "573d8266904a17200073aeca"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "node.mean.gc.minor"
+      ],
+      "alias": "GC minor",
+      "__v": 0
+    },
+    {
+      "_id": "573d9f95e29b8420009c4bbb",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Heap",
+          "_id": "570fe383b8c65f2b00772517"
+        },
+        {
+          "text": "nodejs",
+          "_id": "573d8266904a17200073aeca"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "alias(scale(node.mean.memory.heapTotal,9.5367431640625e-7), \"Mb Total\")",
+        "alias(scale(node.mean.memory.heapUsed,9.5367431640625e-7), \"Mb in Use\")"
+      ],
+      "alias": "Heap",
+      "__v": 1
+    },
+    {
+      "_id": "573e2de28890ed210088d535",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "collectd.mean.swap.*"
+      ],
+      "alias": "Swap",
+      "__v": 0
+    },
+    {
+      "_id": "573e2e5f2e2b311b00ffca9b",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "CPU",
+          "_id": "570fe383b8c65f2b0077251b"
+        },
+        {
+          "text": "OperatingSystem",
+          "_id": "573e2f042e2b311b00ffca9e"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "collectd.mean.cpu-*.cpu-user"
+      ],
+      "alias": "CPU",
+      "__v": 1
+    },
+    {
+      "_id": "573e2f042e2b311b00ffca9c",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "unit": "None",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "OperatingSystem",
+          "_id": "573e2f042e2b311b00ffca9d"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "collectd.mean.load.load.*"
+      ],
+      "alias": "Load average",
+      "__v": 0
+    },
+    {
+      "_id": "573e2f8e2e2b311b00ffca9f",
+      "dashboardId": "573440d4d968a51a00b1765c",
+      "productName": "GATLING",
+      "dashboardName": "LOAD",
+      "unit": "Mb",
+      "includeInSummary": false,
+      "type": "Average",
+      "tags": [
+        {
+          "text": "Memory",
+          "_id": "573e2f8e2e2b311b00ffcaa0"
+        },
+        {
+          "text": "OperatingSystem",
+          "_id": "573e2f042e2b311b00ffca9e"
+        }
+      ],
+      "requirementOperator": null,
+      "requirementValue": null,
+      "benchmarkOperator": null,
+      "benchmarkValue": null,
+      "targets": [
+        "aliasByNode(scale(collectd.mean.memory.*,9.5367431640625e-7),3)"
+      ],
+      "alias": "Memory in Mb",
+      "__v": 2
+    }
+  ],
+  "events": [],
+  "testruns": [],
+  "templates": [
+    {
+      "_id": "566883c77751be0f00fb06e8",
+      "description": "Gatling load metrics for nightly namespace",
+      "name": "GATLING-NIGHTLY",
+      "__v": 0,
+      "tags": [
+        {
+          "text": "Load",
+          "default": true,
+          "_id": "566883f57751be0f00fb06f2"
+        },
+        {
+          "text": "JVM",
+          "default": false,
+          "_id": "566883f57751be0f00fb06f1"
+        },
+        {
+          "text": "Database",
+          "default": false,
+          "_id": "566883f57751be0f00fb06f0"
+        },
+        {
+          "text": "CPU",
+          "default": false,
+          "_id": "566883f57751be0f00fb06ef"
+        },
+        {
+          "text": "Frontend",
+          "default": false,
+          "_id": "566883f57751be0f00fb06ee"
+        },
+        {
+          "text": "JDBC",
+          "default": false,
+          "_id": "566883f57751be0f00fb06ed"
+        },
+        {
+          "text": "Garbage Collection",
+          "default": false,
+          "_id": "566883f57751be0f00fb06ec"
+        },
+        {
+          "text": "Heap",
+          "default": false,
+          "_id": "566883f57751be0f00fb06eb"
+        },
+        {
+          "text": "Sessions",
+          "default": false,
+          "_id": "566883f57751be0f00fb06ea"
+        },
+        {
+          "text": "Threads",
+          "default": false,
+          "_id": "566883f57751be0f00fb06e9"
+        },
+        {
+          "text": "Performance",
+          "_id": "566886097751be0f00fb06f9"
+        },
+        {
+          "text": "Transactions",
+          "_id": "5668864b7751be0f00fb06fc"
+        }
+      ],
+      "variables": [
+        {
+          "description": "Gatling script name",
+          "placeholder": "$SCRIPT",
+          "_id": "566883f57751be0f00fb06f3",
+          "query": "gatling2.nightly.*",
+          "name": "SCRIPT"
+        }
+      ],
+      "metrics": [
+        {
+          "_id": "566884257751be0f00fb06f4",
+          "type": "Average",
+          "unit": "Transactions",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Load",
+              "_id": "566883f57751be0f00fb06f2"
+            },
+            {
+              "text": "Transactions",
+              "_id": "5668864b7751be0f00fb06fc"
+            }
+          ],
+          "targets": [
+            "alias(scaleToSeconds(gatling2.nightly.$SCRIPT.allRequests.ok.count,1),\"Passed Transactions per Second\")"
+          ],
+          "alias": "Total Passed Transactions per Second"
+        },
+        {
+          "_id": "566884987751be0f00fb06f7",
+          "type": "Average",
+          "unit": "Users",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Load",
+              "_id": "566883f57751be0f00fb06f2"
+            }
+          ],
+          "targets": [
+            "alias(scaleToSeconds(gatling2.nightly.$SCRIPT.users.allUsers.active,1), \"Concurrent users\")"
+          ],
+          "alias": "Number of concurrent users"
+        },
+        {
+          "_id": "566885ca7751be0f00fb06f8",
+          "type": "Average",
+          "unit": "Percentage",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Load",
+              "_id": "566883f57751be0f00fb06f2"
+            }
+          ],
+          "targets": [
+            "alias(asPercent(integral(gatling2.nightly.$SCRIPT.allRequests.ko.count), integral(gatling2.nightly.$SCRIPT.allRequests.all.count)),\"Percentage of failed transactions\")"
+          ],
+          "alias": "Percentage of failed transactions"
+        },
+        {
+          "_id": "566884437751be0f00fb06f5",
+          "type": "Average",
+          "unit": "Transactions",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Load",
+              "_id": "566883f57751be0f00fb06f2"
+            },
+            {
+              "text": "Transactions",
+              "_id": "5668864b7751be0f00fb06fc"
+            }
+          ],
+          "targets": [
+            "alias(scaleToSeconds(gatling2.nightly.$SCRIPT.allRequests.ko.count,1),\"Failed Transactions per Second\")"
+          ],
+          "alias": "Total Failed Transactions per Second"
+        },
+        {
+          "_id": "566884987751be0f00fb06f7",
+          "type": "Average",
+          "unit": "Users",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Load",
+              "_id": "566883f57751be0f00fb06f2"
+            }
+          ],
+          "targets": [
+            "alias(scaleToSeconds(gatling2.nightly.$SCRIPT.users.allUsers.active,1), \"Concurrent users\")"
+          ],
+          "alias": "Number of concurrent users"
+        },
+        {
+          "_id": "566886097751be0f00fb06fa",
+          "type": "Average",
+          "unit": "Milliseconds",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Performance",
+              "_id": "566886097751be0f00fb06fb"
+            }
+          ],
+          "targets": [
+            "aliasByNode(gatling2.nightly.$SCRIPT.*.ok.percentiles99-0,3)"
+          ],
+          "alias": "Transaction Response Times 99 percentile"
+        },
+        {
+          "_id": "5668864b7751be0f00fb06fd",
+          "type": "Average",
+          "unit": "Transactions",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Transactions",
+              "_id": "5668864b7751be0f00fb06fe"
+            }
+          ],
+          "targets": [
+            "aliasByNode(scaleToSeconds(gatling2.nightly.$SCRIPT.*.ko.count,1),3)"
+          ],
+          "alias": "Failed Transactions per Second"
+        },
+        {
+          "_id": "5668872d7751be0f00fb06ff",
+          "type": "Average",
+          "unit": "Transactions",
+          "requirementOperator": ">",
+          "requirementValue": 0,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Transactions",
+              "_id": "5668864b7751be0f00fb06fc"
+            }
+          ],
+          "targets": [
+            "aliasByNode(scaleToSeconds(gatling2.nightly.$SCRIPT.*.ok.count,1),3)"
+          ],
+          "alias": "Passed Transactions per Second"
+        }
+      ]
+    },
+    {
+      "_id": "5657209bff7e7e0e00ef6c1d",
+      "description": "Gatling metrics",
+      "name": "GATLING",
+      "__v": 2,
+      "tags": [
+        {
+          "text": "Load",
+          "default": true,
+          "_id": "565720aeff7e7e0e00ef6c31"
+        },
+        {
+          "text": "JVM",
+          "default": false,
+          "_id": "565720aeff7e7e0e00ef6c30"
+        },
+        {
+          "text": "Database",
+          "default": false,
+          "_id": "565720aeff7e7e0e00ef6c2f"
+        },
+        {
+          "text": "CPU",
+          "default": false,
+          "_id": "565720aeff7e7e0e00ef6c2e"
+        },
+        {
+          "text": "Frontend",
+          "default": false,
+          "_id": "565720aeff7e7e0e00ef6c2d"
+        },
+        {
+          "text": "JDBC",
+          "default": false,
+          "_id": "565720aeff7e7e0e00ef6c2c"
+        },
+        {
+          "text": "Garbage Collection",
+          "default": false,
+          "_id": "565720aeff7e7e0e00ef6c2b"
+        },
+        {
+          "text": "Heap",
+          "default": false,
+          "_id": "565720aeff7e7e0e00ef6c2a"
+        },
+        {
+          "text": "Sessions",
+          "default": false,
+          "_id": "565720aeff7e7e0e00ef6c29"
+        },
+        {
+          "text": "Threads",
+          "default": false,
+          "_id": "565720aeff7e7e0e00ef6c28"
+        },
+        {
+          "text": "Performance",
+          "_id": "5657241fff7e7e0e00ef6c3c"
+        },
+        {
+          "text": "Transactions",
+          "_id": "565723f6ff7e7e0e00ef6c3a"
+        }
+      ],
+      "variables": [
+        {
+          "description": "Gatling simulation class name",
+          "placeholder": "$SCRIPT",
+          "_id": "573486dfd968a51a00b17692",
+          "query": "gatling2.*",
+          "name": "SCRIPT"
+        }
+      ],
+      "metrics": [
+        {
+          "_id": "565721a4ff7e7e0e00ef6c33",
+          "type": "Average",
+          "unit": "Transactions",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Load",
+              "_id": "565720aeff7e7e0e00ef6c31"
+            }
+          ],
+          "targets": [
+            "alias(scaleToSeconds(gatling2.$SCRIPT.allRequests.ok.count,1),\"Passed Transactions per Second\")"
+          ],
+          "alias": "Total Passed Transactions per Second"
+        },
+        {
+          "_id": "565721caff7e7e0e00ef6c34",
+          "type": "Average",
+          "unit": "Transactions",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Load",
+              "_id": "565720aeff7e7e0e00ef6c31"
+            }
+          ],
+          "targets": [
+            "alias(scaleToSeconds(gatling2.$SCRIPT.allRequests.ko.count,1),\"Failed Transactions per Second\")"
+          ],
+          "alias": "Total Failed Transactions per Second"
+        },
+        {
+          "_id": "565723a4ff7e7e0e00ef6c36",
+          "type": "Average",
+          "unit": "Users",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Load",
+              "_id": "565720aeff7e7e0e00ef6c31"
+            }
+          ],
+          "targets": [
+            "alias(scaleToSeconds(gatling2.$SCRIPT.users.allUsers.active,1), \"Concurrent users\")"
+          ],
+          "alias": "Number of concurrent users"
+        },
+        {
+          "_id": "56572347ff7e7e0e00ef6c35",
+          "type": "Average",
+          "unit": "Percentage",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Load",
+              "_id": "565720aeff7e7e0e00ef6c31"
+            }
+          ],
+          "targets": [
+            "alias(asPercent(integral(gatling2.$SCRIPT.allRequests.ko.count), integral(gatling2.$SCRIPT.allRequests.all.count)),\"Percentage of failed transactions\")"
+          ],
+          "alias": "Percentage of failed transactions"
+        },
+        {
+          "_id": "5657241fff7e7e0e00ef6c3b",
+          "type": "Average",
+          "unit": "Milliseconds",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Performance",
+              "_id": "5657241fff7e7e0e00ef6c3c"
+            }
+          ],
+          "targets": [
+            "aliasByNode(gatling2.$SCRIPT.*.ok.percentiles99-0,2)"
+          ],
+          "alias": "Transaction Response Times 99 percentile"
+        },
+        {
+          "_id": "565723c9ff7e7e0e00ef6c37",
+          "type": "Average",
+          "unit": "Transactions",
+          "requirementOperator": null,
+          "requirementValue": null,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Transactions",
+              "_id": "565723c9ff7e7e0e00ef6c38"
+            }
+          ],
+          "targets": [
+            "aliasByNode(scaleToSeconds(gatling2.$SCRIPT.*.ko.count,1),2)"
+          ],
+          "alias": "Failed Transactions per Second"
+        },
+        {
+          "_id": "565723f6ff7e7e0e00ef6c39",
+          "type": "Average",
+          "unit": "Transactions",
+          "requirementOperator": ">",
+          "requirementValue": 0,
+          "benchmarkOperator": null,
+          "benchmarkValue": null,
+          "tags": [
+            {
+              "text": "Transactions",
+              "_id": "565723f6ff7e7e0e00ef6c3a"
+            }
+          ],
+          "targets": [
+            "aliasByNode(scaleToSeconds(gatling2.$SCRIPT.*.ok.count,1),2)"
+          ],
+          "alias": "Passed Transactions per Second"
+        }
+      ]
+    }
+  ],
+  "releases": [
+  ],
+  "testrunSummaries": [
+  ],
+  "gatlingDetails": [
+  ]
+}
