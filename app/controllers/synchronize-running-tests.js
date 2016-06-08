@@ -188,7 +188,7 @@ function connect() {
     }
   };
 
-  var mongoUrl = process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
+  var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
 
 
   mongoose.connection.once('open', function() {
