@@ -78,6 +78,13 @@ if(cluster.isMaster) {
 
 	var io = require('socket.io').listen(server);
 
+	var redis_io = require('socket.io-redis');
+	var redis = require("redis");
+
+	global.io = io;
+
+	io.adapter(redis_io({host: "172.21.42.150", port: 6379 }));
+
 	io.on('connection', function(client) {
 		console.log('Client connected...');
 

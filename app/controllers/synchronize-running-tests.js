@@ -233,6 +233,7 @@ let saveTestRun = function (runningTest){
           if (err) {
             reject(err);
           } else {
+
             resolve(savedTestRun);
           }
         });

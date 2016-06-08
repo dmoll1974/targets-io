@@ -123,7 +123,8 @@ function TestrunsDirective () {
 
     mySocket.on('connect', function(data) {
       //mySocket.emit('join', 'Hello World from client');
-      console.log('Joined: ' + data);
+      console.log(this.io.engine.id);
+
     });
 
     mySocket.on('message', function(data) {

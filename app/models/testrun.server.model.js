@@ -98,13 +98,5 @@ TestrunSchema.index({
   dashboardId: 1
 }, { unique: true });
 
-TestrunSchema.post('save', function() {
-  console.log('emitting message from socket ' + socket.id);
-  socket.emit('message', {event: 'saved', testrun: this});
-});
-TestrunSchema.post('remove', function() {
-  socket.emit('message', {event: 'removed'});
-});
-
 
 mongoose.model('Testrun', TestrunSchema);

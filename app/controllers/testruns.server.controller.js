@@ -594,6 +594,9 @@ let upsertTestRun = function(testRun){
       if (err) {
         reject(err);
       } else {
+        var io = global.io;
+        console.log('emitting message from socket');
+        io.sockets.emit('message', {event: 'saved', testrun: savedTestRun});
 
         resolve(savedTestRun);
       }
