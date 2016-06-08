@@ -7,7 +7,9 @@ var init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose'),
 	chalk = require('chalk'),
-	cluster = require('cluster');
+	cluster = require('cluster'),
+   sticky = require('sticky-session');
+
 
 /**
  * Main application entry file.
@@ -70,9 +72,21 @@ if(cluster.isMaster) {
 
 	app.all('/*', function(req, res) {res.send('process ' + process.pid + ' says hello!').end();})
 
-	app.listen(config.port, function() {
+	var server = app.listen(config.port, function() {
 		console.log('Process ' + process.pid + ' is listening to all incoming requests');
 	});
+
+	var io = require('socket.io').listen(server);
+
+	io.on('connection', function(client) {
+		console.log('Client connected...');
+
+		//client.on('join', function(data) {
+		//	console.log(data);
+		//	client.emit('messages', 'Hello from server');
+		//});
+	});
+
 
 	// Expose app
 	exports = module.exports = app;

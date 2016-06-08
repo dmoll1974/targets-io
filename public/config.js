@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'targets-io';
-	var applicationModuleVendorDependencies = ['ngResource', 'ui.router', 'ui.bootstrap', 'ui.utils', 'ngTagsInput', 'ui.bootstrap.datetimepicker', 'cgBusy', 'ngTable', 'ngClipboard','ngMaterial', 'ui.bootstrap.datetimepicker', 'ngMessages', 'focus-if'];
+	var applicationModuleVendorDependencies = ['ngResource', 'ui.router', 'ui.bootstrap', 'ui.utils', 'ngTagsInput', 'ui.bootstrap.datetimepicker', 'cgBusy', 'ngTable', 'ngClipboard','ngMaterial', 'ui.bootstrap.datetimepicker', 'ngMessages', 'focus-if'/*, 'btford.socket-io'*/];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {

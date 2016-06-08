@@ -15,7 +15,7 @@ function TestrunsDirective () {
   return directive;
 
   /* @ngInject */
-  function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $interval, $timeout, $window) {
+  function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $interval, $timeout, $window, mySocket) {
 
 
     var vm = this;
@@ -119,7 +119,17 @@ function TestrunsDirective () {
     });
 
 
+  /*socket.io*/
 
+    mySocket.on('connect', function(data) {
+      //mySocket.emit('join', 'Hello World from client');
+      console.log('Joined: ' + data);
+    });
+
+    mySocket.on('message', function(data) {
+      console.log('event:' + data.event);
+      console.log('testrun:' + data.testrun.testRunId);
+    });
 
     /* initialise */
     activate();
