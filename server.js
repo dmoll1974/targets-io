@@ -30,7 +30,9 @@ if (config.graylog) {
 		graylog: {
 			servers: [{host: config.graylog.host, port: config.graylog.port}],
 			facility: 'targets-io'
-		}/*,
+		},
+		level: config.logLevel
+		/*,
 		staticMeta: {environment: config.environment, source: os.hostname()}*/
 	});
 }
