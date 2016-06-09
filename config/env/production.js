@@ -13,6 +13,9 @@ module.exports = {
     },
     redisHost: process.env.REDIS_SERVICE_HOST,
     redisPort: process.env.REDIS_SERVICE_PORT,
+    jenkinsUser: process.env.JENKINS_USER,
+    jenkinsPassword: process.env.JENKINS_PASSWORD,
+
     assets: {
         lib: {
             css: [
