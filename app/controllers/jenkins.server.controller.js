@@ -4,7 +4,7 @@
  */
 var mongoose = require('mongoose'),
     _ = require('lodash'),
-    requestjson = require('request-json'),
+    request = require('request'),
     config = require('../../config/config'),
     GatlingDetails = mongoose.model('GatlingDetails');
 
@@ -16,10 +16,13 @@ exports.getConsoleData = function (req, res) {
   GatlingDetails.findOne({consoleUrl: req.body.consoleUrl},function(err, GatlingDetailsResponse) {
 
     if (GatlingDetailsResponse) {
+
+      console.log('Gatling details served from db');
       res.jsonp(GatlingDetailsResponse.response);
 
     } else {
 
+      console.log('Gatling details served from Jenkins');
       getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, function (response) {
 
         if(response.status === 'fail'){
@@ -53,12 +56,19 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
     separator = '> ';
   }
 
-  var client = requestjson.createClient(jenkinsUrl);
 
-  client.get(consoleUrl, function (err, response, body) {
-    if (err){
+
+  request.get(consoleUrl, {
+    'auth': {
+      'user': config.jenkinsUser,
+      'pass': config.jenkinsPassword,
+      'sendImmediately': true
+    }
+  }, function (err, response, body) {
+    if (err) {
       console.error(err);
-    }else {
+    } else {
+
       if (response.statusCode !== 200) {
 
         consoleResponse.status = 'fail';
@@ -121,4 +131,5 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
         }
       }
     }
-  }
+  })
+}
