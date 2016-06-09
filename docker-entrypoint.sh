@@ -17,6 +17,16 @@ if [ -z "$MONGO_PASSWORD" ]; then
 
 			exit 1
 fi
+if [ -z "$JENKINS_USER" ]; then
+			echo >&2 'error: Need to set JENKINS_USER'
+
+			exit 1
+fi
+if [ -z "$JENKINS_PASSWORD" ]; then
+			echo >&2 'error: Need to set JENKINS_PASSWORD'
+
+			exit 1
+fi
 if [ -z "$REDIS_SERVICE_HOST" ]; then
 			echo >&2 'error: Need to set REDIS_SERVICE_HOST'
 
