@@ -14,7 +14,7 @@ exports.flushCache = flushCache;
 
 
 
-var client = redis.createClient(config.redisPort, config.redisHost, {no_ready_check: true});
+var client = redis.createClient(config.redisHost, config.redisPort, {no_ready_check: true});
 
 
 client.on('connect', function() {
