@@ -6,8 +6,8 @@ module.exports = {
 	logLevel: 'error',
 	graphiteHost: process.env.GRAPHITE_HOST,
 	db: process.env.MONGO_URL,
-	dbUsername: process.env.MONGO_USER,
-	dbPassword: process.env.MONGO_PASSWORD,
+	//dbUsername: process.env.MONGO_USER,
+	//dbPassword: process.env.MONGO_PASSWORD,
 	//graylog : {
 	//	host: 'graylog.host.com',
 	//	port: 12201

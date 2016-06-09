@@ -42,8 +42,9 @@ if (config.graylog) {
  * Please note that the order of loading is important.
  */
 console.log ("mongoDb connect to: " + config.db + " with credentials: " + config.dbUsername + "/" +  config.dbPassword);
-console.log ("memcached host: " + config.memcachedHost)
-console.log ("graphite host: " + config.graphiteHost)
+console.log ("graphite host: " + config.graphiteHost);
+console.log ("redis host: " + config.redisHost + ':' + config.redisPort );
+
 
 
 // Bootstrap db connection
