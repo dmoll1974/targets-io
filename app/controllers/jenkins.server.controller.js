@@ -6,50 +6,36 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     requestjson = require('request-json'),
     config = require('../../config/config'),
-    Memcached = require('memcached'),
     GatlingDetails = mongoose.model('GatlingDetails');
 
 exports.getJenkinsData = getJenkinsData;
 
 exports.getConsoleData = function (req, res) {
-  var memcached = new Memcached(config.memcachedHost);
-  var jenkinsKey = req.body.consoleUrl + req.body.running;
-  memcached.get(jenkinsKey, function (err, result) {
-    if (err)
-      console.error(err);
-    if (result) {
-      console.dir('cache hit jenkins: ' + result);
-      res.jsonp(result);
+
+  /* first check if response is available in db */
+  GatlingDetails.findOne({consoleUrl: req.body.consoleUrl},function(err, GatlingDetailsResponse) {
+
+    if (GatlingDetailsResponse) {
+      res.jsonp(GatlingDetailsResponse.response);
+
     } else {
 
-      /* first check if response is available in db */
-      GatlingDetails.findOne({consoleUrl: req.body.consoleUrl},function(err, GatlingDetailsResponse) {
+      getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, function (response) {
 
-        if (GatlingDetailsResponse) {
-          res.jsonp(GatlingDetailsResponse.response);
+        if(response.status === 'fail'){
 
-        } else {
+          res.send(400, {message : response.data.message})
 
-          getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, function (response) {
-
-            if(response.status === 'fail'){
-
-              res.send(400, {message : response.data.message})
-
-            }else {
-              res.jsonp(response);
-              memcached.set(jenkinsKey, response.data, 10, function (err, result) {
-                if (err)
-                  console.error(err);
-                memcached.end();
-              });
-            }
-          });
+        }else {
+          res.jsonp(response);
         }
       });
     }
   });
+
+
 };
+
 function getJenkinsData (jenkinsUrl, running, start, end, callback) {
   var consoleResponse = {};
   var consoleData = [];
@@ -57,8 +43,8 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
   var consoleUrl;
   var separator;
   /*
-     * we use a different url if a test is still running
-     * */
+   * we use a different url if a test is still running
+   * */
   if (running === false) {
     consoleUrl = jenkinsUrl + 'console';
     separator = '&gt; ';
@@ -66,51 +52,20 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
     consoleUrl = jenkinsUrl + 'logText/progressiveText?start=';
     separator = '> ';
   }
-  var memcached = new Memcached(config.memcachedHost);
+
   var client = requestjson.createClient(jenkinsUrl);
-  var testDurationInSeconds, offset;
-  memcached.get(consoleUrl, function (err, result) {
-    if (err)
+
+  client.get(consoleUrl, function (err, response, body) {
+    if (err){
       console.error(err);
-    if (result) {
-      console.dir('cache hit, offset: ' + result);
-      if (running === false) {
-        /*no offset needed*/
-        offset = '';
-      } else {
-        offset = result;
-      }
-    } else {
-      if (running === false) {
-        /*no offset needed*/
-        offset = '';
-      } else {
-        /* If screen was never opened before downloading the whole console output file would lead to Jenkins out of memory
-                 * in case of long lasting tests. Instead make an educated guess for a suitable offset based on the test timestamps
-                 */
-        testDurationInSeconds = new Date() / 1000 - start;
-        offset = Math.round(testDurationInSeconds * 500);
-      }
-    }
-    client.get(consoleUrl + offset, function (err, response, body) {
-       if (err) console.error(err);
-      console.log(consoleUrl + offset);
-      console.log('X-More-Data:' + response.headers['x-more-data']);
-      //if (response.headers['x-text-size'] && running == true) {
-      //  memcached.set(consoleUrl, response.headers['x-text-size'], 600, function (err, result) {
-      //    if (err)
-      //      console.error(err);
-      //    console.dir('key set ' + consoleUrl + ' : ' + response.headers['x-text-size']);
-      //    memcached.end();
-      //  });
-      //}
-      if(response.statusCode !== 200){
+    }else {
+      if (response.statusCode !== 200) {
 
         consoleResponse.status = 'fail';
         consoleResponse.data = err;
         callback(consoleResponse);
 
-      }else {
+      } else {
 
         var consoleArray = body.split('Requests');
         if (consoleArray.length > 1) {
@@ -165,6 +120,5 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
           });
         }
       }
-    });
-  });
-}
+    }
+  }
