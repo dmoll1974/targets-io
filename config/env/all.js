@@ -9,7 +9,8 @@ module.exports = {
 	graphiteHost: 'http://localhost:8090',
 	graphiteRetentionPeriod: '90d', /*90 days*/
 	db: 'mongodb://localhost/targets-io-dev',
-	memcachedHost: [ 'localhost:11211'],
+	redisHost: '172.21.42.150' ,
+    redisPort: '6379',
 	port: process.env.PORT || 3000,
 	templateEngine: 'swig',
 	sessionSecret: 'MEAN',

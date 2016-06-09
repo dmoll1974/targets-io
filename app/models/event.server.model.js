@@ -53,4 +53,5 @@ eventSchema.on('index', function (err) {
     console.info('User indexing complete');
   }
 });
+
 mongoose.model('Event', eventSchema);
