@@ -7,7 +7,6 @@ module.exports = {
     db: process.env.MONGO_URL,
     dbUsername: process.env.MONGO_USER,
     dbPassword: process.env.MONGO_PASSWORD,
-    memcachedHost: [process.env.MEMCACHED_HOST],
     graylog : {
         host: 'graylog.ae1.klm.com',
         port: 12201
