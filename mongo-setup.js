@@ -23,7 +23,15 @@ mongoSetup.connect = function() {
         }
     };
 
-    var mongoUrl = 'mongodb://' + config.dbUsername + ':' + config.dbPassword + '@' + config.db;
+    if(config.dbUsername && config.dbPassword ){
+
+        var mongoUrl = 'mongodb://' + config.dbUsername + ':' + config.dbPassword + '@' + config.db;
+
+    }else{
+
+        var mongoUrl = 'mongodb://' + config.db;
+    }
+
 
 
     mongoose.connection.once('open', function() {

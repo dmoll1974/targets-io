@@ -1,11 +1,22 @@
 'use strict';
 
 module.exports = {
-	db: 'KLM123444:27017,KLM123444:27018,KLM123444:27019/targetsIoDb?replicaSet=rs0',
-	dbUsername: 'bla',
-	dbPassword: 'bla',
-	graphiteHost: 'http://172.21.42.178',
-	memcachedHost: [ '172.21.42.178:11211'],
+	isProduction: false,
+	isDevelopment: true,
+	logLevel: 'error',
+	graphiteHost: process.env.GRAPHITE_HOST,
+	db: process.env.MONGO_URL,
+	//dbUsername: process.env.MONGO_USER,
+	//dbPassword: process.env.MONGO_PASSWORD,
+	//graylog : {
+	//	host: 'graylog.host.com',
+	//	port: 12201
+	//},
+	redisHost: process.env.REDIS_SERVICE_HOST,
+	redisPort: process.env.REDIS_SERVICE_PORT,
+	jenkinsUser: process.env.JENKINS_USER,
+	jenkinsPassword: process.env.JENKINS_PASSWORD,
+
 
 	app: {
 		title: 'targets-io - Development Environment'

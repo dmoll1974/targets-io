@@ -18,7 +18,7 @@ var client = redis.createClient(config.redisPort, config.redisHost, {no_ready_ch
 
 
 client.on('connect', function() {
-  console.log('Redis host' + config.redisHost + ':' + config.redisPort );
+  console.log('Redis host: ' + config.redisHost + ':' + config.redisPort );
 });
 
 function setCache(key, array, expiry, callback){

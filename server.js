@@ -30,7 +30,9 @@ if (config.graylog) {
 		graylog: {
 			servers: [{host: config.graylog.host, port: config.graylog.port}],
 			facility: 'targets-io'
-		}/*,
+		},
+		level: config.logLevel
+		/*,
 		staticMeta: {environment: config.environment, source: os.hostname()}*/
 	});
 }
@@ -39,9 +41,10 @@ if (config.graylog) {
  * Main application entry file.
  * Please note that the order of loading is important.
  */
-console.log ("mongoDb connect to: " + config.db)
-console.log ("memcached host: " + config.memcachedHost)
-console.log ("graphite host: " + config.graphiteHost)
+console.log ("mongoDb connect to: " + config.db + " with credentials: " + config.dbUsername + "/" +  config.dbPassword);
+console.log ("graphite host: " + config.graphiteHost);
+console.log ("redis host: " + config.redisHost + ':' + config.redisPort );
+
 
 
 // Bootstrap db connection

@@ -17,6 +17,16 @@ if [ -z "$MONGO_PASSWORD" ]; then
 
 			exit 1
 fi
+if [ -z "$JENKINS_USER" ]; then
+			echo >&2 'error: Need to set JENKINS_USER'
+
+			exit 1
+fi
+if [ -z "$JENKINS_PASSWORD" ]; then
+			echo >&2 'error: Need to set JENKINS_PASSWORD'
+
+			exit 1
+fi
 if [ -z "$REDIS_SERVICE_HOST" ]; then
 			echo >&2 'error: Need to set REDIS_SERVICE_HOST'
 
@@ -38,5 +48,5 @@ if [ -z "$GRAPHITE_SERVICE_PORT" ]; then
 			exit 1
 fi
 
-MEMCACHED_HOST=$MEMCACHED_SERVICE_HOST:$MEMCACHED_SERVICE_PORT GRAPHITE_HOST=http://$GRAPHITE_SERVICE_HOST:$GRAPHITE_SERVICE_PORT  bash -c "forever -c 'node --harmony' server.js"
+GRAPHITE_HOST=http://$GRAPHITE_SERVICE_HOST:$GRAPHITE_SERVICE_PORT  bash -c "forever -c 'node --harmony' server.js"
 
