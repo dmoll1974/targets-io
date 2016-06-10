@@ -2,7 +2,7 @@
 
 module.exports = {
 	isProduction: false,
-	isDevelopment: true,
+	isDemo: true,
 	logLevel: 'error',
 	graphiteHost: process.env.GRAPHITE_HOST,
 	db: process.env.MONGO_URL,

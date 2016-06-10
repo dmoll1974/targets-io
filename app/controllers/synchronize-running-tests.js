@@ -173,29 +173,44 @@ mongoose.model('Testrun', TestrunSchema);
 var db = connect();
 
 function connect() {
-  // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-  var options = {
-    //user: process.env.dbUsername,
-    //pass: process.env.dbPassword,
-    server: {
-      //poolSize: 20,
-      auto_reconnect: true, // already default, but explicit
-      reconnectTries: 30, // already default, explicit
-      socketOptions: {
-        keepAlive: 100000, // less then 120s configured on mongo side
-        connectTimeoutMS: 10000
-      }
-    }
-  };
 
-  var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
+  if(!isDemo) {
+
+    // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+    var options = {
+      //user: process.env.dbUsername,
+      //pass: process.env.dbPassword,
+      server: {
+        //poolSize: 20,
+        auto_reconnect: true, // already default, but explicit
+        reconnectTries: 30, // already default, explicit
+        socketOptions: {
+          keepAlive: 100000, // less then 120s configured on mongo side
+          connectTimeoutMS: 10000
+        }
+      }
+    };
+  }else{
+
+    var options = {};
+
+  }
+
+  if(config.dbUsername && config.dbPassword ){
+
+    var mongoUrl = 'mongodb://' + config.dbUsername + ':' + config.dbPassword + '@' + config.db;
+
+  }else{
+
+    var mongoUrl = 'mongodb://' + config.db;
+  }
 
 
   mongoose.connection.once('open', function() {
     console.log('Connected to MongoDB server with mongoose.');
   });
 
-  mongoose.connection.on('error', function (err) { console.log("Connect error: " + err.stack) });
+  mongoose.connection.on('error', function (err) { console.log("Connect error: " + err.) });
 
   mongoose.connection.on('disconnected', () => {
     // http://mongoosejs.com/docs/connections.html

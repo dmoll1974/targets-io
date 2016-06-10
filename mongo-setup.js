@@ -8,20 +8,29 @@ var mongoSetup = module.exports;
 
 // Connect to mongodb with mongoose
 mongoSetup.connect = function() {
-    // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-    var options = {
-        //user: config.dbUsername,
-        //pass: config.dbPassword,
-        server: {
-            poolSize: 10,
-            auto_reconnect: true, // already default, but explicit
-            reconnectTries: 30, // already default, explicit
-            socketOptions: {
-                keepAlive: 100000, // less then 120s configured on mongo side
-                connectTimeoutMS: 10000
+
+    if(!isDemo) {
+
+        var options = {
+            //user: config.dbUsername,
+            //pass: config.dbPassword,
+            server: {
+                poolSize: 10,
+                auto_reconnect: true, // already default, but explicit
+                reconnectTries: 30, // already default, explicit
+                socketOptions: {
+                    keepAlive: 100000, // less then 120s configured on mongo side
+                    connectTimeoutMS: 10000
+                }
             }
-        }
-    };
+        };
+
+    }else{
+
+        var options = {};
+
+    }
+
 
     if(config.dbUsername && config.dbPassword ){
 
