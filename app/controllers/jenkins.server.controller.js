@@ -56,15 +56,25 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
     separator = '> ';
   }
 
+  /* if user and password are provided, add those as authentication */
 
+  var options;
+  if (config.jenkinsUser &config.jenkinsPassword){
 
-  request.get(consoleUrl, {
-    'auth': {
-      'user': config.jenkinsUser,
-      'pass': config.jenkinsPassword,
-      'sendImmediately': true
+    options = {
+      'auth': {
+        'user': config.jenkinsUser,
+        'pass': config.jenkinsPassword,
+        'sendImmediately': true
+      }
     }
-  }, function (err, response, body) {
+
+  }else{
+
+    options = {};
+  }
+
+  request.get(consoleUrl, options, function (err, response, body) {
     if (err) {
       console.error(err);
     } else {
