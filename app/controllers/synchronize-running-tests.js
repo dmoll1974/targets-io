@@ -195,7 +195,7 @@ function connect() {
     console.log('Connected to MongoDB server with mongoose.');
   });
 
-  mongoose.connection.on('error', function (err) { console.log("Connect error: " + err) });
+  mongoose.connection.on('error', function (err) { console.log("Connect error: " + err.stack) });
 
   mongoose.connection.on('disconnected', () => {
     // http://mongoosejs.com/docs/connections.html
