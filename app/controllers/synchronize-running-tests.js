@@ -178,7 +178,7 @@ function connect() {
     //user: process.env.dbUsername,
     //pass: process.env.dbPassword,
     server: {
-      poolSize: 20,
+      //poolSize: 20,
       auto_reconnect: true, // already default, but explicit
       reconnectTries: 30, // already default, explicit
       socketOptions: {

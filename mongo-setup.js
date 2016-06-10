@@ -13,7 +13,7 @@ mongoSetup.connect = function() {
         //user: config.dbUsername,
         //pass: config.dbPassword,
         server: {
-            poolSize: 100,
+            poolSize: 10,
             auto_reconnect: true, // already default, but explicit
             reconnectTries: 30, // already default, explicit
             socketOptions: {
