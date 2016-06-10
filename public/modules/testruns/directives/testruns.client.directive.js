@@ -122,11 +122,40 @@ function TestrunsDirective () {
 
     });
 
-    mySocket.on('message', function (data) {
-      console.log('event:' + data.event);
-      console.log('testrun:' + data.testrun.testRunId);
+    mySocket.on('testrun', function (message) {
+      switch (message.event){
 
-      $scope.testRuns.splice($scope.numberOfRunningTests, 0, data.testrun);
+        case 'saved':
+
+          $scope.testRuns.splice($scope.numberOfRunningTests, 0, message.testrun);
+          break;
+
+        case 'removed':
+
+        default:
+
+      }
+    });
+
+    mySocket.on('runningTest', function (message) {
+      switch (message.event){
+
+        case 'saved':
+
+          $scope.numberOfRunningTests += 1;
+          $scope.runningTest = $scope.numberOfRunningTests > 0 ? true : false;
+          $scope.testRuns.unshift(message.testrun);
+          updateTestRuns();
+
+          break;
+
+        case 'removed':
+
+            var removeIndex = $scope.testRuns.map(function(testRun){return testRun})
+
+        default:
+
+      }
     });
 
     /* initialise */
@@ -221,25 +250,27 @@ function TestrunsDirective () {
         //  });
         //}
 
-        /* Set end value to 'Running' for running test(s)*/
-
-        for (var i = 0; i < $scope.numberOfRunningTests; i++) {
-
-          $scope.testRuns[i].end = 'Running ...';
-        }
+        updateTestRuns();
 
         $scope.loading = false;
-
-
-        TestRuns.list = response.testRuns;
-        TestRuns.runningTest = response.runningTest;
-        TestRuns.numberOfRunningTests = response.numberOfRunningTests;
-
-
       });
 
     };
 
+  function updateTestRuns(){
+
+    /* Set end value to 'Running' for running test(s)*/
+
+    for (var i = 0; i < $scope.numberOfRunningTests; i++) {
+
+      $scope.testRuns[i].end = 'Running ...';
+    }
+
+    TestRuns.list = $scope.testRuns;
+    TestRuns.runningTest = $scope.runningTest;
+    TestRuns.numberOfRunningTests = $scope.numberOfRunningTests;
+
+  }
 
     /* get testRun Id's that might be selected */
     function getSelectedTestRunIds(testRuns) {

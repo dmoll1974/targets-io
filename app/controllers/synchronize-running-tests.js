@@ -44,11 +44,7 @@ var RunningTestSchema = new mongoose.Schema({
   'humanReadableDuration': String,
   'rampUpPeriod': Number
 
-},
-    {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
-    });
+});
 
 RunningTestSchema.index({
   testRunId: 1,
@@ -68,11 +64,7 @@ var testRunTargetSchema = new Schema({
   'value': Number,
   'benchmarkPreviousValue': Number,
   'benchmarkFixedValue': Number
-},
-    {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
-    });
+});
 mongoose.model('TestrunTarget', testRunTargetSchema);
 var testRunMetricSchema = new Schema({
   'alias': String,
@@ -96,11 +88,7 @@ var testRunMetricSchema = new Schema({
   },
   'annotation': String,
   'targets': [testRunTargetSchema]
-},
-    {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
-    });
+});
 mongoose.model('TestrunMetric', testRunMetricSchema);
 /**
  * Testrun Schema
@@ -152,8 +140,6 @@ var TestrunSchema = new Schema({
 },
     {
       toObject: { getters: true },
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
     } );
 TestrunSchema.virtual('startEpoch').get(function () {
   return this.start.getTime();
@@ -177,6 +163,7 @@ function connect() {
   var options = {
     //user: process.env.dbUsername,
     //pass: process.env.dbPassword,
+
     server: {
       poolSize: 20,
       auto_reconnect: true, // already default, but explicit
@@ -188,7 +175,14 @@ function connect() {
     }
   };
 
-  var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
+  if(config.dbUsername && config.dbPassword ){
+
+    var mongoUrl = 'mongodb://' + config.dbUsername + ':' + config.dbPassword + '@' + config.db;
+
+  }else{
+
+    var mongoUrl = 'mongodb://' + config.db;
+  }
 
 
   mongoose.connection.once('open', function() {
@@ -239,24 +233,33 @@ function synchronizeRunningTestRuns () {
 
   RunningTest.find().exec(function (err, runningTests) {
 
-    console.log('checking running tests');
+    if(err){
 
-    _.each(runningTests, function (runningTest) {
+      console.log(err);
+    }else {
+      console.log('checking running tests');
 
-            /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
-            if (dateNow - runningTest.keepAliveTimestamp.getTime() > 16 * 1000){
+      _.each(runningTests, function (runningTest) {
 
-              /* mark test as not completed */
-              runningTest.completed = false;
+        console.log('found running tests');
 
-              saveTestRun(runningTest)
-                  .then(function(){
+        /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
+        if (dateNow - runningTest.keepAliveTimestamp.getTime() > 16 * 1000) {
 
-                  });
-            }
+          /* mark test as not completed */
+          runningTest.completed = false;
 
-          });
+          saveTestRun(runningTest)
+              .then(function () {
 
+                runningTest.remove(function (err) {
+
+                });
+              });
+        }
+
+      });
+    }
   });
 }
 
@@ -283,22 +286,13 @@ let saveTestRun = function (runningTest){
 
     });
 
+    testRun.save(function (err, savedTestRun) {
+        if (err) {
+          reject(err);
+        } else {
 
-    runningTest.remove(function (err) {
-
-      if (err) {
-        reject(err);
-      } else {
-
-        testRun.save(function (err, savedTestRun) {
-          if (err) {
-            reject(err);
-          } else {
-
-            resolve(savedTestRun);
-          }
-        });
-      }
+          resolve(savedTestRun);
+        }
     });
 
   });

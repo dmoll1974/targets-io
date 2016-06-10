@@ -182,6 +182,16 @@ function updateRunningTest(runningTest) {
         newRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(newRunningTest.end.getTime() - newRunningTest.start.getTime())
         newRunningTest.save(function(err, newRunningTest){
 
+          var io = global.io;
+          var room = runningTest.productName + '-' + runningTest.dashboardName;
+
+          console.log('emitting message to room: ' + room);
+
+          /* mark temporarily as completed to make it visible in test run list*/
+          newRunningTest.completed = true;
+
+          io.sockets.in(room).emit('runningTest', {event: 'saved', testrun: newRunningTest});
+
           resolve('running test created!');
         });
       }
@@ -197,16 +207,25 @@ let saveTestRun = function (runningTest){
 
     let testRun = new Testrun(runningTest);
 
-    testRun.save(function (err, savedTestRun) {
+    runningTest.remove(function (err) {
 
       if (err) {
         reject(err);
+
       } else {
 
-        runningTest.remove(function (err) {
+        var io = global.io;
+        var room = runningTest.productName + '-' + runningTest.dashboardName;
+
+        console.log('emitting message to room: ' + room);
+        io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
+
+        testRun.save(function (err, savedTestRun) {
+
           if (err) {
             reject(err);
           } else {
+
             resolve(savedTestRun);
           }
         });

@@ -599,7 +599,7 @@ let upsertTestRun = function(testRun){
         var room = savedTestRun.productName + '-' + savedTestRun.dashboardName;
 
         console.log('emitting message to room: ' + room);
-        io.sockets.in(room).emit('message', {event: 'saved', testrun: savedTestRun});
+        io.sockets.in(room).emit('testrun', {event: 'saved', testrun: savedTestRun});
 
         resolve(savedTestRun);
       }
