@@ -6,16 +6,8 @@ module.exports = {
 	logLevel: 'error',
 	graphiteHost: process.env.GRAPHITE_HOST,
 	db: process.env.MONGO_URL,
-	//dbUsername: process.env.MONGO_USER,
-	//dbPassword: process.env.MONGO_PASSWORD,
-	//graylog : {
-	//	host: 'graylog.host.com',
-	//	port: 12201
-	//},
 	redisHost: process.env.REDIS_SERVICE_HOST,
 	redisPort: process.env.REDIS_SERVICE_PORT,
-	jenkinsUser: process.env.JENKINS_USER,
-	jenkinsPassword: process.env.JENKINS_PASSWORD,
 
 
 	app: {
