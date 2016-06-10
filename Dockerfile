@@ -47,7 +47,7 @@ EXPOSE 3000 35729
 #ENTRYPOINT forever -c 'node --harmony' server.js
 #ENTRYPOINT MONGO_URL=mongodb://$MONGO_SERVICE_HOST:$MONGO_SERVICE_PORT  MEMCACHED_HOST=$MEMCACHED_SERVICE_HOST:$MEMCACHED_SERVICE_PORT GRAPHITE_HOST=http://$GRAPHITE_SERVICE_HOST:$GRAPHITE_SERVICE_PORT forever -c 'node --harmony' server.js
 
-COPY docker-entrypoint.sh /entrypoint.sh
+COPY docker-entrypoint-demo.sh /entrypoint.sh
 
 #RUN chown -R node:node /entrypoint.sh
 
