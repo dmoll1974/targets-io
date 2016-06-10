@@ -38,7 +38,7 @@ ADD . /home/targets-io
 
 
 # currently only works for development
-ENV NODE_ENV production
+ENV NODE_ENV demo
 
 
 # Port 3000 for server
