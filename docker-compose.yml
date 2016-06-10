@@ -8,8 +8,7 @@ services:
     networks:
       - my-net
     environment:
-       MONGO_SERVICE_HOST: "db"
-       MONGO_SERVICE_PORT: "27017"
+       MONGO_URL: "db:27017/targets-io"
        REDIS_SERVICE_HOST: "redis"
        REDIS_SERVICE_PORT: "6379"
        GRAPHITE_SERVICE_HOST: "graphite"
