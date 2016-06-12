@@ -168,7 +168,8 @@ TestrunSchema.index({
 mongoose.model('Testrun', TestrunSchema);
 
 
-
+console.log('isDemo: ' + config.isDemo);
+console.log('mongoUrl: ' + config.db);
 
 var db = connect();
 
