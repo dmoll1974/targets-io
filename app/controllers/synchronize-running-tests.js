@@ -6,7 +6,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
 var chalk = require('chalk');
-var config = require('../../config/config');
 
 
 
@@ -175,7 +174,7 @@ var db = connect();
 
 function connect() {
 
-  if(!config.isDemo) {
+  if(!process.env.isDemo) {
 
     // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
     var options = {
@@ -199,11 +198,11 @@ function connect() {
 
   if(config.dbUsername && config.dbPassword ){
 
-    var mongoUrl = 'mongodb://' + config.dbUsername + ':' + config.dbPassword + '@' + config.db;
+    var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
 
   }else{
 
-    var mongoUrl = 'mongodb://' + config.db;
+    var mongoUrl = 'mongodb://' + process.env.db;
   }
 
 
