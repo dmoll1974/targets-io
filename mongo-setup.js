@@ -9,7 +9,7 @@ var mongoSetup = module.exports;
 // Connect to mongodb with mongoose
 mongoSetup.connect = function() {
 
-    if(!congif.isDemo) {
+    if(!config.isDemo) {
 
         var options = {
             //user: config.dbUsername,
