@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
 var chalk = require('chalk');
+var config = require('../../config/config');
 
 
 
