@@ -174,7 +174,7 @@ var db = connect();
 
 function connect() {
 
-  if(!isDemo) {
+  if(!config.isDemo) {
 
     // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
     var options = {
