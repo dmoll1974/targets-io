@@ -253,25 +253,29 @@ function synchronizeRunningTestRuns () {
   /* Get  running tests */
 
   RunningTest.find().exec(function (err, runningTests) {
+    if(err){
 
-    console.log('checking running tests');
+      console.log(err)
+    }else {
 
-    _.each(runningTests, function (runningTest) {
+      console.log('checking running tests');
 
-            /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
-            if (dateNow - runningTest.keepAliveTimestamp.getTime() > 16 * 1000){
+      _.each(runningTests, function (runningTest) {
 
-              /* mark test as not completed */
-              runningTest.completed = false;
+        /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
+        if (dateNow - runningTest.keepAliveTimestamp.getTime() > 16 * 1000) {
 
-              saveTestRun(runningTest)
-                  .then(function(){
+          /* mark test as not completed */
+          runningTest.completed = false;
 
-                  });
-            }
+          saveTestRun(runningTest)
+              .then(function () {
 
-          });
+              });
+        }
 
+      });
+    }
   });
 }
 
