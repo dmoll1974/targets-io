@@ -88,9 +88,13 @@ if(cluster.isMaster) {
 	var env = 	{
 					isDemo: config.isDemo,
 					db: config.db,
-					dbUsername: config.dbUsername || undefined,
-					dbPassword: config.dbPassword || undefined
+
 				};
+
+	if(config.dbUsername && config.dbPassword) {
+		env['dbUsername'] = config.dbUsername;
+		env['dbPassword'] = config.dbPassword;
+	}
 
 	var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
 
