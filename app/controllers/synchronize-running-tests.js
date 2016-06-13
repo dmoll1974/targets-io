@@ -199,10 +199,12 @@ function connect() {
 
   if(process.env.dbUsername && process.env.dbPassword ){
 
+    console.log("Connect (with credentials) synchronize-running-tests to: " + process.env.db);
     var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
 
   }else{
 
+    console.log("Connect synchronize-running-tests to: " + process.env.db);
     var mongoUrl = 'mongodb://' + process.env.db;
   }
 
@@ -211,7 +213,7 @@ function connect() {
     console.log('Connected to MongoDB server with mongoose.');
   });
 
-  mongoose.connection.on('error', function (err) { console.log("Connect error: " + err) });
+  mongoose.connection.on('error', function (err) { console.log("Synchronize-running-tests connect error: " + err) });
 
   mongoose.connection.on('disconnected', () => {
     // http://mongoosejs.com/docs/connections.html
