@@ -10,7 +10,9 @@ angular.module('graphs').factory('Graphite', [
     var Graphite = {
       getData: getData,
       addEvents: addEvents,
-      findMetrics: findMetrics
+      findMetrics: findMetrics,
+      flushCache: flushCache
+
     };
     return Graphite;
 
@@ -18,6 +20,7 @@ angular.module('graphs').factory('Graphite', [
 
       return $http.get('/graphite/find/' + query);
     }
+
 
     function addFlagData(series, events, productName, dashboardName, testRunId) {
 
@@ -182,12 +185,17 @@ angular.module('graphs').factory('Graphite', [
       return updatedTotal;
     }
 
+    function flushCache(testRun){
+
+        return $http.post('/flush-cache/', testRun);
+
+    }
 
 
     function getData(from, until, targets, maxDataPoints) {
       var urlEncodedTargetUrl = '';
-      var queryFrom = /^\d+$/.test(from) ? Math.round(from / 1000) : from;
-      var queryUntil = /^\d+$/.test(until) ? Math.round(until / 1000) : until;
+      var queryFrom =  from;
+      var queryUntil = until;
       _.each(targets, function (target) {
         urlEncodedTargetUrl = urlEncodedTargetUrl + '&target=' + encodeURI(target);
       });

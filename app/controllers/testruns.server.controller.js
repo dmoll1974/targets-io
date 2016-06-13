@@ -511,6 +511,8 @@ function testRunById(req, res) {
   });
 }
 function refreshTestrun(req, res) {
+
+
   Testrun.findOne({
     $and: [
       { productName: req.params.productName },
@@ -521,6 +523,13 @@ function refreshTestrun(req, res) {
     if (err){
       return res.status(404).send({ message: 'No test run with id ' + req.params.testRunId + 'has been found for this dashboard' });
     }else{
+
+      /* flush the graphite cache */
+
+      graphite.flushGraphiteCacheForTestRun(testRun, true, function(result){
+
+        console.log(result);
+      })
 
       let newTestRun = new Testrun();
 
@@ -607,8 +616,7 @@ function benchmarkAndPersistTestRunById(testRun) {
 
   return new Promise((resolve, reject) => {
 
-    flushMemcachedForTestRun(testRun)
-    .then(getDataForTestrun)
+    getDataForTestrun(testRun)
     .then(Requirements.setRequirementResultsForTestRun)
     .then(Benchmarks.setBenchmarkResultsPreviousBuildForTestRun)
     .then(Benchmarks.setBenchmarkResultsFixedBaselineForTestRun)
@@ -703,7 +711,7 @@ function getDataForTestrun(testRun) {
           }
           async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
 
-            graphite.getGraphiteData(Math.round(start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
+            graphite.getGraphiteData(start, testRun.end, target, 900, function (body) {
               _.each(body, function (bodyTarget) {
 
                 /* save value based on metric type */

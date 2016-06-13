@@ -13,8 +13,9 @@ angular.module('testruns').controller('TestrunsController', [
   '$interval',
   '$mdDialog',
   'Utils',
+  'Graphite',
   '$mdToast',
-  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window, $interval, $mdDialog, Utils, $mdToast) {
+  function ($scope, $stateParams, $state, TestRuns, Dashboards, Events, $modal, $q, ConfirmModal, $window, $interval, $mdDialog, Utils, Graphite, $mdToast) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
@@ -96,6 +97,20 @@ angular.module('testruns').controller('TestrunsController', [
 
     }
 
+ $scope.flushCache = function(testRun) {
+
+   Graphite.flushCache(testRun).success(function () {
+
+     var toast = $mdToast.simple()
+         .action('OK')
+         .highlightAction(true)
+         .hideDelay(3000)
+
+     $mdToast.show(toast.content('Cache has been flushed for test run ' + testRun.testRunId)).then(function (response) {
+     })
+
+   })
+ }
 
     /* Check if baseline test run exists */
 

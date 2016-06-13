@@ -197,7 +197,7 @@ function connect() {
 
   }
 
-  if(config.dbUsername && config.dbPassword ){
+  if(process.env.dbUsername && process.env.dbPassword ){
 
     var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
 
