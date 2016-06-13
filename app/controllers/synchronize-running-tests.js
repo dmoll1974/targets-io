@@ -197,7 +197,7 @@ function connect() {
 
   }
 
-  if(process.env.dbUsername !== null && process.env.dbPassword !== null ){
+  if(process.env.dbUsername  && process.env.dbPassword  ){
 
 
     console.log("User synchronize-running-tests: " + process.env.dbUsername);
