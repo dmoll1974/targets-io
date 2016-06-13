@@ -197,8 +197,11 @@ function connect() {
 
   }
 
-  if(process.env.dbUsername && process.env.dbPassword ){
+  if(process.env.dbUsername !== null && process.env.dbPassword !== null ){
 
+
+    console.log("User synchronize-running-tests: " + process.env.dbUsername);
+    console.log("User synchronize-running-tests: " + process.env.dbPassword);
     console.log("Connect (with credentials) synchronize-running-tests to: " + process.env.db);
     var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
 
