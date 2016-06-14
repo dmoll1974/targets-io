@@ -70,7 +70,6 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
   /* create cache key*/
   var cacheKey = cache.createKey(graphiteTargetUrl);
 
-  console.log('get key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
 
   var client = requestjson.createClient(config.graphiteHost);
   /* Don't cache live data! */
@@ -87,6 +86,8 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
     });
   } else {
     /* first check cache */
+    console.log('get key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
+
     cache.getCache(cacheKey, function (result) {
 
       if (result !== null) {
@@ -117,7 +118,15 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
   }
 }
 function createUrl(from, until, targets, maxDataPoints) {
-  var graphiteTargetUrl = '/render?format=json&from=' + Math.round(from / 1000) + '&until=' + Math.round(until / 1000) + '&maxDataPoints=' + maxDataPoints;
+
+  if(until !== 'now'){
+
+    var from = Math.round(from / 1000);
+    var until = Math.round(until / 1000);
+
+  }
+
+  var graphiteTargetUrl = '/render?format=json&from=' + from + '&until=' + until + '&maxDataPoints=' + maxDataPoints;
   if (_.isArray(targets)) {
     _.each(targets, function (target) {
       graphiteTargetUrl += '&target=' + target;
