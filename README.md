@@ -56,18 +56,16 @@ To start one of the demo scripts open the Jenkins console
 
 Log in using the credentials admin/targets-io
 
-To start Gatling or Jmeter tests click on one of DEMO-GATLING or DEMO-JMETER jobs and click "Build now"
-
-This will trigger the [Gatling demo script](https://github.com/dmoll1974/gatling-demo-script) or the [JMeter demo script](https://github.com/dmoll1974/jmeter-demo-script). 
-
-To see a demo of the automated assertion of benchmark results run, start the TARGETS-IO-DEMO job (click "Build now")
+To see a demo of the automated assertion of benchmark results run, start the TARGETS-IO-DEMO job (click "Build now"). This will trigger the [Gatling demo script](https://github.com/dmoll1974/targets-io-demo-script-gatling)
 
 - The first time the job runs, the "Assert results" stage will fail, because there are no test runs yet to benchmark against. 
 - After the first run has finished, go to `http://localhost:3000/#!/browse/GATLING/NIGHTLY`to check the results.
 - Rerun the the TARGETS-IO-DEMO job.
 - When this build passes it means all your configured requirements / benchmark thresholds (see explanation below) have passed for this run. If the job fails, check the "Assert results" job logs to find out why and examine  `http://localhost:3000/#!/browse/GATLING/NIGHTLY` to investigate. You can drill down the consolidated results by clicking on the passed/failed icons. 
 
+**Documentation**
 
+[Wiki](https://github.com/dmoll1974/targets-io/wiki) (in progress)
 
 
 **Libraries / Dependencies**
@@ -80,9 +78,7 @@ To see a demo of the automated assertion of benchmark results run, start the TAR
 + [ng-clip] (https://github.com/asafdav/ng-clip)
 + [bootstrap-ui-datetime-picker] (https://github.com/Gillardo/bootstrap-ui-datetime-picker)
 
-**Documentation**
 
-[Wiki](https://github.com/dmoll1974/targets-io/wiki)
 
 ## License
 
