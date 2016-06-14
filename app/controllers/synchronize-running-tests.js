@@ -277,7 +277,9 @@ function synchronizeRunningTestRuns () {
           saveTestRun(runningTest)
               .then(function () {
 
-              });
+                runningTest.remove(function (err) {});
+
+                });
         }
 
       });
@@ -309,21 +311,14 @@ let saveTestRun = function (runningTest){
     });
 
 
-    runningTest.remove(function (err) {
+      testRun.save(function (err, savedTestRun) {
+        if (err) {
+          reject(err);
+        } else {
 
-      if (err) {
-        reject(err);
-      } else {
-
-        testRun.save(function (err, savedTestRun) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(savedTestRun);
-          }
-        });
-      }
-    });
+              resolve(savedTestRun);
+        }
+      });
 
   });
 }
