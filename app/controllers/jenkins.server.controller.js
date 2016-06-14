@@ -59,7 +59,7 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
   /* if user and password are provided, add those as authentication */
 
   var options;
-  if (config.jenkinsUser &config.jenkinsPassword){
+  if (config.jenkinsUser && config.jenkinsPassword){
 
     options = {
       'auth': {
@@ -87,10 +87,12 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
 
       } else {
 
-        var consoleArray = body.split('Requests');
+        var endTestPattern = new RegExp('sending end test run|Build was aborted');
+
+        var consoleArrayFirstSplit = body.split(endTestPattern);
+        var consoleArray = consoleArrayFirstSplit[0].split('Requests');
         if (consoleArray.length > 1) {
 
-          var endTestPattern = new RegExp('sending end test run|Build was aborted');
           var consoleResultsArray = consoleArray[consoleArray.length - 1].split(endTestPattern);
 
           var consoleLineArray = consoleResultsArray[0].split(separator);
