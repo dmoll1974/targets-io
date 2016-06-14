@@ -204,11 +204,9 @@ let saveTestRun = function (runningTest){
       } else {
 
         runningTest.remove(function (err) {
-          if (err) {
-            reject(err);
-          } else {
+          /* no matter if remove fails, still resolve*/
             resolve(savedTestRun);
-          }
+
         });
       }
     });
