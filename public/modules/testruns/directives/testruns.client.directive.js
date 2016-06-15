@@ -107,6 +107,8 @@ function TestrunsDirective () {
       // Make sure that the interval is destroyed too
       $interval.cancel(spinner);
       $interval.cancel(Utils.polling);
+    //  disconnect the socket
+      mySocket.disconnect();
 
     });
 
