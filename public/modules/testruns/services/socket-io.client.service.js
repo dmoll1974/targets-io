@@ -31,6 +31,15 @@ factory('mySocket', function ($rootScope) {
           }
         });
       })
+    },
+    disconnect: function (eventName, data, callback) {
+      socket.disconnect(function () {
+        $rootScope.$apply(function () {
+          if (callback) {
+            callback.apply(socket);
+          }
+        });
+      })
     }
   };
 });
