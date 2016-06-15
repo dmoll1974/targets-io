@@ -86,7 +86,7 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
     });
   } else {
     /* first check cache */
-    console.log('get key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
+    //console.log('get key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
 
     cache.getCache(cacheKey, function (result) {
 
