@@ -286,21 +286,43 @@ function productReleasesFromTestRuns(req, res) {
  * select test runs for product release
  */
 function testRunsForProductRelease(req, res) {
-  Testrun.find({$and:[{productName: req.params.productName}, {productRelease: req.params.productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
+
+  Product.findOne({name: req.params.productName}).exec(function(err, product){
+
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+
     } else {
+      Testrun.find({$and: [{productName: product.name}, {productRelease: req.params.productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
+        if (err) {
+          return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+        } else {
 
-      _.each(testRuns, function(testRun, i){
+          var filteredTestruns = [];
 
-        testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+          _.each(testRuns, function (testRun, i) {
 
+            /* Only send test runs for dashboards that are linked to product requirements */
+
+            _.each(product.requirements, function(requirement){
+
+              if(requirement.relatedDashboards.indexOf(testRun.dashboardName) !== -1) {
+
+                if (filteredTestruns.indexOf(testRun) == -1) {
+                  testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+                  filteredTestruns.push(testRun);
+                }
+
+              }
+            })
+          });
+
+          res.jsonp(filteredTestruns);
+
+        }
       });
-
-      res.jsonp(testRuns);
-
     }
-  });
+  })
 }
 
   function createTestRunSummaryFromEvents(events, callback) {
