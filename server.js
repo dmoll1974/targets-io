@@ -41,7 +41,7 @@ if (config.graylog) {
  * Main application entry file.
  * Please note that the order of loading is important.
  */
-console.log ("mongoDb connect to: " + config.db + " with credentials: " + config.dbUsername + "/" +  config.dbPassword);
+console.log ("mongoDb connect to: " + config.db);
 console.log ("graphite host: " + config.graphiteHost);
 console.log ("redis host: " + config.redisHost + ':' + config.redisPort );
 
@@ -85,10 +85,16 @@ if(cluster.isMaster) {
 		process.execArgv.push('--debug=' + (40894));
 	}
 
-	var env = 	{	db: config.db,
-					dbUsername: config.dbUsername,
-					dbPassword: config.dbPassword
+	var env = 	{
+					isDemo: config.isDemo,
+					db: config.db,
+
 				};
+
+	if(config.dbUsername && config.dbPassword) {
+		env['dbUsername'] = config.dbUsername;
+		env['dbPassword'] = config.dbPassword;
+	}
 
 	var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
 

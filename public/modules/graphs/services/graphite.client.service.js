@@ -10,7 +10,9 @@ angular.module('graphs').factory('Graphite', [
     var Graphite = {
       getData: getData,
       addEvents: addEvents,
-      findMetrics: findMetrics
+      findMetrics: findMetrics,
+      flushCache: flushCache
+
     };
     return Graphite;
 
@@ -18,6 +20,7 @@ angular.module('graphs').factory('Graphite', [
 
       return $http.get('/graphite/find/' + query);
     }
+
 
     function addFlagData(series, events, productName, dashboardName, testRunId) {
 
@@ -91,14 +94,10 @@ angular.module('graphs').factory('Graphite', [
             graphiteData[tempDate] = [];
           }
 
-          /* set null values to NaN to show holes in graphs */
-          if (datapoint[0] === null) {
-            datapoint[0] = NaN;
-          }
 
           /* update minimum, maximum and avg values for series */
 
-          if(!isNaN(datapoint[0])) {
+          if(datapoint[0]!== null) {
             seriesMin = (!seriesMin || seriesMin > datapoint[0]) ? datapoint[0] : seriesMin;
             seriesMax = (seriesMax < datapoint[0]) ? datapoint[0] : seriesMax;
             seriesTotal = addToTotals(seriesTotal, datapoint[0]);
@@ -107,7 +106,7 @@ angular.module('graphs').factory('Graphite', [
             if (datapoint[0] > graphMaxValue) graphMaxValue = datapoint[0];
           }
 
-          graphiteData[tempDate].push([datapoint[0]]);
+          graphiteData[tempDate].push(datapoint[0]);
 
         });
 
@@ -182,12 +181,17 @@ angular.module('graphs').factory('Graphite', [
       return updatedTotal;
     }
 
+    function flushCache(testRun){
+
+        return $http.post('/flush-cache/', testRun);
+
+    }
 
 
     function getData(from, until, targets, maxDataPoints) {
       var urlEncodedTargetUrl = '';
-      var queryFrom = /^\d+$/.test(from) ? Math.round(from / 1000) : from;
-      var queryUntil = /^\d+$/.test(until) ? Math.round(until / 1000) : until;
+      var queryFrom =  from;
+      var queryUntil = until;
       _.each(targets, function (target) {
         urlEncodedTargetUrl = urlEncodedTargetUrl + '&target=' + encodeURI(target);
       });

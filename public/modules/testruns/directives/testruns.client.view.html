@@ -104,7 +104,7 @@
                             </md-menu-item>
                             <md-menu-item data-ng-if="testRun.completed === false">
                                 <md-button data-ng-click="markAsComplete(testRun)">
-                                    <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
+                                    <md-icon md-svg-src="images/assets/ic_check_circle_black_24px.svg"></md-icon>
                                     Mark test run as complete
                                 </md-button>
                             </md-menu-item>
@@ -119,6 +119,12 @@
                                 <md-button  data-ng-click="viewTestRunSummary(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
                                     View test run summary
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button class="danger" data-ng-click="flushCache(testRun)">
+                                    <md-icon md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>
+                                    Flush cache
                                 </md-button>
                             </md-menu-item>
                         </md-menu-content>

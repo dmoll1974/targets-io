@@ -45,29 +45,31 @@ function getCache(key, callback){
 
 function flushCache(key, callback){
 
-  client.del(key, function(err, reply){
+  client.del(key);
+  //client.del(key, function(err, reply){
+  //
+  //  if(err){
+  //    console.log(err);
+  //  }else{
 
-    if(err){
-      console.log(err);
-    }else{
-
-      callback();
-    }
-  });
+      callback('flushed key: ' + key );
+  //  }
+  //});
 }
 
-function createKey(from, until, targets) {
+function createKey(url) {
   var key;
   var hashedKey;
-  key = from.toString() + until.toString();
-  if (_.isArray(targets)) {
-    targets.sort();
-    _.each(targets, function (target) {
-      key += target;
-    });
-  } else {
-    key += targets;
-  }
-  hashedKey = md5(key);
+  //key = from.toString() + until.toString();
+  //if (_.isArray(targets)) {
+  //  targets.sort();
+  //  _.each(targets, function (target) {
+  //    key += target;
+  //  });
+  //} else {
+  //  key += targets;
+  //}
+  hashedKey = md5(url);
+  //return url;
   return hashedKey;
 }

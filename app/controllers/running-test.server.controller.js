@@ -207,25 +207,22 @@ let saveTestRun = function (runningTest){
 
     let testRun = new Testrun(runningTest);
 
-    runningTest.remove(function (err) {
+    testRun.save(function (err, savedTestRun) {
 
       if (err) {
         reject(err);
 
       } else {
 
-        var io = global.io;
-        var room = runningTest.productName + '-' + runningTest.dashboardName;
+        runningTest.remove(function (err) {
 
-        console.log('emitting message to room: ' + room);
-        io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
+          var io = global.io;
+          var room = runningTest.productName + '-' + runningTest.dashboardName;
 
-        testRun.save(function (err, savedTestRun) {
+          console.log('emitting message to room: ' + room);
+          io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
 
-          if (err) {
-            reject(err);
-          } else {
-
+          /* no matter if remove fails, still resolve*/
             resolve(savedTestRun);
           }
         });

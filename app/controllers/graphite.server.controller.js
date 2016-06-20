@@ -8,7 +8,11 @@ var mongoose = require('mongoose'),
     request = require('request'),
     requestjson = require('request-json'),
     cache = require('./redis.server.controller'),
-    config = require('../../config/config');
+    config = require('../../config/config'),
+    Dashboard = mongoose.model('Dashboard'),
+    Testrun = mongoose.model('Testrun'),
+
+    Product = mongoose.model('Product');
 
 exports.getGraphiteData = getGraphiteData;
 
@@ -59,11 +63,13 @@ exports.getData = function (req, res) {
 
 function getGraphiteData(from, until, targets, maxDataPoints, callback) {
 
-  /* create cache key*/
-  var cacheKey = cache.createKey(from, until, targets);
 
   /* construct graphite url*/
   var graphiteTargetUrl = createUrl(from, until, targets, maxDataPoints);
+
+  /* create cache key*/
+  var cacheKey = cache.createKey(graphiteTargetUrl);
+
 
   var client = requestjson.createClient(config.graphiteHost);
   /* Don't cache live data! */
@@ -80,11 +86,13 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
     });
   } else {
     /* first check cache */
+    //console.log('get key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
+
     cache.getCache(cacheKey, function (result) {
 
-      if (result) {
+      if (result !== null) {
         console.dir('cache hit: ' + cacheKey);
-        callback(result);
+        callback(eval(result));
       } else {
         //console.log(graphiteTargetUrl);
         /* if no cache hit, go to graphite back end */
@@ -110,6 +118,14 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
   }
 }
 function createUrl(from, until, targets, maxDataPoints) {
+
+  if(until !== 'now'){
+
+    var from = Math.round(from / 1000);
+    var until = Math.round(until / 1000);
+
+  }
+
   var graphiteTargetUrl = '/render?format=json&from=' + from + '&until=' + until + '&maxDataPoints=' + maxDataPoints;
   if (_.isArray(targets)) {
     _.each(targets, function (target) {
@@ -119,4 +135,92 @@ function createUrl(from, until, targets, maxDataPoints) {
     graphiteTargetUrl += '&target=' + targets;
   }
   return graphiteTargetUrl;
+}
+
+
+exports.flushCache = function (req, res) {
+  /* gettestRun */
+  var testRun = req.body;
+
+  flushGraphiteCacheForTestRun(testRun, false, function (message) {
+    res.jsonp(message);
+  });
+};
+
+exports.flushGraphiteCacheForTestRun = flushGraphiteCacheForTestRun;
+
+function flushGraphiteCacheForTestRun(testRunParam, isBenchmark, callback){
+
+  Testrun.findOne({
+    $and: [
+      { productName: testRunParam.productName },
+      { dashboardName: testRunParam.dashboardName },
+      { testRunId: testRunParam.testRunId }
+    ]
+  }).exec(function (err, testRun) {
+
+    Product.findOne({ name: testRun.productName}).exec(function(err, product){
+
+      if(err){
+        callback(err);
+      }else{
+
+        Dashboard.findOne({$and:[{name: testRun.dashboardName}, {productId: product._id}]})
+            .populate({path: 'metrics', options: { sort: { tag: 1, alias: 1 } } })
+            .exec(function (err, dashboard) {
+              if (err) return console.error(err);
+
+              _.each(dashboard.metrics, function(metric){
+
+
+                if(isBenchmark) {
+                  _.each(metric.targets, function (target) {
+
+
+                    /* if include ramp up is false, add ramp up period to start of test run */
+                    var start = (testRun.rampUpPeriod && dashboard.includeRampUp === false ) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
+                    /* construct graphite url*/
+                    var graphiteTargetUrl = createUrl(start, testRun.end, target, 900);
+
+                    /* create cache key*/
+                    var cacheKey = cache.createKey(graphiteTargetUrl);
+
+                    console.log('flush key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
+
+                    cache.flushCache(cacheKey, function (message) {
+
+                      console.log(message);
+
+
+                    });
+
+                  });
+                }else{
+
+                  /* construct graphite url*/
+                  var graphiteTargetUrl = createUrl(testRun.start, testRun.end, metric.targets, 900);
+
+                  /* create cache key*/
+                  var cacheKey = cache.createKey(graphiteTargetUrl);
+
+                  console.log('flush key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
+
+                  cache.flushCache(cacheKey, function (message) {
+
+                    console.log(message);
+
+
+                  });
+                }
+              });
+
+              callback("Cache has been flushed for test run: " + testRun.testRunId);
+
+
+            });
+
+      }
+    })
+  })
+
 }

@@ -286,21 +286,43 @@ function productReleasesFromTestRuns(req, res) {
  * select test runs for product release
  */
 function testRunsForProductRelease(req, res) {
-  Testrun.find({$and:[{productName: req.params.productName}, {productRelease: req.params.productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
+
+  Product.findOne({name: req.params.productName}).exec(function(err, product){
+
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+
     } else {
+      Testrun.find({$and: [{productName: product.name}, {productRelease: req.params.productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
+        if (err) {
+          return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+        } else {
 
-      _.each(testRuns, function(testRun, i){
+          var filteredTestruns = [];
 
-        testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+          _.each(testRuns, function (testRun, i) {
 
+            /* Only send test runs for dashboards that are linked to product requirements */
+
+            _.each(product.requirements, function(requirement){
+
+              if(requirement.relatedDashboards.indexOf(testRun.dashboardName) !== -1) {
+
+                if (filteredTestruns.indexOf(testRun) == -1) {
+                  testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+                  filteredTestruns.push(testRun);
+                }
+
+              }
+            })
+          });
+
+          res.jsonp(filteredTestruns);
+
+        }
       });
-
-      res.jsonp(testRuns);
-
     }
-  });
+  })
 }
 
   function createTestRunSummaryFromEvents(events, callback) {
@@ -511,6 +533,8 @@ function testRunById(req, res) {
   });
 }
 function refreshTestrun(req, res) {
+
+
   Testrun.findOne({
     $and: [
       { productName: req.params.productName },
@@ -521,6 +545,13 @@ function refreshTestrun(req, res) {
     if (err){
       return res.status(404).send({ message: 'No test run with id ' + req.params.testRunId + 'has been found for this dashboard' });
     }else{
+
+      /* flush the graphite cache */
+
+      graphite.flushGraphiteCacheForTestRun(testRun, true, function(result){
+
+        console.log(result);
+      })
 
       let newTestRun = new Testrun();
 
@@ -612,8 +643,7 @@ function benchmarkAndPersistTestRunById(testRun) {
 
   return new Promise((resolve, reject) => {
 
-    flushMemcachedForTestRun(testRun)
-    .then(getDataForTestrun)
+    getDataForTestrun(testRun)
     .then(Requirements.setRequirementResultsForTestRun)
     .then(Benchmarks.setBenchmarkResultsPreviousBuildForTestRun)
     .then(Benchmarks.setBenchmarkResultsFixedBaselineForTestRun)
@@ -708,7 +738,7 @@ function getDataForTestrun(testRun) {
           }
           async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
 
-            graphite.getGraphiteData(Math.round(start / 1000), Math.round(testRun.end / 1000), target, 900, function (body) {
+            graphite.getGraphiteData(start, testRun.end, target, 900, function (body) {
               _.each(body, function (bodyTarget) {
 
                 /* save value based on metric type */

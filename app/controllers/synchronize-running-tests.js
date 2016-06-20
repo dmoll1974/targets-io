@@ -44,7 +44,11 @@ var RunningTestSchema = new mongoose.Schema({
   'humanReadableDuration': String,
   'rampUpPeriod': Number
 
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 
 RunningTestSchema.index({
   testRunId: 1,
@@ -64,7 +68,11 @@ var testRunTargetSchema = new Schema({
   'value': Number,
   'benchmarkPreviousValue': Number,
   'benchmarkFixedValue': Number
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 mongoose.model('TestrunTarget', testRunTargetSchema);
 var testRunMetricSchema = new Schema({
   'alias': String,
@@ -88,7 +96,11 @@ var testRunMetricSchema = new Schema({
   },
   'annotation': String,
   'targets': [testRunTargetSchema]
-});
+},
+    {
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+    });
 mongoose.model('TestrunMetric', testRunMetricSchema);
 /**
  * Testrun Schema
@@ -140,6 +152,8 @@ var TestrunSchema = new Schema({
 },
     {
       toObject: { getters: true },
+      read: 'primary',
+      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
     } );
 TestrunSchema.virtual('startEpoch').get(function () {
   return this.start.getTime();
@@ -154,26 +168,30 @@ TestrunSchema.index({
 mongoose.model('Testrun', TestrunSchema);
 
 
-
+//console.log('isDemo: ' + process.env.isDemo);
+//console.log('mongoUrl: ' + process.env.db);
 
 var db = connect();
 
 function connect() {
-  // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-  var options = {
-    //user: process.env.dbUsername,
-    //pass: process.env.dbPassword,
 
-    server: {
-      poolSize: 20,
-      auto_reconnect: true, // already default, but explicit
-      reconnectTries: 30, // already default, explicit
-      socketOptions: {
-        keepAlive: 100000, // less then 120s configured on mongo side
-        connectTimeoutMS: 10000
+  if(!process.env.isDemo) {
+
+    // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+    var options = {
+      //user: process.env.dbUsername,
+      //pass: process.env.dbPassword,
+      server: {
+        //poolSize: 20,
+        auto_reconnect: true, // already default, but explicit
+        reconnectTries: 30, // already default, explicit
+        socketOptions: {
+          keepAlive: 100000, // less then 120s configured on mongo side
+          connectTimeoutMS: 10000
+        }
       }
-    }
-  };
+    };
+  }else{
 
   if(config.dbUsername && config.dbPassword ){
 
@@ -183,13 +201,30 @@ function connect() {
 
     var mongoUrl = 'mongodb://' + config.db;
   }
+    var options = {};
+
+  }
+
+  if(process.env.dbUsername  && process.env.dbPassword  ){
+
+
+    console.log("User synchronize-running-tests: " + process.env.dbUsername);
+    console.log("User synchronize-running-tests: " + process.env.dbPassword);
+    console.log("Connect (with credentials) synchronize-running-tests to: " + process.env.db);
+    var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
+
+  }else{
+
+    console.log("Connect synchronize-running-tests to: " + process.env.db);
+    var mongoUrl = 'mongodb://' + process.env.db;
+  }
 
 
   mongoose.connection.once('open', function() {
     console.log('Connected to MongoDB server with mongoose.');
   });
 
-  mongoose.connection.on('error', function (err) { console.log("Connect error: " + err) });
+  mongoose.connection.on('error', function (err) { console.log("Synchronize-running-tests connect error: " + err) });
 
   mongoose.connection.on('disconnected', () => {
     // http://mongoosejs.com/docs/connections.html
@@ -232,16 +267,14 @@ function synchronizeRunningTestRuns () {
   /* Get  running tests */
 
   RunningTest.find().exec(function (err, runningTests) {
-
     if(err){
 
-      console.log(err);
+      console.log(err)
     }else {
+
       console.log('checking running tests');
 
       _.each(runningTests, function (runningTest) {
-
-        console.log('found running tests');
 
         /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
         if (dateNow - runningTest.keepAliveTimestamp.getTime() > 16 * 1000) {
@@ -252,10 +285,9 @@ function synchronizeRunningTestRuns () {
           saveTestRun(runningTest)
               .then(function () {
 
-                runningTest.remove(function (err) {
+                runningTest.remove(function (err) {});
 
                 });
-              });
         }
 
       });
@@ -286,14 +318,15 @@ let saveTestRun = function (runningTest){
 
     });
 
-    testRun.save(function (err, savedTestRun) {
+
+      testRun.save(function (err, savedTestRun) {
         if (err) {
           reject(err);
         } else {
 
-          resolve(savedTestRun);
+              resolve(savedTestRun);
         }
-    });
+      });
 
   });
 }
