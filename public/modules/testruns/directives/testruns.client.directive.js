@@ -15,7 +15,7 @@ function TestrunsDirective () {
   return directive;
 
   /* @ngInject */
-  function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $interval, $timeout, $window, mySocket) {
+  function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $interval, $timeout, $window, mySocket, Graphite) {
 
 
     var vm = this;
@@ -63,6 +63,7 @@ function TestrunsDirective () {
     $scope.testRunDetails = testRunDetails;
     $scope.go = go;
     $scope.openMenu = openMenu;
+    $scope.flushCache = flushCache;
 
 
     /* watches */
@@ -302,6 +303,21 @@ function TestrunsDirective () {
       $mdOpenMenu(ev);
 
     };
+
+    function flushCache(testRun) {
+
+      Graphite.flushCache(testRun).success(function () {
+
+        var toast = $mdToast.simple()
+            .action('OK')
+            .highlightAction(true)
+            .hideDelay(3000)
+
+        $mdToast.show(toast.content('Cache has been flushed for test run ' + testRun.testRunId)).then(function (response) {
+        })
+
+      })
+    }
 
 
     function go(url) {
