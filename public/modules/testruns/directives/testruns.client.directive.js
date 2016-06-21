@@ -15,7 +15,7 @@ function TestrunsDirective () {
   return directive;
 
   /* @ngInject */
-  function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $interval, $timeout, $window, mySocket, Graphite) {
+  function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $q, $interval, $timeout, $window, mySocket, Graphite) {
 
 
     var vm = this;
@@ -107,9 +107,8 @@ function TestrunsDirective () {
     $scope.$on('$destroy', function () {
       // Make sure that the interval is destroyed too
       $interval.cancel(spinner);
-      $interval.cancel(Utils.polling);
-    //  disconnect the socket
-      mySocket.disconnect();
+      //  leave the room
+      mySocket.emit('exit-room', room);
 
     });
 
@@ -126,37 +125,63 @@ function TestrunsDirective () {
     });
 
     mySocket.on('testrun', function (message) {
-      switch (message.event){
+      switch (message.event) {
 
         case 'saved':
 
-          $scope.testRuns.splice($scope.numberOfRunningTests, 0, message.testrun);
+
+          var index = $scope.testRuns.map(function(testRun){ return testRun.testRunId; }).indexOf(message.testrun.testRunId);
+
+          if (index === -1){
+
+            $scope.testRuns.unshift(message.testrun);
+
+          }else{
+
+            $scope.testRuns[index] = message.testrun;
+          }
+
           break;
 
         case 'removed':
 
-        default:
+          var index = $scope.testRuns.map(function(testRun){ return testRun.testRunId; }).indexOf(message.testrun.testRunId);
+
+          if(index !== -1) $scope.testRuns.splice(index, 1);
+
+        break;
 
       }
     });
 
     mySocket.on('runningTest', function (message) {
-      switch (message.event){
+      switch (message.event) {
 
         case 'saved':
 
-          $scope.numberOfRunningTests += 1;
-          $scope.runningTest = $scope.numberOfRunningTests > 0 ? true : false;
-          $scope.testRuns.unshift(message.testrun);
-          updateTestRuns();
+          var testRun = message.testrun;
+
+          testRun.progress = (message.testrun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(message.testrun.start).getTime()) / message.testrun.lastKnownDuration * 100) : undefined;
+
+          var index = $scope.runningTests.map(function(runningTest){ return runningTest.testRunId; }).indexOf(message.testrun.testRunId);
+
+          if (index === -1){
+
+            $scope.runningTests.unshift(testRun);
+
+          }else{
+
+            $scope.runningTests[index] = testRun;
+          }
+
 
           break;
 
         case 'removed':
 
-            var removeIndex = $scope.testRuns.map(function(testRun){return testRun})
+          var index = $scope.runningTests.map(function(runningTest){ return runningTest.testRunId; }).indexOf(message.testrun.testRunId);
+          $scope.runningTests.splice(index, 1);
 
-        default:
 
       }
     });
@@ -171,22 +196,21 @@ function TestrunsDirective () {
 
       /* only get test runs from db when neccessary */
       /* if switching dashboards, reset application state */
-      if (($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName && $rootScope.previousStateParams.dashboardName) || !$rootScope.previousStateParams.dashboardName) {
-
-
-        $scope.loading = true;
-          testRunPolling();
-
-
-      } else {
-
-        $scope.testRuns = [];
-        $scope.testRuns = TestRuns.list;
-        $scope.runningTest = (TestRuns.runningTest) ? TestRuns.runningTest : false;
-        $scope.numberOfRunningTests = (TestRuns.runningTest) ? TestRuns.runningTest : 0;
-
-      }
-
+      //if (($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName && $rootScope.previousStateParams.dashboardName) || !$rootScope.previousStateParams.dashboardName) {
+      //
+      //
+      //  $scope.loading = true;
+      //
+      //
+      //} else {
+      //
+      //  $scope.testRuns = [];
+      //  $scope.testRuns = TestRuns.list;
+      //  $scope.runningTest = (TestRuns.runningTest) ? TestRuns.runningTest : false;
+      //  $scope.numberOfRunningTests = (TestRuns.runningTest) ? TestRuns.runningTest : 0;
+      //
+      //}
+      //
 
       /* Check if baseline test run exists */
 
@@ -213,92 +237,41 @@ function TestrunsDirective () {
         }
       });
 
-    }
+      /* get test runs */
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (testRuns) {
 
 
-    function testRunPolling() {
-
-
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (response) {
-
-        $scope.runningTest = response.runningTest;
-
-        $scope.numberOfRunningTests = response.numberOfRunningTests;
-
-        $scope.totalNumberOftestRuns = response.totalNumberOftestRuns;
-
-        //if ($scope.testRuns > 0) {
-        //  /* get testRun Id's that might be selected */
-        //  var selectedTestRunIds = getSelectedTestRunIds($scope.testRuns);
-        //}
-
-        /* reset test runs */
-        $scope.testRuns = [];
-        $scope.testRuns = response.testRuns;
-
-
-        /* set selected testruns if necessary */
-        //if (selectedTestRunIds > 0) {
-        //
-        //  _.each($scope.testRuns, function (testRun) {
-        //
-        //    _.each(selectedTestRunIds, function (selectedTestRunId) {
-        //
-        //      if (testRun.testRunId === selectedTestRunId) {
-        //
-        //        testRun.selected = true;
-        //      }
-        //    });
-        //
-        //  });
-        //}
-
-        updateTestRuns();
-
+        /* set test runs */
+        $scope.testRuns = testRuns;
         $scope.loading = false;
       });
 
-    };
 
-  function updateTestRuns(){
+   /* get running tests */
+      TestRuns.listRunningTestsForDashboard($scope.productName, $scope.dashboardName).success(function (runningTests) {
 
-    /* Set end value to 'Running' for running test(s)*/
+        _.each(runningTests, function(runningTest){
 
-    for (var i = 0; i < $scope.numberOfRunningTests; i++) {
+          runningTest.progress = (runningTest.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(runningTest.start).getTime()) / runningTest.lastKnownDuration * 100) : undefined;
 
-      $scope.testRuns[i].end = 'Running ...';
-    }
+          runningTest.progress = runningTest.progress < 100 ? runningTest.progress : undefined;
+        });
 
-    TestRuns.list = $scope.testRuns;
-    TestRuns.runningTest = $scope.runningTest;
-    TestRuns.numberOfRunningTests = $scope.numberOfRunningTests;
-
-  }
-
-    /* get testRun Id's that might be selected */
-    function getSelectedTestRunIds(testRuns) {
-      var selectedTestRunIds = [];
-      var testRunsSelected = false;
-
-      _.each(testRuns, function (testRun) {
-
-        if (testRun.selected === true) {
-
-          selectedTestRunIds.push(testRun.testRunId);
-          testRunsSelected = true;
-        }
+        /* set running tests */
+        $scope.runningTests = runningTests;
 
       });
 
-      return selectedTestRunIds;
 
-    }
+
+
+  };
+
 
 
     var originatorEv;
 
     function openMenu($mdOpenMenu, ev) {
-      $interval.cancel(Utils.polling);
       originatorEv = ev;
       $mdOpenMenu(ev);
 
@@ -452,7 +425,6 @@ function TestrunsDirective () {
 
               /* refresh view */
 
-              testRunPolling();
 
 
             });
@@ -463,9 +435,6 @@ function TestrunsDirective () {
 
     function refreshTestrun(testRun) {
 
-      /* stop polling during refresh */
-
-      $interval.cancel(Utils.polling);
 
 
       var selectedTestRunIndex = $scope.testRuns.map(function (currentTestRun) {
@@ -480,9 +449,6 @@ function TestrunsDirective () {
         $scope.testRuns[selectedTestRunIndex] = testRun;
         $scope.testRuns[selectedTestRunIndex].busy = false;
 
-        /* start polling again after refresh */
-
-        Utils.polling = $interval(testRunPolling, 15000);
 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
@@ -559,7 +525,6 @@ function TestrunsDirective () {
 
       $scope.loading = true;
 
-      testRunPolling();
 
     }
 

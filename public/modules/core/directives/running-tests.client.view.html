@@ -16,6 +16,13 @@
             <th>
                 Started
             </th>
+            <th>
+                Duration
+            </th>
+            <th>
+                Progress
+            </th>
+
 
        
         </thead>
@@ -38,9 +45,19 @@
             </td>
 
             <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})" title="Open live graphs">
-                {{runningTest.duration}} ago
+                {{runningTest.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+            </td>
+            <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})" title="Open live graphs">
+                {{runningTest.humanReadableDuration }}
             </td>
 
+            <td class="pointer">
+                <div layout="row" layout-align="start center">
+                    <md-progress-linear data-ng-if="runningTest.progress"  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
+                    <!--<div data-ng-if="runningTest.progress" >{{runningTest.progress}}%</div>-->
+                </div>
+                <md-progress-linear data-ng-if="!runningTest.progress" flex md-mode="indeterminate"></md-progress-linear>
+            </td>
         </tr>
         </tbody>
     </table>

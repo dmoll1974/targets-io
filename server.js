@@ -58,7 +58,7 @@ console.log ("redis host: " + config.redisHost + ':' + config.redisPort );
 var db = mongoSetup.connect();
 
 if(cluster.isMaster) {
-	var numWorkers = (require('os').cpus().length - 1 > 0) ? require('os').cpus().length - 1 : 1; /* save one core for daemon, unless there is only one core */
+	var numWorkers = (require('os').cpus().length - 1 === 1 || config.debugMode) ? 1 : require('os').cpus().length - 1; /* save one core for daemon, unless there is only one core */
 
 	console.log('Master cluster setting up ' + numWorkers + ' workers...');
 
@@ -67,7 +67,7 @@ if(cluster.isMaster) {
 	}
 
 	cluster.on('online', function(worker) {
-		console.log('Worker ' + worker.process.pid + ' is online');
+		console.log('worker:' + worker.id + ', process ' + worker.process.pid + ' is online');
 	});
 
 	cluster.on('exit', function(worker, code, signal) {
@@ -76,42 +76,16 @@ if(cluster.isMaster) {
 		cluster.fork();
 	});
 
-/* spawn child process that synchronizes running tests */
-
-	var child_process = require('child_process');
-	var debug = typeof v8debug === 'object';
-	if (debug) {
-		//Set an unused port number.
-		process.execArgv.push('--debug=' + (40894));
-	}
-
-	var env = 	{
-					isDemo: config.isDemo,
-					db: config.db,
-
-				};
-
-	if(config.dbUsername && config.dbPassword) {
-		env['dbUsername'] = config.dbUsername;
-		env['dbPassword'] = config.dbPassword;
-	}
-
-	var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
-
-	synchronizeRunningTestsDaemonFork.on('exit', function (code, signal) {
-		console.log("synchronizeRunningTestsDaemonFork process terminated with code: " + code);
-		synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js');
-	});
 
 } else {
 	var app = require('./config/express')(db);
 
 	app.disable('etag');
 
-	app.all('/*', function(req, res) {res.send('process ' + process.pid + ' says hello!').end();})
+	app.all('/*', function(req, res) {res.send('worker:' + cluster.worker.id + ', process ' + process.pid + ' says hello!').end();})
 
 	var server = app.listen(config.port, function() {
-		console.log('Process ' + process.pid + ' is listening to all incoming requests');
+		console.log('worker:' + cluster.worker.id + ', process ' + process.pid + ' is listening to all incoming requests');
 	});
 
 	var io = require('socket.io').listen(server);
@@ -130,10 +104,58 @@ if(cluster.isMaster) {
 		socket.on('room', function(room) {
 
 			socket.join(room);
+			console.log('Client joined room: ' + room);
+
+		});
+
+		socket.on('exit-room', function(room) {
+
+			socket.leave(room);
+			console.log('Client left room: ' + room);
+
 
 		});
 	});
 
+	/* the first worker should spawn the running tests saemon child process */
+
+	if(cluster.worker.id === 1){
+
+		/* spawn child process that synchronizes running tests */
+
+		var child_process = require('child_process');
+		var debug = typeof v8debug === 'object';
+		if (debug) {
+			//Set an unused port number.
+			process.execArgv.push('--debug=' + (40894));
+		}
+
+
+		var env = 	{
+			io: io,
+			isDemo: config.isDemo,
+			db: config.db,
+
+		};
+
+		if(config.dbUsername && config.dbPassword) {
+			env['dbUsername'] = config.dbUsername;
+			env['dbPassword'] = config.dbPassword;
+		}
+
+		var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
+
+		synchronizeRunningTestsDaemonFork.on('exit', function (code, signal) {
+			console.log("synchronizeRunningTestsDaemonFork process terminated with code: " + code);
+			synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js');
+		});
+		synchronizeRunningTestsDaemonFork.on('message', function (message) {
+
+			io.sockets.in(message.room).emit(message.type, {event: message.event, testrun: message.testrun});
+
+		});
+
+	}
 
 	// Expose app
 	exports = module.exports = app;

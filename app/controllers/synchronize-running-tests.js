@@ -253,7 +253,7 @@ var Testrun = mongoose.model('Testrun');
 
 
   /* start polling every minute */
-  setInterval(synchronizeRunningTestRuns, 60 * 1000);
+  setInterval(synchronizeRunningTestRuns, 30 * 1000);
 
 
 
@@ -277,7 +277,7 @@ function synchronizeRunningTestRuns () {
       _.each(runningTests, function (runningTest) {
 
         /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
-        if (dateNow - runningTest.keepAliveTimestamp.getTime() > 16 * 1000) {
+        if (dateNow - new Date(runningTest.keepAliveTimestamp).getTime() > 16 * 1000) {
 
           /* mark test as not completed */
           runningTest.completed = false;
@@ -285,9 +285,44 @@ function synchronizeRunningTestRuns () {
           saveTestRun(runningTest)
               .then(function () {
 
-                runningTest.remove(function (err) {});
+                var room = runningTest.productName + '-' + runningTest.dashboardName;
+
+                process.send({
+                  room: room,
+                  type: 'testrun',
+                  event: 'saved',
+                  testrun: runningTest
+                });
+
+
+                process.send({
+                  room: 'recent-test',
+                  type: 'testrun',
+                  event: 'saved',
+                  testrun: runningTest
+                });
+
+                runningTest.remove(function (err) {
+
+
+                  process.send({
+                    room: room,
+                    type: 'runningTest',
+                    event: 'removed',
+                    testrun: runningTest
+                  });
+
+                  process.send({
+                    room: 'running-test',
+                    type: 'runningTest',
+                    event: 'removed',
+                    testrun: runningTest
+                  });
 
                 });
+
+
+              });
         }
 
       });
@@ -324,7 +359,7 @@ let saveTestRun = function (runningTest){
           reject(err);
         } else {
 
-              resolve(savedTestRun);
+          resolve(savedTestRun);
         }
       });
 

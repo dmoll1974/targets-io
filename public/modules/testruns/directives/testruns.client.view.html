@@ -2,6 +2,12 @@
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div layout="column">
 
+        <div layout="row" ng-if="runningTest" layout-align="start center">
+            <span class="md-padding" >{{wilyExportRunningTestRunId}}</span>
+            <md-progress-linear class="md-padding" md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
+            <span class="md-padding">{{determinateValue}}%</span>
+
+        </div>
         <div layout="row" id="fixedBaselineToast" >
             <div flex="95">
                 <md-checkbox style="margin-bottom: 0px;" ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
@@ -41,24 +47,46 @@
             </tr>
             </thead>
             <tbody>
-
-            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } "
-                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'running-test' : (runningTest && $index < numberOfRunningTests)}" >
-                    <td>
-                        <div id="testRunInfo"  layout="row">
-                            <div class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.testRunId}}</div>
-                            <div   ng-if="testRun.annotations" class="fa fa-info-circle info-hover" data-ng-click="showAnnotations($event, testRun)" style="margin-left: 10px;"></div>
-                        </div>
-                    </td>
-                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+            <tr ng-repeat="runningTest in runningTests" class="running-test" data-ng-click="liveGraphs(runningTest)">
+                <td>
+                    {{runningTest.testRunId}}
                 </td>
-                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                <td class="pointer" >
+                    {{runningTest.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                </td>
+                <td class="pointer">
+                    <div layout="row" layout-align="start center">
+                        <md-progress-linear data-ng-if="runningTest.progress"  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
+                        <!--<div data-ng-if="runningTest.progress" >{{runningTest.progress}}%</div>-->
+                    </div>
+                    <md-progress-linear data-ng-if="!runningTest.progress" flex md-mode="indeterminate"></md-progress-linear>
+                </td>
+                <td class="pointer">{{runningTest.humanReadableDuration}}
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } "
+                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true}" >
+                <td>
+                    <div id="testRunInfo"  layout="row">
+                        <div class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.testRunId}}</div>
+                        <div   ng-if="testRun.annotations" class="fa fa-info-circle info-hover" data-ng-click="showAnnotations($event, testRun)" style="margin-left: 10px;"></div>
+                    </div>
+                </td>
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                </td>
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                     <md-progress-linear data-ng-if="runningTest && $index < numberOfRunningTests" flex md-mode="indeterminate"></md-progress-linear>
 
                 </td>
-                <td class="pointer" data-ng-click="(runningTest && $index < numberOfRunningTests) ? liveGraphs(testRun) : testRunDetails(testRun)">{{testRun.humanReadableDuration}}
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.humanReadableDuration}}
                 </td>
-                <td data-ng-if="!(runningTest && $index < numberOfRunningTests)" header-class="text-center" class="text-center pointer"
+                <td  header-class="text-center" class="text-center pointer"
                     data-ng-click="testRunRequirements(testRun)"><span
                         ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>
                 </td>
@@ -73,7 +101,7 @@
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)">
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="testRun.testRunId === dashboard.baseline"></md-icon>
                 </td>
-                <td data-ng-if="!(runningTest && $index < numberOfRunningTests)">
+                <td >
                     <md-menu style="padding-top: 0px; padding-bottom: 0px;">
                         <div aria-label="Open test run menu" class="md-icon-button"
                                    ng-click="openMenu($mdOpenMenu, $event)">
@@ -130,7 +158,7 @@
                         </md-menu-content>
                     </md-menu>
                 </td>
-                <td data-ng-if="!(runningTest && $index < numberOfRunningTests)">
+                <td >
                     <md-checkbox md-no-ink aria-label="select test run" ng-model="testRun.selected"  ng-change="setTestRunsSelected(testRun.selected)" style="margin: 0px;">
                     </md-checkbox>
                 </td>

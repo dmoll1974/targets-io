@@ -13,6 +13,7 @@ angular.module('events').factory('TestRuns', [
       //metricFilter: '',
 
       listTestRunsForDashboard: listTestRunsForDashboard,
+      listRunningTestsForDashboard: listRunningTestsForDashboard,
       listTestRunsForProduct: listTestRunsForProduct,
       listTestRunsForProductRelease: listTestRunsForProductRelease,
       listProductReleasesFromTestRuns: listProductReleasesFromTestRuns,
@@ -60,6 +61,10 @@ angular.module('events').factory('TestRuns', [
     }
     function listTestRunsForDashboard(productName, dashboardName, limit) {
       return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + limit );
+    }
+
+    function listRunningTestsForDashboard(productName, dashboardName, limit) {
+      return $http.get('/running-tests-dashboard/' + productName + '/' + dashboardName);
     }
 
     function listTestRunsForProduct(productName, limit) {

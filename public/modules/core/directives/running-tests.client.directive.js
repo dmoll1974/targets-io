@@ -14,32 +14,71 @@ function RunningTestsDirective () {
     return directive;
 
     /* @ngInject */
-    function RunningTestsDirectiveController ($scope, $state, $interval, RunningTests, TestRuns) {
+    function RunningTestsDirectiveController ($scope, $state, $interval, RunningTests, TestRuns, mySocket) {
 
-        var pollRunningTests = function(){
             RunningTests.get().success(function(runningTests){
 
                 $scope.runningTests = runningTests;
 
                 /* calculate duration */
 
-                _.each($scope.runningTests, function(testRun, i){
-
-                    $scope.runningTests[i].duration = TestRuns.calculateDuration(testRun);
-                })
+                //_.each($scope.runningTests, function(testRun, i){
+                //
+                //    $scope.runningTests[i].duration = TestRuns.calculateDuration(testRun);
+                //})
 
 
             });
-        };
 
-        pollRunningTests();
-        var polling = $interval(pollRunningTests, 30 * 1000); // poll every 30 seconds
+        /*socket.io*/
+
+        var room = 'running-test';
+
+        mySocket.on('connect', function (data) {
+
+            mySocket.emit('room', room);
+            console.log('Joined room: ' + room);
+
+        });
+
+        mySocket.on('runningTest', function (message) {
+            switch (message.event) {
+
+                case 'saved':
+
+                    var testRun = message.testrun;
+
+                    testRun.progress = (message.testrun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(message.testrun.start).getTime()) / message.testrun.lastKnownDuration * 100) : undefined;
+
+                    var index = $scope.runningTests.map(function(runningTest){ return runningTest.testRunId; }).indexOf(message.testrun.testRunId);
+
+                    if (index === -1){
+
+                        $scope.runningTests.unshift(testRun);
+
+                    }else{
+
+                        $scope.runningTests[index] = testRun;
+                    }
+
+
+                    break;
+
+                case 'removed':
+
+                    var index = $scope.runningTests.map(function(runningTest){ return runningTest.testRunId; }).indexOf(message.testrun.testRunId);
+                    $scope.runningTests.splice(index, 1);
+
+
+            }
+        });
+
 
 
 
         $scope.$on('$destroy', function () {
-            // Make sure that the interval is destroyed too
-            $interval.cancel(polling);
+            //  leave the room
+            mySocket.emit('exit-room', room);
         });
 
     }

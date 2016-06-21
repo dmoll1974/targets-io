@@ -14,7 +14,7 @@ function RecentTestsDirective () {
     return directive;
 
     /* @ngInject */
-    function RecentTestsDirectiveController ($scope, $state, $interval, TestRuns) {
+    function RecentTestsDirectiveController ($scope, $state, $interval, TestRuns, mySocket) {
 
         $scope.completedTestRunsOnly = true;
 
@@ -37,16 +37,56 @@ function RecentTestsDirective () {
             {value: 7, label: 'Last week'}
         ];
 
-        var pollRecentTests = function(){
+        /*socket.io*/
+
+        var room = 'recent-test';
+
+        mySocket.on('connect', function (data) {
+
+            mySocket.emit('room', room);
+            console.log('Joined room: ' + room);
+
+        });
+
+        mySocket.on('testrun', function (message) {
+            switch (message.event) {
+
+                case 'saved':
+
+
+                    var index = $scope.recentTests.map(function(testRun){ return testRun.testRunId; }).indexOf(message.testrun.testRunId);
+
+                    if (index === -1){
+
+                        $scope.recentTests.unshift(message.testrun);
+
+                    }else{
+
+                        $scope.recentTests[index] = message.testrun;
+                    }
+
+                    break;
+
+                case 'removed':
+
+                    var index = $scope.recentTests.map(function(testRun){ return testRun.testRunId; }).indexOf(message.testrun.testRunId);
+
+                    if(index !== -1) $scope.recentTests.splice(index, 1);
+
+                    break;
+
+            }
+        });
+
+
+
             TestRuns.getRecentTestruns($scope.recentTestPeriod).success(function(recentTests){
 
                 $scope.recentTests = recentTests;
 
             });
-        };
 
-        pollRecentTests();
-        var polling = $interval(pollRecentTests, 60 * 1000); // poll every minute
+
 
 
         $scope.updaterecentTestRuns = function(){
@@ -55,8 +95,8 @@ function RecentTestsDirective () {
         }
 
         $scope.$on('$destroy', function () {
-            // Make sure that the interval is destroyed too
-            $interval.cancel(polling);
+            //  leave the room
+            mySocket.emit('exit-room', room);
         });
 
     }
