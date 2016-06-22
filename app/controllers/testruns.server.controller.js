@@ -242,7 +242,7 @@ function deleteTestRunById(req, res) {
           }else{
 
             var io = global.io;
-            var room = runningTest.productName + '-' + runningTest.dashboardName;
+            var room = testRun.productName + '-' + testRun.dashboardName;
 
             console.log('emitting message to room: ' + room);
             io.sockets.in(room).emit('testrun', {event: 'removed', testrun: testRun});
