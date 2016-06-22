@@ -118,6 +118,15 @@ function runningTest(req, res){
             ]
           }).exec(function (err, testRun) {
 
+            var io = global.io;
+            var room = testRun.productName + '-' + testRun.dashboardName;
+
+
+            console.log('emitting message to room: ' + room);
+            io.sockets.in(room).emit('testrun', {event: 'removed', testrun: testRun});
+            console.log('emitting message to room: running-test');
+            io.sockets.in('recent-test').emit('testrun', {event: 'removed', testrun: testRun});
+
             updateRunningTest(runningTestKeepAlive)
                 .then(function (message) {
 
