@@ -117,12 +117,8 @@ function TestrunsDirective () {
 
     var room = $scope.productName + '-' + $scope.dashboardName;
 
-    mySocket.on('connect', function (data) {
-
-      mySocket.emit('room', room);
-      console.log('Joined room: ' + room);
-
-    });
+    mySocket.emit('room', room);
+    console.log('Joined room: ' + room);
 
     mySocket.on('testrun', function (message) {
       switch (message.event) {

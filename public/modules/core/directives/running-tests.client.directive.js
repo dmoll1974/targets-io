@@ -34,12 +34,9 @@ function RunningTestsDirective () {
 
         var room = 'running-test';
 
-        mySocket.on('connect', function (data) {
+        mySocket.emit('room', room);
+        console.log('Joined room: ' + room);
 
-            mySocket.emit('room', room);
-            console.log('Joined room: ' + room);
-
-        });
 
         mySocket.on('runningTest', function (message) {
             switch (message.event) {
