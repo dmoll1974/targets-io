@@ -95,7 +95,7 @@ if(cluster.isMaster) {
 
 	global.io = io;
 
-	io.adapter(redis_io({host: "172.21.42.150", port: 6379 }));
+	io.adapter(redis_io({host: config.redisHost, port: config.redisPort }));
 
 	io.on('connection', function(socket) {
 		console.log('Client connected...');
