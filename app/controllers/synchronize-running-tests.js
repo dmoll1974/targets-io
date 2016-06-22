@@ -344,6 +344,7 @@ let saveTestRun = function (runningTest){
 
 
           });
+
         } else {
 
           var room = runningTest.productName + '-' + runningTest.dashboardName;
@@ -384,6 +385,7 @@ let saveTestRun = function (runningTest){
           });
         }
 
+    });
   });
 }
 
