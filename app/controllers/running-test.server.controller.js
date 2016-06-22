@@ -236,6 +236,9 @@ let saveTestRun = function (runningTest){
         /* In case of error still remove running test! */
         runningTest.remove(function (err) {
 
+          var io = global.io;
+          var room = runningTest.productName + '-' + runningTest.dashboardName;
+
 
           console.log('emitting message to room: ' + room);
           io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
