@@ -116,7 +116,7 @@ function runningTest(req, res){
               {dashboardName: dashboardName},
               {testRunId: testRunId}
             ]
-          }).exec(function (err, testRun) {
+          }).exec(function (err, testRunDeleted) {
 
             var io = global.io;
             var room = testRun.productName + '-' + testRun.dashboardName;
