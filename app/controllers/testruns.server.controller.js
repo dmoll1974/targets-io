@@ -38,13 +38,14 @@ exports.updateAllProductTestRuns = updateAllProductTestRuns;
 exports.recentTestRuns = recentTestRuns;
 exports.update = update;
 exports.addTestRun = addTestRun;
-exports.humanReadbleDuration = humanReadbleDuration;
+exports.humanReadbleDuration = humanReadableDuration;
+exports.runningTestsForDashboard = runningTestsForDashboard;
 
 function addTestRun(req, res){
 
   let testRun = new Testrun(req.body);
 
-  testRun.humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+  testRun.humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
   testRun.meetsRequirement = null;
 
   testRun.save(function(err, testRun){
@@ -83,7 +84,7 @@ function update (req, res) {
       testRun.buildResultsUrl = req.body.buildResultsUrl;
       testRun.rampUpPeriod = req.body.rampUpPeriod;
       testRun.annotations = req.body.annotations;
-      testRun.humanReadableDuration = humanReadbleDuration(new Date(req.body.end).getTime() - new Date(req.body.start).getTime());
+      testRun.humanReadableDuration = humanReadableDuration(new Date(req.body.end).getTime() - new Date(req.body.start).getTime());
 
       testRun.save(function(err, savedTestRun){
 
@@ -112,7 +113,7 @@ function recentTestRuns(req, res){
 
     _.each(testRuns, function(testRun, i){
 
-      testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+      testRuns[i].humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
 
     });
 
@@ -239,6 +240,13 @@ function deleteTestRunById(req, res) {
           if (err) {
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
           }else{
+
+            var io = global.io;
+            var room = testRun.productName + '-' + testRun.dashboardName;
+
+            console.log('emitting message to room: ' + room);
+            io.sockets.in(room).emit('testrun', {event: 'removed', testrun: testRun});
+            io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: testRun});
             res.jsonp({message: 'test run deleted'});
           }
         });
@@ -257,7 +265,7 @@ function testRunsForProduct(req, res) {
 
       _.each(testRuns, function(testRun, i){
 
-        testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+        testRuns[i].humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
 
       });
 
@@ -309,7 +317,7 @@ function testRunsForProductRelease(req, res) {
               if(requirement.relatedDashboards.indexOf(testRun.dashboardName) !== -1) {
 
                 if (filteredTestruns.indexOf(testRun) == -1) {
-                  testRuns[i].humanReadableDuration = humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime());
+                  testRuns[i].humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
                   filteredTestruns.push(testRun);
                 }
 
@@ -339,7 +347,7 @@ function testRunsForProductRelease(req, res) {
               productName: events[i].productName,
               dashboardName: events[i].dashboardName,
               testRunId: events[i].testRunId,
-              humanReadbleDuration: humanReadbleDuration(events[j].eventTimestamp.getTime() - events[i].eventTimestamp.getTime()),
+              humanReadbleDuration: humanReadableDuration(events[j].eventTimestamp.getTime() - events[i].eventTimestamp.getTime()),
               duration: events[j].eventTimestamp.getTime() - events[i].eventTimestamp.getTime()
             });
 
@@ -352,7 +360,7 @@ function testRunsForProductRelease(req, res) {
     callback(testRuns);
   }
 
-  function humanReadbleDuration(durationInMs){
+  function humanReadableDuration(durationInMs){
 
     var date = new Date(durationInMs);
     var readableDate = '';
@@ -366,149 +374,62 @@ function testRunsForProductRelease(req, res) {
  */
 function testRunsForDashboard(req, res) {
 
-  var response = {};
-  response.numberOfRunningTests = 0;
-  response.runningTest = false;
-
-  var query = {
+  Testrun.find({
     $and: [
       { productName: req.params.productName },
       { dashboardName: req.params.dashboardName }
     ]
-  };
-
-
-
-  Testrun.find(query).sort({end: -1 }).limit(req.params.limit).exec(function(err, testRuns) {
+  }).sort({end: -1 }).limit(req.params.limit).exec(function(err, testRuns) {
     if (err) {
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
 
-
-
-      //response.totalNumberOftestRuns = testRuns.length;
-      //
-      ///* Only return paginated test runs */
-      //
-      //let page = req.params.page;
-      //let limit = req.params.limit;
-      //let paginatedTestRuns = [];
-      //
-      //_.each(testRuns, function(testRun, index){
-      //
-      //  if(index >= (page - 1) * (limit)  && index <= (page * limit) - 1){
-      //
-      //    paginatedTestRuns.push(testRun);
-      //  }
-      //
-      //});
-      //
-      //response.testRuns = paginatedTestRuns;
-
-      response.testRuns = testRuns;
-
-    /* Check for running tests */
-      RunningTest.find({
-        $and: [
-          { productName: req.params.productName },
-          { dashboardName: req.params.dashboardName }
-        ]
-      }).exec(function(err, runningTests){
-
-        if(err){
-          res.jsonp(response);
-        }else{
-
-
-          /* if running tests are found, put them on top*/
-          if(runningTests.length > 0){
-
-            response.runningTest = true;
-
-            _.each(runningTests, function(runningTest){
-
-              response.numberOfRunningTests = response.numberOfRunningTests + 1;
-
-
-              /* mark temporarily as completed to make it visible in test run list*/
-              runningTest.completed = true;
-
-              response.testRuns.unshift(runningTest);
-
-            })
-
-
-          }
-
-
-          res.jsonp(response);
-        }
-
-      });
-
+      res.jsonp(testRuns);
 
     }
   });
 
-  function persistTestrunsFromEvents(testRuns, testRunsFromEvents, callback) {
-    var persistedTestRuns = [];
-    var testRunsToBePersisted = [];
-    var testRunsToBenchmark = [];
-    _.each(testRunsFromEvents, function (testRunFromEvents) {
-      var exists = false;
-      _.each(testRuns, function (testRun) {
-        if (testRun.testRunId === testRunFromEvents.testRunId) {
-          exists = true;
-          persistedTestRuns.push(testRun);
-          return exists;
-        }
-      });
-      if (exists === false) {
-        testRunsToBePersisted.push(testRunFromEvents);
-      }
-    });
-    async.forEachLimit(testRunsToBePersisted, 16, function (testRun, callback) {
-      getDataForTestrun(testRun.productName, testRun.dashboardName, testRun, function (metrics) {
-        saveTestrun(testRun, metrics, function (savedTestrun) {
-          console.log('test run saved: ' + savedTestrun.testRunId);
-          testRunsToBenchmark.push(savedTestrun);
-          callback();
-        });
-      });
-    }, function (err) {
-      if (err)
-        return next(err);
-      testRunsToBenchmark.sort(Utils.dynamicSort('-start'));
-      async.forEachLimit(testRunsToBenchmark, 1, function (testRun, callback) {
-        Requirements.setRequirementResultsForTestRun(testRun, function (requirementsTestrun) {
-          if (requirementsTestrun)
-            console.log('Requirements set for: ' + requirementsTestrun.productName + '-' + requirementsTestrun.dashboardName + 'testrunId: ' + requirementsTestrun.testRunId);
-          Benchmarks.setBenchmarkResultsPreviousBuildForTestRun(requirementsTestrun, function (benchmarkPreviousBuildTestrun) {
-            if (benchmarkPreviousBuildTestrun)
-              console.log('Benchmark previous build done for: ' + benchmarkPreviousBuildTestrun.productName + '-' + benchmarkPreviousBuildTestrun.dashboardName + 'testrunId: ' + benchmarkPreviousBuildTestrun.testRunId);
-            Benchmarks.setBenchmarkResultsFixedBaselineForTestRun(benchmarkPreviousBuildTestrun, function (benchmarkFixedBaselineTestrun) {
-              if (benchmarkFixedBaselineTestrun)
-                console.log('Benchmark fixed baseline done for: ' + benchmarkFixedBaselineTestrun.productName + '-' + benchmarkFixedBaselineTestrun.dashboardName + 'testrunId: ' + benchmarkFixedBaselineTestrun.testRunId);
-              benchmarkFixedBaselineTestrun.save(function (err) {
-                if (err) {
-                  console.log(err);
-                  callback(err);
-                } else {
-                  persistedTestRuns.push(benchmarkFixedBaselineTestrun);
-                  callback();
-                }
-              });
-            });
-          });
-        });
-      }, function (err) {
-        if (err)
-          console.log(err);
-        callback(persistedTestRuns);
-      });
-    });
-  }
 }
+
+function runningTestsForDashboard(req, res) {
+
+
+  /* Check for running tests */
+  RunningTest.find({
+    $and: [
+      {productName: req.params.productName},
+      {dashboardName: req.params.dashboardName}
+    ]
+  }).exec(function (err, runningTests) {
+
+    if (err) {
+      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+    } else {
+
+      Testrun.findOne({
+        $and: [
+          {productName: req.params.productName},
+          {dashboardName: req.params.dashboardName},
+          {completed: true}
+        ]
+      }).exec(function (err, testRun) {
+
+        _.each(runningTests, function(runningTest){
+
+          runningTest.humanReadableDuration = humanReadableDuration(new Date().getTime() - new Date(runningTest.start).getTime() );
+          runningTest.lastKnownDuration = testRun ? new Date(testRun.end).getTime() - new Date(testRun.start).getTime() : undefined;
+        })
+
+        res.jsonp(runningTests);
+
+      })
+
+
+    }
+  });
+}
+
+
 function testRunById(req, res) {
   Testrun.findOne({
     $and: [
@@ -621,11 +542,18 @@ let upsertTestRun = function(testRun){
         benchmarkResultPreviousOK: testRun.benchmarkResultPreviousOK,
         baseline: testRun.baseline,
         previousBuild: testRun.previousBuild,
-        humanReadableDuration: humanReadbleDuration(testRun.end.getTime() - testRun.start.getTime())}
+        humanReadableDuration: humanReadableDuration(testRun.end.getTime() - testRun.start.getTime())}
         , {upsert:true}, function(err, savedTestRun){
       if (err) {
         reject(err);
       } else {
+        var io = global.io;
+        var room = savedTestRun.productName + '-' + savedTestRun.dashboardName;
+
+        console.log('emitting message to room: ' + room);
+        io.sockets.in(room).emit('testrun', {event: 'saved', testrun: savedTestRun});
+        console.log('emitting message to room: recent-test');
+        io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: savedTestRun});
 
         resolve(savedTestRun);
       }
@@ -822,6 +750,7 @@ function getDataForTestrun(testRun) {
                 if (err) {
                   reject(err);
                 } else {
+
 
                   resolve(savedTestrun);
 

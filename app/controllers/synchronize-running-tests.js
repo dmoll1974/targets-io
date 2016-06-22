@@ -168,8 +168,8 @@ TestrunSchema.index({
 mongoose.model('Testrun', TestrunSchema);
 
 
-console.log('isDemo: ' + process.env.isDemo);
-console.log('mongoUrl: ' + process.env.db);
+//console.log('isDemo: ' + process.env.isDemo);
+//console.log('mongoUrl: ' + process.env.db);
 
 var db = connect();
 
@@ -193,6 +193,14 @@ function connect() {
     };
   }else{
 
+  if(config.dbUsername && config.dbPassword ){
+
+    var mongoUrl = 'mongodb://' + config.dbUsername + ':' + config.dbPassword + '@' + config.db;
+
+  }else{
+
+    var mongoUrl = 'mongodb://' + config.db;
+  }
     var options = {};
 
   }
@@ -245,7 +253,7 @@ var Testrun = mongoose.model('Testrun');
 
 
   /* start polling every minute */
-  setInterval(synchronizeRunningTestRuns, 60 * 1000);
+  setInterval(synchronizeRunningTestRuns, 30 * 1000);
 
 
 
@@ -269,17 +277,17 @@ function synchronizeRunningTestRuns () {
       _.each(runningTests, function (runningTest) {
 
         /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
-        if (dateNow - runningTest.keepAliveTimestamp.getTime() > 16 * 1000) {
+        if (dateNow - new Date(runningTest.keepAliveTimestamp).getTime() > 16 * 1000) {
 
           /* mark test as not completed */
           runningTest.completed = false;
 
-          saveTestRun(runningTest)
-              .then(function () {
+          saveTestRun(runningTest).then(function(savedTestRun){
 
-                runningTest.remove(function (err) {});
+            console.log('removed running test: ' + savedTestRun.testRunId);
 
-                });
+          });
+
         }
 
       });
@@ -313,13 +321,71 @@ let saveTestRun = function (runningTest){
 
       testRun.save(function (err, savedTestRun) {
         if (err) {
-          reject(err);
+
+          /* In case of error still remove running test! */
+          runningTest.remove(function (err) {
+
+
+            process.send({
+              room: room,
+              type: 'runningTest',
+              event: 'removed',
+              testrun: runningTest
+            });
+
+            process.send({
+              room: 'running-test',
+              type: 'runningTest',
+              event: 'removed',
+              testrun: runningTest
+            });
+
+            resolve(savedTestRun);
+
+
+          });
+
         } else {
 
-              resolve(savedTestRun);
-        }
-      });
+          var room = runningTest.productName + '-' + runningTest.dashboardName;
 
+          process.send({
+            room: room,
+            type: 'testrun',
+            event: 'saved',
+            testrun: runningTest
+          });
+
+
+          process.send({
+            room: 'recent-test',
+            type: 'testrun',
+            event: 'saved',
+            testrun: runningTest
+          });
+
+          runningTest.remove(function (err) {
+
+
+            process.send({
+              room: room,
+              type: 'runningTest',
+              event: 'removed',
+              testrun: runningTest
+            });
+
+            process.send({
+              room: 'running-test',
+              type: 'runningTest',
+              event: 'removed',
+              testrun: runningTest
+            });
+
+            resolve(savedTestRun);
+          });
+        }
+
+    });
   });
 }
 

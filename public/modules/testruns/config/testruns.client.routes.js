@@ -6,7 +6,7 @@ angular.module('testruns').config([
     // Testruns state routing
     $stateProvider.state('viewTestruns', {
       url: '/testruns/:productName/:dashboardName/',
-      templateUrl: 'modules/testruns/views/testruns.client.view.html'
+      template: '<testruns></testruns>'
     }).state('requirementsTestRun', {
       url: '/requirements/:productName/:dashboardName/:testRunId/:requirementsResult/',
       template: '<requirements></requirements>'

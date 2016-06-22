@@ -52,6 +52,8 @@
     "request": "^2.65.0",
     "request-json": "~0.5.2",
     "simple-statistics": "^0.8.0",
+    "socket.io": "^1.4.6",
+    "socket.io-redis": "^1.0.0",
     "swig": "~1.4.1",
     "winston": "^2.2.0",
     "winston-graylog2": "^0.5.0"

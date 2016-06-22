@@ -116,7 +116,16 @@ function runningTest(req, res){
               {dashboardName: dashboardName},
               {testRunId: testRunId}
             ]
-          }).exec(function (err, testRun) {
+          }).exec(function (err, testRunDeleted) {
+
+            var io = global.io;
+            var room = testRun.productName + '-' + testRun.dashboardName;
+
+
+            console.log('emitting message to room: ' + room);
+            io.sockets.in(room).emit('testrun', {event: 'removed', testrun: testRun});
+            console.log('emitting message to room: running-test');
+            io.sockets.in('recent-test').emit('testrun', {event: 'removed', testrun: testRun});
 
             updateRunningTest(runningTestKeepAlive)
                 .then(function (message) {
@@ -158,11 +167,19 @@ function updateRunningTest(runningTest) {
       if(storedRunningTest){
 
         storedRunningTest.keepAliveTimestamp = dateNow;
-        storedRunningTest.end = dateNow + 15 * 1000;
-        storedRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(storedRunningTest.end.getTime() - storedRunningTest.start.getTime());
+        storedRunningTest.end = dateNow + 30 * 1000;
+        storedRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date().getTime() - storedRunningTest.start.getTime());
         storedRunningTest.rampUpPeriod = runningTest.rampUpPeriod;
 
         storedRunningTest.save(function(err, runnigTestSaved){
+
+          var io = global.io;
+          var room = runningTest.productName + '-' + runningTest.dashboardName;
+
+          console.log('emitting message to room: ' + room);
+          io.sockets.in(room).emit('runningTest', {event: 'saved', testrun: storedRunningTest});
+          console.log('emitting message to room: running-test');
+          io.sockets.in('running-test').emit('runningTest', {event: 'saved', testrun: storedRunningTest});
 
           resolve('running test updated!');
         });
@@ -171,19 +188,43 @@ function updateRunningTest(runningTest) {
 
       }else{
 
+        /* get duration for last completed test run */
 
-        newRunningTest = new RunningTest(runningTest);
+        Testrun.findOne({
+          $and: [
+            {productName: runningTest.productName},
+            {dashboardName: runningTest.dashboardName},
+            {completed: true}
+          ]
+        }).exec(function (err, testRun) {
 
-        /* set timestamps */
-        /* if start request, give some additional time to start up */
 
-        newRunningTest.keepAliveTimestamp = dateNow + 120 * 1000;
-        newRunningTest.end = dateNow + 30 * 1000;
-        newRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(newRunningTest.end.getTime() - newRunningTest.start.getTime())
-        newRunningTest.save(function(err, newRunningTest){
+          var lastKnownDuration = testRun ? new Date(testRun.end).getTime() - new Date(testRun.start).getTime() : undefined;
 
-          resolve('running test created!');
+          newRunningTest = new RunningTest(runningTest);
+
+          /* set timestamps */
+          /* if start request, give some additional time to start up */
+
+          newRunningTest.keepAliveTimestamp = dateNow + 30 * 1000;
+          newRunningTest.lastKnownDuration = lastKnownDuration;
+          newRunningTest.end = dateNow + 30 * 1000;
+          newRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date().getTime() - newRunningTest.start.getTime())
+          newRunningTest.save(function(err, newRunningTest){
+
+            var io = global.io;
+            var room = runningTest.productName + '-' + runningTest.dashboardName;
+
+            console.log('emitting message to room: ' + room);
+            io.sockets.in(room).emit('runningTest', {event: 'saved', testrun: newRunningTest});
+            console.log('emitting message to room: running-test ');
+            io.sockets.in('running-test').emit('runningTest', {event: 'saved', testrun: newRunningTest});
+
+            resolve('running test created!');
+          });
+
         });
+
       }
     });
   });
@@ -200,10 +241,41 @@ let saveTestRun = function (runningTest){
     testRun.save(function (err, savedTestRun) {
 
       if (err) {
-        reject(err);
+
+        /* In case of error still remove running test! */
+        runningTest.remove(function (err) {
+
+          var io = global.io;
+          var room = runningTest.productName + '-' + runningTest.dashboardName;
+
+
+          console.log('emitting message to room: ' + room);
+          io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
+          console.log('emitting message to room: running-test');
+          io.sockets.in('running-test').emit('runningTest', {event: 'removed', testrun: runningTest});
+
+          /* no matter if remove fails, still resolve*/
+          resolve(savedTestRun);
+
+        });
+
       } else {
 
+        var io = global.io;
+        var room = runningTest.productName + '-' + runningTest.dashboardName;
+
+        console.log('emitting message to room: ' + room);
+        io.sockets.in(room).emit('testrun', {event: 'saved', testrun: savedTestRun});
+        io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: savedTestRun});
+
         runningTest.remove(function (err) {
+
+
+          console.log('emitting message to room: ' + room);
+          io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
+          console.log('emitting message to room: running-test');
+          io.sockets.in('running-test').emit('runningTest', {event: 'removed', testrun: runningTest});
+
           /* no matter if remove fails, still resolve*/
             resolve(savedTestRun);
 

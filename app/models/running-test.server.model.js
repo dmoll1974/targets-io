@@ -43,15 +43,12 @@ var RunningTestSchema = new mongoose.Schema({
     },
     'buildResultsUrl': String,
     'humanReadableDuration': String,
+    'lastKnownDuration': Number,
     'rampUpPeriod': Number
 
 
 
-},
-    {
-        read: 'primary',
-        safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
-    });
+});
 
 RunningTestSchema.index({
     testRunId: 1,

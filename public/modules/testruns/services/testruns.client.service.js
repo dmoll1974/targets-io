@@ -13,6 +13,7 @@ angular.module('events').factory('TestRuns', [
       //metricFilter: '',
 
       listTestRunsForDashboard: listTestRunsForDashboard,
+      listRunningTestsForDashboard: listRunningTestsForDashboard,
       listTestRunsForProduct: listTestRunsForProduct,
       listTestRunsForProductRelease: listTestRunsForProductRelease,
       listProductReleasesFromTestRuns: listProductReleasesFromTestRuns,
@@ -62,6 +63,10 @@ angular.module('events').factory('TestRuns', [
       return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + limit );
     }
 
+    function listRunningTestsForDashboard(productName, dashboardName, limit) {
+      return $http.get('/running-tests-dashboard/' + productName + '/' + dashboardName);
+    }
+
     function listTestRunsForProduct(productName, limit) {
       return $http.get('/testruns-product/' + productName + '/' + limit);
     }
@@ -105,9 +110,7 @@ angular.module('events').factory('TestRuns', [
       return(humanReadbleDuration(totalDuration));
     }
 
-    function calculateDuration (testRun){
-
-      var duration = new Date().getTime() - new Date(testRun.start).getTime();
+    function calculateDuration (duration){
 
       return(humanReadbleDuration(duration));
     }
