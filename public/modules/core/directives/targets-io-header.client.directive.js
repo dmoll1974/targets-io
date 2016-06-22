@@ -52,7 +52,7 @@ function TargetsIoHeaderDirective () {
                 fetchProducts(function(products){
                     $scope.products = Products.items;
 
-                    if($rootScope.currentStateParams.productName) {
+                    if($rootScope.currentStateParams && $rootScope.currentStateParams.productName) {
 
 
                         var productIndex = $scope.products.map(function(product){return product.name;}).indexOf($rootScope.currentStateParams.productName);
