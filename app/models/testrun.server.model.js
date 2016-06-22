@@ -106,6 +106,8 @@ TestrunSchema.virtual('endEpoch').get(function () {
 });
 TestrunSchema.index({
   testRunId: 1,
-  dashboardId: 1
+  dashboardName: 1,
+  productName: 1
 }, { unique: true });
+
 mongoose.model('Testrun', TestrunSchema);
