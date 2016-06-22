@@ -282,47 +282,12 @@ function synchronizeRunningTestRuns () {
           /* mark test as not completed */
           runningTest.completed = false;
 
-          saveTestRun(runningTest)
-              .then(function () {
+          saveTestRun(runningTest).then(function(savedTestRun){
 
-                var room = runningTest.productName + '-' + runningTest.dashboardName;
+            console.log('removed running test: ' + savedTestRun.testRunId);
 
-                process.send({
-                  room: room,
-                  type: 'testrun',
-                  event: 'saved',
-                  testrun: runningTest
-                });
+          });
 
-
-                process.send({
-                  room: 'recent-test',
-                  type: 'testrun',
-                  event: 'saved',
-                  testrun: runningTest
-                });
-
-                runningTest.remove(function (err) {
-
-
-                  process.send({
-                    room: room,
-                    type: 'runningTest',
-                    event: 'removed',
-                    testrun: runningTest
-                  });
-
-                  process.send({
-                    room: 'running-test',
-                    type: 'runningTest',
-                    event: 'removed',
-                    testrun: runningTest
-                  });
-
-                });
-
-
-              });
         }
 
       });
@@ -356,12 +321,68 @@ let saveTestRun = function (runningTest){
 
       testRun.save(function (err, savedTestRun) {
         if (err) {
-          reject(err);
+
+          /* In case of error still remove running test! */
+          runningTest.remove(function (err) {
+
+
+            process.send({
+              room: room,
+              type: 'runningTest',
+              event: 'removed',
+              testrun: runningTest
+            });
+
+            process.send({
+              room: 'running-test',
+              type: 'runningTest',
+              event: 'removed',
+              testrun: runningTest
+            });
+
+            resolve(savedTestRun);
+
+
+          });
         } else {
 
-          resolve(savedTestRun);
+          var room = runningTest.productName + '-' + runningTest.dashboardName;
+
+          process.send({
+            room: room,
+            type: 'testrun',
+            event: 'saved',
+            testrun: runningTest
+          });
+
+
+          process.send({
+            room: 'recent-test',
+            type: 'testrun',
+            event: 'saved',
+            testrun: runningTest
+          });
+
+          runningTest.remove(function (err) {
+
+
+            process.send({
+              room: room,
+              type: 'runningTest',
+              event: 'removed',
+              testrun: runningTest
+            });
+
+            process.send({
+              room: 'running-test',
+              type: 'runningTest',
+              event: 'removed',
+              testrun: runningTest
+            });
+
+            resolve(savedTestRun);
+          });
         }
-      });
 
   });
 }

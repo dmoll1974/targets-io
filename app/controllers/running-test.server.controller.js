@@ -232,7 +232,20 @@ let saveTestRun = function (runningTest){
     testRun.save(function (err, savedTestRun) {
 
       if (err) {
-        reject(err);
+
+        /* In case of error still remove running test! */
+        runningTest.remove(function (err) {
+
+
+          console.log('emitting message to room: ' + room);
+          io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
+          console.log('emitting message to room: running-test');
+          io.sockets.in('running-test').emit('runningTest', {event: 'removed', testrun: runningTest});
+
+          /* no matter if remove fails, still resolve*/
+          resolve(savedTestRun);
+
+        });
 
       } else {
 
