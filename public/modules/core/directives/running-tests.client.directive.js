@@ -18,15 +18,16 @@ function RunningTestsDirective () {
 
             RunningTests.get().success(function(runningTests){
 
+
+                /* calculate progress */
+
+                _.each(runningTests, function(testRun, i){
+
+                    testRun.progress = (testRun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(testRun.start).getTime()) / testRun.lastKnownDuration * 100) : undefined;
+                    testRun.humanReadablelastKnownDuration = (testRun.lastKnownDuration) ? TestRuns.calculateDuration(testRun.lastKnownDuration): undefined;
+                })
+
                 $scope.runningTests = runningTests;
-
-                /* calculate duration */
-
-                //_.each($scope.runningTests, function(testRun, i){
-                //
-                //    $scope.runningTests[i].duration = TestRuns.calculateDuration(testRun);
-                //})
-
 
             });
 
@@ -46,7 +47,7 @@ function RunningTestsDirective () {
                     var testRun = message.testrun;
 
                     testRun.progress = (message.testrun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(message.testrun.start).getTime()) / message.testrun.lastKnownDuration * 100) : undefined;
-
+                    testRun.humanReadablelastKnownDuration = (message.testrun.lastKnownDuration) ? TestRuns.calculateDuration(message.testrun.lastKnownDuration): undefined;
                     var index = $scope.runningTests.map(function(runningTest){ return runningTest.testRunId; }).indexOf(message.testrun.testRunId);
 
                     if (index === -1){

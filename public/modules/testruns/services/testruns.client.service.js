@@ -110,9 +110,7 @@ angular.module('events').factory('TestRuns', [
       return(humanReadbleDuration(totalDuration));
     }
 
-    function calculateDuration (testRun){
-
-      var duration = new Date().getTime() - new Date(testRun.start).getTime();
+    function calculateDuration (duration){
 
       return(humanReadbleDuration(duration));
     }

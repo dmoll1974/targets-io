@@ -167,7 +167,7 @@ function updateRunningTest(runningTest) {
       if(storedRunningTest){
 
         storedRunningTest.keepAliveTimestamp = dateNow;
-        storedRunningTest.end = dateNow + 15 * 1000;
+        storedRunningTest.end = dateNow + 30 * 1000;
         storedRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date().getTime() - storedRunningTest.start.getTime());
         storedRunningTest.rampUpPeriod = runningTest.rampUpPeriod;
 
@@ -209,7 +209,7 @@ function updateRunningTest(runningTest) {
           newRunningTest.keepAliveTimestamp = dateNow + 30 * 1000;
           newRunningTest.lastKnownDuration = lastKnownDuration;
           newRunningTest.end = dateNow + 30 * 1000;
-          newRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(newRunningTest.end.getTime() - newRunningTest.start.getTime())
+          newRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date().getTime() - newRunningTest.start.getTime())
           newRunningTest.save(function(err, newRunningTest){
 
             var io = global.io;

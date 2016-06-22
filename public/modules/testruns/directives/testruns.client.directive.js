@@ -158,6 +158,7 @@ function TestrunsDirective () {
           var testRun = message.testrun;
 
           testRun.progress = (message.testrun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(message.testrun.start).getTime()) / message.testrun.lastKnownDuration * 100) : undefined;
+          testRun.humanReadablelastKnownDuration = (message.testrun.lastKnownDuration) ? TestRuns.calculateDuration(message.testrun.lastKnownDuration): undefined;
 
           var index = $scope.runningTests.map(function(runningTest){ return runningTest.testRunId; }).indexOf(message.testrun.testRunId);
 
@@ -249,8 +250,9 @@ function TestrunsDirective () {
         _.each(runningTests, function(runningTest){
 
           runningTest.progress = (runningTest.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(runningTest.start).getTime()) / runningTest.lastKnownDuration * 100) : undefined;
+          runningTest.humanReadablelastKnownDuration = (runningTest.lastKnownDuration) ? TestRuns.calculateDuration(runningTest.lastKnownDuration): undefined;
 
-          runningTest.progress = runningTest.progress < 100 ? runningTest.progress : undefined;
+          //runningTest.progress = runningTest.progress < 100 ? runningTest.progress : undefined;
         });
 
         /* set running tests */

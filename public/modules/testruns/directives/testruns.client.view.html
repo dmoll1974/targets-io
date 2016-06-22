@@ -55,9 +55,9 @@
                     {{runningTest.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
                 <td class="pointer">
-                    <div layout="row" layout-align="start center">
+                    <div layout="column" layout-align="center left">
                         <md-progress-linear data-ng-if="runningTest.progress"  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
-                        <!--<div data-ng-if="runningTest.progress" >{{runningTest.progress}}%</div>-->
+                        <div class="running-test" data-ng-if="runningTest.progress" >{{runningTest.progress}}% of {{runningTest.humanReadablelastKnownDuration}}</div>
                     </div>
                     <md-progress-linear data-ng-if="!runningTest.progress" flex md-mode="indeterminate"></md-progress-linear>
                 </td>
