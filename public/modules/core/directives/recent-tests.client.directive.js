@@ -67,6 +67,8 @@ function RecentTestsDirective () {
                         $scope.recentTests[index] = message.testrun;
                     }
 
+                    console.log('added test run: ' + message.testrun.testRunId);
+
                     break;
 
                 case 'removed':
@@ -74,6 +76,8 @@ function RecentTestsDirective () {
                     var index = $scope.recentTests.map(function(testRun){ return testRun.testRunId; }).indexOf(message.testrun.testRunId);
 
                     if(index !== -1) $scope.recentTests.splice(index, 1);
+
+                    console.log('removed test run: ' + message.testrun.testRunId);
 
                     break;
 
