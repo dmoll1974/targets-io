@@ -219,7 +219,7 @@ function TargetsIoHeaderDirective () {
             }else {
                 $scope.dashboardSelected = false;
                 if(checkProductState($rootScope.currentState) && $rootScope.currentState !== 'home' ) {
-                    $state.go('viewProduct', {productName: $scope.product.name});
+                    $state.go('viewProduct', {productName: $stateParams.productName});
                 }
             }
         }

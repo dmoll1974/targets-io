@@ -14,7 +14,7 @@ function RecentTestsDirective () {
     return directive;
 
     /* @ngInject */
-    function RecentTestsDirectiveController ($scope, $state, $interval, TestRuns, mySocket) {
+    function RecentTestsDirectiveController ($scope, $state, $interval, $timeout, TestRuns, mySocket) {
 
         $scope.completedTestRunsOnly = true;
 
@@ -41,8 +41,13 @@ function RecentTestsDirective () {
 
         var room = 'recent-test';
 
-        mySocket.emit('room', room);
-        console.log('Joined room: ' + room);
+        $timeout(function(){
+
+            mySocket.emit('room', room);
+            console.log('Joined room: ' + room);
+
+        },100);
+
 
 
         mySocket.on('testrun', function (message) {

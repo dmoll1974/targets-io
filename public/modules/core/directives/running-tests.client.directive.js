@@ -14,7 +14,7 @@ function RunningTestsDirective () {
     return directive;
 
     /* @ngInject */
-    function RunningTestsDirectiveController ($scope, $state, $interval, RunningTests, TestRuns, mySocket) {
+    function RunningTestsDirectiveController ($scope, $state, $interval, $timeout, RunningTests, TestRuns, mySocket) {
 
             RunningTests.get().success(function(runningTests){
 
@@ -35,9 +35,14 @@ function RunningTestsDirective () {
 
         var room = 'running-test';
 
-        mySocket.emit('room', room);
-        console.log('Joined room: ' + room);
 
+        $timeout(function(){
+
+            mySocket.emit('room', room);
+            console.log('Joined room: ' + room);
+
+        },100);
+        
 
         mySocket.on('runningTest', function (message) {
             switch (message.event) {
