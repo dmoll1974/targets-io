@@ -98,7 +98,8 @@ if(cluster.isMaster) {
 	io.adapter(redis_io({host: config.redisHost, port: config.redisPort }));
 
 	io.on('connection', function(socket) {
-		console.log('Client connected...');
+
+		console.log('Client connected');
 
 		// once a client has connected, we expect to get a ping from them saying what room they want to join
 		socket.on('room', function(room) {
@@ -114,6 +115,10 @@ if(cluster.isMaster) {
 			console.log('Client left room: ' + room);
 
 
+		});
+
+		socket.on('disconnect', function() {
+			console.log('Client disconnected!');
 		});
 	});
 

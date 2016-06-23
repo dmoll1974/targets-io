@@ -41,12 +41,12 @@ function RecentTestsDirective () {
 
         var room = 'recent-test';
 
-        mySocket.on('connect', function(){
-
-            mySocket.emit('room', room);
-            console.log('Joined room: ' + room);
-
-        });
+        //mySocket.on('connect', function(){
+        //
+        //    mySocket.emit('room', room);
+        //    console.log('Joined room: ' + room);
+        //
+        //});
 
 
 
