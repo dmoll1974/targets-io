@@ -41,12 +41,12 @@ function RecentTestsDirective () {
 
         var room = 'recent-test';
 
-        $timeout(function(){
+        mySocket.on('connect', function(){
 
             mySocket.emit('room', room);
             console.log('Joined room: ' + room);
 
-        },100);
+        });
 
 
 

@@ -36,13 +36,12 @@ function RunningTestsDirective () {
         var room = 'running-test';
 
 
-        $timeout(function(){
+        mySocket.on('connect', function(){
 
             mySocket.emit('room', room);
             console.log('Joined room: ' + room);
 
-        },100);
-
+        });
 
         mySocket.on('runningTest', function (message) {
             switch (message.event) {
