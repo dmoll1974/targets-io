@@ -33,7 +33,7 @@
             <td></td>
         </tr>
         <tbody>
-        <tr ng-repeat="runningTest in runningTests" class="hover-row pointer" >
+        <tr ng-repeat="runningTest in runningTests | orderBy: runningTest.start:true" class="hover-row pointer" >
             <td ui-sref="viewProduct({productName: runningTest.productName})" title="Open product">
                 {{runningTest.productName}}
             </td>
