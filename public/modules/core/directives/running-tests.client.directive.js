@@ -60,7 +60,7 @@ function RunningTestsDirective () {
                         $scope.runningTests[index] = testRun;
                     }
 
-                    console.log('added running test: ' + message.testrun.testRunId);
+                    //console.log('added running test: ' + message.testrun.testRunId);
 
                     break;
 
@@ -69,7 +69,7 @@ function RunningTestsDirective () {
                     var index = $scope.runningTests.map(function(runningTest){ return runningTest.testRunId; }).indexOf(message.testrun.testRunId);
                     $scope.runningTests.splice(index, 1);
 
-                    console.log('removed running test: ' + message.testrun.testRunId);
+                    //console.log('removed running test: ' + message.testrun.testRunId);
 
                     break;
 
