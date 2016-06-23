@@ -88,7 +88,7 @@ if(cluster.isMaster) {
 		console.log('worker:' + cluster.worker.id + ', process ' + process.pid + ' is listening to all incoming requests');
 	});
 
-	var io = require('socket.io').listen(server);
+	var io = require('socket.io').listen(server, {'transports': ['websocket']});
 
 	var redis_io = require('socket.io-redis');
 	var redis = require("redis");
