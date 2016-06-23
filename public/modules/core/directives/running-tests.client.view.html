@@ -52,11 +52,14 @@
             </td>
 
             <td class="pointer">
-                <div layout="column" layout-align="center left">
-                    <md-progress-linear data-ng-if="runningTest.progress"  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
-                    <div class="running-test" data-ng-if="runningTest.progress" >{{runningTest.progress}}% of {{runningTest.humanReadablelastKnownDuration}}</div>
+                <div layout="column" data-ng-if="runningTest.progress !== undefined" layout-align="center left">
+                    <md-progress-linear  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
+                    <div class="running-test">{{runningTest.progress}}% of {{runningTest.humanReadablelastKnownDuration}}</div>
                 </div>
-                <md-progress-linear data-ng-if="!runningTest.progress" flex md-mode="indeterminate"></md-progress-linear>
+                <div layout="column" data-ng-if="runningTest.progress === undefined" layout-align="center left">
+                    <md-progress-linear  flex md-mode="indeterminate"></md-progress-linear>
+                    <div class="running-test">Unknown</div>
+                </div>
             </td>
         </tr>
         </tbody>

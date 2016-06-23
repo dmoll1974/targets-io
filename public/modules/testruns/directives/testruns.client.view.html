@@ -2,12 +2,6 @@
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div layout="column">
 
-        <div layout="row" ng-if="runningTest" layout-align="start center">
-            <span class="md-padding" >{{wilyExportRunningTestRunId}}</span>
-            <md-progress-linear class="md-padding" md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
-            <span class="md-padding">{{determinateValue}}%</span>
-
-        </div>
         <div layout="row" id="fixedBaselineToast" >
             <div flex="95">
                 <md-checkbox style="margin-bottom: 0px;" ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
@@ -55,11 +49,14 @@
                     {{runningTest.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
                 <td class="pointer">
-                    <div layout="column" layout-align="center left">
-                        <md-progress-linear data-ng-if="runningTest.progress"  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
-                        <div class="running-test" data-ng-if="runningTest.progress" >{{runningTest.progress}}% of {{runningTest.humanReadablelastKnownDuration}}</div>
+                    <div layout="column" data-ng-if="runningTest.progress !== undefined" layout-align="center left">
+                        <md-progress-linear  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
+                        <div class="running-test">{{runningTest.progress}}% of {{runningTest.humanReadablelastKnownDuration}}</div>
                     </div>
-                    <md-progress-linear data-ng-if="!runningTest.progress" flex md-mode="indeterminate"></md-progress-linear>
+                    <div layout="column" data-ng-if="runningTest.progress === undefined" layout-align="center left">
+                        <md-progress-linear  flex md-mode="indeterminate"></md-progress-linear>
+                        <div class="running-test">Unknown</div>
+                    </div>
                 </td>
                 <td class="pointer">{{runningTest.humanReadableDuration}}
                 </td>

@@ -196,7 +196,7 @@ function updateRunningTest(runningTest) {
             {dashboardName: runningTest.dashboardName},
             {completed: true}
           ]
-        }).exec(function (err, testRun) {
+        }).sort({end: -1}).exec(function (err, testRun) {
 
 
           var lastKnownDuration = testRun ? new Date(testRun.end).getTime() - new Date(testRun.start).getTime() : undefined;
