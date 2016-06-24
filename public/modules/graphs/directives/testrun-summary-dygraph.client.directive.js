@@ -211,14 +211,14 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
             dataline[0] = new Date(dataline[0]);
 
-          /* set null values to NaN to show holes in graphs */
-          _.each(dataline, function(datalineItem){
-
-            if (datalineItem[0] === null) {
-              datalineItem[0] = NaN;
-            }
-
-          })
+          ///* set null values to NaN to show holes in graphs */
+          //_.each(dataline, function(datalineItem){
+          //
+          //  if (datalineItem[0] === null) {
+          //    datalineItem[0] = NaN;
+          //  }
+          //
+          //})
 
 
       })
