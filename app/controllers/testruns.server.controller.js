@@ -279,16 +279,40 @@ function testRunsForProduct(req, res) {
  * get distinct releases for product
  */
 function productReleasesFromTestRuns(req, res) {
-  Testrun.find({productName: req.params.productName}).distinct('productRelease').sort().exec(function (err, releases) {
+
+  Product.findOne({name: req.params.productName}).exec(function(err, product){
+
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+
     } else {
+      Testrun.find({$and: [{productName: product.name}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
+        if (err) {
+          return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+        } else {
 
 
-      res.jsonp(releases);
+          res.jsonp(distinctReleases(filterTestRunsBasedOnRequirements(testRuns, product.requirements)));
 
+        }
+      });
     }
-  });
+  })
+}
+
+function distinctReleases(testRuns){
+
+  var distinctReleases = [];
+
+  _.each(testRuns, function(testRun){
+
+    if(distinctReleases.indexOf(testRun.productRelease) === -1){
+
+      if(testRun.productRelease !== '') distinctReleases.push(testRun.productRelease);
+    }
+  })
+
+  return distinctReleases;
 }
 /**
  * select test runs for product release
@@ -306,26 +330,7 @@ function testRunsForProductRelease(req, res) {
           return res.status(400).send({message: errorHandler.getErrorMessage(err)});
         } else {
 
-          var filteredTestruns = [];
-
-          _.each(testRuns, function (testRun, i) {
-
-            /* Only send test runs for dashboards that are linked to product requirements */
-
-            _.each(product.requirements, function(requirement){
-
-              if(requirement.relatedDashboards.indexOf(testRun.dashboardName) !== -1) {
-
-                if (filteredTestruns.indexOf(testRun) == -1) {
-                  testRuns[i].humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
-                  filteredTestruns.push(testRun);
-                }
-
-              }
-            })
-          });
-
-          res.jsonp(filteredTestruns);
+          res.jsonp(filterTestRunsBasedOnRequirements(testRuns, product.requirements));
 
         }
       });
@@ -333,6 +338,29 @@ function testRunsForProductRelease(req, res) {
   })
 }
 
+function filterTestRunsBasedOnRequirements(testRuns, requirements){
+
+  var filteredTestruns = [];
+
+  _.each(testRuns, function (testRun, i) {
+
+    /* Only send test runs for dashboards that are linked to product requirements */
+
+    _.each(requirements, function(requirement){
+
+      if(requirement.relatedDashboards.indexOf(testRun.dashboardName) !== -1) {
+
+        if (filteredTestruns.indexOf(testRun) == -1) {
+          testRuns[i].humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
+          filteredTestruns.push(testRun);
+        }
+
+      }
+    })
+  });
+
+  return filteredTestruns;
+}
   function createTestRunSummaryFromEvents(events, callback) {
     var testRuns = [];
     for (var i = 0; i < events.length; i++) {
