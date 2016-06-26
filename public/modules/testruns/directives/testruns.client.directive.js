@@ -559,7 +559,7 @@ function TestrunsDirective () {
         controller: DialogController
       });
       function DialogController($scope, $mdDialog, testRun, TestRuns) {
-        testRun = testRun;
+        $scope.testRun = testRun;
         $scope.closeDialog = function () {
           TestRuns.update(testRun).success(function () {
 
