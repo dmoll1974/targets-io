@@ -15,7 +15,7 @@ function TestrunsDirective () {
   return directive;
 
   /* @ngInject */
-  function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $q, $interval, $timeout, $window, mySocket, Graphite) {
+  function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $q, $interval, $timeout, $window, $mdDialog, mySocket, Graphite) {
 
 
     var vm = this;
