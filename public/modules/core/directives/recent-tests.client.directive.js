@@ -81,19 +81,21 @@ function RecentTestsDirective () {
         });
 
 
+        getRecentTests();
 
-            TestRuns.getRecentTestruns($scope.recentTestPeriod).success(function(recentTests){
+        function getRecentTests() {
+            TestRuns.getRecentTestruns($scope.recentTestPeriod).success(function (recentTests) {
 
                 $scope.recentTests = recentTests;
 
             });
 
-
+        }
 
 
         $scope.updaterecentTestRuns = function(){
 
-            pollRecentTests();
+            getRecentTests();
         }
 
         $scope.$on('$destroy', function () {
