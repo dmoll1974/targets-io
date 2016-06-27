@@ -43,38 +43,66 @@ function TestRunSummaryDirective () {
 
         $scope.summarySaved = false;
 
-        /* get test run info */
+        createTestRunSummary (false);
+      }
+  });
 
-        TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+    function createTestRunSummary (update){
 
-          $scope.testRunSummary.productName = testRun.productName;
-          $scope.testRunSummary.productRelease = testRun.productRelease;
-          $scope.testRunSummary.dashboardName = testRun.dashboardName;
-          $scope.testRunSummary.testRunId = testRun.testRunId;
-          $scope.testRunSummary.start = testRun.start;
-          $scope.testRunSummary.end = testRun.end;
-          $scope.testRunSummary.humanReadableDuration = testRun.humanReadableDuration;
-          $scope.testRunSummary.annotations = (testRun.annotations)? testRun.annotations : 'None';
-          if (testRun.buildResultsUrl){
-            $scope.testRunSummary.buildResultsUrl = testRun.buildResultsUrl;
-            /* in case of Jenkins CI server, get last two url parameters to display */
-            var splitbuildResultsUrl = testRun.buildResultsUrl.split('/');
-            $scope.testRunSummary.buildResultsUrlDisplay = splitbuildResultsUrl[splitbuildResultsUrl.length -3] + ' #' + splitbuildResultsUrl[splitbuildResultsUrl.length -2];
-          }
+      /* get test run info */
 
+      TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
 
-          /* get dashboard info */
-
-          Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
-
-            $scope.testRunSummary.description = dashboard.description;
-            $scope.testRunSummary.goal = dashboard.goal;
+        $scope.testRunSummary.productName = testRun.productName;
+        $scope.testRunSummary.productRelease = testRun.productRelease;
+        $scope.testRunSummary.dashboardName = testRun.dashboardName;
+        $scope.testRunSummary.testRunId = testRun.testRunId;
+        $scope.testRunSummary.start = testRun.start;
+        $scope.testRunSummary.end = testRun.end;
+        $scope.testRunSummary.humanReadableDuration = testRun.humanReadableDuration;
+        $scope.testRunSummary.annotations = (testRun.annotations)? testRun.annotations : 'None';
+        if (testRun.buildResultsUrl){
+          $scope.testRunSummary.buildResultsUrl = testRun.buildResultsUrl;
+          /* in case of Jenkins CI server, get last two url parameters to display */
+          var splitbuildResultsUrl = testRun.buildResultsUrl.split('/');
+          $scope.testRunSummary.buildResultsUrlDisplay = splitbuildResultsUrl[splitbuildResultsUrl.length -3] + ' #' + splitbuildResultsUrl[splitbuildResultsUrl.length -2];
+        }
 
 
-            /* merge requirements results from test run data*/
 
-            $scope.testRunSummary.metrics = addRequirementsResultsForTestRun(dashboard.metrics, testRun.metrics);
+        /* get dashboard info */
 
+        Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+
+          $scope.testRunSummary.description = dashboard.description;
+          $scope.testRunSummary.goal = dashboard.goal;
+
+          /* add requirements */
+          addRequirements(testRun.metrics, dashboard.metrics);
+
+
+          if (update === true){
+
+            var newTestRunSummaryMetrics = [];
+
+            newTestRunSummaryMetrics = getNewMetrics(dashboard.metrics, $scope.testRunSummary.metrics);
+
+            _.each(addMetricsToSummary(newTestRunSummaryMetrics), function(newMetric){
+
+              newMetric.summaryText = (newMetric.defaultSummaryText) ? newMetric.defaultSummaryText : '';
+              $scope.testRunSummary.metrics.push(newMetric);
+
+            })
+
+
+
+            $scope.updated = true;
+
+          }else{
+
+            /* Add metrics*/
+
+            $scope.testRunSummary.metrics = addMetricsToSummary(dashboard.metrics);
 
             /* add default annotation texts to model */
 
@@ -85,12 +113,53 @@ function TestRunSummaryDirective () {
             })
 
 
-          });
+          }
+
 
 
         });
-      }
-  });
+
+
+      });
+
+    }
+
+    function getNewMetrics(testRunMetrics, testRunSummaryMetrics){
+
+      var newMetrics = [];
+
+      _.each(testRunMetrics, function(testRunMetric){
+
+        var index = testRunSummaryMetrics.map(function(testRunSummaryMetric){return testRunSummaryMetric._id;}).indexOf(testRunMetric._id);
+
+        if(index === -1 && testRunMetric.includeInSummary === true ) newMetrics.push(testRunMetric);
+
+
+      })
+
+      return newMetrics;
+    }
+
+    $scope.restoreDefaultAnnotation = function(metric){
+
+      Metrics.get(metric._id).success(function(storedMetric){
+
+        var index =  $scope.testRunSummary.metrics.map(function(testRunSummaryMetric){return testRunSummaryMetric._id;}).indexOf(storedMetric._id);
+
+        $scope.testRunSummary.metrics[index].summaryText = storedMetric.defaultSummaryText;
+        $scope.updated = true;
+
+      })
+    }
+
+    $scope.deleteFromTestRunSummary = function(metric){
+
+      var index =  $scope.testRunSummary.metrics.map(function(testRunSummaryMetric){return testRunSummaryMetric._id;}).indexOf(metric._id);
+
+      $scope.testRunSummary.metrics.splice(index, 1);
+
+      $scope.updated = true;
+    }
 
     $scope.gatlingDetails = function(testRunId){
 
@@ -102,7 +171,7 @@ function TestRunSummaryDirective () {
       });
     }
 
-    function addRequirementsResultsForTestRun(dashboardMetrics, testRunMetrics) {
+    function addMetricsToSummary(dashboardMetrics) {
 
       var summaryIndex = 0;
       var metricsInSummary = [];
@@ -126,27 +195,35 @@ function TestRunSummaryDirective () {
           metricsInSummary.push(dashboardMetric);
         }
 
-
-        _.each(testRunMetrics, function (testRunMetric) {
-
-          if(dashboardMetric.alias === testRunMetric.alias && testRunMetric.meetsRequirement !== null){
-
-            dashboardMetric.meetsRequirement = testRunMetric.meetsRequirement;
-
-            var requirementText =  dashboardMetric.requirementOperator == "<" ? dashboardMetric.alias + ' should be lower than ' + dashboardMetric.requirementValue : dashboardMetric.alias + ' should be higher than ' + dashboardMetric.requirementValue;
-
-            var tag = dashboardMetric.tags.length > 0 ? dashboardMetric.tags[0].text : 'All';
-
-            $scope.testRunSummary.requirements.push({metricAlias: dashboardMetric.alias, tag: tag, requirementText: requirementText, meetsRequirement:testRunMetric.meetsRequirement });
-          }
-
-
-        });
       });
 
       return metricsInSummary.sort(Utils.dynamicSort('summaryIndex'));
+
     }
 
+    function addRequirements(testRunMetrics, dashboardMetrics){
+
+      if($scope.testRunSummary.requirements.length > 0) $scope.testRunSummary.requirements = [];
+
+      _.each(dashboardMetrics, function (dashboardMetric, i) {
+
+          _.each(testRunMetrics, function (testRunMetric) {
+
+            if(dashboardMetric.alias === testRunMetric.alias && testRunMetric.meetsRequirement !== null){
+
+              dashboardMetric.meetsRequirement = testRunMetric.meetsRequirement;
+
+              var requirementText =  dashboardMetric.requirementOperator == "<" ? dashboardMetric.alias + ' should be lower than ' + dashboardMetric.requirementValue : dashboardMetric.alias + ' should be higher than ' + dashboardMetric.requirementValue;
+
+              var tag = dashboardMetric.tags.length > 0 ? dashboardMetric.tags[0].text : 'All';
+
+              $scope.testRunSummary.requirements.push({metricAlias: dashboardMetric.alias, tag: tag, requirementText: requirementText, meetsRequirement:testRunMetric.meetsRequirement });
+            }
+
+
+          });
+      });
+    }
 
     $scope.moveUp = function(metricToMove){
 
@@ -326,11 +403,17 @@ function TestRunSummaryDirective () {
         }, function () {
 
           /* return to previous state*/
-          $state.go($rootScope.previousState, $rootScope.previousStateParams);
+          //$state.go($rootScope.previousState, $rootScope.previousStateParams);
 
         });
       }
     });
+
+    $scope.reloadTestRunSummary = function(){
+
+      createTestRunSummary(true);
+
+    }
 
 
     $scope.openDeleteModal = function (size, testRunSummary) {

@@ -17,6 +17,7 @@ var mongoose = require('mongoose'),
     Metric = mongoose.model('Metric'),
     async = require('async'),
     RunningTest = mongoose.model('RunningTest'),
+    Release = mongoose.model('Release'),
     cache = require('./redis.server.controller'),
     ss = require('simple-statistics');
 
@@ -291,10 +292,25 @@ function productReleasesFromTestRuns(req, res) {
           return res.status(400).send({message: errorHandler.getErrorMessage(err)});
         } else {
 
+          var releaseFromTestRuns = distinctReleases(filterTestRunsBasedOnRequirements(testRuns, product.requirements));
 
-          res.jsonp(distinctReleases(filterTestRunsBasedOnRequirements(testRuns, product.requirements)));
+          Release.find({name: product.name}).exec(function (err, releases) {
+            if (err) {
+              return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+            } else {
+
+              _.each(releases, function (release) {
+
+                if (releaseFromTestRuns.indexOf(release) === -1) releaseFromTestRuns.push(release.productRelease);
+
+              });
+
+              res.jsonp(releaseFromTestRuns);
+            }
+          })
 
         }
+
       });
     }
   })

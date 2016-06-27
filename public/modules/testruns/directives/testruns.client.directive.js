@@ -96,7 +96,7 @@ function TestrunsDirective () {
     });
 
 
-    $scope.$watch('$scope.allTestRunsSelected', function (newVal, oldVal) {
+    $scope.$watch('allTestRunsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         _.each($scope.testRuns, function (testRun, i) {
           testRun.selected = newVal;

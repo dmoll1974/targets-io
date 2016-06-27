@@ -249,7 +249,7 @@ function ProductReleaseDetailsDirective () {
         }, function () {
 
           /* return to previous state*/
-          $state.go($rootScope.previousState, $rootScope.previousStateParams);
+          //$state.go($rootScope.previousState, $rootScope.previousStateParams);
         });
       }
     });
