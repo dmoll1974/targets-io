@@ -527,6 +527,7 @@ function TestrunsDirective () {
 
       $scope.loading = true;
 
+      activate();
 
     }
 
