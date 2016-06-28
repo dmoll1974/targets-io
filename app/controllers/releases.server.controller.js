@@ -60,7 +60,7 @@ function upsert(req, res){
             {name: req.body.name},
             {productRelease: req.body.productRelease}
         ]
-    }, {releaseLinks: req.body.releaseLinks, releaseTestRuns: req.body.releaseTestRuns}, {upsert: true}, function (err, release) {
+    }, {releaseLinks: req.body.releaseLinks, releaseTestRuns: req.body.releaseTestRuns, markDown: req.body.markDown}, {upsert: true}, function (err, release) {
                 if (err) {
                     return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
                 } else {

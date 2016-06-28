@@ -14,7 +14,7 @@ function ProductReleaseDetailsDirective () {
 
 
   /* @ngInject */
-  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, $mdToast, $location, $anchorScroll) {
+  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, $mdToast, $location, $anchorScroll, $showdown) {
 
     /* if coming from add link screen, set edit mode and updated to true */
     $scope.editMode = $rootScope.previousState.includes('addProductReleaseLink')? true : false;
@@ -27,6 +27,13 @@ function ProductReleaseDetailsDirective () {
       originatorEv = ev;
       $mdOpenMenu(ev);
     };
+
+    //$scope.$watch('markDownInput', function (newVal, oldVal) {
+    //  if (newVal !== oldVal) {
+    //
+    //    $scope.markdown = $showdown.makeHtml(newVal)  ;
+    //  }
+    //});
 
 
     Products.getProductRelease($stateParams.productName, $stateParams.productRelease).success(function(productRelease){

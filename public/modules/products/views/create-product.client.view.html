@@ -31,6 +31,10 @@
                             <div ng-message="required">Product description is required.</div>
                         </div>
                     </md-input-container>
+                    <md-input-container flex>
+                        <label>Default report markdown</label>
+                        <textarea  ng-model="product.markDown" placeholder="Enter Markdown text here"  class="markdown-textarea"></textarea>
+                    </md-input-container>
                 </div>
                 <div layout="row">
                     <md-button md-no-ink class="md-primary" ng-click="productForm.$valid && create()">Submit</md-button>

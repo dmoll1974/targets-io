@@ -50,10 +50,15 @@
         </table>
         </div>
     </div>
+    <h3 ng-show="editMode === true">Markdown</h3>
+    <textarea ng-show="editMode === true" ng-model="product.markDown" placeholder="Enter Markdown text here" ng-change="updated = true;" class="markdown-textarea"></textarea>
+    <div ng-show="editMode === true" >
+        <h3>Preview</h3>
+        <p markdown-to-html="product.markDown" class="preview"></p>
+    </div>
+    <p ng-show="product.markDown.length > 0 && editMode !== true" markdown-to-html="product.markDown"></p>
 
-
-
-    <h3>Release test runs</h3>
+        <h3>Release test runs</h3>
 
     <div  style="margin-bottom: 5px;" ng-repeat="testRunIndexItem in testRunIndexItems | orderBy:'-end':true">
         <a class="md-padding" href="" ng-click="scrollTo(testRunIndexItem.testRunId)">{{testRunIndexItem.description}}</a><br/>

@@ -68,7 +68,7 @@ function TestrunsDirective () {
 
     /* watches */
 
-    $scope.$watch('$scope.loading', function (current, old) {
+    $scope.$watch('loading', function (current, old) {
       if (current !== old) {
         if (current === true) {
           // Iterate every 100ms, non-stop

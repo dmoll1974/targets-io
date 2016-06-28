@@ -35,6 +35,7 @@ module.exports = {
 			js: [
 				'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/angular/angular.min.js',
+				'public/lib/angular-sanitize/angular-sanitize.min.js',
 				'public/lib/angular-aria/angular-aria.min.js',
 				'public/lib/angular-animate/angular-animate.min.js',
 				'public/lib/angular-material/angular-material.min.js',
@@ -43,6 +44,8 @@ module.exports = {
 				'public/lib/angular-ui-utils/ui-utils.min.js',
 				'public/lib/angular-messages/angular-messages.min.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+				'public/lib/showdown/dist/showdown.js',
+				'public/lib/ng-showdown/dist/ng-showdown.js',
 				'public/lib/moment/moment.js',
 				'public/lib/angular-spinners/dist/angular-spinners.js',
 				'public/lib/angular-busy/dist/angular-busy.js',

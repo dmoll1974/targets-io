@@ -31,7 +31,9 @@ exports.update = function (req, res) {
   //product = _.extend(product , req.body);
   product.name = req.body.name;
   product.description = req.body.description;
+  product.markDown = req.body.markDown;
   product.requirements = req.body.requirements;
+
   product.save(function (err) {
     if (err) {
       console.log(err);
