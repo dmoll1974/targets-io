@@ -301,7 +301,7 @@ function productReleasesFromTestRuns(req, res) {
 
               _.each(releases, function (release) {
 
-                if (releaseFromTestRuns.indexOf(release) === -1) releaseFromTestRuns.push(release.productRelease);
+                if (releaseFromTestRuns.indexOf(release.productRelease) === -1) releaseFromTestRuns.push(release.productRelease);
 
               });
 
