@@ -8,14 +8,14 @@
     </md-button>
     <md-menu-content width="4">
         <md-menu-item>
-            <md-button data-ng-click="addProduct()">
+            <md-button class="targets-io-menu-button" data-ng-click="addProduct()">
                 <md-icon md-svg-src="images/assets/ic_add_black_36px.svg"
                          md-menu-align-target></md-icon>
                 Add product
             </md-button>
         </md-menu-item>
         <md-menu-item ng-if="product">
-            <md-button data-ng-click="editProduct(product.name)">
+            <md-button class="targets-io-menu-button" data-ng-click="editProduct(product.name)">
                 <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"
                          md-menu-align-target></md-icon>
                 Edit product
@@ -23,7 +23,7 @@
         </md-menu-item>
         <md-menu-divider ng-if="product"></md-menu-divider>
         <md-menu-item ng-if="product">
-            <md-button data-ng-click="editProductRequirememts()">
+            <md-button class="targets-io-menu-button" data-ng-click="editProductRequirememts()">
                 <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"
                          md-menu-align-target></md-icon>
                 Product requirements
@@ -31,7 +31,7 @@
         </md-menu-item>
         <md-menu-divider ng-if="product"></md-menu-divider>
         <md-menu-item ng-if="product">
-            <md-button class="danger" data-ng-click="openDeleteProductModal('', $index)">
+            <md-button class="targets-io-menu-button"  data-ng-click="openDeleteProductModal('', $index)">
                 <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"></md-icon>
                 Delete product
             </md-button>

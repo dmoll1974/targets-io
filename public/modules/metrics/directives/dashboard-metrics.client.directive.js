@@ -36,7 +36,9 @@ function DashboardMetricsDirective () {
     vm.clearMetricFilter = clearMetricFilter;
     vm.cancel = cancel;
     vm.openMenu = openMenu;
-
+    vm.metricsInTestRunSummary = metricsInTestRunSummary;
+    vm.resetAllBenchmarks = resetAllBenchmarks;
+    vm.metricSelected = false;
 
     var originatorEv;
 
@@ -120,6 +122,57 @@ function DashboardMetricsDirective () {
 
     }
 
+    function metricsInTestRunSummary(value){
+
+      var metricsToUpdate = [];
+
+      _.each(vm.filteredMetrics, function(metric, i){
+
+        if(metric.selected === true){
+
+          metric.includeInSummary = value;
+          metricsToUpdate.push(Metrics.update(metric));
+
+
+        }
+      });
+
+      $q.all(metricsToUpdate)
+          .then(Dashboards.get(vm.productName, vm.dashboardName))
+          .then(function () {
+            vm.allMetricsSelected = false;
+            vm.dashboard = Dashboards.selected;
+
+          });
+
+    }
+
+    function resetAllBenchmarks(){
+
+      var metricsToUpdate = [];
+
+      _.each(vm.filteredMetrics, function(metric, i){
+
+        if(metric.selected === true){
+
+          metric.benchmarkOperator = null;
+          metric.benchmarkValue = null;
+          metric.requirementOperator = null;
+          metric.requirementValue = null;
+          metricsToUpdate.push(Metrics.update(metric));
+
+
+        }
+      });
+
+      $q.all(metricsToUpdate)
+          .then(Dashboards.get(vm.productName, vm.dashboardName))
+          .then(function () {
+            vm.allMetricsSelected = false;
+            vm.dashboard = Dashboards.selected;
+          });
+
+    }
 
     function addMetric() {
         //            console.log('add/metric/' + $stateParams.productName + '/' + $stateParams.dashboardName)
@@ -236,7 +289,7 @@ function DashboardMetricsDirective () {
 
           $q.all(deleteMetricArrayOfPromises)
               .then(Dashboards.get(vm.productName, vm.dashboardName))
-              .success(function () {
+              .then(function () {
                 vm.allMetricsSelected = false;
                 vm.dashboard = Dashboards.selected;
               });

@@ -11,7 +11,7 @@
             </div>
 
             <div flex="5">
-                <md-button style="margin-left: 10px;" ng-class="{'disabled': testRunSelected === false }" class="md-accent md-icon-button" ng-click="testRunSelected && openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >
+                <md-button style="margin-left: 5px;" ng-class="{'disabled': testRunSelected === false }" class="md-accent md-icon-button" ng-click="testRunSelected && openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >
                     <md-tooltip>
                         Delete selected test runs
                     </md-tooltip>
@@ -110,47 +110,47 @@
                         </div>
                         <md-menu-content width="4">
                             <md-menu-item>
-                                <md-button data-ng-click="refreshTestrun(testRun)">
+                                <md-button class="targets-io-menu-button" data-ng-click="refreshTestrun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_refresh_black_36px.svg"
                                              md-menu-align-target></md-icon>
-                                    Update benchmarks
+                                    UPDATE BENCHMARKS
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item data-ng-if="showBenchmarks && testRun.testRunId !== dashboard.baseline && testRun.completed === true">
-                                <md-button data-ng-click="setTestRunAsBaseline(testRun.testRunId)">
+                                <md-button class="targets-io-menu-button" data-ng-click="setTestRunAsBaseline(testRun.testRunId)">
                                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
-                                    Set as baseline
+                                    SET AS BASELINE
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item data-ng-if="testRun.buildResultsUrl">
-                                <md-button data-ng-click="go(testRun.buildResultsUrl)">
+                                <md-button class="targets-io-menu-button" data-ng-click="go(testRun.buildResultsUrl)">
                                     <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
-                                    View in CI server
+                                    VIEW IN CI SERVER
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item data-ng-if="testRun.completed === false">
-                                <md-button data-ng-click="markAsComplete(testRun)">
+                                <md-button class="targets-io-menu-button" data-ng-click="markAsComplete(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_check_circle_black_24px.svg"></md-icon>
-                                    Mark test run as complete
+                                    MARK TEST RUN AS COMPLETE
                                 </md-button>
                             </md-menu-item>
                             <md-menu-divider></md-menu-divider>
                             <md-menu-item>
-                                <md-button  data-ng-click="editTestRun(testRun)">
+                                <md-button class="targets-io-menu-button"  data-ng-click="editTestRun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
-                                    Edit test run
+                                    EDIT TEST RUN
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button  data-ng-click="viewTestRunSummary(testRun)">
+                                <md-button  class="targets-io-menu-button" data-ng-click="viewTestRunSummary(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
-                                    View test run summary
+                                    VIEW TEST RUN SUMMARY
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button class="danger" data-ng-click="flushCache(testRun)">
+                                <md-button class="targets-io-menu-button"  data-ng-click="flushCache(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>
-                                    Flush cache
+                                    FLUSH CACHE
                                 </md-button>
                             </md-menu-item>
                         </md-menu-content>
