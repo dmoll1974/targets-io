@@ -322,6 +322,7 @@ let saveTestRun = function (runningTest){
       testRun.save(function (err, savedTestRun) {
         if (err) {
 
+          console.log(err);
           /* In case of error still remove running test! */
           runningTest.remove(function (err) {
 
