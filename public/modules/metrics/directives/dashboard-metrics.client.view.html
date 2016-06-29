@@ -165,8 +165,9 @@
                    {{metric.alias}}
                 </td>
                 <td ng-click="vm.editMetric(metric._id)">
-                    <span ng-repeat="tag in metric.tags track by $index">{{tag.text}}<span
-                            data-ng-show="!$last">, </span></span>
+                    <span ng-repeat="tag in metric.tags track by $index">{{tag.text}}
+                        <span data-ng-show="!$last">, </span>
+                    </span>
                 </td>
                 <td ng-click="vm.editMetric(metric._id)"><span>{{metric.requirementOperator}} {{metric.requirementValue}}</span></td>
                 <td ng-click="vm.editMetric(metric._id)"><span data-ng-if="metric.benchmarkOperator">{{metric.benchmarkOperator === '>'?'+':'-'}} {{metric.benchmarkValue}}</span>
