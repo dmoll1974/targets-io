@@ -182,8 +182,8 @@ function TargetsIoHeaderDirective () {
                 'editProductRequirement',
                 'addProductReleaseLink',
                 'addDashboard',
-                'editDashboard',
-                'home'
+                'editDashboard'
+
             ]
 
             var stateCheck = true;
