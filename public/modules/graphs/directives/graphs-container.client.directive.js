@@ -209,8 +209,10 @@ function GraphsContainerDirective () {
         if ($stateParams.testRunId) {
           TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
             TestRuns.selected = testRun;
-            /* if testrun ID is too long, crop it ...*/
-            if(testRun.testRunId.length > 33) testRun.testRunIdBreadCrump = testRun.testRunId.substring(0,32) + '...';
+            /* if breadcrump is too long, crop it ...*/
+
+            var breadCrumpLength = $stateParams.productName.length + $stateParams.dashboardName.length + testRun.testRunId.length;
+            testRun.testRunIdBreadCrump = ( breadCrumpLength < 65)? testRun.testRunId : testRun.testRunId.substring(0,(65-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
 
             vm.testRun = testRun;
           });
