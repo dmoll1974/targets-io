@@ -81,15 +81,15 @@
             </div>
         </div>
         <table class="table">
-            <!--<colgroup>-->
-                <!--<col span="1" style="width: 47%;">-->
-                <!--<col span="1" style="width: 20%;">-->
-                <!--<col span="1" style="width: 10%;">-->
-                <!--<col span="1" style="width: 10%;">-->
-                <!--<col span="1" style="width: 10%;">-->
-                <!--<col span="1" style="width: 1%;">-->
-                <!--<col span="1" style="width: 2%;">-->
-            <!--</colgroup>-->
+            <colgroup>
+                <col span="1" style="width: 47%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 1%;">
+                <col span="1" style="width: 2%;">
+            </colgroup>
             <thead>
                 <tr>
                     <th ng-click="vm.sortType = 'alias'; vm.sortReverse = !vm.sortReverse">
@@ -152,10 +152,11 @@
                                 </md-menu-item>
                             </md-menu-content>
                         </md-menu>
-                    <td>
+                    </th>
+                    <th>
                         <md-checkbox md-no-ink aria-label="select all metrics" ng-model="vm.allMetricsSelected" ng-change="vm.setAllMetricsSelected(vm.allMetricsSelected)" style="margin: 0px;">
                         </md-checkbox>
-                    </td>
+                    </th>
                 </tr>
             </thead>
             <tbody>
