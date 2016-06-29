@@ -410,6 +410,8 @@ md-toast {
 
 .testrun-header{
     color:#FF5722;
+    margin-bottom: 20px;
+    font-size: 25px;
 }
 
 md-autocomplete{
@@ -483,4 +485,9 @@ md-toast {
 .markdown-textarea{
 
     height:300px;
+}
+
+.testrun-summary-section{
+
+    margin-bottom: 50px;
 }

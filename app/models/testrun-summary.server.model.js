@@ -91,6 +91,7 @@ var TestrunSummarySchema = new Schema({
   'humanReadableDuration': String,
   'annotations': String,
   'metrics': [testRunSummaryMetricSchema],
+  'markDown': String,
   'requirements': [{
     metricAlias : String,
     requirementText : String,

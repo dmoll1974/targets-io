@@ -25,7 +25,7 @@
     <md-content>
 
         <!--<md-card>-->
-            <div flex="50">
+            <div flex="50" class="testrun-summary-section">
                 <h3>Test run info</h3>
                 <table class="table">
                 <tbody>
@@ -69,11 +69,11 @@
             </table>
         </div>
 
-        <div class="md-padding" ng-if="testRunSummary.goal" flex="50">
+        <div ng-if="testRunSummary.goal" flex="50" class="testrun-summary-section">
             <h3>Goal</h3>
             <p>{{testRunSummary.goal}}</p>
         </div>
-        <div class="md-padding" ng-if="testRunSummary.annotations" flex="50">
+        <div ng-if="testRunSummary.annotations" flex="50" class="testrun-summary-section">
             <h3>Remarks</h3>
             <div ng-if="editMode === true" class="md-padding">
                 <md-input-container class="md-block" flex>
@@ -84,7 +84,23 @@
             <p ng-if="editMode === false">{{testRunSummary.annotations}}</p>
         </div>
 
-        <div class="md-padding" ng-if="testRunSummary.requirements.length > 0" flex="50">
+        <div ng-show="editMode === true" layout="column">
+            <h3>Markdown</h3>
+            <textarea ng-show="editMode === true" ng-model="testRunSummary.markDown" placeholder="Enter Markdown text here" ng-change="updated = true;" class="markdown-textarea"></textarea>
+            <div layout="row" layout-align="start center" style="margin-top: 10px;" >
+                <span class="fa fa-info-circle info-hover"style="margin-left: 5px; margin-right: 5px;"></span>
+                <a ng-href="https://github.com/showdownjs/showdown/wiki/Showdown's-Markdown-syntax" target="'_blank'" style="font-size: 12px;">Markdown syntax documentation</a>
+            </div>
+            <div ng-if="testRunSummary.markDown.length > 0">
+                <h3>Preview</h3>
+                <p markdown-to-html="testRunSummary.markDown" class="preview"></p>
+            </div>
+        </div>
+        <div class="testrun-summary-section">
+            <p ng-show="testRunSummary.markDown.length > 0 && editMode !== true" markdown-to-html="testRunSummary.markDown"></p>
+        </div>
+
+        <div  ng-if="testRunSummary.requirements.length > 0" flex="50" class="testrun-summary-section">
             <h3>Requirements</h3>
 
 
@@ -100,7 +116,7 @@
                         <td>{{requirement.requirementText}}</td>
                         <td>
                             <span  class="pointer" ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                                  ui-sref="requirementsTestRun({productName: testRunSummary.productName, dashboardName: testRunSummary.dashboardName, testRunId: testRunSummary.testRunId, requirementsResult: requirement.meetsRequirement ? 'passed' : 'failed', selectedMetric: requirement.metricAlias })"  >
+                                  ui-sref="requirementsTestRun({testRunSummaryName: testRunSummary.productName, dashboardName: testRunSummary.dashboardName, testRunId: testRunSummary.testRunId, requirementsResult: requirement.meetsRequirement ? 'passed' : 'failed', selectedMetric: requirement.metricAlias })"  >
                             </span>
                         </td>
                     </tr>

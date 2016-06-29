@@ -111,6 +111,7 @@ function updateTestrunSummary(req, res){
 
         testRunSummary.annotations = req.body.annotations;
         testRunSummary.metrics = req.body.metrics;
+        testRunSummary.markDown = req.body.markDown;
 
         testRunSummary.save(function(err, savedTestRunSummary){
 

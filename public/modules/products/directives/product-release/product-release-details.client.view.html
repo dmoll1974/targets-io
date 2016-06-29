@@ -50,15 +50,21 @@
         </table>
         </div>
     </div>
-    <h3 ng-show="editMode === true">Markdown</h3>
-    <textarea ng-show="editMode === true" ng-model="product.markDown" placeholder="Enter Markdown text here" ng-change="updated = true;" class="markdown-textarea"></textarea>
-    <div ng-show="editMode === true" >
-        <h3>Preview</h3>
-        <p markdown-to-html="product.markDown" class="preview"></p>
+    <div ng-show="editMode === true" layout="column">
+        <h3 >Markdown</h3>
+        <textarea ng-show="editMode === true" ng-model="product.markDown" placeholder="Enter Markdown text here" ng-change="updated = true;" class="markdown-textarea"></textarea>
+        <div layout="row" layout-align="start center" style="margin-top: 10px;" >
+            <span class="fa fa-info-circle info-hover"style="margin-left: 5px; margin-right: 5px;"></span>
+            <a ng-href="https://github.com/showdownjs/showdown/wiki/Showdown's-Markdown-syntax" target="'_blank'" style="font-size: 12px;">Markdown syntax documentation</a>
+        </div>
+        <div ng-if="product.markDown.length > 0">
+            <h3>Preview</h3>
+            <p markdown-to-html="product.markDown" class="preview"></p>
+        </div>
     </div>
     <p ng-show="product.markDown.length > 0 && editMode !== true" markdown-to-html="product.markDown"></p>
 
-        <h3>Release test runs</h3>
+    <h3>Release test runs</h3>
 
     <div  style="margin-bottom: 5px;" ng-repeat="testRunIndexItem in testRunIndexItems | orderBy:'-end':true">
         <a class="md-padding" href="" ng-click="scrollTo(testRunIndexItem.testRunId)">{{testRunIndexItem.description}}</a><br/>
@@ -69,11 +75,11 @@
 
 <md-content ng-repeat="testRun in product.releaseTestRuns track by $index">
 
+    <md-divider  ></md-divider>
 
     <release-testrun-summary ng-attr-id="{{testRun.testRunId}}" testrun="testRun" index="$index" productrequirements="testRun.requirements" edit="editMode"></release-testrun-summary>
 
     <br/>
-    <md-divider  ng-if="!$last"></md-divider>
 
 </md-content>
 
