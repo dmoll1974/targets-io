@@ -3,10 +3,11 @@
     <div layout="column">
 
         <div layout="row" id="fixedBaselineToast" >
-            <div flex="95">
+            <div layout="row"  flex="95" layout-align="start center">
                 <md-checkbox style="margin-bottom: 0px;" ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
                     Show completed test runs only
                 </md-checkbox>
+                <span ng-cloak ng-if="onlyIncompleteTestRunsAvailable" title="There are incomplete test runs!" class="fa fa-exclamation-triangle text-danger info-hover"style="margin-left: 10px;"></span>
             </div>
 
             <div flex="5">

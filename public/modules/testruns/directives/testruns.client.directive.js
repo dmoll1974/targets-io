@@ -64,6 +64,8 @@ function TestrunsDirective () {
     $scope.go = go;
     $scope.openMenu = openMenu;
     $scope.flushCache = flushCache;
+    $scope.onlyIncompleteTestRunsAvailable = true;
+
 
 
     /* watches */
@@ -242,6 +244,14 @@ function TestrunsDirective () {
       TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (testRuns) {
 
 
+        /* determine if there are only incomplete test runs*/
+        _.each(testRuns, function(testRun){
+
+          if (testRun.completed === true) $scope.onlyIncompleteTestRunsAvailable = false;
+
+        });
+
+        if(testRuns.length === 0) $scope.onlyIncompleteTestRunsAvailable = false;
         /* set test runs */
         $scope.testRuns = testRuns;
         $scope.loading = false;
