@@ -53,7 +53,13 @@
                 </tbody>
             </table>
         </div>
-    </md-content>
+        <div class="testrun-summary-section">
+            <p ng-show="testRunSummary.markDown.length > 0 && editMode !== true" markdown-to-html="testRunSummary.markDown"></p>
+        </div>
+
+        </md-content>
+
+
 
 
 
@@ -64,6 +70,7 @@
     </md-button>
 
     <md-content ng-if="showTestRunDetails" class="md-padding" layout="column" flex="90" >
+
 
         <h4>Metrics</h4>
         <div  data-ng-repeat="metric in testRunSummary.metrics | testRunSummary " >
