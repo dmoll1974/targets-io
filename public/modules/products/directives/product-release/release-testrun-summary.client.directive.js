@@ -111,6 +111,15 @@ function ReleaseTestRunSummaryDirective () {
 
     });
 
+    $scope.goToTestRunSummary = function(){
+
+      $state.go('testRunSummary', {
+        'productName': $scope.testrun.productName,
+        'dashboardName': $scope.testrun.dashboardName,
+        'testRunId': $scope.testrun.testRunId
+      });
+
+    }
 
     $scope.toggleShowTestRunDetails = function(){
 

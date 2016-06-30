@@ -30,15 +30,17 @@ function TestRunSummaryDirective () {
 
     $scope.$watch('testRunSummary.markDown', function (newVal, oldVal) {
 
-          var markDownToHTML = converter.makeHtml(newVal);
+      if (newVal !== undefined) {
 
-      $timeout(function(){
+        var markDownToHTML = converter.makeHtml(newVal);
 
-        document.getElementById('markdown-preview').innerHTML = markDownToHTML;
-        document.getElementById('markdown').innerHTML = markDownToHTML;
+        $timeout(function () {
 
-      }, 100)
+          document.getElementById('markdown').innerHTML = markDownToHTML;
+          document.getElementById('markdown-preview').innerHTML = markDownToHTML;
 
+        }, 100)
+      }
     });
 
     $scope.markAsUpdated = function(){

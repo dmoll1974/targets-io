@@ -1,6 +1,16 @@
 <md-content>
         <md-content class="md-padding" flex="75">
-            <h4 class="testrun-header">{{testRunSummary.description}}</h4>
+            <div layout="row" layout-align="space-between">
+                <h4 class="testrun-header">{{testRunSummary.description}}</h4>
+                <div ng-if="edit === true">
+                    <md-button  class="md-icon-button" data-ng-click="goToTestRunSummary()">
+                        <md-icon md-svg-src="images/assets/ic_mode_edit_black_24px.svg"></md-icon>
+                        <md-tooltip>
+                            Edit test run summary
+                        </md-tooltip>
+                    </md-button>
+                </div>
+            </div>
             <div ng-attr-id="{{'show-detailed-testrun-summary-' + index}}" >
 
                 <h4>Test run summary</h4>
