@@ -29,7 +29,7 @@ angular.module('events').factory('TestRuns', [
       updateAllTestRunsForProduct: updateAllTestRunsForProduct,
       updateAllTestRunsForDashboard: updateAllTestRunsForDashboard,
       calculateTotalDuration: calculateTotalDuration,
-      calculateDuration: calculateDuration,
+      humanReadbleDuration: humanReadbleDuration,
     };
     return TestRuns;
 
@@ -110,17 +110,15 @@ angular.module('events').factory('TestRuns', [
       return(humanReadbleDuration(totalDuration));
     }
 
-    function calculateDuration (duration){
 
-      return(humanReadbleDuration(duration));
-    }
     function humanReadbleDuration(durationInMs){
 
       var date = new Date(durationInMs);
       var readableDate = '';
       if(date.getUTCDate()-1 > 0) readableDate += date.getUTCDate()-1 + " days, ";
       if(date.getUTCHours() > 0) readableDate += date.getUTCHours() + " hours, ";
-      readableDate += date.getUTCMinutes() + " minutes";
+      if(date.getUTCMinutes() > 0)readableDate += date.getUTCMinutes() + " minutes";
+      if(date.getUTCMinutes() === 0)readableDate += date.getUTCSeconds() + "  seconds";
       return readableDate;
     }
   }

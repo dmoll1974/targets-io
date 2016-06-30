@@ -37,8 +37,7 @@ var templateMetricSchema = new mongoose.Schema({
   }
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 
 var TemplateVariableSchema = new mongoose.Schema({
@@ -55,8 +54,7 @@ var TemplateVariableSchema = new mongoose.Schema({
 
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 
 mongoose.model('TemplateVariable', TemplateVariableSchema);
@@ -119,7 +117,6 @@ var TemplateSchema = new Schema({
   }
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 mongoose.model('Template', TemplateSchema);

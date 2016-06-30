@@ -60,8 +60,7 @@ var metricSchema = new mongoose.Schema({
   }
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 
 metricSchema.pre('remove', function (next) {

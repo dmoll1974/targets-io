@@ -13,8 +13,7 @@ var testRunTargetSchema = new Schema({
   'benchmarkFixedValue': Number
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 mongoose.model('TestrunTarget', testRunTargetSchema);
 var testRunMetricSchema = new Schema({
@@ -42,8 +41,7 @@ var testRunMetricSchema = new Schema({
 
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 mongoose.model('TestrunMetric', testRunMetricSchema);
 /**
@@ -94,8 +92,7 @@ var TestrunSchema = new Schema({
   },
   'metrics': [testRunMetricSchema]
 }, { toObject: { getters: true } ,
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 
 TestrunSchema.virtual('startEpoch').get(function () {

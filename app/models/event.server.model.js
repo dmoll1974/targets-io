@@ -36,8 +36,7 @@ var eventSchema = new mongoose.Schema({
   }
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 eventSchema.index({
   productName: 1,

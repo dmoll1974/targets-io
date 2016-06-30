@@ -46,8 +46,7 @@ var testRunSummaryMetricSchema = new Schema({
   'targets': [String]
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 
 mongoose.model('TestrunSummaryMetric', testRunSummaryMetricSchema);
@@ -99,8 +98,7 @@ var TestrunSummarySchema = new Schema({
   }]
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 
 TestrunSummarySchema.index({

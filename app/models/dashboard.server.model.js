@@ -88,8 +88,7 @@ var dashboardSchema = new mongoose.Schema({
   }
 },
     {
-      read: 'primary',
-      safe: {w: 'majority', j: true, wtimeout: 5000} // 2 replicas and 5 seconds timeout from replica
+      read: 'primary'
     });
 dashboardSchema.pre('remove', function (next) {
   this.model('Product').update({ _id: this.productId }, { $pull: { dashboards: this._id } }, { multi: true }, next);
