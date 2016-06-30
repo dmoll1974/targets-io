@@ -33,15 +33,18 @@ function ProductReleaseDetailsDirective () {
 
     $scope.$watch('product.markDown', function (newVal, oldVal) {
 
-      var markDownToHTML = converter.makeHtml(newVal);
+      if (newVal !== undefined){
 
-      $timeout(function(){
+        var markDownToHTML = converter.makeHtml(newVal);
 
-        document.getElementById('markdown-preview').innerHTML = markDownToHTML;
-        document.getElementById('markdown').innerHTML = markDownToHTML;
+        $timeout(function () {
 
-      },100)
+          document.getElementById('markdown').innerHTML = markDownToHTML;
+          document.getElementById('markdown-preview').innerHTML = markDownToHTML;
 
+        }, 100);
+
+    }
     });
 
 
@@ -80,30 +83,65 @@ function ProductReleaseDetailsDirective () {
 
           });
 
+          createProductReleaseDetails(false);
 
-          /* get product */
-          Products.get($stateParams.productName).success(function (product) {
+        }
+    });
 
-            $scope.product = product;
-            $scope.product.productRelease = $stateParams.productRelease;
+function createProductReleaseDetails(update){
 
-            /* get test runs for release */
-            TestRuns.listTestRunsForProductRelease($scope.product.name, $stateParams.productRelease).success(function (testRuns) {
+  /* get product */
+  Products.get($stateParams.productName).success(function (product) {
 
-              $scope.product.releaseTestRuns = testRuns;
 
-              /* match test runs to requirements */
 
-              _.each($scope.product.releaseTestRuns, function (testRun) {
+    if(!update) {
 
-                /* add test runs to index */
+      $scope.product = product;
+      $scope.product.productRelease = $stateParams.productRelease;
 
-                Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
+
+    }else{
+      /* reset in case of reload */
+
+      $scope.product.releaseTestRuns = [];
+      $scope.product.requirements = product.requirements;
+      $scope.testRunIndexItems = [];
+      $scope.releaseSaved = true;
+      $scope.updated = true
+
+
+    }
+
+
+    /* get test runs for release */
+    TestRuns.listTestRunsForProductRelease($scope.product.name, $stateParams.productRelease).success(function (testRuns) {
+
+        /* reset in case of update */
+        //$scope.product.releaseTestRuns = [];
+        $scope.product.releaseTestRuns = testRuns;
+
+
+        /* match test runs to requirements */
+
+        //_.each($scope.product.releaseTestRuns, function (testRun) {
+
+
+
+      _.each(testRuns, function (testRun) {
+
+        Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
+
+
+                //var testRunInReport = $scope.product.releaseTestRuns.map(function(releaseTestRun){return releaseTestRun.testRunId;}).indexOf(testRun.testRunId);
+                ///*if not yet in index, push the test run to index*/
+                //if(testRunInReport === -1){
 
                   $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
+                  //$scope.product.releaseTestRuns.push(testRun);
 
-                });
 
+                //}
 
                 testRun.requirements = [];
 
@@ -123,15 +161,33 @@ function ProductReleaseDetailsDirective () {
                   })
 
                 })
-
-              });
-
             });
-          });
-        }
+        });
+
     });
+  });
 
+}
 
+    $scope.reloadProductRelease = function(){
+
+      createProductReleaseDetails(true);
+
+      $scope.releaseSaved = false;
+
+      var toast = $mdToast.simple()
+          .action('OK')
+          .highlightAction(true)
+          .position('top')
+          .hideDelay(10000)
+          //.parent(angular.element('#fixedBaselineToast'))
+          .theme('error-toast');
+
+      $mdToast.show(toast.content('Test runs and requirements have reloaded, please set requirement results again!')).then(function (response) {
+
+      });
+
+    }
 
     $scope.addLink = function(){
 

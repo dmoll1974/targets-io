@@ -29,7 +29,6 @@ function ReleaseTestRunSummaryDirective () {
 
     $scope.testRunSummary = {};
     $scope.testRunSummary.requirements = [];
-    $scope.editMode = false;
     $scope.showTestRunDetails = false;
 
     $scope.productName = $scope.testrun.productName;
