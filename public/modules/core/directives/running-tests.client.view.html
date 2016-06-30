@@ -54,11 +54,11 @@
             <td class="pointer">
                 <div layout="column" data-ng-if="runningTest.progress !== undefined" layout-align="center left">
                     <md-progress-linear  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
-                    <div class="running-test">{{runningTest.progress}}% of {{runningTest.humanReadablelastKnownDuration}}</div>
+                    <div class="running-test">{{runningTest.timeLeft}} left to finish ({{runningTest.progress}}%)</div>
                 </div>
                 <div layout="column" data-ng-if="runningTest.progress === undefined" layout-align="center left">
                     <md-progress-linear  flex md-mode="indeterminate"></md-progress-linear>
-                    <div class="running-test">Unknown</div>
+                    <div class="running-test">No data available</div>
                 </div>
             </td>
         </tr>
