@@ -476,7 +476,7 @@ md-toast {
 }
 
 .preview {
-    font-size: smaller;
+    /*font-size: smaller;*/
     color: #111;
     background-color: #eee;
     padding: 1em;

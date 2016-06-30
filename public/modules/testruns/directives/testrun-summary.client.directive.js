@@ -13,7 +13,7 @@ function TestRunSummaryDirective () {
   return directive;
 
   /* @ngInject */
-  function TestRunSummaryDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal) {
+  function TestRunSummaryDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $timeout) {
 
 
     Utils.graphType = 'testrun';
@@ -24,6 +24,22 @@ function TestRunSummaryDirective () {
     $scope.editMode = $rootScope.previousState.includes('editMetric')? true : false;
     $scope.updated = $rootScope.previousState.includes('editMetric')? true : false;
     $scope.hideGraphs = false;
+
+    var converter = new showdown.Converter({extensions: ['targetblank']});
+
+
+    $scope.$watch('testRunSummary.markDown', function (newVal, oldVal) {
+
+          var markDownToHTML = converter.makeHtml(newVal);
+
+      $timeout(function(){
+
+        document.getElementById('markdown-preview').innerHTML = markDownToHTML;
+        document.getElementById('markdown').innerHTML = markDownToHTML;
+
+      }, 100)
+
+    });
 
     $scope.markAsUpdated = function(){
 

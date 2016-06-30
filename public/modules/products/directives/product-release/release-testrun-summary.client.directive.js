@@ -20,7 +20,7 @@ function ReleaseTestRunSummaryDirective () {
   return directive;
 
   /* @ngInject */
-  function ReleaseTestRunSummaryDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal) {
+  function ReleaseTestRunSummaryDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $timeout) {
 
 
     console.log("relatedTestRun: " + $scope.testrun);
@@ -97,6 +97,21 @@ function ReleaseTestRunSummaryDirective () {
         });
       }
   });
+
+    var converter = new showdown.Converter({extensions: ['targetblank']});
+
+    $scope.$watch('testRunSummary.markDown', function (newVal, oldVal) {
+
+      var markDownToHTML = converter.makeHtml(newVal);
+
+      $timeout(function(){
+
+        document.getElementById('markdown-testrun-summary').innerHTML = markDownToHTML;
+
+      },100)
+
+    });
+
 
     $scope.toggleShowTestRunDetails = function(){
 

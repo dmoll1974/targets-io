@@ -93,11 +93,11 @@
             </div>
             <div ng-if="testRunSummary.markDown.length > 0">
                 <h4>Preview</h4>
-                <p markdown-to-html="testRunSummary.markDown" class="preview"></p>
+                <div id="markdown-preview" ng-show="testRunSummary.markDown.length > 0 && editMode" class="preview"></div>
             </div>
         </div>
         <div class="testrun-summary-section">
-            <p ng-show="testRunSummary.markDown.length > 0 && editMode !== true" markdown-to-html="testRunSummary.markDown"></p>
+            <div id="markdown" ng-show="testRunSummary.markDown.length > 0 && !editMode"></div>
         </div>
 
         <div  ng-if="testRunSummary.requirements.length > 0" flex="50" class="testrun-summary-section">

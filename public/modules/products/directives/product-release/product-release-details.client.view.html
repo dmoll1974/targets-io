@@ -59,10 +59,12 @@
         </div>
         <div ng-if="product.markDown.length > 0">
             <h3>Preview</h3>
-            <p markdown-to-html="product.markDown" class="preview"></p>
+            <div id="markdown-preview" ng-show="product.markDown.length > 0 && editMode" class="preview"></div>
+
         </div>
     </div>
-    <p ng-show="product.markDown.length > 0 && editMode !== true" markdown-to-html="product.markDown"></p>
+
+    <div id="markdown" ng-show="product.markDown.length > 0 && !editMode "></div>
 
     <h3>Release test runs</h3>
 
