@@ -58,7 +58,7 @@ console.log ("redis host: " + config.redisHost + ':' + config.redisPort );
 var db = mongoSetup.connect();
 
 if(cluster.isMaster) {
-	var numWorkers = (require('os').cpus().length - 1 === 1 || config.debugMode) ? 1 : require('os').cpus().length - 1; /* save one core for daemon, unless there is only one core */
+	var numWorkers = (require('os').cpus().length - 1 === 0 || config.debugMode) ? 1 : require('os').cpus().length - 1; /* save one core for daemon, unless there is only one core */
 
 	console.log('Master cluster setting up ' + numWorkers + ' workers...');
 
