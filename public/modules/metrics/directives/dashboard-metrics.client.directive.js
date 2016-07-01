@@ -81,9 +81,12 @@ function DashboardMetricsDirective () {
       }, function (newVal, oldVal) {
         if(newVal !== oldVal){
 
-          vm.dashboard = Dashboards.selected;
-          vm.metricFilter = '';
+          $timeout(function(){
 
+            vm.dashboard = Dashboards.selected;
+            vm.metricFilter = '';
+
+          });
         }
 
       });
