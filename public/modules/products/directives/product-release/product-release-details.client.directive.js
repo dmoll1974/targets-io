@@ -40,7 +40,6 @@ function ProductReleaseDetailsDirective () {
         $timeout(function () {
 
           document.getElementById('markdown').innerHTML = markDownToHTML;
-          document.getElementById('markdown-preview').innerHTML = markDownToHTML;
 
         }, 100);
 

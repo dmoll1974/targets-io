@@ -58,15 +58,12 @@
             <span class="fa fa-info-circle info-hover"style="margin-left: 5px; margin-right: 5px;"></span>
             <a ng-href="https://github.com/showdownjs/showdown/wiki/Showdown's-Markdown-syntax" target="'_blank'" style="font-size: 12px;">Markdown syntax documentation</a>
         </div>
-        <div ng-if="product.markDown.length > 0">
-            <h3>Preview</h3>
-            <div id="markdown-preview" ng-show="product.markDown.length > 0 && editMode" class="preview"></div>
-
-        </div>
     </div>
 
-    <!--<div id="markdown" ng-show="product.markDown.length > 0 && !editMode "></div>-->
-    <div id="markdown"></div>
+    <div>
+        <h3 ng-if="editMode">Preview</h3>
+        <div id="markdown" ng-class="{preview: editMode}"></div>
+    </div>
 
     <h3>Release test runs</h3>
 
