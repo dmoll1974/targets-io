@@ -31,5 +31,8 @@ module.exports = function (app) {
   app.route('/testrun-summary').put(testrunSummary.update);
   app.route('/testrun-summary/:productName/:dashboardName/:testRunId').delete(testrunSummary.delete);
 
+/* get benchmark results*/
+
+  app.route('/benchmarks/:productName/:dashboardName/:testRunId').get(testruns.getTestRunBenchmarks);
 
 };
