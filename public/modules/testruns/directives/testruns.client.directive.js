@@ -399,7 +399,7 @@ function TestrunsDirective () {
           /* refresh test runs*/
           setTimeout(function () {
             TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
-              TestRuns.list = testRuns;
+              $scope.testRuns = testRuns;
             }, function (errorResponse) {
               $scope.error = errorResponse.data.message;
             });
