@@ -115,10 +115,15 @@ angular.module('events').factory('TestRuns', [
 
       var date = new Date(durationInMs);
       var readableDate = '';
-      if(date.getUTCDate()-1 > 0) readableDate += date.getUTCDate()-1 + " days, ";
-      if(date.getUTCHours() > 0) readableDate += date.getUTCHours() + " hours, ";
-      if(date.getUTCMinutes() > 0)readableDate += date.getUTCMinutes() + " minutes";
-      if(date.getUTCMinutes() === 0)readableDate += date.getUTCSeconds() + "  seconds";
+      var daysLabel = (date.getUTCDate()-1 === 1) ? " day, " : " days, ";
+      var hoursLabel = (date.getUTCHours() === 1) ? " hour, " : " hours, "
+      var minutesLabel = (date.getUTCMinutes() === 1) ? " minute" : " minutes";
+      var secondsLabel = (date.getUTCSeconds() === 1) ? "  second" : "  seconds";
+
+      if(date.getUTCDate()-1 > 0) readableDate += date.getUTCDate()-1 + daysLabel;
+      if(date.getUTCHours() > 0) readableDate += date.getUTCHours() + hoursLabel ;
+      if(date.getUTCMinutes() > 0)readableDate += date.getUTCMinutes() + minutesLabel ;
+      if(date.getUTCMinutes() === 0)readableDate += date.getUTCSeconds() + secondsLabel ;
       return readableDate;
     }
   }
