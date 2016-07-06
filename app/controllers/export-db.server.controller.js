@@ -120,7 +120,7 @@ module.exports.dbExport = function (req, res) {
                                 res.write(release + '\n');
                             }).on('close', function () {
                                 res.write('],\n');
-                                res.write('"testRunSummeries": [');
+                                res.write('"testrunSummaries": [');
 
                                 TestrunSummary.find().lean().stream({
                                     transform: () => {
