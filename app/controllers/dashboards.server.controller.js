@@ -24,6 +24,7 @@ exports.clone = function (req, res) {
     });
   });
   dashboardClone.name = req.dashboard.name + '-CLONE';
+  dashboardClone.description = req.dashboard.description + '-CLONE';
   dashboardClone.metrics = metricCloneArray;
   dashboardClone.productId = req.dashboard.productId;
   dashboardClone.save(function (err) {
