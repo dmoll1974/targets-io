@@ -105,7 +105,8 @@ function ReleaseTestRunSummaryDirective () {
 
       $timeout(function(){
 
-        document.getElementById('markdown-testrun-summary').innerHTML = markDownToHTML;
+        var markDownId = 'markdown-testrun-summary-' + $scope.index;
+        document.getElementById(markDownId).innerHTML = markDownToHTML;
 
       },100)
 
