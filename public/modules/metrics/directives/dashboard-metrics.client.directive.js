@@ -267,9 +267,14 @@ function DashboardMetricsDirective () {
 
       function openDeleteSelectedMetricsModal(size) {
 
+        var numberOfSelected = vm.filteredMetrics.filter(function(metric){
+          if(metric.selected === true)
+            return metric.selected === true;
+        });
+
         ConfirmModal.itemType = 'Delete ';
         ConfirmModal.selectedItemId = '';
-        ConfirmModal.selectedItemDescription = 'selected metrics';
+        ConfirmModal.selectedItemDescription = ' selected ' + numberOfSelected.length + ' metrics';
         var modalInstance = $modal.open({
           templateUrl: 'ConfirmDelete.html',
           controller: 'ModalInstanceController',

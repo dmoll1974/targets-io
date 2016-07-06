@@ -97,9 +97,14 @@ angular.module('events').controller('EventsController', [
 
     $scope.openDeleteSelectedEventsModal = function (size) {
 
+      var numberOfSelected = $scope.events.filter(function(event){
+        if(event.selected === true)
+          return event.selected === true;
+      });
+
       ConfirmModal.itemType = 'Delete ';
       ConfirmModal.selectedItemId = '';
-      ConfirmModal.selectedItemDescription = 'selected events';
+      ConfirmModal.selectedItemDescription = ' selected ' + numberOfSelected.length + ' events';
       var modalInstance = $modal.open({
         templateUrl: 'ConfirmDelete.html',
         controller: 'ModalInstanceController',

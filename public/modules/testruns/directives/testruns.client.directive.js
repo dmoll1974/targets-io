@@ -409,8 +409,15 @@ function TestrunsDirective () {
     };
 
     function openDeleteSelectedTestRunsModal(size) {
+      var numberOfSelected = $scope.testRuns.filter(function(testRun){
+        if(testRun.selected === true)
+        return testRun.selected === true;
+      });
+
+     /* get number of selected test runs*/
+
       ConfirmModal.itemType = 'Delete ';
-      ConfirmModal.selectedItemDescription = ' selected test runs';
+      ConfirmModal.selectedItemDescription = ' selected ' + numberOfSelected.length + ' test runs';
       var modalInstance = $modal.open({
         templateUrl: 'ConfirmDelete.html',
         controller: 'ModalInstanceController',
