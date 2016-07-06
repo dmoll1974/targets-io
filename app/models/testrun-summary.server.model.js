@@ -67,14 +67,14 @@ var TestrunSummarySchema = new Schema({
     uppercase: true
   },
   'dashboardDescription': {
-    type: String,
+    type: String
 
   },
   'goal': {
-    type: String,
+    type: String
 
   },'description': {
-    type: String,
+    type: String
 
   },
   'testRunId': {
@@ -82,7 +82,7 @@ var TestrunSummarySchema = new Schema({
     uppercase: true
   },
   'start': {
-    type: Date,
+    type: Date
   },
   'end': Date,
   'buildResultsUrl': String,
@@ -90,7 +90,10 @@ var TestrunSummarySchema = new Schema({
   'humanReadableDuration': String,
   'annotations': String,
   'metrics': [testRunSummaryMetricSchema],
-  'markDown': String,
+   'markDown': {
+        type: String,
+        default: ''
+   },
   'requirements': [{
     metricAlias : String,
     requirementText : String,

@@ -12,8 +12,11 @@ var ProductSchema = new mongoose.Schema({
     uppercase: true
   },
   'description': String,
-  'markDown': String,
-  'dashboards': [{
+   'markDown': {
+        type: String,
+        default: ''
+    },
+   'dashboards': [{
       type: Schema.Types.ObjectId,
       ref: 'Dashboard'
     }],

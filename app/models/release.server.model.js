@@ -16,7 +16,10 @@ var ReleaseSchema = new Schema({
     type: String,
     uppercase: true
   },
-  'markDown': String,
+  'markDown': {
+    type: String,
+    default: ''
+  },
   'date': Date,
   'releaseTestRuns':[
     {
