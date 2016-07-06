@@ -2,15 +2,15 @@
     <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
     <div layout="column">
 
-        <div layout="row" id="fixedBaselineToast" >
-            <div layout="row"  flex="95" layout-align="start center">
+        <div layout="row" id="fixedBaselineToast" layout-align="space-between" >
+            <div layout="row"  layout-align="start center">
                 <md-checkbox style="margin-bottom: 0px;" ng-model="completedTestRunsOnly" aria-label="Show completed test runs only">
                     Show completed test runs only
                 </md-checkbox>
                 <span ng-cloak ng-if="onlyIncompleteTestRunsAvailable" title="There are incomplete test runs!" class="fa fa-exclamation-triangle text-danger info-hover"style="margin-left: 10px;"></span>
             </div>
 
-            <div flex="5">
+            <div >
                 <md-button style="margin-left: 5px;" ng-class="{'disabled': testRunSelected === false }" class="md-accent md-icon-button" ng-click="testRunSelected && openDeleteSelectedTestRunsModal('')" style="margin: 0px;" >
                     <md-tooltip>
                         Delete selected test runs
@@ -22,6 +22,30 @@
 
 
         <table class="table">
+            <colgroup ng-if="!showBenchmarks">
+                <col span="1" style="width: 40%;">
+                <col span="1" style="width: 18%;">
+                <col span="1" style="width: 18%;">
+                <col span="1" style="width: 18%;">
+                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 2%;">
+                <col span="1" style="width: 2%;">
+            </colgroup>
+            <colgroup ng-if="showBenchmarks">
+                <col span="1" style="width: 25%;">
+                <col span="1" style="width: 18%;">
+                <col span="1" style="width: 18%;">
+                <col span="1" style="width: 18%;">
+                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 2%;">
+                <col span="1" style="width: 2%;">
+            </colgroup>
             <thead>
             <tr>
                 <th>Test run ID</th>
@@ -30,10 +54,13 @@
                 <th>Duration</th>
                 <th>Requirements</th>
                 <th data-ng-if="showBenchmarks">Previous Build</th>
+                <th ng-if="!showBenchmarks"></th>
                 <th data-ng-if="showBenchmarks">Fixed Baseline</th>
+                <th ng-if="!showBenchmarks"></th>
                 <th data-ng-if="showBenchmarks">
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
                 </th>
+                <th ng-if="!showBenchmarks"></th>
                 <th></th>
                 <th>
                     <md-checkbox md-no-ink aria-label="select all test runs" ng-model="allTestRunsSelected" ng-change="setAllTestRunsSelected(allTestRunsSelected)" style="margin: 0px;">
@@ -92,13 +119,16 @@
                     class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark(testRun)"><span
                         ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
                 </td>
+                <td ng-if="!showBenchmarks"></td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.baseline}}"
                     class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark(testRun)"><span
                         ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
                 </td>
+                <td ng-if="!showBenchmarks"></td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)">
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="testRun.testRunId === dashboard.baseline"></md-icon>
                 </td>
+                <td ng-if="!showBenchmarks"></td>
                 <td >
                     <md-menu style="padding-top: 0px; padding-bottom: 0px;">
                         <div aria-label="Open test run menu" class="md-icon-button"
