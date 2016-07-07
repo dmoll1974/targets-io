@@ -16,11 +16,11 @@ function MergeTemplateDirective () {
   function MergeTemplateDirectiveController ($scope, $rootScope, $state, $timeout, Templates, Dashboards, Metrics, Graphite) {
 
 
-
-
-      $scope.template = Templates.selected;
-
       setTimeout(function(){
+
+          $scope.template = Templates.selected;
+
+
           _.each($scope.template.variables, function(variable, index){
 
               $scope.template.variables[index].values = [];
