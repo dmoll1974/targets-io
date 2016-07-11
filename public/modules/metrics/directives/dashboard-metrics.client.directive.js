@@ -86,7 +86,7 @@ function DashboardMetricsDirective () {
             vm.dashboard = Dashboards.selected;
             vm.metricFilter = '';
 
-          });
+          }, 100);
         }
 
       });
