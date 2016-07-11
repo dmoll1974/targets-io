@@ -36,7 +36,7 @@ function MergeTemplateDirective () {
                   $scope.template.variables[index].values.push('');
               }
           })
-      },1);
+      },100);
 
 
       $scope.addValue = function (index) {
