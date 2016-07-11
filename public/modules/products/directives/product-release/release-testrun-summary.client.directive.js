@@ -203,6 +203,13 @@ function ReleaseTestRunSummaryDirective () {
     $scope.toggleRequirementResult = function (index){
 
       $scope.productrequirements[index].result = !$scope.productrequirements[index].result;
+
+      $timeout(function(){
+
+        $scope.$parent.$parent.updated = true;
+
+      },1)
+
     }
 
 

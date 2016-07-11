@@ -107,7 +107,7 @@ function createProductReleaseDetails(update){
       $scope.product.requirements = product.requirements;
       $scope.testRunIndexItems = [];
       $scope.releaseSaved = true;
-      $scope.updated = true
+      $scope.updated = true;
 
 
     }
@@ -202,7 +202,7 @@ function createProductReleaseDetails(update){
       $scope.product.releaseLinks.splice(index,1);
     }
 
-    $scope.$watch('product.releaseTestRuns', function (newVal, oldVal) {
+    $scope.$watchCollection('product.releaseTestRuns', function (newVal, oldVal) {
       if (newVal !== oldVal && oldVal) {
         $scope.updated = true;
       }
