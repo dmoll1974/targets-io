@@ -285,6 +285,7 @@ function upload(req, res) {
               newProduct.description = importProduct.description;
               newProduct.dashboards = importProduct.dashboards;
               newProduct.requirements = importProduct.requirements;
+              newProduct.markDown = importProduct.markDown;
 
               newProduct.save(function (err, NewProduct) {
                 if (err)
