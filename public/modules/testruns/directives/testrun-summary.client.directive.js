@@ -268,6 +268,7 @@ function TestRunSummaryDirective () {
 
           $scope.testRunSummary.metrics = $scope.testRunSummary.metrics.sort(Utils.dynamicSort('summaryIndex'));
 
+          $scope.updated = true;
 
         });
 
