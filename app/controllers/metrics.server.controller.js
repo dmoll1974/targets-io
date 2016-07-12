@@ -2,7 +2,12 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Metric = mongoose.model('Metric'), testruns = require('./testruns.server.controller.js'), _ = require('lodash');
+var mongoose = require('mongoose'),
+    errorHandler = require('./errors.server.controller'),
+    Metric = mongoose.model('Metric'),
+    Testrun = mongoose.model('Testrun'),
+    testruns = require('./testruns.server.controller.js'),
+    _ = require('lodash');
 /**
  * Create a Metric
  */
@@ -13,6 +18,16 @@ exports.create = function (req, res) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
+      /* update all test runs for the dashboard */
+
+      Testrun.update({
+        $and: [
+          {productName: metric.productName},
+          {dashboardName: metric.dashboardName}
+        ]
+      }, { lastUpdated: new Date().getTime() }, { multi: true },function(err, testRuns){
+            if(err) console.log(err);
+      })
       res.jsonp(savedMetric);
     }
   });
@@ -38,7 +53,23 @@ exports.update = function (req, res) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
+
+      /* update all test runs for the dashboard */
+
+      /* update all test runs for the dashboard */
+
+      Testrun.update({
+        $and: [
+          {productName: metric.productName},
+          {dashboardName: metric.dashboardName}
+        ]
+      }, { lastUpdated: new Date().getTime() }, { multi: true },function(err, testRuns){
+        if(err) console.log(err);
+      })
+
       res.jsonp(metric);
+
+
     }
   });
 };

@@ -47,14 +47,31 @@ function TestRunSummaryDirective () {
       $scope.updated = true;
     }
 
-    TestRunSummary.getTestRunSummary($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRunSummary) {
+    TestRunSummary.getTestRunSummary($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (response) {
 
-      if(testRunSummary){
 
-        $scope.testRunSummary = testRunSummary;
+      if(response.testRunSummary){
+
+        $scope.testRunSummary = response.testRunSummary;
+
         $scope.summarySaved = true;
 
-        console.log('got test run summary from db!')
+        if(response.hasBeenUpdated){
+          $scope.updated = true;
+          $scope.editMode = true;
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('top center')
+              .parent(angular.element('#summary-buttons'))
+              .hideDelay(6000);
+
+          $mdToast.show(toast.content('Test run summary was updated based on new metric configuration, save to persist!')).then(function(response) {
+
+          });
+
+        }
 
       }else {
 

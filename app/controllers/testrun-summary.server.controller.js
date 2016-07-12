@@ -50,6 +50,8 @@ exports.delete = deleteTestrunSummary;
 
 function getTestrunSummary (req, res){
 
+  var response = {};
+
   TestrunSummary.findOne({
     $and: [
       { productName: req.params.productName },
@@ -62,34 +64,54 @@ function getTestrunSummary (req, res){
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
-      Testrun.findOne({
-        $and: [
-          { productName: req.params.productName },
-          { dashboardName: req.params.dashboardName },
-          { testRunId: req.params.testRunId }
-        ]
-      }).exec(function (err, testRun) {
+      if(testRunSummary) {
 
-        /* if test run summary is based on the latest stored test run, return it */
-          if(testRunSummary.lastUpdated === testRun.lastUpdated ){
 
-            res.jsonp(testRunSummary);
-        /* otherwise update the test run summary bases on the latest stored test run */
-          }else{
+        Testrun.findOne({
+          $and: [
+            {productName: req.params.productName},
+            {dashboardName: req.params.dashboardName},
+            {testRunId: req.params.testRunId}
+          ]
+        }).exec(function (err, testRun) {
 
-            res.jsonp(updateTestrunSummaryBasedOnTestRun(testRunSummary, testRun));
+          /* if test run summary is based on the latest stored test run, return it */
+          if (testRunSummary.lastUpdated && testRunSummary.lastUpdated > testRun.lastUpdated) {
+
+            response.testRunSummary = testRunSummary;
+            response.hasBeenUpdated = false;
+
+
+            res.jsonp(response);
+            /* otherwise update the test run summary bases on the latest stored test run */
+          } else {
+
+            updateTestrunSummaryBasedOnTestRun(testRunSummary, testRun, function(updatedTestRunSummary){
+
+              response.testRunSummary = updatedTestRunSummary;
+              response.hasBeenUpdated = true;
+
+              res.jsonp(response);
+            });
+
           }
 
 
-      })
+        })
+      }else{
+
+        response.testRunSummary = undefined;
+        res.jsonp(response);
+
+      }
     }
   })
 }
 
 
-function updateTestrunSummaryBasedOnTestRun(testRunSummary, testRun){
+function updateTestrunSummaryBasedOnTestRun(testRunSummary, testRun, callback){
 
-  var updatedTestRunSummary = testRunSummary;
+  var updatedTestRunSummary = _.clone(testRunSummary);
   updatedTestRunSummary.metrics = [];
 
   dashboard.getDashboard (testRun.productName, testRun.dashboardName)
@@ -106,7 +128,7 @@ function updateTestrunSummaryBasedOnTestRun(testRunSummary, testRun){
 
           _.each(testRunMetricsToIncludeInTestRunSummary, function(testRunMetric){
 
-              if(testRunSummaryMetric._id === testRunMetric._id) updatedTestRunSummary.metrics.push(testRunSummaryMetric);
+              if(testRunSummaryMetric._id.toString() === testRunMetric._id.toString()) updatedTestRunSummary.metrics.push(testRunSummaryMetric);
 
           })
         })
@@ -134,7 +156,7 @@ function updateTestrunSummaryBasedOnTestRun(testRunSummary, testRun){
 
         });
 
-        return updatedTestRunSummary;
+      callback(updatedTestRunSummary);
 
   });
 }
@@ -143,6 +165,7 @@ function createTestrunSummary(req, res){
 
   var testRunSummary = new TestrunSummary(req.body);
 
+  testRunSummary.lastUpdated = new Date().getTime();
 
   testRunSummary.save(function(err, savedTestRunSummary){
 
