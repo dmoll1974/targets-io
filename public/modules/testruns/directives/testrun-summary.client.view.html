@@ -113,7 +113,7 @@
                         <td>{{requirement.requirementText}}</td>
                         <td>
                             <span  class="pointer" ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                                  ui-sref="requirementsTestRun({testRunSummaryName: testRunSummary.productName, dashboardName: testRunSummary.dashboardName, testRunId: testRunSummary.testRunId, requirementsResult: requirement.meetsRequirement ? 'passed' : 'failed', selectedMetric: requirement.metricAlias })"  >
+                                  ui-sref="requirementsTestRun({productName: testRunSummary.productName, dashboardName: testRunSummary.dashboardName, testRunId: testRunSummary.testRunId, requirementsResult: requirement.meetsRequirement ? 'passed' : 'failed', selectedMetric: requirement.metricAlias })"  >
                             </span>
                         </td>
                     </tr>
