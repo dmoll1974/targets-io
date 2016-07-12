@@ -171,3 +171,28 @@ exports.hasAuthorization = function (req, res, next) {
   }
   next();
 };
+
+exports.getDashboard = function(productName, dashboardName) {
+
+  return new Promise((resolve, reject) => {
+
+    Product.findOne({name: productName}).exec(function (err, product) {
+
+      if (err) {
+        reject(err);
+      } else {
+
+        Dashboard.findOne({$and: [{name: dashboardName}, {productId: product._id}]})
+            .populate({path: 'metrics', options: {sort: {tag: 1, alias: 1}}})
+            .exec(function (err, dashboard) {
+              if (err) {
+                reject(err);
+              } else {
+
+                  resolve(dashboard);
+              }
+         });
+      }
+    });
+  });
+}

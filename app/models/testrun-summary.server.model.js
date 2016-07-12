@@ -94,6 +94,7 @@ var TestrunSummarySchema = new Schema({
         type: String,
         default: ''
    },
+   'lastUpdated': Date,
   'requirements': [{
     metricAlias : String,
     requirementText : String,

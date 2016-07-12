@@ -16,6 +16,7 @@ var testRunTargetSchema = new Schema({
       read: 'primary'
     });
 mongoose.model('TestrunTarget', testRunTargetSchema);
+
 var testRunMetricSchema = new Schema({
   'alias': String,
   'type': String,
@@ -90,6 +91,7 @@ var TestrunSchema = new Schema({
   'rampUpPeriod': {
       type: Number
   },
+  'lastUpdated': Date,
   'metrics': [testRunMetricSchema]
 }, { toObject: { getters: true } ,
       read: 'primary'

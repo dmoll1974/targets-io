@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     Event = mongoose.model('Event'),
     Testrun = mongoose.model('Testrun'),
     Dashboard = mongoose.model('Dashboard'),
+    dashboard = require('./dashboards.server.controller'),
     Product = mongoose.model('Product'),
     _ = require('lodash'),
     graphite = require('./graphite.server.controller'),
@@ -621,7 +622,9 @@ let upsertTestRun = function(testRun){
         benchmarkResultPreviousOK: testRun.benchmarkResultPreviousOK,
         baseline: testRun.baseline,
         previousBuild: testRun.previousBuild,
-        humanReadableDuration: humanReadableDuration(testRun.end.getTime() - testRun.start.getTime())}
+        humanReadableDuration: humanReadableDuration(testRun.end.getTime() - testRun.start.getTime()),
+        lastUpdated: new Date().getTime()
+        }
         , {upsert:true}, function(err, savedTestRun){
       if (err) {
         reject(err);
@@ -663,44 +666,6 @@ let testRunErrorHandler = function(err){
 }
 
 
-function flushMemcachedForTestRun(testRun, callback){
-
-  return new Promise((resolve, reject) => {
-
-    Product.findOne({ name: testRun.productName}).exec(function(err, product){
-
-    if(err){
-      reject(err);
-    }else{
-
-      Dashboard.findOne({$and:[{name: testRun.dashboardName}, {productId: product._id}]})
-          .populate({path: 'metrics', options: { sort: { tag: 1, alias: 1 } } })
-          .exec(function (err, dashboard) {
-            if (err){
-              reject(err);
-            }else{
-
-              _.each(dashboard.toObject().metrics, function(metric){
-
-                _.each(metric.targets, function(target){
-
-                  cache.flushCache(cache.createKey(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target), function(){
-
-                    });
-                });
-
-              });
-
-            resolve(testRun);
-            }
-
-      });
-
-      }
-    });
-  });
-
-}
 
 
 function getDataForTestrun(testRun) {

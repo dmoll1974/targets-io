@@ -5,7 +5,11 @@
  */
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
+    dashboard = require('./dashboards.server.controller'),
     TestrunSummary = mongoose.model('TestrunSummary'),
+    Testrun = mongoose.model('Testrun'),
+    Dashboard = mongoose.model('Dashboard'),
+    Product = mongoose.model('Product'),
     _ = require('lodash'),
     Utils = require('./utils.server.controller'),
     Jenkins = require('./jenkins.server.controller'),
@@ -57,9 +61,82 @@ function getTestrunSummary (req, res){
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
-      res.jsonp(testRunSummary);
+
+      Testrun.findOne({
+        $and: [
+          { productName: req.params.productName },
+          { dashboardName: req.params.dashboardName },
+          { testRunId: req.params.testRunId }
+        ]
+      }).exec(function (err, testRun) {
+
+        /* if test run summary is based on the latest stored test run, return it */
+          if(testRunSummary.lastUpdated === testRun.lastUpdated ){
+
+            res.jsonp(testRunSummary);
+        /* otherwise update the test run summary bases on the latest stored test run */
+          }else{
+
+            res.jsonp(updateTestrunSummaryBasedOnTestRun(testRunSummary, testRun));
+          }
+
+
+      })
     }
   })
+}
+
+
+function updateTestrunSummaryBasedOnTestRun(testRunSummary, testRun){
+
+  var updatedTestRunSummary = testRunSummary;
+  updatedTestRunSummary.metrics = [];
+
+  dashboard.getDashboard (testRun.productName, testRun.dashboardName)
+  .then(function(dashboard){
+
+        var testRunMetricsToIncludeInTestRunSummary = dashboard.metrics.filter(function(metric){
+          if (metric.includeInSummary === true) return metric;
+        });
+
+    /* synchronise metrics included in test run summary*/
+
+
+        _.each(testRunSummary.metrics, function(testRunSummaryMetric){
+
+          _.each(testRunMetricsToIncludeInTestRunSummary, function(testRunMetric){
+
+              if(testRunSummaryMetric._id === testRunMetric._id) updatedTestRunSummary.metrics.push(testRunSummaryMetric);
+
+          })
+        })
+
+        _.each(testRunMetricsToIncludeInTestRunSummary, function(testRunMetric){
+
+            var index = updatedTestRunSummary.metrics.map(function(metric){return metric._id;}).indexOf(testRunMetric._id);
+            if (index === -1) updatedTestRunSummary.metrics.push(testRunMetric);
+
+        })
+
+        /* set requirements */
+
+        var testRunMetricsWithRequirements = testRun.metrics.filter(function(metric){
+          if (metric.meetsRequirement !== null) return metric;
+        });
+
+        _.each(testRunMetricsWithRequirements, function(testRunMetric){
+
+          var requirementText =  testRunMetric.requirementOperator == "<" ? testRunMetric.alias + ' should be lower than ' + testRunMetric.requirementValue : testRunMetric.alias + ' should be higher than ' + testRunMetric.requirementValue;
+
+          var tag = testRunMetric.tags.length > 0 ? testRunMetric.tags[0].text : 'All';
+
+          updatedTestRunSummary.requirements.push({metricAlias: testRunMetric.alias, tag: tag, requirementText: requirementText, meetsRequirement:testRunMetric.meetsRequirement });
+
+        });
+
+        return updatedTestRunSummary;
+
+  });
 }
 
 function createTestrunSummary(req, res){
@@ -112,6 +189,7 @@ function updateTestrunSummary(req, res){
         testRunSummary.annotations = req.body.annotations;
         testRunSummary.metrics = req.body.metrics;
         testRunSummary.markDown = req.body.markDown;
+        testRunSummary.lastUpdated = req.body.lastUpdated;
 
         testRunSummary.save(function(err, savedTestRunSummary){
 
