@@ -57,8 +57,10 @@ var metricSchema = new mongoose.Schema({
   'unit': {
     type: String,
     default: 'None'
-  }
-},
+  },
+  'lastUpdated': Date
+
+    },
     {
       read: 'primary'
     });

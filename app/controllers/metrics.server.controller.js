@@ -5,7 +5,7 @@
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     Metric = mongoose.model('Metric'),
-    Testrun = mongoose.model('Testrun'),
+    Dashboard = mongoose.model('Dashboard'),
     testruns = require('./testruns.server.controller.js'),
     _ = require('lodash');
 /**
@@ -14,18 +14,15 @@ var mongoose = require('mongoose'),
 exports.create = function (req, res) {
   var metric = new Metric(req.body);
   metric.user = req.user;
+  metric.lastUpdated = new Date().getTime();
   metric.save(function (err, savedMetric) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
-      /* update all test runs for the dashboard */
+      /* update dashboard lastUpdated */
 
-      Testrun.update({
-        $and: [
-          {productName: metric.productName},
-          {dashboardName: metric.dashboardName}
-        ]
-      }, { lastUpdated: new Date().getTime() }, { multi: true },function(err, testRuns){
+      Dashboard.update({_id: metric.dashboardId}
+        , { lastUpdated: new Date().getTime() }, { multi: false },function(err, testRuns){
             if(err) console.log(err);
       })
       res.jsonp(savedMetric);
@@ -49,22 +46,17 @@ exports.update = function (req, res) {
   //		testruns.updateTestRunRequirementForMetric(req.body)
   //	}
   metric = _.extend(metric, req.body);
+  metric.lastUpdated = new Date().getTime();
   metric.save(function (err) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
 
-      /* update all test runs for the dashboard */
+      /* update dashboard lastUpdated */
 
-      /* update all test runs for the dashboard */
-
-      Testrun.update({
-        $and: [
-          {productName: metric.productName},
-          {dashboardName: metric.dashboardName}
-        ]
-      }, { lastUpdated: new Date().getTime() }, { multi: true },function(err, testRuns){
-        if(err) console.log(err);
+      Dashboard.update({_id: metric.dashboardId}
+          , { lastUpdated: new Date().getTime() }, { multi: false },function(err, testRuns){
+            if(err) console.log(err);
       })
 
       res.jsonp(metric);

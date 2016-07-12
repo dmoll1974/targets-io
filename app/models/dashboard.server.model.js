@@ -37,6 +37,7 @@ var dashboardSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  'lastUpdated': Date,
   'startSteadyState': Number,
   'tags': {
     type: [{
