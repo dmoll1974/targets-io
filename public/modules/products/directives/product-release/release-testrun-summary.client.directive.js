@@ -35,7 +35,7 @@ function ReleaseTestRunSummaryDirective () {
     $scope.dashboardName = $scope.testrun.dashboardName;
     $scope.testRunId = $scope.testrun.testRunId;
 
-    TestRunSummary.getTestRunSummary($scope.productName, $scope.dashboardName, $scope.testRunId).success(function (testRunSummary) {
+    TestRunSummary.getTestRunSummaryForRelease($scope.productName, $scope.dashboardName, $scope.testRunId).success(function (testRunSummary) {
 
       if(testRunSummary){
 

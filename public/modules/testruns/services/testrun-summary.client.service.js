@@ -12,6 +12,7 @@ angular.module('testruns').factory('TestRunSummary', [
       updateTestRunSummary: updateTestRunSummary,
       deleteTestRunSummary: deleteTestRunSummary,
       getTestRunSummary: getTestRunSummary,
+      getTestRunSummaryForRelease: getTestRunSummaryForRelease
       //listTestRunsSummariesForProductRelease:listTestRunsSummariesForProductRelease
 
     };
@@ -24,6 +25,11 @@ angular.module('testruns').factory('TestRunSummary', [
     function getTestRunSummary(productName, dashboardName, testRunId){
 
       return $http.get('/testrun-summary/' + productName + '/' + dashboardName + '/' + testRunId);
+
+    }
+    function getTestRunSummaryForRelease(productName, dashboardName, testRunId){
+
+      return $http.get('/testrun-summary-release/' + productName + '/' + dashboardName + '/' + testRunId);
 
     }
     function addTestRunSummary(testRunSummary){

@@ -20,6 +20,7 @@ var mongoose = require('mongoose'),
 
 
 exports.get = getTestrunSummary;
+exports.getTestRunSummaryForRelease = getTestRunSummaryForRelease;
 exports.create = createTestrunSummary;
 exports.update = updateTestrunSummary;
 exports.delete = deleteTestrunSummary;
@@ -47,6 +48,26 @@ exports.delete = deleteTestrunSummary;
 //  });
 //}
 
+
+function getTestRunSummaryForRelease (req, res) {
+
+  var response = {};
+
+  TestrunSummary.findOne({
+    $and: [
+      {productName: req.params.productName},
+      {dashboardName: req.params.dashboardName},
+      {testRunId: req.params.testRunId}
+    ]
+  }).exec(function (err, testRunSummary) {
+
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
+      res.jsonp(testRunSummary);
+    }
+  });
+}
 
 function getTestrunSummary (req, res){
 
