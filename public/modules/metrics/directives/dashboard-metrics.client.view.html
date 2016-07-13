@@ -188,7 +188,7 @@
             </tr>
             </tbody>
         </table>
-        <div style="margin-top: 30px;" flex layout="row">
+        <div ng-if="vm.filteredMetrics.length >20" style="margin-top: 30px;" flex layout="row">
             <div layout="row" flex="33">
                 <md-input-container style="margin: 0px;" flex>
                     <label>Filter metrics</label>
