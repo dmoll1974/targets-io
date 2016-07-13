@@ -134,12 +134,12 @@ function updateTestrunsResults(req, res) {
       { productName: req.params.productName },
       { dashboardName: req.params.dashboardName }
     ]
-  }).exec(function (err, testRuns) {
+  }).sort({end: 1}).exec(function (err, testRuns) {
     if (err) {
       console.log(err);
     } else {
       var count = 0;
-      async.forEachLimit(testRuns, 1, function (testRun, callback) {
+      async.eachSeries(testRuns, function (testRun, callback) {
 
         benchmarkAndPersistTestRunById(testRun)
         .then(function(){
