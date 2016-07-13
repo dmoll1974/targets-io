@@ -90,7 +90,7 @@ function getTestrunSummary (req, res){
         dashboard.getDashboard (testRunSummary.productName, testRunSummary.dashboardName)
         .then(function(dashboard){
 
-          if(testRunSummary.lastUpdated < dashboard.lastUpdated) {
+          if(!testRunSummary.lastUpdated || testRunSummary.lastUpdated < dashboard.lastUpdated) {
 
             updateTestrunSummaryBasedOnMetrics(testRunSummary)
                 .then(updateRequirements)
