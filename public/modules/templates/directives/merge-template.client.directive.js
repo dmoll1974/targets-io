@@ -15,10 +15,9 @@ function MergeTemplateDirective () {
   /* @ngInject */
   function MergeTemplateDirectiveController ($scope, $rootScope, $state, $timeout, Templates, Dashboards, Metrics, Graphite) {
 
+      $scope.template = Templates.selected;
 
-      setTimeout(function(){
-
-          $scope.template = Templates.selected;
+      $timeout(function(){
 
 
           _.each($scope.template.variables, function(variable, index){
@@ -36,7 +35,7 @@ function MergeTemplateDirective () {
                   $scope.template.variables[index].values.push('');
               }
           })
-      },100);
+      });
 
 
       $scope.addValue = function (index) {
