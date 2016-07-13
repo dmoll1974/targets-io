@@ -27,7 +27,7 @@ function TestRunSummaryDirective () {
 
 
     $scope.dragControlListeners = {
-      //accept: function (sourceItemHandleScope, destSortableScope) {return boolean},//override to determine drag is allowed or not. default is true.
+      accept: $scope.editMode && $scope.hideGraphs,//override to determine drag is allowed or not. default is true.
       itemMoved: function(){$scope.updated = true;}, //Do what you want},
       orderChanged: updateMetricOrder,//Do what you want},
       //containment: '#board'//optional param.

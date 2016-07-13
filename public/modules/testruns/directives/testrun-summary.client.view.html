@@ -131,7 +131,7 @@
         <p ng-if="testRunSummary.metrics.length === 0">No metrics configured to include in test run summary, please check metric configuration.</p>
         <md-content class="md-padding" layout="column" flex="75" >
             <ul as-sortable="dragControlListeners" data-ng-model="testRunSummary.metrics">
-                <li class="card" data-ng-repeat="metric in testRunSummary.metrics" data-as-sortable-item>
+                <li  data-ng-repeat="metric in testRunSummary.metrics" data-as-sortable-item>
                 <div ng-class="{boxedGraph: hideGraphs && editMode}"  data-as-sortable-item-handle>
                     <div layout="row" layout-align="space-between center">
                         <h4 class="md-padding" data-ng-click="editMetric(metric._id)">{{metric.alias}}</h4>
