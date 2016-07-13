@@ -25,7 +25,28 @@ function TestRunSummaryDirective () {
     $scope.updated = $rootScope.previousState.includes('editMetric')? true : false;
     $scope.hideGraphs = false;
 
-    var converter = new showdown.Converter({extensions: ['targetblank']});
+
+    $scope.dragControlListeners = {
+      //accept: function (sourceItemHandleScope, destSortableScope) {return boolean},//override to determine drag is allowed or not. default is true.
+      itemMoved: function(){$scope.updated = true;}, //Do what you want},
+      orderChanged: updateMetricOrder,//Do what you want},
+      //containment: '#board'//optional param.
+      //clone: true //optional param for clone feature.
+      //    allowDuplicates: false //optional param allows duplicates to be dropped.
+     };
+
+    function updateMetricOrder(event){
+
+      _.each($scope.testRunSummary.metrics, function(testRunSummaryMetric, i){
+
+        testRunSummaryMetric.summaryIndex = i;
+        Metrics.update(testRunSummaryMetric).success(function(){
+
+        })
+      })
+    }
+
+        var converter = new showdown.Converter({extensions: ['targetblank']});
 
 
     $scope.$watch('testRunSummary.markDown', function (newVal, oldVal) {
@@ -39,6 +60,14 @@ function TestRunSummaryDirective () {
           document.getElementById('markdown').innerHTML = markDownToHTML;
 
         }, 100)
+      }
+    });
+
+    $scope.$watch('editMode', function (newVal, oldVal) {
+
+      if (newVal === false) {
+
+        $scope.hideGraphs = false;
       }
     });
 

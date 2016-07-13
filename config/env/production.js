@@ -27,7 +27,9 @@ module.exports = {
                 'public/lib/angular-busy/dist/angular-busy.css',
                 'public/lib/ng-table/dist/ng-table.css',
                 'public/lib/ng-tags-input/ng-tags-input.min.css',
-                'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css'
+                'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css',
+                'public/lib/ng-sortable/dist/ng-sortable.style.css',
+                'public/lib/ng-sortable/dist/ng-sortable.style.css'
             ],
             js: [
                 'public/lib/jquery/dist/jquery.min.js',
@@ -57,7 +59,8 @@ module.exports = {
                 'public/lib/angular-utils-pagination/dirPagination.js',
                 'public/lib/dygraphs/dygraph-combined-dev.js',
                 'public/lib/ng-focus-if/focusIf.min.js',
-                'public/lib/socket.io-client/socket.io.js'
+                'public/lib/socket.io-client/socket.io.js',
+                'public/lib/ng-sortable/dist/ng-sortable.js'
 
 
             ]

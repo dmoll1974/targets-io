@@ -122,68 +122,71 @@
 
         </div>
 
-        <div layout="row" layout-align="space-between">
+        <div layout="column" >
             <h4>Metrics</h4>
             <md-switch class="md-primary" ng-show="editMode" md-no-ink aria-label="Hide graphs" ng-model="hideGraphs" ng-class="{'switch-label-disabled': hideGraphs === false }">
-                Hide graphs
+                Move graphs
             </md-switch>
         </div>
         <p ng-if="testRunSummary.metrics.length === 0">No metrics configured to include in test run summary, please check metric configuration.</p>
         <md-content class="md-padding" layout="column" flex="75" >
-            <div ng-class="{boxedGraph: hideGraphs}" data-ng-repeat="metric in testRunSummary.metrics | testRunSummary " >
-                <div layout="row" layout-align="space-between center">
-                    <h4 class="md-padding" data-ng-click="editMetric(metric._id)">{{metric.alias}}</h4>
-                    <div layout="row">
-                        <md-menu ng-if="editMode">
-                            <div aria-label="Open test run menu" class="md-icon-button"
-                                 ng-click="openMenu($mdOpenMenu, $event)">
-                                <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_24px.svg"></md-icon>
+            <ul as-sortable="dragControlListeners" data-ng-model="testRunSummary.metrics">
+                <li class="card" data-ng-repeat="metric in testRunSummary.metrics" data-as-sortable-item>
+                <div ng-class="{boxedGraph: hideGraphs && editMode}"  data-as-sortable-item-handle>
+                    <div layout="row" layout-align="space-between center">
+                        <h4 class="md-padding" data-ng-click="editMetric(metric._id)">{{metric.alias}}</h4>
+                        <div layout="row">
+                            <md-menu ng-if="editMode && !hideGraphs">
+                                <div aria-label="Open test run menu" class="md-icon-button"
+                                     ng-click="openMenu($mdOpenMenu, $event)">
+                                    <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_24px.svg"></md-icon>
+                                    <md-tooltip>
+                                        Metric menu
+                                    </md-tooltip>
+                                </div>
+                                <md-menu-content width="4">
+                                    <md-menu-item>
+                                        <md-button class="targets-io-menu-button" data-ng-click="restoreDefaultAnnotation(metric)">
+                                            <md-icon md-svg-src="images/assets/ic_refresh_black_36px.svg"
+                                                     md-menu-align-target></md-icon>
+                                            Restore default annotation
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button class="targets-io-menu-button" data-ng-click="deleteFromTestRunSummary(metric)">
+                                            <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"
+                                                     md-menu-align-target></md-icon>
+                                            Remove metric from summary
+                                        </md-button>
+                                    </md-menu-item>
+
+                                </md-menu-content>
+                            </md-menu>
+                            <md-button ng-if="editMode && hideGraphs " class="md-icon-button" data-ng-click="moveUp(metric)">
+                                <md-icon md-svg-src="images/assets/ic_drag_handle_black_24px.svg"></md-icon>
                                 <md-tooltip>
-                                    Test run menu
+                                    Drag and drop
                                 </md-tooltip>
-                            </div>
-                            <md-menu-content width="4">
-                                <md-menu-item>
-                                    <md-button class="targets-io-menu-button" data-ng-click="restoreDefaultAnnotation(metric)">
-                                        <md-icon md-svg-src="images/assets/ic_refresh_black_36px.svg"
-                                                 md-menu-align-target></md-icon>
-                                        Restore default annotation
-                                    </md-button>
-                                </md-menu-item>
-                                <md-menu-item>
-                                    <md-button class="targets-io-menu-button" data-ng-click="deleteFromTestRunSummary(metric)">
-                                        <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"
-                                                 md-menu-align-target></md-icon>
-                                        Remove metric from summary
-                                    </md-button>
-                                </md-menu-item>
+                             </md-button>
 
-                            </md-menu-content>
-                        </md-menu>
-                        <md-button ng-if="editMode && $index > 0" class="md-icon-button" data-ng-click="moveUp(metric)">
-                            <md-icon md-svg-src="images/assets/ic_arrow_upward_black_24px.svg"></md-icon>
-                            <md-tooltip>
-                                Move up
-                            </md-tooltip>
-                         </md-button>
-
+                        </div>
                     </div>
-                </div>
 
 
-                <div ng-if="editMode === true" class="md-padding">
-                    <md-input-container class="md-block" flex>
-                        <label>Annotations</label>
-                        <textarea name="summaryText" ng-model="metric.summaryText" columns="1" md-maxlength="500" rows="10" ng-change="markAsUpdated()"></textarea>
-                    </md-input-container>
-                </div>
-                <div ng-if="editMode === false" class="md-padding">
-                    <p>{{metric.summaryText}}</p>
-                </div>
+                    <div ng-if="editMode === true" class="md-padding">
+                        <md-input-container class="md-block" flex>
+                            <label>Annotations</label>
+                            <textarea name="summaryText" ng-model="metric.summaryText" columns="1" md-maxlength="500" rows="10" ng-change="markAsUpdated()"></textarea>
+                        </md-input-container>
+                    </div>
+                    <div ng-if="editMode === false" class="md-padding">
+                        <p>{{metric.summaryText}}</p>
+                    </div>
 
-                <testrun-summary-dygraph ng-show="hideGraphs === false" class="md-padding" metric="metric" testrun="testRunSummary"></testrun-summary-dygraph>
-
+                    <testrun-summary-dygraph ng-show="!hideGraphs" class="md-padding" metric="metric" testrun="testRunSummary"></testrun-summary-dygraph>
             </div>
+            </li>
+        </ul>
         </md-content>
         <!--<div id="summary-buttons" layout="row">-->
             <!--<md-button  ng-if="editMode === true && summarySaved === false" md-no-ink class="md-primary" data-ng-click="saveTestRunSummary()">Save</md-button>-->

@@ -497,3 +497,10 @@ md-menu-item>.md-button.targets-io-menu-button{
     text-transform: uppercase;
 
 }
+
+ul
+{
+    list-style-type: none;
+    padding:0;
+    margin:0;
+}
