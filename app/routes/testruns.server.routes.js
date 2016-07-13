@@ -19,7 +19,7 @@ module.exports = function (app) {
       .get(testruns.testRunById)
       .delete(testruns.deleteTestRunById);
   app.route('/refresh-testrun/:productName/:dashboardName/:testRunId').get(testruns.refreshTestrun);
-  app.route('/update-testruns-results/:productName/:dashboardName/:metricId/:updateRequirements/:updateBenchmarks').get(testruns.updateTestrunsResults);
+  app.route('/update-testruns-results/:productName/:dashboardName').get(testruns.updateTestrunsResults);
   app.route('/update-fixed-baseline-benchmark').post(benchmarks.updateFixedBaselineBenchmark);
   app.route('/update-all-dashboard-testruns/:oldProductName/:oldDashboardName/:newDashboardName').get(testruns.updateAllDashboardTestRuns);
   app.route('/update-all-product-testruns/:oldProductName/:newProductName').get(testruns.updateAllProductTestRuns);

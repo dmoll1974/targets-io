@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     Event = mongoose.model('Event'),
     Testrun = mongoose.model('Testrun'),
     Dashboard = mongoose.model('Dashboard'),
+    dashboard = require('./dashboards.server.controller'),
     Product = mongoose.model('Product'),
     _ = require('lodash'),
     graphite = require('./graphite.server.controller'),
@@ -137,34 +138,21 @@ function updateTestrunsResults(req, res) {
     if (err) {
       console.log(err);
     } else {
+      var count = 0;
       async.forEachLimit(testRuns, 1, function (testRun, callback) {
-          updateMetricInTestrun(req.params.metricId, testRun)
-          .then(function(testRun){
-            if (req.params.updateRequirements === 'true'){
-              Requirements.updateRequirementResults(testRun)
-              .then(function (requirementsTestRun){
-                if(req.params.updateBenchmarks === 'true'){
-                  Benchmarks.updateBenchmarkResults(requirementsTestRun)
-                  .then(function(){
-                    callback();
-                  });
-                }else{
 
-                  callback();
-                }
+        benchmarkAndPersistTestRunById(testRun)
+        .then(function(){
 
-              });
-            }else{
+          count = count + 1;
+          var io = global.io;
+          var room = testRun.productName + '-' + testRun.dashboardName;
 
-              if(req.params.updateBenchmarks === 'true'){
-                Benchmarks.updateBenchmarkResults(testRun)
-                .then(function(){
-                  callback();
-                });
-              }
-            }
-          });
+          console.log('emitting message to room: ' + room);
+          io.sockets.in(room).emit('progress', {progress: Math.round(count / testRuns.length * 100)  });
 
+          callback();
+        })
 
       }, function (err) {
         if (err)
@@ -187,22 +175,26 @@ function updateTestrunsResults(req, res) {
     }
   });
 }
-function  updateMetricInTestrun(metricId, testRun) {
+function  updateMetricsInTestrun(testRun) {
 
   return new Promise((resolve, reject) => {
 
-      var updatedMetrics = [];
-      Metric.findOne({ _id: metricId }).exec(function (err, dashboardMetric) {
-        if (err)
-          console.log(err);
+    dashboard.getDashboard (testRun.productName, testRun.dashboardName)
+    .then(function(dashboard){
+
+        var updatedMetrics = [];
+
         _.each(testRun.metrics, function (testrunMetric) {
-          if (testrunMetric.alias === dashboardMetric.alias) {
-            testrunMetric.requirementOperator = dashboardMetric.requirementOperator;
-            testrunMetric.requirementValue = dashboardMetric.requirementValue;
-            testrunMetric.benchmarkOperator = dashboardMetric.benchmarkOperator;
-            testrunMetric.benchmarkValue = dashboardMetric.benchmarkValue;
+
+          var index = dashboard.metrics.map(function(dashboardMetric){return dashboardMetric._id.toString()}).indexOf(testrunMetric._id.toString());
+
+          if (index !== -1) {
+              testrunMetric.requirementOperator = dashboard.metrics[index].requirementOperator;
+              testrunMetric.requirementValue = dashboard.metrics[index].requirementValue;
+              testrunMetric.benchmarkOperator = dashboard.metrics[index].benchmarkOperator;
+              testrunMetric.benchmarkValue = dashboard.metrics[index].benchmarkValue;
           }
-          updatedMetrics.push(testrunMetric);
+            updatedMetrics.push(testrunMetric);
         });
         /* Save updated test run */
 
@@ -621,7 +613,9 @@ let upsertTestRun = function(testRun){
         benchmarkResultPreviousOK: testRun.benchmarkResultPreviousOK,
         baseline: testRun.baseline,
         previousBuild: testRun.previousBuild,
-        humanReadableDuration: humanReadableDuration(testRun.end.getTime() - testRun.start.getTime())}
+        humanReadableDuration: humanReadableDuration(testRun.end.getTime() - testRun.start.getTime()),
+        lastUpdated: new Date().getTime()
+        }
         , {upsert:true}, function(err, savedTestRun){
       if (err) {
         reject(err);
@@ -663,44 +657,6 @@ let testRunErrorHandler = function(err){
 }
 
 
-function flushMemcachedForTestRun(testRun, callback){
-
-  return new Promise((resolve, reject) => {
-
-    Product.findOne({ name: testRun.productName}).exec(function(err, product){
-
-    if(err){
-      reject(err);
-    }else{
-
-      Dashboard.findOne({$and:[{name: testRun.dashboardName}, {productId: product._id}]})
-          .populate({path: 'metrics', options: { sort: { tag: 1, alias: 1 } } })
-          .exec(function (err, dashboard) {
-            if (err){
-              reject(err);
-            }else{
-
-              _.each(dashboard.toObject().metrics, function(metric){
-
-                _.each(metric.targets, function(target){
-
-                  cache.flushCache(cache.createKey(Math.round(testRun.start / 1000), Math.round(testRun.end / 1000), target), function(){
-
-                    });
-                });
-
-              });
-
-            resolve(testRun);
-            }
-
-      });
-
-      }
-    });
-  });
-
-}
 
 
 function getDataForTestrun(testRun) {

@@ -14,7 +14,7 @@ function EditMetricDirective () {
   return directive;
 
   /* @ngInject */
-  function EditMetricDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, ConfirmModal, $modal, $q, $timeout) {
+  function EditMetricDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, ConfirmModal, $modal, $q, $timeout, $mdToast, TestRuns, mySocket ) {
 
     var vm = this;
 
@@ -28,6 +28,7 @@ function EditMetricDirective () {
     vm.metricUnits = Metrics.metricUnits;
     vm.operatorOptions = Metrics.operatorOptions;
     vm.deviationOptions = Metrics.deviationOptions;
+    vm.progress = undefined;
 
     vm.dashboard = Dashboards.selected;
     
@@ -59,8 +60,30 @@ function EditMetricDirective () {
       }
     });
 
+    /*socket.io*/
 
-     function addCustomUnit(){
+    var room = $stateParams.productName + '-' + $stateParams.dashboardName;
+
+
+    mySocket.emit('room', room);
+    console.log('Joined room: ' + room);
+
+
+    mySocket.on('progress', function (message) {
+
+      vm.progress = (message.progress < 100) ? message.progress : undefined ;
+    });
+
+
+
+
+    $scope.$on('$destroy', function () {
+      //  leave the room
+      mySocket.emit('exit-room', room);
+    });
+
+
+    function addCustomUnit(){
 
       vm.metricUnits.push(vm.metric.customUnit)
       vm.metric.unit = vm.metric.customUnit;
@@ -109,35 +132,38 @@ function EditMetricDirective () {
         });
 
 
-        //var updateRequirements = vm.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
-        //var updateBenchmarks = vm.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
-        //
-        ///* if requirement or benchmark vlaues have changed, update test runs */
-        //if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
-        //
-        //  var toast = $mdToast.simple()
-        //      .action('OK')
-        //      .highlightAction(true)
-        //      .position('top center')
-        //      .hideDelay(3000);
-        //
-        //  $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
-        //
-        //  });
-        //
-        //  vm.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, $stateParams.metricId, updateRequirements, updateBenchmarks).success(function (testRuns) {
-        //    TestRuns.list = testRuns;
-        //    if ($rootScope.previousStateParams)
-        //      $state.go($rootScope.previousState, $rootScope.previousStateParams);
-        //    else
-        //      $state.go($rootScope.previousState);
-        //  });
-        //} else {
+        var updateRequirements = vm.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
+        var updateBenchmarks = vm.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
+
+        /* if requirement or benchmark vlaues have changed, update test runs */
+        if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('bottom center')
+              .hideDelay(3000);
+
+          $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
+
+          });
+
+          vm.progress = 0;
+
+          TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName).success(function (testRuns) {
+            TestRuns.list = testRuns;
+
+            if ($rootScope.previousStateParams)
+              $state.go($rootScope.previousState, $rootScope.previousStateParams);
+            else
+              $state.go($rootScope.previousState);
+          });
+        } else {
         if ($rootScope.previousStateParams)
           $state.go($rootScope.previousState, $rootScope.previousStateParams);
         else
           $state.go($rootScope.previousState);
-        //}
+        }
       });
     };
 

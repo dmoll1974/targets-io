@@ -307,7 +307,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
           case 'testrun':
 
-            TestRuns.getTestRunById($scope.testrun.productName, $scope.testrun.dashboardName, $scope.testrun.testRunId).success(function (testRun) {
+            TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
               TestRuns.selected = testRun;
               var from = /*Utils.zoomFrom ? Utils.zoomFrom : */TestRuns.selected.startEpoch;
               var until =/* Utils.zoomUntil ? Utils.zoomUntil :*/ TestRuns.selected.endEpoch;
@@ -476,7 +476,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
     function getGraphData(from, until, targets, callback) {
       Graphite.getData(from, until, targets, 900).then(function (series) {
         if (series.data.length > 0) {
-          Graphite.addEvents(series, from, until, $scope.testrun.productName, $scope.testrun.dashboardName, $scope.testrun.testRunId).then(function (seriesEvents) {
+          Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
             callback(seriesEvents);
           });
         } else {

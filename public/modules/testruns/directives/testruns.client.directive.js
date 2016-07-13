@@ -65,7 +65,7 @@ function TestrunsDirective () {
     $scope.openMenu = openMenu;
     $scope.flushCache = flushCache;
     $scope.onlyIncompleteTestRunsAvailable = true;
-
+    $scope.progress = undefined;
 
 
     /* watches */
@@ -187,6 +187,12 @@ function TestrunsDirective () {
 
 
       }
+    });
+
+    mySocket.on('progress', function (message) {
+
+      $scope.progress = (message.progress < 100) ? message.progress : undefined ;
+
     });
 
     /* initialise */

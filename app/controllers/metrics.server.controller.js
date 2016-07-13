@@ -2,17 +2,29 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Metric = mongoose.model('Metric'), testruns = require('./testruns.server.controller.js'), _ = require('lodash');
+var mongoose = require('mongoose'),
+    errorHandler = require('./errors.server.controller'),
+    Metric = mongoose.model('Metric'),
+    Dashboard = mongoose.model('Dashboard'),
+    testruns = require('./testruns.server.controller.js'),
+    _ = require('lodash');
 /**
  * Create a Metric
  */
 exports.create = function (req, res) {
   var metric = new Metric(req.body);
   metric.user = req.user;
+  metric.lastUpdated = new Date().getTime();
   metric.save(function (err, savedMetric) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
+      /* update dashboard lastUpdated */
+
+      Dashboard.update({_id: metric.dashboardId}
+        , { lastUpdated: new Date().getTime() }, { multi: false },function(err, testRuns){
+            if(err) console.log(err);
+      })
       res.jsonp(savedMetric);
     }
   });
@@ -34,11 +46,22 @@ exports.update = function (req, res) {
   //		testruns.updateTestRunRequirementForMetric(req.body)
   //	}
   metric = _.extend(metric, req.body);
+  metric.lastUpdated = new Date().getTime();
   metric.save(function (err) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
+
+      /* update dashboard lastUpdated */
+
+      Dashboard.update({_id: metric.dashboardId}
+          , { lastUpdated: new Date().getTime() }, { multi: false },function(err, testRuns){
+            if(err) console.log(err);
+      })
+
       res.jsonp(metric);
+
+
     }
   });
 };

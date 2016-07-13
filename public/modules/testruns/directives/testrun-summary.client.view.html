@@ -10,9 +10,9 @@
         </span>
 
         <div ng-class="{'fix-to-top-summary': editMode, 'md-padding' : editMode}" layout="row" layout-align="end center">
-            <md-button  ng-if="editMode === true && summarySaved === false" md-no-ink class="md-primary" data-ng-click="submitTestRunSummary()">Save</md-button>
-            <md-button  ng-if="editMode === true && summarySaved === true && updated === true;" md-no-ink class="md-primary" data-ng-click="submitTestRunSummary()">Update</md-button>
-            <md-button ng-if="editMode === true && summarySaved === true" class="md-primary" data-ng-click="reloadTestRunSummary()">Reload</md-button>
+            <md-button  ng-if="editMode === true && (summarySaved === false || updated === true)" md-no-ink class="md-primary" data-ng-click="submitTestRunSummary()">Save</md-button>
+            <!--<md-button  ng-if="editMode === true && summarySaved === true && updated === true" md-no-ink class="md-primary" data-ng-click="submitTestRunSummary()">Update</md-button>-->
+            <!--<md-button ng-if="editMode === true && summarySaved === true" class="md-primary" data-ng-click="reloadTestRunSummary()">Reload</md-button>-->
             <md-button ng-if="summarySaved === true" class="md-warn" data-ng-click="openDeleteModal('', testRunSummary)">Discard</md-button>
             <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode"  ng-class="{'switch-label-disabled': editMode === false }">
                 Edit

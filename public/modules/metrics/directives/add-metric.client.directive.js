@@ -14,7 +14,7 @@ function AddMetricDirective () {
   return directive;
 
   /* @ngInject */
-  function AddMetricDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, ConfirmModal, $modal, $q, $timeout) {
+  function AddMetricDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, ConfirmModal, $modal, $q, $timeout, mySocket, $mdToast, TestRuns) {
 
     var vm = this;
 
@@ -28,6 +28,8 @@ function AddMetricDirective () {
     vm.metricUnits = Metrics.metricUnits;
     vm.operatorOptions = Metrics.operatorOptions;
     vm.deviationOptions = Metrics.deviationOptions;
+    vm.progress = undefined;
+
 
     vm.dashboard = Dashboards.selected;
 
@@ -55,6 +57,28 @@ function AddMetricDirective () {
           vm.metric.benchmarkValue = null;
         }
       }
+    });
+
+    /*socket.io*/
+
+    var room = $stateParams.productName + '-' + $stateParams.dashboardName;
+
+
+    mySocket.emit('room', room);
+    console.log('Joined room: ' + room);
+
+
+    mySocket.on('progress', function (message) {
+
+      vm.progress = (message.progress < 100) ? message.progress : undefined ;
+    });
+
+
+
+
+    $scope.$on('$destroy', function () {
+      //  leave the room
+      mySocket.emit('exit-room', room);
     });
 
     function activate(){
@@ -120,36 +144,46 @@ function AddMetricDirective () {
 
       vm.metric.productName = $stateParams.productName;
       vm.metric.dashboardName = $stateParams.dashboardName;
-      //vm.currentRequirement = '';
-      //vm.currentBenchmark = '';
+      vm.currentRequirement = '';
+      vm.currentBenchmark = '';
 
       Metrics.create(vm.metric).success(function (metric) {
 
         /* reset cloned metric */
         Metrics.clone = undefined;
 
-        //var updateRequirements = vm.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
-        //var updateBenchmarks = vm.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
+        var updateRequirements = vm.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
+        var updateBenchmarks = vm.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
         /* if requirement or benchmark values have changed, update test runs */
-        //if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
-        //
-        //  var toast = $mdToast.simple()
-        //      .action('OK')
-        //      .highlightAction(true)
-        //      .position('top center')
-        //      .hideDelay(3000);
-        //
-        //  $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
+        if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
 
-        //});
-        //vm.updateTestrun = TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName, metric._id, updateRequirements, updateBenchmarks).success(function (testRuns) {
-        //  TestRuns.list = testRuns;
-        //});
-        //}
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('bottom center')
+              .hideDelay(3000);
 
-        $state.go('viewDashboard', {productName:  $stateParams.productName, dashboardName: $stateParams.dashboardName});
+          $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
+            vm.progress = 0;
+
+         });
+
+         TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName).success(function (testRuns) {
+            TestRuns.list = testRuns;
+            vm.progress = undefined;
+           $state.go('viewDashboard', {productName:  $stateParams.productName, dashboardName: $stateParams.dashboardName});
+
+         });
+        }else{
+
+          $state.go('viewDashboard', {productName:  $stateParams.productName, dashboardName: $stateParams.dashboardName});
+
+        }
+
+
 
       });
+
     };
 
     function cancel() {

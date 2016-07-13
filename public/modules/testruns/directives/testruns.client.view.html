@@ -19,7 +19,10 @@
                 </md-button>
             </div>
         </div>
-
+        <div  flex="25" class="md-padding" layout="column" data-ng-if="progress !== undefined" layout-align="center right">
+            <md-progress-linear  md-mode="determinate" value="{{progress}}"></md-progress-linear>
+            <div>Updating test runs ... {{progress}}%</div>
+        </div>
 
         <table class="table">
             <colgroup ng-if="!showBenchmarks">
@@ -130,7 +133,7 @@
                 </td>
                 <td ng-if="!showBenchmarks"></td>
                 <td >
-                    <md-menu style="padding-top: 0px; padding-bottom: 0px;">
+                    <md-menu style="padding-top: 0px; padding-bottom: 0px;" >
                         <div aria-label="Open test run menu" class="md-icon-button"
                                    ng-click="openMenu($mdOpenMenu, $event)">
                             <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_24px.svg"></md-icon>
@@ -139,45 +142,45 @@
                             </md-tooltip>
                         </div>
                         <md-menu-content width="4">
-                            <md-menu-item>
+                            <md-menu-item ng-show="progress === undefined">
                                 <md-button class="targets-io-menu-button" data-ng-click="refreshTestrun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_refresh_black_36px.svg"
                                              md-menu-align-target></md-icon>
                                     UPDATE BENCHMARKS
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item data-ng-if="showBenchmarks && testRun.testRunId !== dashboard.baseline && testRun.completed === true">
+                            <md-menu-item ng-show="progress === undefined" data-ng-if="showBenchmarks && testRun.testRunId !== dashboard.baseline && testRun.completed === true">
                                 <md-button class="targets-io-menu-button" data-ng-click="setTestRunAsBaseline(testRun.testRunId)">
                                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
                                     SET AS BASELINE
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item data-ng-if="testRun.buildResultsUrl">
+                            <md-menu-item  data-ng-if="testRun.buildResultsUrl">
                                 <md-button class="targets-io-menu-button" data-ng-click="go(testRun.buildResultsUrl)">
                                     <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
                                     VIEW IN CI SERVER
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item data-ng-if="testRun.completed === false">
+                            <md-menu-item ng-show="progress === undefined" data-ng-if="testRun.completed === false">
                                 <md-button class="targets-io-menu-button" data-ng-click="markAsComplete(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_check_circle_black_24px.svg"></md-icon>
                                     MARK TEST RUN AS COMPLETE
                                 </md-button>
                             </md-menu-item>
                             <md-menu-divider></md-menu-divider>
-                            <md-menu-item>
+                            <md-menu-item ng-show="progress === undefined">
                                 <md-button class="targets-io-menu-button"  data-ng-click="editTestRun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
                                     EDIT TEST RUN
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item>
+                            <md-menu-item ng-show="progress === undefined">
                                 <md-button  class="targets-io-menu-button" data-ng-click="viewTestRunSummary(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
                                     VIEW TEST RUN SUMMARY
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item>
+                            <md-menu-item ng-show="progress === undefined">
                                 <md-button class="targets-io-menu-button"  data-ng-click="flushCache(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>
                                     FLUSH CACHE
