@@ -138,6 +138,9 @@ function DashboardMetricsDirective () {
 
       });
 
+      Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+        vm.dashboard = dashboard;
+      });
 
       /* Get templates */
 
