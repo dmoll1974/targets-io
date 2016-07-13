@@ -123,9 +123,13 @@
                 </md-input-container>
 
             </div>
-            <div layout="row">
+            <div flex layout="row">
                 <md-button md-no-ink class="md-primary" data-ng-click="vm.create()">Submit</md-button>
                 <md-button data-ng-click="vm.cancel()">Cancel</md-button>
+                <div flex="75" class="md-padding" layout="column" data-ng-if="vm.progress !== undefined" layout-align="center right">
+                    <md-progress-linear  md-mode="determinate" value="{{vm.progress}}"></md-progress-linear>
+                    <div>Updating test runs ... {{vm.progress}}%</div>
+                </div>
             </div>
         </div>
     </form>

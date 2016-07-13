@@ -80,6 +80,10 @@
 
             </div>
         </div>
+        <div  flex="25" class="md-padding" layout="column" data-ng-if="vm.progress !== undefined" layout-align="center right">
+            <md-progress-linear  md-mode="determinate" value="{{vm.progress}}"></md-progress-linear>
+            <div>Updating test runs ... {{vm.progress}}%</div>
+        </div>
         <table class="table">
             <colgroup>
                 <col span="1" style="width: 47%;">
@@ -184,6 +188,7 @@
             </tr>
             </tbody>
         </table>
+
     </div>
 
 </div>

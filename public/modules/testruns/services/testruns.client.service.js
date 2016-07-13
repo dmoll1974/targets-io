@@ -36,8 +36,8 @@ angular.module('events').factory('TestRuns', [
     function addTestRun(testRun){
       return $http.post('/add-testrun', testRun);
     }
-    function updateTestruns(productName, dashboardName, metricId, updateRequirements, updateBenchmarks) {
-      return $http.get('/update-testruns-results/' + productName + '/' + dashboardName + '/' + metricId + '/' + updateRequirements + '/' + updateBenchmarks);
+    function updateTestruns(productName, dashboardName) {
+      return $http.get('/update-testruns-results/' + productName + '/' + dashboardName );
     }
     function updateFixedBaseline(testRun) {
       return $http.post('/update-fixed-baseline-benchmark', testRun);

@@ -257,7 +257,7 @@ function createTestrunSummary(req, res){
 
             if(response.status === 'fail') {
 
-              console.log('Persisting of Gatling data failed due to: ' + response.data.message);
+              console.log('Persisting of Gatling data failed due to: ' + response.data);
 
             }
           });

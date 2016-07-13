@@ -14,7 +14,7 @@ function DashboardMetricsDirective () {
   return directive;
 
   /* @ngInject */
-  function DashboardMetricsDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, ConfirmModal, $modal, $q, $timeout) {
+  function DashboardMetricsDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, ConfirmModal, $modal, $q, $timeout, TestRuns, mySocket, $mdToast) {
 
     var vm = this;
 
@@ -39,6 +39,7 @@ function DashboardMetricsDirective () {
     vm.metricsInTestRunSummary = metricsInTestRunSummary;
     vm.resetAllBenchmarks = resetAllBenchmarks;
     vm.metricSelected = false;
+    vm.progress = undefined;
 
     var originatorEv;
 
@@ -102,6 +103,29 @@ function DashboardMetricsDirective () {
       }
 
     }, true);
+
+
+    /*socket.io*/
+
+    var room = $stateParams.productName + '-' + $stateParams.dashboardName;
+
+
+    mySocket.emit('room', room);
+    console.log('Joined room: ' + room);
+
+
+    mySocket.on('progress', function (message) {
+
+      vm.progress = (message.progress < 100) ? message.progress : undefined ;
+    });
+
+
+
+
+    $scope.$on('$destroy', function () {
+      //  leave the room
+      mySocket.emit('exit-room', room);
+    });
 
     /* initialise view */
 
@@ -173,6 +197,22 @@ function DashboardMetricsDirective () {
           .then(function () {
             vm.allMetricsSelected = false;
             vm.dashboard = Dashboards.selected;
+
+            var toast = $mdToast.simple()
+                .action('OK')
+                .highlightAction(true)
+                .position('bottom center')
+                .hideDelay(3000);
+
+            $mdToast.show(toast.content('Test runs are being updated, this might take a while ...')).then(function(response) {
+
+            });
+
+            vm.progress = 0;
+
+            TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName).success(function (testRuns) {
+              TestRuns.list = testRuns;
+            });
           });
 
     }

@@ -123,11 +123,15 @@
                 </md-input-container>
 
             </div>
-            <div layout="row">
+            <div layout="row" flex >
                 <md-button md-no-ink class="md-primary" data-ng-click="vm.update()">Submit</md-button>
                 <md-button data-ng-click="vm.cancel()">Cancel</md-button>
                 <md-button class="md-primary" data-ng-click="vm.clone()">Clone</md-button>
                 <md-button class="md-warn" data-ng-click="vm.openDeleteConfirmation()">Delete metric</md-button>
+                <div flex-offset="50" flex="25" class="md-padding" layout="column" data-ng-if="vm.progress !== undefined" layout-align="center right">
+                    <md-progress-linear  md-mode="determinate" value="{{vm.progress}}"></md-progress-linear>
+                    <div>Updating test runs ... {{vm.progress}}%</div>
+                </div>
 
             </div>
 
