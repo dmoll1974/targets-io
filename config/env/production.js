@@ -27,9 +27,7 @@ module.exports = {
                 'public/lib/angular-busy/dist/angular-busy.css',
                 'public/lib/ng-table/dist/ng-table.css',
                 'public/lib/ng-tags-input/ng-tags-input.min.css',
-                'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css',
-                'public/lib/ng-sortable/dist/ng-sortable.style.css',
-                'public/lib/ng-sortable/dist/ng-sortable.style.css'
+                'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css'
             ],
             js: [
                 'public/lib/jquery/dist/jquery.min.js',
