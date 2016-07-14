@@ -30,6 +30,7 @@ exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
 exports.testRunsForProduct = testRunsForProduct;
 exports.testRunsForProductRelease = testRunsForProductRelease;
+exports.testRunsForProductReleaseImpl = testRunsForProductReleaseImpl;
 exports.deleteTestRunById = deleteTestRunById;
 exports.testRunById = testRunById;
 exports.refreshTestrun = refreshTestrun;
@@ -328,22 +329,33 @@ function distinctReleases(testRuns){
  */
 function testRunsForProductRelease(req, res) {
 
-  Product.findOne({name: req.params.productName}).exec(function(err, product){
+  testRunsForProductReleaseImpl(req.params.productName, req.params.productRelease)
+  .then(function(testRuns){
 
-    if (err) {
-      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+        res.jsonp(testRuns);
+  })
+}
 
-    } else {
-      Testrun.find({$and: [{productName: product.name}, {productRelease: req.params.productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
-        if (err) {
-          return res.status(400).send({message: errorHandler.getErrorMessage(err)});
-        } else {
+function testRunsForProductReleaseImpl(productName, productRelease) {
 
-          res.jsonp(filterTestRunsBasedOnRequirements(testRuns, product.requirements));
+  return new Promise((resolve, reject) => {
 
-        }
-      });
-    }
+    Product.findOne({name: productName}).exec(function(err, product){
+
+      if (err) {
+        reject(err);
+      } else {
+        Testrun.find({$and: [{productName: product.name}, {productRelease: productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
+          if (err) {
+            reject(err);
+          } else {
+
+            resolve(filterTestRunsBasedOnRequirements(testRuns, product.requirements));
+
+          }
+        });
+      }
+    })
   })
 }
 
@@ -361,6 +373,24 @@ function filterTestRunsBasedOnRequirements(testRuns, requirements){
 
         if (filteredTestruns.indexOf(testRun) == -1) {
           testRuns[i].humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
+
+          /* get all requiremetns related to dashboard*/
+          var dashboardRequirements = requirements.filter(function(requirement){
+            if(requirement.relatedDashboards.indexOf(testRun.dashboardName)!== -1){
+              return requirement;
+            }
+          })
+
+          _.each(dashboardRequirements, function(dashboardRequirement){
+
+              testRun.requirements.push({
+                stakeholder: dashboardRequirement.stakeholder,
+                description: dashboardRequirement.description,
+                result: false
+              })
+
+          });
+
           filteredTestruns.push(testRun);
         }
 

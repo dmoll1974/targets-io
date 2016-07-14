@@ -48,23 +48,39 @@ function ProductReleaseDetailsDirective () {
 
 
 
-    Products.getProductRelease($stateParams.productName, $stateParams.productRelease).success(function(productRelease){
+    Products.getProductRelease($stateParams.productName, $stateParams.productRelease).success(function(response){
 
-        if(productRelease){
+        if(response.productRelease){
 
-          $scope.product = productRelease;
+          $scope.product = response.productRelease;
           $scope.releaseSaved = true;
-
 
           /* add test runs to index */
           _.each($scope.product.releaseTestRuns, function (testRun) {
 
             Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
 
-                $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
+              $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
 
             });
           });
+
+          if(response.hasBeenUpdated) {
+            $scope.updated = true;
+            $scope.editMode = true;
+
+            var toast = $mdToast.simple()
+                .action('OK')
+                .highlightAction(true)
+                .position('top center')
+                .hideDelay(6000);
+
+            $mdToast.show(toast.content('Release report was updated based on updated data, save to persist!')).then(function (response) {
+
+            });
+          }
+
+
 
         }else {
 
@@ -82,87 +98,55 @@ function ProductReleaseDetailsDirective () {
 
           });
 
-          createProductReleaseDetails(false);
+          createProductReleaseDetails();
 
         }
     });
 
-function createProductReleaseDetails(update){
+function createProductReleaseDetails(){
 
   /* get product */
   Products.get($stateParams.productName).success(function (product) {
 
 
-
-    if(!update) {
-
       $scope.product = product;
       $scope.product.productRelease = $stateParams.productRelease;
-
-
-    }else{
-      /* reset in case of reload */
-
-      $scope.product.releaseTestRuns = [];
-      $scope.product.requirements = product.requirements;
-      $scope.testRunIndexItems = [];
-      $scope.releaseSaved = true;
-      $scope.updated = true;
-
-
-    }
 
 
     /* get test runs for release */
     TestRuns.listTestRunsForProductRelease($scope.product.name, $stateParams.productRelease).success(function (testRuns) {
 
-        /* reset in case of update */
-        //$scope.product.releaseTestRuns = [];
         $scope.product.releaseTestRuns = testRuns;
 
-
-        /* match test runs to requirements */
-
-        //_.each($scope.product.releaseTestRuns, function (testRun) {
-
-
-
+      /* create index */
       _.each(testRuns, function (testRun) {
 
         Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
 
+          $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
 
-                //var testRunInReport = $scope.product.releaseTestRuns.map(function(releaseTestRun){return releaseTestRun.testRunId;}).indexOf(testRun.testRunId);
-                ///*if not yet in index, push the test run to index*/
-                //if(testRunInReport === -1){
-
-                  $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
-                  //$scope.product.releaseTestRuns.push(testRun);
-
-
-                //}
-
-                testRun.requirements = [];
-
-                _.each($scope.product.requirements, function (requirement, i) {
-
-                  /* set requirements results to false */
-                  requirement.result = false;
-
-                  _.each(requirement.relatedDashboards, function (dashboard) {
-
-                    if (testRun.dashboardName === dashboard) {
-
-                      testRun.requirements.push(requirement);
-                      testRun.description = dashboard.description;
-                    }
-
-                  })
-
-                })
-            });
+            //    testRun.requirements = [];
+            //
+            //    _.each($scope.product.requirements, function (requirement, i) {
+            //
+            //      /* set requirements results to false */
+            //      requirement.result = false;
+            //
+            //      _.each(requirement.relatedDashboards, function (dashboard) {
+            //
+            //        if (testRun.dashboardName === dashboard) {
+            //
+            //          testRun.requirements.push(requirement);
+            //          testRun.description = dashboard.description;
+            //        }
+            //
+            //      })
+            //
+            //    })
+            //});
         });
 
+      });
     });
   });
 
