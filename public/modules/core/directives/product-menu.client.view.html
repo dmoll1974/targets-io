@@ -23,7 +23,7 @@
         </md-menu-item>
         <md-menu-divider ng-if="product"></md-menu-divider>
         <md-menu-item ng-if="product">
-            <md-button class="targets-io-menu-button" data-ng-click="editProductRequirememts()">
+            <md-button class="targets-io-menu-button" data-ng-click="editProductRequirememts(product.name)">
                 <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"
                          md-menu-align-target></md-icon>
                 Product requirements

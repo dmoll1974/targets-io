@@ -32,10 +32,10 @@ function ProductMenuDirective () {
             $state.go('addProduct');
         };
 
-        $scope.editProductRequirememts = function (){
+        $scope.editProductRequirememts = function (productName){
 
             $state.go('productRequirements', {
-                'productName': Products.selected.name
+                'productName': productName
             });
 
         }

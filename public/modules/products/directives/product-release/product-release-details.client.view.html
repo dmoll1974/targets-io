@@ -8,9 +8,9 @@
         <div ng-class="{'fix-to-top-release': editMode, 'md-padding' : editMode}" layout="row" layout-align="end center">
             <div id="summary-buttons" layout="row">
                 <md-button  ng-if="editMode === true" md-no-ink class="md-primary" data-ng-click="addLink()">Add link</md-button>
-                <md-button  ng-if="editMode === true && releaseSaved === false" md-no-ink class="md-primary" data-ng-click="submitProductRelease()">Save</md-button>
-                <md-button  ng-if="editMode === true && releaseSaved === true && updated === true;" md-no-ink class="md-primary" data-ng-click="submitProductRelease()">Update</md-button>
-                <md-button ng-if="editMode === true && releaseSaved === true" class="md-primary" data-ng-click="reloadProductRelease()">Reload</md-button>
+                <md-button  ng-if="editMode === true && (releaseSaved === false || updated === true)" md-no-ink class="md-primary" data-ng-click="submitProductRelease()">Save</md-button>
+                <!--<md-button  ng-if="editMode === true && releaseSaved === true && updated === true;" md-no-ink class="md-primary" data-ng-click="submitProductRelease()">Update</md-button>-->
+                <!--<md-button ng-if="editMode === true && releaseSaved === true" class="md-primary" data-ng-click="reloadProductRelease()">Reload</md-button>-->
                 <md-button ng-if="releaseSaved === true" class="md-warn" data-ng-click="openDeleteModal('', product)">Discard</md-button>
 
             </div>

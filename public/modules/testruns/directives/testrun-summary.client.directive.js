@@ -34,6 +34,7 @@ function TestRunSummaryDirective () {
 
     function updateMetricOrder(event){
 
+      $scope.updated = true;
       _.each($scope.testRunSummary.metrics, function(testRunSummaryMetric, i){
 
         testRunSummaryMetric.summaryIndex = i;
