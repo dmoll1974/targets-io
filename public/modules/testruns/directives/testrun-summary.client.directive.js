@@ -27,12 +27,9 @@ function TestRunSummaryDirective () {
 
 
     $scope.dragControlListeners = {
-      accept: $scope.editMode && $scope.hideGraphs,//override to determine drag is allowed or not. default is true.
-      itemMoved: function(){$scope.updated = true;}, //Do what you want},
-      orderChanged: updateMetricOrder,//Do what you want},
-      //containment: '#board'//optional param.
-      //clone: true //optional param for clone feature.
-      //    allowDuplicates: false //optional param allows duplicates to be dropped.
+      accept: $scope.editMode && $scope.hideGraphs,
+      itemMoved: function(){$scope.updated = true;},
+      orderChanged: updateMetricOrder
      };
 
     function updateMetricOrder(event){
@@ -215,6 +212,15 @@ function TestRunSummaryDirective () {
       })
     }
 
+    $scope.setDefaultAnnotation = function(metric){
+
+      Metrics.get(metric._id).success(function(storedMetric){
+
+        storedMetric.defaultSummaryText = metric.summaryText;
+        Metrics.update(storedMetric).success(function(updatedMetric){});
+      })
+    }
+
     $scope.deleteFromTestRunSummary = function(metric){
 
       var index =  $scope.testRunSummary.metrics.map(function(testRunSummaryMetric){return testRunSummaryMetric._id;}).indexOf(metric._id);
@@ -288,56 +294,8 @@ function TestRunSummaryDirective () {
       });
     }
 
-    $scope.moveUp = function(metricToMove){
-
-      var originalSummaryIndex = metricToMove.summaryIndex;
-      var currentIndex = $scope.testRunSummary.metrics.map(function(metric){return metric._id.toString()}).indexOf(metricToMove._id.toString());
-      var newIndex = findNextSummaryMetricIndex($scope.testRunSummary.metrics, currentIndex);
-      var newSummaryIndex = $scope.testRunSummary.metrics[newIndex].summaryIndex;
-
-      //var tempArrayItem = $scope.testRunSummary.metrics[newIndex];
-      //$scope.testRunSummary.metrics[newIndex] = $scope.testRunSummary.metrics[currentIndex];
-      //$scope.testRunSummary.metrics[currentIndex] = tempArrayItem;
-
-      /* switch metric summaryIndeces*/
-
-      $scope.testRunSummary.metrics[currentIndex].summaryIndex = $scope.testRunSummary.metrics[currentIndex].summaryIndex - 1;
-
-      $scope.testRunSummary.metrics[newIndex].summaryIndex = $scope.testRunSummary.metrics[newIndex].summaryIndex + 1;
 
 
-      Metrics.update( $scope.testRunSummary.metrics[currentIndex]).success(function (updatedMetricToMove) {
-
-
-        Metrics.update( $scope.testRunSummary.metrics[newIndex]).success(function (updatedMovedMetric) {
-
-
-          $scope.testRunSummary.metrics = $scope.testRunSummary.metrics.sort(Utils.dynamicSort('summaryIndex'));
-
-          $scope.updated = true;
-
-        });
-
-
-      });
-
-
-
-
-    };
-
-    function findNextSummaryMetricIndex(metrics, index){
-
-      var sortedMetrics = metrics.sort(Utils.dynamicSort('summaryIndex'));
-
-      for(var i = index - 1 ; i > 0; i--){
-
-        if (metrics[i].includeInSummary === true) break;
-
-      }
-
-      return i;
-    }
 
     $scope.editMetric = function(metricId){
 
@@ -390,12 +348,19 @@ function TestRunSummaryDirective () {
 
     function submitTestRunSummary(){
 
-    /* set summaryIndeces in current order of the scope */
+    /* update metric default annotations */
+
+        _.each($scope.testRunSummary.metrics, function(testRunSummaryMetric, i){
+
+          Metrics.get(testRunSummaryMetric._id).success(function(metric){
+
+            if(metric.defaultSummaryText === undefined) {
+              metric.defaultSummaryText = testRunSummaryMetric.summaryText;
+              Metrics.update(metric).success(function(updatedMetric){});
+            }
 
 
-        _.each($scope.testRunSummary.metrics, function(metric, i){
-
-          metric.summaryIndex = i;
+          })
 
         })
 
@@ -473,11 +438,6 @@ function TestRunSummaryDirective () {
       }
     });
 
-    $scope.reloadTestRunSummary = function(){
-
-      createTestRunSummary(true);
-
-    }
 
 
     $scope.openDeleteModal = function (size, testRunSummary) {
