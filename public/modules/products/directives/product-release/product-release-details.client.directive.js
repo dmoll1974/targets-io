@@ -109,8 +109,8 @@ function createProductReleaseDetails(){
   Products.get($stateParams.productName).success(function (product) {
 
 
-      $scope.product = product;
-      $scope.product.productRelease = $stateParams.productRelease;
+    $scope.product = product;
+    $scope.product.productRelease = $stateParams.productRelease;
 
 
     /* get test runs for release */
@@ -118,32 +118,32 @@ function createProductReleaseDetails(){
 
         $scope.product.releaseTestRuns = testRuns;
 
-      /* create index */
       _.each(testRuns, function (testRun) {
 
         Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
 
-          $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
+          /* create index */
 
-            //    testRun.requirements = [];
-            //
-            //    _.each($scope.product.requirements, function (requirement, i) {
-            //
-            //      /* set requirements results to false */
-            //      requirement.result = false;
-            //
-            //      _.each(requirement.relatedDashboards, function (dashboard) {
-            //
-            //        if (testRun.dashboardName === dashboard) {
-            //
-            //          testRun.requirements.push(requirement);
-            //          testRun.description = dashboard.description;
-            //        }
-            //
-            //      })
-            //
-            //    })
-            //});
+            $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
+
+            testRun.requirements = [];
+
+            _.each($scope.product.requirements, function (requirement, i) {
+
+                /* set requirements results to false */
+                requirement.result = false;
+
+                _.each(requirement.relatedDashboards, function (dashboard) {
+
+                    if (testRun.dashboardName === dashboard) {
+
+                      testRun.requirements.push(requirement);
+                      testRun.description = dashboard.description;
+                    }
+
+                });
+
+            });
         });
 
       });
@@ -220,7 +220,7 @@ function createProductReleaseDetails(){
               .position('top center')
               .hideDelay(3000);
 
-          $mdToast.show(toast.content('Product release results saved to db')).then(function (response) {
+          $mdToast.show(toast.content('Product release results stored in database')).then(function (response) {
 
           });
 

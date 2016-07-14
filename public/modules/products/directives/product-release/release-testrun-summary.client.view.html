@@ -1,5 +1,5 @@
-<md-content>
-        <md-content class="md-padding" flex="75">
+<md-content >
+        <md-content  class="md-padding" flex="75">
             <div layout="row" layout-align="space-between">
                 <h4 class="testrun-header">{{testRunSummary.description}}</h4>
                 <div ng-if="edit === true">
@@ -11,7 +11,9 @@
                     </md-button>
                 </div>
             </div>
-            <div ng-attr-id="{{'show-detailed-testrun-summary-' + index}}" >
+
+
+            <div ng-show="summarySaved" ng-attr-id="{{'show-detailed-testrun-summary-' + index}}" >
 
                 <h4>Test run summary</h4>
                 <table class="table">
@@ -73,13 +75,13 @@
 
 
 
-    <md-button ng-click="toggleShowTestRunDetails()" ng-if="showTestRunDetails" class="md-primary" aria-label="Hide detailed test run summary">
+    <md-button ng-show="summarySaved" ng-click="toggleShowTestRunDetails()" ng-if="showTestRunDetails" class="md-primary" aria-label="Hide detailed test run summary">
         <md-tooltip>Hide detailed test run Summary</md-tooltip>
         <md-icon md-svg-src="images/assets/ic_zoom_out_black_24px.svg"></md-icon>
         <span>Hide detailed test run Summary</span>
     </md-button>
 
-    <md-content ng-if="showTestRunDetails" class="md-padding" layout="column" flex="90" >
+    <md-content  ng-if="showTestRunDetails" class="md-padding" layout="column" flex="90" >
 
 
         <h4>Metrics</h4>
@@ -122,7 +124,7 @@
         </table>
 
     </md-content>
-    <md-content >
+    <md-content  ng-show="summarySaved" >
 
         <div class="md-padding" flex="75">
             <h4>Related product requirement(s)</h4>
@@ -152,14 +154,18 @@
         </div>
     </md-content>
 
-    <md-button ng-click="toggleShowTestRunDetails()" ng-if="!showTestRunDetails" class="md-primary" aria-label="Show detailed test run summary">
+    <md-button ng-show="summarySaved" ng-click="toggleShowTestRunDetails()" ng-if="!showTestRunDetails" class="md-primary" aria-label="Show detailed test run summary">
         <md-tooltip>Show detailed test run Summary</md-tooltip>
         <md-icon md-svg-src="images/assets/ic_zoom_in_black_24px.svg"></md-icon>
         <span>Show detailed test run Summary</span>
     </md-button>
-    <md-button ng-click="toggleShowTestRunDetails()" ng-if="showTestRunDetails" class="md-primary" aria-label="Hide detailed test run summary">
+    <md-button ng-show="summarySaved" ng-click="toggleShowTestRunDetails()" ng-if="showTestRunDetails" class="md-primary" aria-label="Hide detailed test run summary">
         <md-tooltip>Hide detailed test run Summary</md-tooltip>
         <md-icon md-svg-src="images/assets/ic_zoom_out_black_24px.svg"></md-icon>
         <span>Hide detailed test run Summary</span>
     </md-button>
+    <div layout="row" layout-align="start center" ng-if="!summarySaved" data-ng-click="goToTestRunSummary()">
+        <md-icon style="margin: 5px;" md-svg-src="images/assets/ic_warning_black_24px.svg"></md-icon>
+        <span>This test run summary has not been stored in database, click here to go the test run summary view</span>
+    </div>
 </md-content>

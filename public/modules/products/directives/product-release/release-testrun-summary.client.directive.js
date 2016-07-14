@@ -48,7 +48,7 @@ function ReleaseTestRunSummaryDirective () {
 
         $scope.summarySaved = false;
 
-        /* get test run info */
+        ///* get test run info */
 
         TestRuns.getTestRunById($scope.productName, $scope.dashboardName, $scope.testRunId).success(function (testRun) {
 
@@ -75,25 +75,27 @@ function ReleaseTestRunSummaryDirective () {
             $scope.testRunSummary.description = dashboard.description;
             $scope.testRunSummary.goal = dashboard.goal;
 
-
-            /* merge requirements results from test run data*/
-
-            $scope.testRunSummary.metrics = addRequirementsResultsForTestRun(dashboard.metrics, testRun.metrics);
-
-
-            /* add default annotation texts to model */
-
-            _.each($scope.testRunSummary.metrics, function (metric) {
-
-              metric.summaryText = (metric.defaultSummaryText) ? metric.defaultSummaryText : '';
-
-            })
-
-
+            });
           });
 
-
-        });
+        //    /* merge requirements results from test run data*/
+        //
+        //    $scope.testRunSummary.metrics = addRequirementsResultsForTestRun(dashboard.metrics, testRun.metrics);
+        //
+        //
+        //    /* add default annotation texts to model */
+        //
+        //    _.each($scope.testRunSummary.metrics, function (metric) {
+        //
+        //      metric.summaryText = (metric.defaultSummaryText) ? metric.defaultSummaryText : '';
+        //
+        //    })
+        //
+        //
+        //  });
+        //
+        //
+        //});
       }
   });
 

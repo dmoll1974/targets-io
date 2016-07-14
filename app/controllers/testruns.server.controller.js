@@ -345,7 +345,7 @@ function testRunsForProductReleaseImpl(productName, productRelease) {
       if (err) {
         reject(err);
       } else {
-        Testrun.find({$and: [{productName: product.name}, {productRelease: productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
+        Testrun.find({$and: [{productName: productName}, {productRelease: productRelease}, {completed: true}]}).sort({end: 1}).exec(function (err, testRuns) {
           if (err) {
             reject(err);
           } else {
@@ -374,24 +374,7 @@ function filterTestRunsBasedOnRequirements(testRuns, requirements){
         if (filteredTestruns.indexOf(testRun) == -1) {
           testRuns[i].humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
 
-          /* get all requiremetns related to dashboard*/
-          var dashboardRequirements = requirements.filter(function(requirement){
-            if(requirement.relatedDashboards.indexOf(testRun.dashboardName)!== -1){
-              return requirement;
-            }
-          })
-
-          _.each(dashboardRequirements, function(dashboardRequirement){
-
-              testRun.requirements.push({
-                stakeholder: dashboardRequirement.stakeholder,
-                description: dashboardRequirement.description,
-                result: false
-              })
-
-          });
-
-          filteredTestruns.push(testRun);
+               filteredTestruns.push(testRun);
         }
 
       }
