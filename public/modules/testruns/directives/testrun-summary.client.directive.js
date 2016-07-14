@@ -354,7 +354,7 @@ function TestRunSummaryDirective () {
 
           Metrics.get(testRunSummaryMetric._id).success(function(metric){
 
-            if(metric.defaultSummaryText === undefined) {
+            if(metric.defaultSummaryText === '' || metric.defaultSummaryText === undefined) {
               metric.defaultSummaryText = testRunSummaryMetric.summaryText;
               Metrics.update(metric).success(function(updatedMetric){});
             }
