@@ -307,7 +307,9 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
           case 'testrun':
 
-            TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+              var testRunId = $stateParams.testRunId ? $stateParams.testRunId : $scope.testrun.testRunId;
+
+            TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, testRunId).success(function (testRun) {
               TestRuns.selected = testRun;
               var from = /*Utils.zoomFrom ? Utils.zoomFrom : */TestRuns.selected.startEpoch;
               var until =/* Utils.zoomUntil ? Utils.zoomUntil :*/ TestRuns.selected.endEpoch;
