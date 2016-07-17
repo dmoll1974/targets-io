@@ -8,6 +8,8 @@ module.exports = function (app) {
   app.route('/dashboards/:productName').get(dashboards.list).post(dashboards.create);
   //users.requiresLogin,
   app.route('/dashboards/:productName/:dashboardName').get(dashboards.read);
+  app.route('/list-metrics-not-in-testrun-summary/:productName/:dashboardName').get(dashboards.listMetricsNotInTestRunSummary);
+
   app.route('/dashboards/:dashboardId').put(dashboards.update)  // users.requiresLogin, dashboards.hasAuthorization,
 .delete(dashboards.delete);
   //users.requiresLogin, dashboards.hasAuthorization,

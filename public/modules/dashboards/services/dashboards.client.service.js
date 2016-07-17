@@ -16,11 +16,17 @@ angular.module('dashboards').factory('Dashboards', [
     defaultTag: '',
     getDefaultTag: getDefaultTag,
     selectedTab: 0,
-    getDashboardsForProduct: getDashboardsForProduct
+    getDashboardsForProduct: getDashboardsForProduct,
+    listMetricsNotInTestRunSummary: listMetricsNotInTestRunSummary
 
   };
   return Dashboards;
 
+
+  function listMetricsNotInTestRunSummary(productName, dashboardName){
+     return $http.get('/list-metrics-not-in-testrun-summary/' + productName + '/' + dashboardName);
+
+  }
 
   function updateTags(productName, dashboardName, tags, callback) {
     /* if new tags are added, update dashbboard */

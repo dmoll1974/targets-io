@@ -143,6 +143,12 @@
                         </div>
                         <md-menu-content width="4">
                             <md-menu-item ng-show="progress === undefined">
+                                <md-button  class="targets-io-menu-button" data-ng-click="viewTestRunSummary(testRun)">
+                                    <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
+                                    VIEW TEST RUN SUMMARY
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item ng-show="progress === undefined">
                                 <md-button class="targets-io-menu-button" data-ng-click="refreshTestrun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_refresh_black_36px.svg"
                                              md-menu-align-target></md-icon>
@@ -174,12 +180,7 @@
                                     EDIT TEST RUN
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item ng-show="progress === undefined">
-                                <md-button  class="targets-io-menu-button" data-ng-click="viewTestRunSummary(testRun)">
-                                    <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
-                                    VIEW TEST RUN SUMMARY
-                                </md-button>
-                            </md-menu-item>
+
                             <md-menu-item ng-show="progress === undefined">
                                 <md-button class="targets-io-menu-button"  data-ng-click="flushCache(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>

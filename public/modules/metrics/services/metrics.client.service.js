@@ -62,6 +62,7 @@ angular.module('metrics').factory('Metrics', [
 
     return Metrics;
 
+
     function getFn(metricId) {
       return $http.get('/metrics/' + metricId);
     }

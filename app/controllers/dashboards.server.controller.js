@@ -3,6 +3,42 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), Metric = mongoose.model('Metric'), _ = require('lodash');
+
+exports.listMetricsNotInTestRunSummary = listMetricsNotInTestRunSummary;
+
+function listMetricsNotInTestRunSummary(req, res) {
+
+  Dashboard.findOne({
+    productId: req.product._id,
+    name: req.params.dashboardName.toUpperCase()
+  }).populate({
+    path: 'metrics',
+    //match: { includeInSummary: false },
+    options: {
+      sort: {
+        tag: 1,
+        alias: 1
+      }
+    }
+  }).exec(function (err, dashboard) {
+
+    if (err) {
+      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+    } else {
+
+      var metricsToAdd = dashboard.metrics.filter(function(metric){
+
+        if(metric.includeInSummary === false) return metric;
+
+      })
+
+      res.json(metricsToAdd);
+    }
+
+
+  })
+
+}
 exports.clone = function (req, res) {
   var dashboardClone = new Dashboard();
   var metricCloneArray = [];

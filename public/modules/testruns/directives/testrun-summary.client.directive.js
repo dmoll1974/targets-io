@@ -108,6 +108,24 @@ function TestRunSummaryDirective () {
       }
   });
 
+
+    /* initialise menu */
+
+    var originatorEv;
+
+    $scope.openMenu = function ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+
+    };
+
+    /* get list of metrics not yet in test run summary */
+    Dashboards.listMetricsNotInTestRunSummary($stateParams.productName, $stateParams.dashboardName).success(function(metricsToAdd){
+
+      $scope.metricsToAdd = metricsToAdd;
+
+    })
+
     function createTestRunSummary (update){
 
       /* get test run info */
@@ -341,10 +359,21 @@ function TestRunSummaryDirective () {
     }
 
 
+    $scope.addMetricToTestRunSummary = function (addMetric){
+
+        $scope.testRunSummary.metrics.unshift(addMetric);
+
+      /* remove metric from menu items */
+        var index= $scope.metricsToAdd.map(function(metricToAdd){return metricToAdd._id.toString()}).indexOf(addMetric._id.toString());
+      $scope.metricsToAdd.splice(index, 1);
+
+    }
+
     $scope.submitTestRunSummary = function() {
 
       submitTestRunSummary();
     }
+
 
 
     function submitTestRunSummary(){
@@ -355,8 +384,9 @@ function TestRunSummaryDirective () {
 
           Metrics.get(testRunSummaryMetric._id).success(function(metric){
 
-            if(metric.defaultSummaryText === '' || metric.defaultSummaryText === undefined) {
+            if(metric.defaultSummaryText === '' || metric.defaultSummaryText === undefined ||  metric.includeInSummary === false) { //in case metrics are added via the add metric button
               metric.defaultSummaryText = testRunSummaryMetric.summaryText;
+              metric.includeInSummary = true;
               Metrics.update(metric).success(function(updatedMetric){});
             }
 
