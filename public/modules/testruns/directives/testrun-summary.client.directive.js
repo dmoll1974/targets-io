@@ -367,6 +367,7 @@ function TestRunSummaryDirective () {
         var index= $scope.metricsToAdd.map(function(metricToAdd){return metricToAdd._id.toString()}).indexOf(addMetric._id.toString());
       $scope.metricsToAdd.splice(index, 1);
 
+      $scope.updated = true;
     }
 
     $scope.submitTestRunSummary = function() {
