@@ -17,7 +17,7 @@ function GraphsContentDirective () {
   return directive;
 
   /* @ngInject */
-  function GraphsContentDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Utils, Metrics, Tags, $timeout) {
+  function GraphsContentDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Utils, Metrics, Tags, $timeout, $mdToast) {
 
     var vm = this;
 
@@ -38,6 +38,7 @@ function GraphsContentDirective () {
     vm.tagRemoved = tagRemoved;
     vm.hasFlash = hasFlash;
     vm.clipClicked =clipClicked;
+    vm.toggleTestRunSummary = toggleTestRunSummary;
 
 
     activate();
@@ -125,6 +126,36 @@ function GraphsContentDirective () {
         vm.showUrl = true;
       }
     };
+
+    function toggleTestRunSummary(metric){
+
+      if(metric.includeInSummary === false){
+
+        metric.includeInSummary = true;
+
+      }else{
+
+        metric.includeInSummary = false;
+
+      }
+
+      Metrics.update(metric).success(function(updatedMetric){
+
+        var content = (updatedMetric.includeInSummary === true) ? 'Metric has been added to test run summary' : 'Metric has been removed from test run summary'
+        var toast = $mdToast.simple()
+            .action('OK')
+            .highlightAction(true)
+            .position('bottom center')
+            .hideDelay(3000);
+
+        $mdToast.show(toast.content(content)).then(function(response) {
+
+        });
+
+
+      })
+
+    }
 
     function editMetric(metricId) {
       $state.go('editMetric', {

@@ -3,17 +3,37 @@
         <div>{{metric.alias}}</div>
     </accordion-heading>
     <div  ng-if="metric.isOpen">
-        <span>
-            <div class="btn-group">
-                <label title="Edit metric" class="btn default" ng-click="vm.editMetric(metric._id)"><span
-                        class="btn btn-xs glyphicon glyphicon-wrench"></span></label>
-                <label title="Edit tags" class="btn default" ng-click="vm.setTags()"><span
-                        class="btn btn-xs glyphicon glyphicon-tag"></span></label>
-                <label title="Share URL" class="btn default"
-                       ng-click="vm.setMetricShareUrl(metric)"><span
-                        class="btn btn-xs glyphicon glyphicon-share"></span></label>
-            </div>
-        </span>
+        <div layout="row">
+            <md-button  class=" md-icon-button" data-ng-click="vm.editMetric(metric._id)">
+                <md-icon class="graph-button" md-svg-src="images/assets/ic_settings_black_18px.svg"></md-icon>
+                <md-tooltip>Metric configuration</md-tooltip>
+            </md-button>
+            <md-button  class=" md-icon-button" data-ng-click="vm.setTags()">
+                <md-icon class="graph-button" md-svg-src="images/assets/ic_label_black_18px.svg"></md-icon>
+                <md-tooltip>Set tags</md-tooltip>
+            </md-button>
+            <md-button  class=" md-icon-button" data-ng-click="vm.setMetricShareUrl(metric)">
+                <md-icon class="graph-button" md-svg-src="images/assets/ic_link_black_18px.svg"></md-icon>
+                <md-tooltip>Share URL</md-tooltip>
+            </md-button>
+            <md-button  class="md-icon-button" data-ng-click="vm.toggleTestRunSummary(metric)">
+                <md-icon ng-class="{'graph-button': metric.includeInSummary === true, 'not-in-summary': metric.includeInSummary === false}" md-svg-src="images/assets/ic_assignment_black_18px.svg"></md-icon>
+                <md-tooltip ng-if="metric.includeInSummary === false">Click to add metric to test run summary</md-tooltip>
+                <md-tooltip ng-if="metric.includeInSummary === true">Click to remove metric from test run summary</md-tooltip>
+            </md-button>
+        </div>
+
+        <!--<span>-->
+            <!--<div class="btn-group">-->
+                <!--<label title="Edit metric" class="btn default" ng-click="vm.editMetric(metric._id)"><span-->
+                        <!--class="btn btn-xs glyphicon glyphicon-wrench"></span></label>-->
+                <!--<label title="Edit tags" class="btn default" ng-click="vm.setTags()"><span-->
+                        <!--class="btn btn-xs glyphicon glyphicon-tag"></span></label>-->
+                <!--<label title="Share URL" class="btn default"-->
+                       <!--ng-click="vm.setMetricShareUrl(metric)"><span-->
+                        <!--class="btn btn-xs glyphicon glyphicon-share"></span></label>-->
+            <!--</div>-->
+        <!--</span>-->
         <span><input ng-readonly="true" ng-model="vm.metricShareUrl" ng-if="vm.showUrl" style="width:50%;"
                      share-graph-url/></span><span><button ng-if="vm.showUrl && vm.hasFlash()"
                                                            tooltip-size="medium" title="Copy graph URL"
