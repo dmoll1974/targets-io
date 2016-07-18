@@ -9,7 +9,8 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     restrict: 'E',
     scope: {
-      metric: '='
+      metric: '=',
+      index: '='
      },
     //template: '<div flex class="dygraph-div"  style="width:100%;"><legend legend="legend" style="margin-top: 20px; margin-left: 30px;"></legend>',
     templateUrl: 'modules/graphs/directives/dygraph.client.view.html',
@@ -85,19 +86,22 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
             });
 
 
+
             /* add colors to legend */
-            var colors = scope.graph.getColors();
 
-            _.each(scope.metric.legendData, function(legendItem, i){
+            $timeout(function(){
+              var colors = scope.graph.getColors();
 
-              if(scope.metric.legendData[i].numberOfValidDatapoints > 0 ){
+              _.each(scope.metric.legendData, function(legendItem, i){
 
-                scope.metric.legendData[i].color = colors[i];
+                if(scope.metric.legendData[i].numberOfValidDatapoints > 0 ){
 
-              }
+                  scope.metric.legendData[i].color = colors[i];
 
-            })
+                }
 
+              })
+            });
             /* add annotation to graph */
             var annotations = scope.graph.annotations();
 
@@ -200,7 +204,8 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
 
-        $scope.graph.updateOptions({legend: Utils.showTooltip ? 'follow' : 'never'});
+        $scope.showTooltip = newVal;
+        $scope.graph.updateOptions({legend: Utils.showTooltip ? 'onmouseover' : 'never'});
 
       }
     });
@@ -286,7 +291,8 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
             connectSeparatedPoints: true,
             labels: dygraphData.labels,
             axisLabelFontSize: 12,
-            legend: Utils.showTooltip ? 'follow' : 'never',
+            legend: Utils.showTooltip ? 'onmouseover' : 'never',
+            labelsDiv: document.getElementById("legend-" + $scope.index),
             includeZero: true,
             valueRange: $scope.yRange,
             highlightCircleSize: 0,

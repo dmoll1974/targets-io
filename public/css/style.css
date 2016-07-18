@@ -319,13 +319,14 @@ html, body {
     /*border-bottom: none;*/
 }
 
-.dygraph-legend > span { display: none; }
-.dygraph-legend > span.highlight { display: inline-flex; }
+.legend  > span { display: none; }
+.legend  > span.highlight { display: inline-flex; }
 
-.dygraph-legend {
+.legend  {
     /*background-color: rgba(200, 200, 255, 0.75) !important;*/
     padding: 4px;
     width: 100%;
+
 }
 
 

@@ -6,7 +6,8 @@ function GraphsContentDirective () {
 
   var directive = {
     scope: {
-      metric: '='
+      metric: '=',
+      index: '='
     },
     restrict: 'EA',
     templateUrl: 'modules/graphs/directives/graphs-content.client.view.html',

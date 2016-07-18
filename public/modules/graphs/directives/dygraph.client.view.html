@@ -1,6 +1,6 @@
 <div flex class="dygraph-div"  style="width:100%; margin-top: 20px;"></div>
 <md-progress-linear ng-show="showProgressBar" md-mode="indeterminate" style="margin-left: 50px; width:95%;" ></md-progress-linear>
-
+<div style="margin-left:45px;" ng-show="showTooltip"  class="md-padding legend" ng-attr-id="{{'legend-' + index}}"></div>
 <div layout="row" layout-align="space-between start" ng-if="showLegend">
     <div  ng-if="metric.graphNumberOfValidDatapoints > 0" class="datagrid" style="margin-top: 20px; margin-left: 40px; ">
         <table>

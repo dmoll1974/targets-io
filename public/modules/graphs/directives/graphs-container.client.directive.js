@@ -134,6 +134,7 @@ function GraphsContainerDirective () {
     $scope.$on('$destroy', function () {
       /* reset metricFilter when leaving graphs view */
       Utils.metricFilter = '';
+      Utils.showTooltip = false;
 
     });
 
@@ -487,6 +488,8 @@ function GraphsContainerDirective () {
     function switchTag(route) {
 
       Utils.metricFilter = '';
+
+      Utils.showTooltip = false;
 
       switch(vm.graphsType){
 
