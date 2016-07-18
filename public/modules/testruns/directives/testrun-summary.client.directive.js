@@ -450,7 +450,7 @@ function TestRunSummaryDirective () {
 
     $scope.$on('$destroy', function () {
       /* if updates have been made and not saved, prompt the user */
-      if($scope.updated === true && !$rootScope.currentState.includes('editMetric') && !$rootScope.currentState.includes('testRunSummary')){
+      if($scope.updated === true  && !$rootScope.currentState.includes('testRunSummary')){
 
         ConfirmModal.itemType = 'Save changes to test run summary ';
         ConfirmModal.selectedItemDescription =  $scope.testRunSummary.testRunId;
