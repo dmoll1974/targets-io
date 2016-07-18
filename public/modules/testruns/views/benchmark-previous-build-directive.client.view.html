@@ -26,6 +26,7 @@
                       ng-class="{ 'glyphicon-chevron-right': group.$hideRows, 'glyphicon-chevron-down': !group.$hideRows }"></span>
                 <strong>{{ group.value }}</strong>
             </a>
+
         </td>
     </tr>
     <tr ng-hide="group.$hideRows" ng-repeat="target in group.data" class="hover-row">
@@ -42,10 +43,15 @@
         <td data-title="'Result'" header-class="text-left">
             <span title="View graphs" class="pointer" ui-sref="visualBenchmark({productName: target.productName, dashboardName:target.dashboardName, baselineTestRunId: testRun.previousBuild, benchmarkTestRunId: testRun.testRunId, selectedSeries: target.target, metricId: target.metricId, benchmarkType: 'previousBuild' })"
                   ng-class="target.benchmarkResultPreviousOK ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
-            <span title="Configure metric"
-                  ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})"
-                  class="fa-lg fa fa-wrench pull-right"></span>
-        </td>
+
+            <div ng-hide="$index > 0" style="margin:0px; padding:0px;" class="md-icon-button pull-right" ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})">
+                <md-icon md-svg-src="images/assets/ic_settings_black_24px.svg"
+                         md-menu-align-target></md-icon>
+                <md-tooltip>Metric configuration</md-tooltip>
+            </div>
+
+
+
 
     </tr>
     </tbody>

@@ -43,9 +43,12 @@
             <span title="View graphs" class="pointer" ui-sref="visualBenchmark({productName: target.productName, dashboardName:target.dashboardName,baselineTestRunId: testRun.baseline, benchmarkTestRunId: testRun.testRunId, selectedSeries: target.target, metricId: target.metricId, benchmarkType: 'fixedBaseline' })"
                   ng-class="target.benchmarkResultFixedOK ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
 
-            <span title="Configure metric"
-                  ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})"
-                  class="fa-lg fa fa-wrench pull-right"></span>
+            <div ng-hide="$index > 0"  style="margin:0px; padding:0px;" class="md-icon-button pull-right" ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})">
+                <md-icon md-svg-src="images/assets/ic_settings_black_24px.svg"
+                         md-menu-align-target></md-icon>
+                <md-tooltip>Metric configuration</md-tooltip>
+            </div>
+
         </td>
 
     </tr>
