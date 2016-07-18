@@ -61,10 +61,15 @@
                             </button>
                             <input flex ng-readonly="true" ng-model="vm.viewShareUrl" ng-if="vm.showViewUrl"
                                    share-graph-url/>
-                            <label title="Share view URL" class="btn default"
-                                   ng-click="vm.setViewShareUrl()"><span
-                                    class="btn  glyphicon glyphicon-share"></span>
-                            </label>
+                            <md-button  data-ng-click="vm.setViewShareUrl()">
+                                <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
+                                <md-tooltip>Share view URL</md-tooltip>
+                            </md-button>
+
+                            <!--<label title="Share view URL" class="btn default"-->
+                                   <!--ng-click="vm.setViewShareUrl()"><span-->
+                                    <!--class="btn  glyphicon glyphicon-share"></span>-->
+                            <!--</label>-->
 
                         </div>
                         <md-menu >
@@ -94,10 +99,10 @@
                             </md-menu-content>
                         </md-menu>
                         <md-switch class="md-primary" md-no-ink aria-label="Show legend" ng-model="vm.showLegend" ng-change="vm.toggleLegend()">
-                            Show legend
+                            SHOW LEGEND
                         </md-switch>
                         <md-switch class="md-primary" md-no-ink aria-label="Show tooltip" ng-model="vm.showTooltip" ng-change="vm.toggleTooltip()">
-                            Show tooltip
+                            SHOW TOOLTIP
                         </md-switch>
                     </div>
                 </div>
