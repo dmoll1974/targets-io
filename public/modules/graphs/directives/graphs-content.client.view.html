@@ -1,6 +1,6 @@
 <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
     <accordion-heading>
-        <div>{{metric.alias}}</div>
+        <div>{{metric.alias | uppercase}}</div>
     </accordion-heading>
     <div  ng-if="metric.isOpen">
         <div layout="row">
