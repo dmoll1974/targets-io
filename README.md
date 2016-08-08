@@ -1,7 +1,7 @@
 #targets-io #
 ##Performance test dashboard
 
-Dashboard app for organising, analysing, and benchmarking of test results of performance tests executed with Gatling Tool, JMeter or LoadRunner (see [lr2graphite](https://github.com/ogarling/LR2Graphite).
+Dashboard app for organising, analysing, and benchmarking of test results of performance tests executed with Gatling Tool, JMeter or LoadRunner (see [lr2graphite](https://github.com/ogarling/LR2Graphite)).
 The load related metrics are stored in Graphite along with for instance resource usage metrics of the application under test.
 Any metric stored in Graphite can be benchmarked between test runs, to provide automated assertions on the performance of an application when running tests from a continuous integration pipeline. 
 
