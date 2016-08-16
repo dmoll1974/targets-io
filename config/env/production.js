@@ -3,6 +3,7 @@
 module.exports = {
     isProduction: true,
     logLevel: 'error',
+    graphiteRetentionPeriod: '90d', /*90 days*/
     graphiteHost: process.env.GRAPHITE_HOST,
     db: process.env.MONGO_URL,
     dbUsername: process.env.MONGO_USER,
