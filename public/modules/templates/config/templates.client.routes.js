@@ -29,7 +29,7 @@ angular.module('templates').config([
       url: '/edit/template-metric/:metricId/',
       template: '<edit-template-metric></edit-template-metric>'
     }).state('mergeTemplate', {
-      url: '/merge/template',
+      url: '/merge/template/:templateName',
       template: '<merge-template></merge-template>'
     });/*.state('editTemplateVariable', {
       url: '/templates/:templateName/variable/:variableId',

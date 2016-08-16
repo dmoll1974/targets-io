@@ -116,7 +116,7 @@
                         <span ng-show="vm.sortType == 'benchmarkValue' && !vm.sortReverse" class="fa fa-caret-down"></span>
                         <span ng-show="vm.sortType == 'benchmarkValue' && vm.sortReverse" class="fa fa-caret-up"></span>
                     </th>
-                    <th ng-click="vm.sortType = 'includeInSummary'; vm.sortReverse = !vm.sortReverse">
+                    <th  ng-click="vm.sortType = 'includeInSummary'; vm.sortReverse = !vm.sortReverse">
                         Testrun summary
                         <span ng-show="vm.sortType == 'includeInSummary' && !vm.sortReverse" class="fa fa-caret-down"></span>
                         <span ng-show="vm.sortType == 'includeInSummary' && vm.sortReverse" class="fa fa-caret-up"></span>
@@ -131,21 +131,28 @@
                                 </md-tooltip>
                             </md-button>
                             <md-menu-content >
-                                <md-menu-item>
-                                    <md-menu width="4">
-                                        <md-button class="targets-io-menu-button" aria-label="Merge metrics from template"
-                                                   ng-click="vm.openMenu($mdOpenMenu, $event)">
-                                            <md-icon style="margin-right:16px;" md-menu-origin md-svg-src="images/assets/ic_input_black_24px.svg"></md-icon>
-                                            FROM TEMPLATE
-                                        </md-button>
-                                        <md-menu-content>
-                                            <md-menu-item ng-repeat="template in vm.templates">
-                                                <md-button data-ng-click="vm.mergeTemplate($index)">
-                                                    {{template.name}}: {{template.description}}
-                                                </md-button>
-                                            </md-menu-item>
-                                        </md-menu-content>
-                                    </md-menu>
+                                <!--<md-menu-item>-->
+                                    <!--<md-menu width="4">-->
+                                        <!--<md-button class="targets-io-menu-button" aria-label="Merge metrics from template"-->
+                                                   <!--ng-click="vm.openMenu($mdOpenMenu, $event)">-->
+                                            <!--<md-icon style="margin-right:16px;" md-menu-origin md-svg-src="images/assets/ic_input_black_24px.svg"></md-icon>-->
+                                            <!--FROM TEMPLATE-->
+                                        <!--</md-button>-->
+                                        <!--<md-menu-content>-->
+                                            <!--<md-menu-item ng-repeat="template in vm.templates">-->
+                                                <!--<md-button data-ng-click="vm.mergeTemplate($index)">-->
+                                                    <!--{{template.name}}: {{template.description}}-->
+                                                <!--</md-button>-->
+                                            <!--</md-menu-item>-->
+                                        <!--</md-menu-content>-->
+                                    <!--</md-menu>-->
+                                    <!---->
+                                <!--</md-menu-item>-->
+                                <md-menu-item ng-if="vm.templates.length > 0" >
+                                    <md-button class="targets-io-menu-button" data-ng-click="vm.addMetricFromTemplate()">
+                                        <md-icon md-menu-origin md-svg-src="images/assets/ic_input_black_24px.svg"></md-icon>
+                                        FROM TEMPLATE
+                                    </md-button>
                                 </md-menu-item>
                                 <md-menu-divider></md-menu-divider>
                                 <md-menu-item>
@@ -154,8 +161,28 @@
                                         CUSTOM METRIC
                                     </md-button>
                                 </md-menu-item>
+                                <!--<md-menu-item ng-show="vm.showTemplates">-->
+                                    <!--<md-autocomplete-->
+                                                     <!--md-selected-item="template"-->
+                                                     <!--md-search-text="templateSearchText"-->
+                                                     <!--md-items="template in vm.filterTemplates(templateSearchText)"-->
+                                                     <!--md-selected-item-change="vm.mergeTemplate(template)"-->
+                                                     <!--md-item-text="vm.template.name"-->
+                                                     <!--md-min-length="0"-->
+                                                     <!--md-autoselect="true"-->
+                                                     <!--md-no-cache="true"-->
+                                                     <!--placeholder="Template">-->
+                                        <!--<md-item-template>-->
+                                            <!--<span>{{template.name}}: {{template.description}}</span>-->
+                                        <!--</md-item-template>-->
+                                        <!--<md-not-found>-->
+                                            <!--No templates matching "{{templateSearchText}}" were found.-->
+                                        <!--</md-not-found>-->
+                                    <!--</md-autocomplete>-->
+                                <!--</md-menu-item>-->
                             </md-menu-content>
                         </md-menu>
+
                     </th>
                     <th>
                         <md-checkbox md-no-ink aria-label="select all metrics" ng-model="vm.allMetricsSelected" ng-change="vm.setAllMetricsSelected(vm.allMetricsSelected)" style="margin: 0px;">

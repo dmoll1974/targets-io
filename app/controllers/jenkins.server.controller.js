@@ -27,7 +27,7 @@ exports.getConsoleData = function (req, res) {
 
         if(response.status === 'fail'){
 
-          res.send(400, {message : response.data.message})
+          res.send(400, {message : response.data})
 
         }else {
           res.jsonp(response);

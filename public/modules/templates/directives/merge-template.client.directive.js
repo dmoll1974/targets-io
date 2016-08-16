@@ -13,11 +13,13 @@ function MergeTemplateDirective () {
   return directive;
 
   /* @ngInject */
-  function MergeTemplateDirectiveController ($scope, $rootScope, $state, $timeout, Templates, Dashboards, Metrics, Graphite) {
+  function MergeTemplateDirectiveController ($scope, $rootScope, $state, $stateParams,  $timeout, Templates, Dashboards, Metrics, Graphite) {
 
-      $scope.template = Templates.selected;
+      Templates.get($stateParams.templateName).success(function(template){
 
-      $timeout(function(){
+        $scope.template = template;
+
+      //$timeout(function(){
 
 
           _.each($scope.template.variables, function(variable, index){

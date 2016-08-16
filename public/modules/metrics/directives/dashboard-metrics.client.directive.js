@@ -14,7 +14,7 @@ function DashboardMetricsDirective () {
   return directive;
 
   /* @ngInject */
-  function DashboardMetricsDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, ConfirmModal, $modal, $q, $timeout, TestRuns, mySocket, $mdToast) {
+  function DashboardMetricsDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, ConfirmModal, $modal, $q, $timeout, TestRuns, mySocket, $mdToast,$mdDialog) {
 
     var vm = this;
 
@@ -27,6 +27,7 @@ function DashboardMetricsDirective () {
     vm.dashboard = Dashboards.selected;
     vm.metricFilter = Metrics.metricFilter;
     vm.addMetric = addMetric;
+    vm.addMetricFromTemplate = addMetricFromTemplate;
     vm.editMetric = editMetric;
     vm.openDeleteSelectedMetricsModal = openDeleteSelectedMetricsModal;
     vm.setMetricsSelected = setMetricsSelected;
@@ -38,9 +39,11 @@ function DashboardMetricsDirective () {
     vm.openMenu = openMenu;
     vm.metricsInTestRunSummary = metricsInTestRunSummary;
     vm.resetAllBenchmarks = resetAllBenchmarks;
+    //vm.filterTemplates = filterTemplates;
+
     vm.metricSelected = false;
     vm.progress = undefined;
-
+    vm.showTemplates = false;
     var originatorEv;
 
     function openMenu ($mdOpenMenu, ev) {
@@ -74,9 +77,14 @@ function DashboardMetricsDirective () {
         }
       });
 
+    $scope.$watch('templateSearchText', function (val) {
+      $scope.templateSearchText = $filter('uppercase')(val);
+    }, true);
 
 
-      /* Watch on dashboard id */
+
+
+    /* Watch on dashboard id */
       $scope.$watch(function (scope) {
         return Dashboards.selected._id;
       }, function (newVal, oldVal) {
@@ -267,10 +275,15 @@ function DashboardMetricsDirective () {
       };
 
 
-      function mergeTemplate(index) {
+      function mergeTemplate(template) {
 
-        Templates.selected = vm.templates[index];
-        $state.go('mergeTemplate');
+        if(template){
+
+          vm.showTemplates = false;
+          $state.go('mergeTemplate',{templateName: template.name});
+
+        }
+
       };
 
 
@@ -351,8 +364,90 @@ function DashboardMetricsDirective () {
 
       };
 
+    function addMetricFromTemplate($event, templates){
 
-      function cancel() {
+        var parentEl = angular.element(document.body);
+        $mdDialog.show({
+          parent: parentEl,
+          targetEvent: $event,
+          template: '<md-dialog aria-label="Templates">' +
+
+          '<md-toolbar class="md-padding">' +
+          ' <div class="md-toolbar-tools>" layout="row  ">' +
+          '   <h4>METRIC TEMPLATES</h4>' +
+          '   <span flex></span>' +
+          '   <md-button class="md-icon-button" ng-click="closeDialog()">' +
+          '     <md-icon md-svg-src="images/assets/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>' +
+          '   </md-button>' +
+          ' </div>' +
+          '</md-toolbar>' +
+          '<md-autocomplete' +
+          ' md-menu-class="template-autocomplete"' +
+          ' md-selected-item="template"' +
+          ' md-search-text="templateSearchText"' +
+          ' md-items="template in filterTemplates(templateSearchText)"' +
+          ' md-selected-item-change="mergeTemplate(template)"' +
+          ' md-item-text="vm.template.name"' +
+          ' md-min-length="0"' +
+          ' md-autoselect="true"' +
+          ' md-no-cache="true"' +
+          ' placeholder="Click or type to select template">' +
+          '<md-item-template>' +
+          '     <span>{{template.name}}: {{template.description}}</span>' +
+          '</md-item-template>' +
+          '<md-not-found>' +
+          'No templates matching "{{templateSearchText}}" were found.' +
+          '</md-not-found>' +
+          '</md-autocomplete>' +
+
+      '</md-dialog>',
+          locals: {
+            templates: templates
+          },
+          controller: DialogController
+        });
+        function DialogController($scope, $mdDialog, templates) {
+          $scope.templates = templates;
+          $scope.closeDialog = function(){
+
+            $mdDialog.hide();
+
+          }
+
+          $scope.mergeTemplate = function (template) {
+
+            if(template){
+
+              vm.showTemplates = false;
+              $state.go('mergeTemplate',{templateName: template.name});
+              $mdDialog.hide();
+            }
+
+
+
+          }
+          $scope.filterTemplates = function(query) {
+
+            var results = query ? vm.templates.filter( createFilterForTemplates(query) ) : vm.templates;
+
+            return results;
+
+          }
+
+          function createFilterForTemplates(query) {
+            var upperCaseQuery = angular.uppercase(query);
+            return function filterFn(template) {
+              return (template.name.toUpperCase().indexOf(upperCaseQuery) !== -1 || template.description.toUpperCase().indexOf(upperCaseQuery) !== -1 );
+            };
+          }
+
+        }
+
+      }
+
+
+
+    function cancel() {
         if ($rootScope.previousStateParams)
           $state.go($rootScope.previousState, $rootScope.previousStateParams);
         else

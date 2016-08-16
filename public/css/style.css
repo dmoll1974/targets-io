@@ -424,7 +424,7 @@ md-toast {
     font-size: 25px;
 }
 
-md-autocomplete{
+md-autocomplete.targets-io-header-autocomplete{
     color: white !important;
     background-color: rgb(33,150,243) !important;
 }
@@ -433,6 +433,13 @@ md-autocomplete{
     /*color: white  !important;*/
     /*background-color: rgb(33,150,243) !important;*/
 /*}*/
+
+.md-virtual-repeat-container.md-autocomplete-suggestions-container {
+    width:500px !important;
+}
+md-autocomplete.template-autocomplete {
+    width:500px !important;
+}
 
 .targetsio-header-text{
     font-size: 15px !important;

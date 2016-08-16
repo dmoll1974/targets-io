@@ -588,6 +588,7 @@ function TestrunsDirective () {
         $scope.closeDialog = function () {
           TestRuns.update(testRun).success(function () {
 
+
             $mdDialog.hide();
           })
 
