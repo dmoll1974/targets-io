@@ -41,7 +41,6 @@ module.exports = {
                 'public/lib/angular-ui-utils/ui-utils.min.js',
                 'public/lib/angular-messages/angular-messages.min.js',
                 'public/lib/showdown/dist/showdown.js',
-                //'public/lib/ng-showdown/dist/ng-showdown.js',
                 'public/lib/showdown-target-blank/dist/showdown-target-blank.min.js',
                 'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
                 'public/lib/moment/moment.js',
