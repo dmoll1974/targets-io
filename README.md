@@ -1,7 +1,7 @@
 #targets-io #
 ##Performance test dashboard
 
-Dashboard app for organising, analysing, and benchmarking of test results of performance tests executed with Gatling Tool or JMeter.
+Dashboard app for organising, analysing, and benchmarking of test results of performance tests executed with Gatling Tool, JMeter or LoadRunner (see [lr2graphite](https://github.com/ogarling/LR2Graphite)).
 The load related metrics are stored in Graphite along with for instance resource usage metrics of the application under test.
 Any metric stored in Graphite can be benchmarked between test runs, to provide automated assertions on the performance of an application when running tests from a continuous integration pipeline. 
 
@@ -19,8 +19,8 @@ The requirements / benchmark thresholds can be set on any of the metrics you hav
 
 To set up a local demo environment take the following steps (instructions for linux Ubuntu. If you use this [Vagrantfile](https://github.com/dmoll1974/targets-io/blob/master/Vagrantfile) to generate a box, you can skip the first two steps. This vagrant file requires the vagrant docker-compose plugin, `vagrant plugin install vagrant-docker-compose`):
 
-- [Install docker](http://docs.docker.com/linux/step_one/)  
-- [Install docker compose](https://github.com/docker/compose/releases)
+- [Install docker](https://docs.docker.com/engine/installation/linux/ubuntulinux/)  
+- [Install docker compose](https://docs.docker.com/compose/install/)
 - Clone this repository
 - Run init script to prepare Graphite volumes on host
 
