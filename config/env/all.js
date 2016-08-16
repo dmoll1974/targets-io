@@ -9,6 +9,7 @@ module.exports = {
 	isProduction: false,
 	isDemo: true,
 	logLevel: 'error',
+	graphiteRetentionPeriod: '90d', /*90 days*/
 	graphiteHost: process.env.GRAPHITE_HOST,
 	db: process.env.MONGO_URL,
 	redisHost: process.env.REDIS_SERVICE_HOST,
