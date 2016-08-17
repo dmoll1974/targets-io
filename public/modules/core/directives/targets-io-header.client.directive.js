@@ -157,6 +157,10 @@ function TargetsIoHeaderDirective () {
 
                         $state.go('viewProduct', {productName: $scope.product.name});
 
+                        setTimeout(function(){
+                            document.querySelector('#dashboardAutoComplete').focus();
+                        },0);
+
                     });
                 }
             }else{
