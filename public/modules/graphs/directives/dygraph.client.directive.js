@@ -385,7 +385,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
             /* if zoomrange execeeds 3h, don't update graph due to bad performance*/
 
-            if(!($scope.zoomRange.value === '-10min' || $scope.zoomRange.value === '-30min' || $scope.zoomRange.value === '-1h' || $scope.zoomRange.value === '-3h' )){
+            if($scope.zoomRange.value === '-6h' || $scope.zoomRange.value === '-12h' || $scope.zoomRange.value === '-1d' || $scope.zoomRange.value === '-2d' || $scope.zoomRange.value === '-3d' || ($scope.zoomRange.label === 'Since start test run' && new Date().getTime() - $scope.zoomRange.value * 1000 > 3 * 60 * 60 * 1000 * 1000)){
               Interval.clearAll();
             }
 
