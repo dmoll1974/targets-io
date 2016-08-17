@@ -54,7 +54,7 @@ function MergeTemplateDirective () {
               var queryVariablesReplaced;
               var valuesPerVariable;
               var totalTemplateCombinations = 1;
-
+              var replaceValue;
 
               /* force get-values-from-graphite directive to destroy*/
               _.each($scope.variables, function (variable, index) {
@@ -67,17 +67,56 @@ function MergeTemplateDirective () {
               _.each($scope.template.variables, function (variable) {
 
                   valuesPerVariable= 0;
+                  regExp = new RegExp('\\$' + variable.name, 'g');
 
-                  _.each(variable.values, function (value) {
 
-                      if (value !== '') {
+                  if(variable.values.length > 1){
 
-                          valuesPerVariable = valuesPerVariable + 1;
+                      var valueList = '{';
 
-                          regExp = new RegExp('\\$' + variable.name, 'g');
-                          Templates.replaceItems.push({variable: variable.name, placeholder: regExp, replace: value});
+                      _.each(variable.values, function (value, index) {
+
+                          if (value !== '') {
+
+                              valuesPerVariable = valuesPerVariable + 1;
+
+                              valueList += value;
+                              if(index !== variable.values.length -1) valueList += ',';
+
+                          }
+                      });
+
+                      valueList += '}';
+
+                      replaceValue = valueList;
+
+
+
+                  }else{
+
+                      if (variable.values[0] !== '') {
+
+                          valuesPerVariable =  1;
+
+                          replaceValue = variable.values[0];
+
+
                       }
-                  });
+                  }
+
+                  var replaceItem = {};
+                  replaceItem.variable = variable.name;
+                  replaceItem.placeholder = regExp;
+                  replaceItem.replace = replaceValue;
+
+                  var index = Templates.replaceItems.map(function(replaceItem){ return replaceItem.variable;}).indexOf(variable.name);
+
+                  if(index === -1){
+                      Templates.replaceItems.push(replaceItem);
+                  }else{
+                      Templates.replaceItems[index] = replaceItem;
+                  }
+
 
                   if(valuesPerVariable > 0) totalTemplateCombinations = totalTemplateCombinations * valuesPerVariable;
               });
@@ -94,7 +133,7 @@ function MergeTemplateDirective () {
 
                       if(graphiteTargetsLeafs.length > 0) {
 
-                          $scope.template.variables[index].query = replacePlaceholders(variable.query, Templates.replaceItems);
+                          $scope.template.variables[index].dynamicQuery = replacePlaceholders(variable.query, Templates.replaceItems);
 
                       }
                   });

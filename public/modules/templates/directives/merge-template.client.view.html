@@ -15,7 +15,7 @@
                                 <label>value</label>
                                 <input ng-model="variable.values[$index]" >
                             </md-input-container>
-                            <get-values-from-graphite ng-show="template.variables[$parent.$index].query !== false" query="template.variables[$parent.$index].query" value="variable.values[$index]"></get-values-from-graphite>
+                            <get-values-from-graphite ng-show="template.variables[$parent.$index].query !== false" query="template.variables[$parent.$index].dynamicQuery" value="variable.values[$index]"></get-values-from-graphite>
                             <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeValue($parent.$index, $index)"
                                      data-ng-show="variable.values.length>1"></md-icon>
                         </div>

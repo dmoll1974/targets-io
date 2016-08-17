@@ -1,16 +1,41 @@
-<md-menu style="padding-top: 0px; padding-bottom: 0px;">
-    <div aria-label="Select value" class="md-icon-button"
-         ng-click="openMenu($mdOpenMenu, $event)">
-        <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
-        <md-tooltip>
-            Select value
-        </md-tooltip>
-    </div>
-    <md-menu-content width="4">
-        <md-menu-item ng-repeat="graphiteTarget in graphiteTargets">
-            <md-button ng-click="setTarget($index)">
-                {{graphiteTarget.text}}
-            </md-button>
-        </md-menu-item>
-    </md-menu-content>
-</md-menu>
+<!--<md-menu style="padding-top: 0px; padding-bottom: 0px;">-->
+    <!--<div aria-label="Select value" class="md-icon-button"-->
+         <!--ng-click="openMenu($mdOpenMenu, $event)">-->
+        <!--<md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>-->
+        <!--<md-tooltip>-->
+            <!--Select value-->
+        <!--</md-tooltip>-->
+    <!--</div>-->
+    <!--<md-menu-content width="4">-->
+        <!--<md-menu-item ng-repeat="graphiteTarget in graphiteTargets">-->
+            <!--<md-button ng-click="setTarget($index)">-->
+                <!--{{graphiteTarget.text}}-->
+            <!--</md-button>-->
+        <!--</md-menu-item>-->
+    <!--</md-menu-content>-->
+<!--</md-menu>-->
+<md-button ng-show="!showTargetAutocomplete" aria-label="Merge metrics from template" class="md-icon-button" style="padding-bottom: 0px;"
+           ng-click="toggleShowTargetAutocomplete()">
+    <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
+    <md-tooltip>
+        Select target
+    </md-tooltip>
+</md-button>
+<md-autocomplete tabindex="1" ng-show="showTargetAutocomplete"
+                 md-input-id="mergeTemplateAutoComplete"
+                 md-selected-item="graphiteTarget"
+                 md-search-text="graphiteTargetSearchText"
+                 md-items="graphiteTarget in filterGraphiteTargets(graphiteTargetSearchText)"
+                 md-selected-item-change="setTarget(graphiteTarget)"
+                 md-item-text="graphiteTarget.text"
+                 md-min-length="0"
+                 md-no-cache="true"
+                 md-autoselect="true"
+                 placeholder="Click or type to select">
+    <md-item-template>
+        <span>{{graphiteTarget.text}}</span>
+    </md-item-template>
+    <md-not-found>
+        No target matching "{{dashboardSearchText}}" was found.
+    </md-not-found>
+</md-autocomplete>

@@ -23,6 +23,9 @@ function GetValuesFromGraphiteDirective () {
 
 
         $scope.validQuery = true;
+        $scope.showTargetAutocomplete = false;
+
+
 
         $scope.$watch('query', function() {
 
@@ -51,18 +54,41 @@ function GetValuesFromGraphiteDirective () {
             });
         });
 
+        $scope.toggleShowTargetAutocomplete = function(){
+
+            $scope.showTargetAutocomplete = true;
+
+            setTimeout(function(){
+                document.querySelector('#mergeTemplateAutoComplete').focus();
+            },0);
+        }
         /* Open menu*/
 
-        var originatorEv;
-        $scope.openMenu = function ($mdOpenMenu, ev) {
-            originatorEv = ev;
-            $mdOpenMenu(ev);
-        };
+        //var originatorEv;
+        //$scope.openMenu = function ($mdOpenMenu, ev) {
+        //    originatorEv = ev;
+        //    $mdOpenMenu(ev);
+        //};
+
+        $scope.filterGraphiteTargets = function(query) {
+
+            var results = query ? $scope.graphiteTargets.filter( createFilterForTemplates(query) ) : $scope.graphiteTargets;
+
+            return results;
+
+        }
+
+        function createFilterForTemplates(query) {
+            var upperCaseQuery = angular.uppercase(query);
+            return function filterFn(graphiteTarget) {
+                return (graphiteTarget.text.toUpperCase().indexOf(upperCaseQuery) !== -1  );
+            };
+        }
 
 
-        $scope.setTarget = function(index) {
+        $scope.setTarget = function(target) {
 
-            Graphite.findMetrics($scope.graphiteTargets[index].text + '.*').success(function(graphiteTargetsLeafs) {
+            Graphite.findMetrics(target.text + '.*').success(function(graphiteTargetsLeafs) {
 
                 /* if leafs are present, add wildcard '*' */
                 if (graphiteTargetsLeafs.length > 0) {
@@ -75,7 +101,9 @@ function GetValuesFromGraphiteDirective () {
                     $scope.validQuery = false;
                 }
 
-                $scope.value = $scope.graphiteTargets[index].text;
+                $scope.value = target.text;
+                $scope.showTargetAutocomplete = false;
+
 
             });
         };
