@@ -85,20 +85,20 @@ function DashboardMetricsDirective () {
 
 
     /* Watch on dashboard id */
-      $scope.$watch(function (scope) {
-        return Dashboards.selected._id;
-      }, function (newVal, oldVal) {
-        if(newVal !== oldVal){
-
-          $timeout(function(){
-
-            vm.dashboard = Dashboards.selected;
-            vm.metricFilter = '';
-
-          }, 100);
-        }
-
-      });
+      //$scope.$watch(function (scope) {
+      //  return Dashboards.selected._id;
+      //}, function (newVal, oldVal) {
+      //  if(newVal !== oldVal){
+      //
+      //    $timeout(function(){
+      //
+      //      vm.dashboard = Dashboards.selected;
+      //      vm.metricFilter = '';
+      //
+      //    }, 100);
+      //  }
+      //
+      //});
 
     /* Watch on dashboard id */
     $scope.$watch(function (scope) {
