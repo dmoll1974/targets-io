@@ -239,7 +239,7 @@ function GraphsContainerDirective () {
             /* if breadcrump is too long, crop it ...*/
 
             var breadCrumpLength = $stateParams.productName.length + $stateParams.dashboardName.length + testRun.testRunId.length;
-            testRun.testRunIdBreadCrump = ( breadCrumpLength < 65)? testRun.testRunId : testRun.testRunId.substring(0,(65-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
+            testRun.testRunIdBreadCrump = ( breadCrumpLength < 50)? testRun.testRunId : testRun.testRunId.substring(0,(65-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
 
             vm.testRun = testRun;
           });
