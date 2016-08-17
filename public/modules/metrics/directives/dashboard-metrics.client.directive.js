@@ -14,7 +14,7 @@ function DashboardMetricsDirective () {
   return directive;
 
   /* @ngInject */
-  function DashboardMetricsDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, ConfirmModal, $modal, $q, $timeout, TestRuns, mySocket, $mdToast,$mdDialog) {
+  function DashboardMetricsDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Templates, Metrics, Utils, ConfirmModal, $modal, $q, $timeout, TestRuns, mySocket, $mdToast,$mdDialog) {
 
     var vm = this;
 
@@ -22,8 +22,8 @@ function DashboardMetricsDirective () {
 
     vm.productName = $stateParams.productName;
     vm.dashboardName = $stateParams.dashboardName;
-    vm.sortType     = 'tags[0].text'; // set the default sort type
-    vm.sortReverse  = false;  // set the default sort order
+    vm.sortType     = Utils.sortType; // set the default sort type
+    vm.sortReverse  = Utils.sortReverse;  // set the default sort order
     vm.dashboard = Dashboards.selected;
     vm.metricFilter = Metrics.metricFilter;
     vm.addMetric = addMetric;
@@ -66,6 +66,20 @@ function DashboardMetricsDirective () {
       if (newVal !== oldVal) {
 
         Metrics.metricFilter = vm.metricFilter;
+      }
+    });
+
+    $scope.$watch('vm.sortType', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        Utils.sortType = vm.sortType;
+      }
+    });
+
+    $scope.$watch('vm.sortReverse', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+
+        Utils.sortReverse = vm.sortReverse;
       }
     });
 
