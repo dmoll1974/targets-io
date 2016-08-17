@@ -382,6 +382,7 @@ function DashboardMetricsDirective () {
           ' </div>' +
           '</md-toolbar>' +
           '<md-autocomplete' +
+          ' md-input-id="selectTemplateAutoComplete"' +
           ' md-menu-class="template-autocomplete"' +
           ' md-selected-item="template"' +
           ' md-search-text="templateSearchText"' +
@@ -407,7 +408,10 @@ function DashboardMetricsDirective () {
           controller: DialogController
         });
         function DialogController($scope, $mdDialog, templates) {
+
           $scope.templates = templates;
+
+
           $scope.closeDialog = function(){
 
             $mdDialog.hide();
@@ -443,7 +447,13 @@ function DashboardMetricsDirective () {
 
         }
 
-      }
+      /* set focus */
+
+      setTimeout(function(){
+        document.querySelector('#selectTemplateAutoComplete').focus();
+      },200);
+
+    }
 
 
 
