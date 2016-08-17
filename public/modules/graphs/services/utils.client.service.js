@@ -1,6 +1,7 @@
 'use strict';
 // service used for Utilty functions
-angular.module('graphs').service('Utils', [function () {
+angular.module('graphs').factory('Utils', [
+    function () {
     var Utils = {
       dynamicSort: dynamicSort,
       dynamicSortMultiple: dynamicSortMultiple,
@@ -21,8 +22,9 @@ angular.module('graphs').service('Utils', [function () {
       numberOfColumns: 2,
       recentTestPeriod: "1",
       selectedSeries: '',
-
-        reset: reset
+      sortReverse: false,
+      sortType: 'tags[0].text',
+      reset: reset
 
     };
     return Utils;
@@ -41,6 +43,8 @@ angular.module('graphs').service('Utils', [function () {
         Utils.zoomUntil = undefined;
         Utils.showLegend = true;
         Utils.numberOfColumns = 2;
+        Utils.sortReverse = false;
+        Utils.sortType = 'tags[0].text';
 
     }
     function dynamicSortTags(sortOrderParam) {

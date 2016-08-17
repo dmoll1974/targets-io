@@ -166,9 +166,35 @@ function GraphsContainerDirective () {
 
     /* watch zoomRange */
     $scope.$watch('vm.zoomRange', function (newVal, oldVal) {
-      //if (newVal !== oldVal) {
-      Utils.zoomRange = vm.zoomRange;
+
+
+      //if(newVal.value === 'start' ){
+      //
+      //  TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function(runningTest){
+      //
+      //    if(runningTest.start){
+      //
+      //      Utils.zoomRange = {value: Math.round(new Date(runningTest.start).getTime() / 1000), label: 'Since start test run'} ;
+      //
+      //    }else{
+      //
+      //
+      //
+      //          Utils.zoomRange.value = '-10min';
+      //          Utils.zoomRange.label = 'Last 10 minutes';
+      //          vm.zoomRange.value = '-10min';
+      //          vm.zoomRange.label = 'Last 10 minutes';
+      //
+      //    }
+      //
+      //
+      //
+      //  });
+      //}else{
+
+        Utils.zoomRange = vm.zoomRange;
       //}
+
     });
 
     /* watch zoomLock */
@@ -219,6 +245,36 @@ function GraphsContainerDirective () {
           });
         }
       });
+
+      if(vm.graphsType === 'graphs-live'){
+
+        TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function(runningTest) {
+
+          if (runningTest.start) {
+
+            var runningTestOption = {};
+            runningTestOption.value = Math.round(new Date(runningTest.start).getTime() / 1000);
+            runningTestOption.label = 'Since start test run';
+
+            vm.zoomOptions.unshift(runningTestOption);
+
+            Utils.zoomRange = runningTestOption;
+
+            vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(Utils.zoomRange.value);
+
+          }else{
+
+            Utils.zoomRange = {
+              value: '-10min',
+              label: 'Last 10 minutes'
+            };
+
+            vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(Utils.zoomRange.value);
+
+
+          }
+        });
+      }
 
     }
 
