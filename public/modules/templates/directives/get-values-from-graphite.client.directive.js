@@ -60,7 +60,7 @@ function GetValuesFromGraphiteDirective () {
 
             setTimeout(function(){
                 document.querySelector('#mergeTemplateAutoComplete').focus();
-            },0);
+            },10);
         }
         /* Open menu*/
 
