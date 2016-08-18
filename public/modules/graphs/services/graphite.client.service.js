@@ -234,6 +234,7 @@ angular.module('graphs').factory('Graphite', [
             outputTime = new Date() - numberOf * 3600 * 24 * 7 * 30 * 1000;
             break;
           default:
+
             outputTime = inputTime;
             //Math.round(inputTime / 1000);
             break;

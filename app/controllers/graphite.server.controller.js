@@ -119,12 +119,12 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
 }
 function createUrl(from, until, targets, maxDataPoints) {
 
-  if(until !== 'now'){
+  /* convert epoch timestamps in ms to s*/
 
-    var from = Math.round(from / 1000);
-    var until = Math.round(until / 1000);
+  var from = from.match(/[a-z]/i) ? from : Math.round(from / 1000);
+  var until = until.match(/[a-z]/i) ? until : Math.round(until / 1000);
 
-  }
+
 
   var graphiteTargetUrl = '/render?format=json&from=' + from + '&until=' + until + '&maxDataPoints=' + maxDataPoints;
   if (_.isArray(targets)) {
