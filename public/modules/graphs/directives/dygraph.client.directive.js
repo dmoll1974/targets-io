@@ -419,17 +419,36 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       if (clickDetected) {
 
         clickDetected = false;
-        var eventTimestamp = x;
+        var eventTimestamp = new Date(x).toISOString();
         Events.selected.productName = $stateParams.productName;
         Events.selected.dashboardName = $stateParams.dashboardName;
         Events.selected.eventTimestamp = eventTimestamp;
-        Events.selected.testRunId = $stateParams.testRunId;
         Events.selected.eventDescription = '';
+        Events.selected.testRunId = $stateParams.testRunId;
 
-        $state.go('createEvent', {
-          productName: $stateParams.productName,
-          dashboardName: $stateParams.dashboardName
-        });
+
+        /* in case of live graphs, try to get running test testRunId*/
+        if($scope.graphsType === 'graphs-live') {
+
+          TestRuns.listRunningTestsForDashboard($stateParams.productName, $stateParams.dashboardName, 1).success(function (runningTest) {
+
+            Events.selected.testRunId = runningTest[0].testRunId;
+
+            $state.go('createEvent', {
+              productName: $stateParams.productName,
+              dashboardName: $stateParams.dashboardName
+            });
+
+          })
+        }else{
+
+          $state.go('createEvent', {
+            productName: $stateParams.productName,
+            dashboardName: $stateParams.dashboardName
+          });
+
+        }
+
 
       } else {
         clickDetected = true;
