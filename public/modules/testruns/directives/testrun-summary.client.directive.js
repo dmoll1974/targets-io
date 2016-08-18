@@ -226,8 +226,18 @@ function TestRunSummaryDirective () {
         var index =  $scope.testRunSummary.metrics.map(function(testRunSummaryMetric){return testRunSummaryMetric._id;}).indexOf(storedMetric._id);
 
         $scope.testRunSummary.metrics[index].summaryText = storedMetric.defaultSummaryText;
+
+        var toast = $mdToast.simple()
+            .action('OK')
+            .highlightAction(true)
+            .position('bottom center')
+            //.parent(angular.element('#addMetric'))
+            .hideDelay(3000);
+
+        $mdToast.show(toast.content('Default annotation has been restored for ' + metric.alias.toUpperCase())).then(function(response) {
         $scope.updated = true;
 
+        })
       })
     }
 
@@ -236,7 +246,20 @@ function TestRunSummaryDirective () {
       Metrics.get(metric._id).success(function(storedMetric){
 
         storedMetric.defaultSummaryText = metric.summaryText;
-        Metrics.update(storedMetric).success(function(updatedMetric){});
+        Metrics.update(storedMetric).success(function(updatedMetric){
+
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('bottom center')
+              //.parent(angular.element('#addMetric'))
+              .hideDelay(3000);
+
+          $mdToast.show(toast.content('Default annotation set for ' + updatedMetric.alias.toUpperCase())).then(function(response) {
+
+          });
+
+        });
       })
     }
 
@@ -245,6 +268,22 @@ function TestRunSummaryDirective () {
       var index =  $scope.testRunSummary.metrics.map(function(testRunSummaryMetric){return testRunSummaryMetric._id;}).indexOf(metric._id);
 
       $scope.testRunSummary.metrics.splice(index, 1);
+
+      var toast = $mdToast.simple()
+          .action('OK')
+          .highlightAction(true)
+          .position('bottom center')
+          //.parent(angular.element('#addMetric'))
+          .hideDelay(3000);
+
+      $mdToast.show(toast.content(metric.alias.toUpperCase() + ' removed from test run summary' )).then(function(response) {
+
+      });
+
+      /* Add metric to metrics to add */
+
+      $scope.metricsToAdd.push(metric);
+      $scope.metricsToAdd.sort(Utils.dynamicSort('alias'));
 
       $scope.updated = true;
     }
