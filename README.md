@@ -71,7 +71,7 @@ To update: Check [targets-io on Docker hub](https://hub.docker.com/r/dmoll1974/t
 
 
 ##Libraries / Dependencies
-------------------------
+
 + [Meanjs](https://github.com/meanjs/mean)
 + [Dygraphs] (http://dygraphs.com/) 
 + [Angular-Material] (https://github.com/angular/material)
