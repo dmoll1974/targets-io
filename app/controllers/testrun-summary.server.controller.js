@@ -164,6 +164,8 @@ function updateTestrunSummaryBasedOnMetrics(testRunSummary){
                 updatedTestRunSummary.metrics.push(includeMetric);
                 /* set dygraphData to undefined! */
                 updatedTestRunSummary.metrics[updatedTestRunSummary.metrics.length-1].dygraphData = undefined;
+                /* set annotations*/
+                updatedTestRunSummary.metrics[updatedTestRunSummary.metrics.length-1].summaryText = includeMetric.defaultSummaryText;
               }
 
           })
@@ -192,8 +194,8 @@ function updateTestRunSummaryMetric(testRunSummaryMetric, includeMetric, testRun
     if(!_.isEqual(testRunSummaryMetric.targets, includeMetric.targets )){
 
       /* set dygraphData to undefined! */
-      testRunSummaryMetric.targets = includeMetric.targets;
       testRunSummaryMetric.dygraphData = undefined;
+      testRunSummaryMetric.targets = includeMetric.targets;
 
     }
 

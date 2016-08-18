@@ -18,7 +18,7 @@ function GraphsContentDirective () {
   return directive;
 
   /* @ngInject */
-  function GraphsContentDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Utils, Metrics, Tags, $timeout, $mdToast) {
+  function GraphsContentDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, Utils, Metrics, Tags, $timeout, $mdToast, $mdDialog) {
 
     var vm = this;
 
@@ -128,33 +128,111 @@ function GraphsContentDirective () {
       }
     };
 
-    function toggleTestRunSummary(metric){
+    function toggleTestRunSummary(metric, $event){
 
       if(metric.includeInSummary === false){
 
-        metric.includeInSummary = true;
 
-      }else{
+        var parentEl = angular.element(document.body);
+
+        $mdDialog.show({
+          parent: parentEl,
+          targetEvent: $event,
+          template: '<md-dialog draggable class="pointer" aria-label="Annotations">' +
+                    '<md-toolbar class="md-padding"><h4>ADD METRIC TO SUMMARY</h4></md-toolbar>' +
+                    '  <div layout="column"' +
+                    '  <md-dialog-content class="md-padding">' +
+                    '    <h5>{{metric.alias | uppercase}}</h5>' +
+                    '    <md-input-container class="md-block" flex>' +
+                    '    <label>Annotation</label>' +
+                    '       <textarea name="metricAnnotations" ng-model="metric.defaultSummaryText" columns="1" md-maxlength="500" rows="10"></textarea>' +
+                    '    </md-input-container>' +
+                    '  </md-dialog-content>' +
+                    '  <md-dialog-actions>' +
+                    '   <div layout="row" layout-align="space-between" flex> ' +
+                    '      <md-button ng-click="closeDialogCancel()" class="md-primary">' +
+                    '        Cancel' +
+                    '     </md-button>' +
+                    '      <md-button ng-click="closeDialogOK()" class="md-primary">' +
+                    '        OK' +
+                    '     </md-button>' +
+                    '   </div>' +
+                    '  </md-dialog-actions>' +
+                    '  </div>' +
+                    '</md-dialog>',
+            locals: {
+            metric: metric
+          },
+          controller: DialogController
+        });
+        function DialogController($scope, $mdDialog, metric, Metrics) {
+
+          $scope.metric = metric;
+
+          $scope.closeDialogCancel = function(){
+
+            $mdDialog.hide();
+
+
+          }
+
+          $scope.closeDialogOK = function(){
+
+            $scope.metric.includeInSummary = true;
+
+            Metrics.update($scope.metric).success(function () {
+
+              $mdDialog.hide();
+
+              var content = 'Metric has been added to test run summary'
+              var toast = $mdToast.simple()
+                  .action('OK')
+                  .highlightAction(true)
+                  .position('bottom center')
+                  .hideDelay(3000);
+
+              $mdToast.show(toast.content(content)).then(function(response) {
+
+
+              })
+            })
+
+          }
+
+        }
+
+        /* set focus */
+
+        //setTimeout(function(){
+        //  document.querySelector('#selectTemplateAutoComplete').focus();
+        //},200);
+
+
+
+    }else{
 
         metric.includeInSummary = false;
+        metric.defaultSummaryText = undefined;
 
+        Metrics.update($scope.metric).success(function () {
+
+          var content = 'Metric has been removed from test run summary';
+          var toast = $mdToast.simple()
+              .action('OK')
+              .highlightAction(true)
+              .position('bottom center')
+              .hideDelay(3000);
+
+          $mdToast.show(toast.content(content)).then(function(response) {
+
+          });
+
+
+        })
       }
 
-      Metrics.update(metric).success(function(updatedMetric){
-
-        var content = (updatedMetric.includeInSummary === true) ? 'Metric has been added to test run summary' : 'Metric has been removed from test run summary'
-        var toast = $mdToast.simple()
-            .action('OK')
-            .highlightAction(true)
-            .position('bottom center')
-            .hideDelay(3000);
-
-        $mdToast.show(toast.content(content)).then(function(response) {
-
-        });
 
 
-      })
 
     }
 
