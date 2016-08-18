@@ -65,12 +65,12 @@ To see a demo of the automated assertion of benchmark results run, start the TAR
 
 To update: Check [targets-io on Docker hub](https://hub.docker.com/r/dmoll1974/targets-io/) if the targets-io image has been updated recently. If so, use `sudo docker-compose stop targetsio`, `sudo docker-compose pull targetsio` and `sudo docker-compose up -d` to update your demo environment to the latest version!  
 
-**Documentation**
+##Documentation
 
 [Wiki](https://github.com/dmoll1974/targets-io/wiki) (in progress)
 
 
-**Libraries / Dependencies**
+##Libraries / Dependencies
 ------------------------
 + [Meanjs](https://github.com/meanjs/mean)
 + [Dygraphs] (http://dygraphs.com/) 
@@ -84,6 +84,6 @@ To update: Check [targets-io on Docker hub](https://hub.docker.com/r/dmoll1974/t
 
 
 
-## License
+##License
 
 [MIT license](https://github.com/dmoll1974/targets-io/blob/master/LICENSE.md)
