@@ -361,7 +361,19 @@ function TestRunSummaryDirective () {
 
     $scope.addMetricToTestRunSummary = function (addMetric){
 
-        $scope.testRunSummary.metrics.unshift(addMetric);
+        $scope.testRunSummary.metrics.push(addMetric);
+
+      var toast = $mdToast.simple()
+          .action('OK')
+          .highlightAction(true)
+          .position('bottom center')
+          //.parent(angular.element('#addMetric'))
+          .hideDelay(3000);
+
+      $mdToast.show(toast.content(addMetric.alias.toUpperCase() + ' added to test run summary' )).then(function(response) {
+
+      });
+
 
       /* remove metric from menu items */
         var index= $scope.metricsToAdd.map(function(metricToAdd){return metricToAdd._id.toString()}).indexOf(addMetric._id.toString());
