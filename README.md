@@ -63,7 +63,7 @@ To see a demo of the automated assertion of benchmark results run, start the TAR
 - Rerun the the TARGETS-IO-DEMO job.
 - When this build passes it means all your configured requirements / benchmark thresholds (see explanation below) have passed for this run. If the job fails, check the "Assert results" job logs to find out why and examine  `http://localhost:3000/#!/browse/GATLING/NIGHTLY` to investigate. You can drill down the consolidated results by clicking on the passed/failed icons. 
 
-> Update: Check [targets-io on Docker hub](https://hub.docker.com/r/dmoll1974/targets-io/) if the targets-io image has been updated recently. If so, use `sudo docker-compose stop targetsio`, `sudo docker-compose pull targetsio` and `sudo docker-compose up -d` to update your demo environment to the latest version!
+To update: Check [targets-io on Docker hub](https://hub.docker.com/r/dmoll1974/targets-io/) if the targets-io image has been updated recently. If so, use `sudo docker-compose stop targetsio`, `sudo docker-compose pull targetsio` and `sudo docker-compose up -d` to update your demo environment to the latest version!  
 
 **Documentation**
 
