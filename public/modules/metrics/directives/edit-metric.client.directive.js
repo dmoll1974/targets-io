@@ -34,6 +34,7 @@ function EditMetricDirective () {
     
     vm.addTarget = addTarget;
     vm.removeTarget = removeTarget;
+    vm.duplicateTarget = duplicateTarget;
     vm.addCustomUnit = addCustomUnit;
     vm.loadTags = loadTags;
     vm.clone = clone;
@@ -98,7 +99,12 @@ function EditMetricDirective () {
     function removeTarget(index) {
       vm.metric.targets.splice(index, 1);
     };
-    
+
+    function duplicateTarget(index){
+
+      vm.metric.targets.push(vm.metric.targets[index]);
+    }
+
     function loadTags(query) {
       var matchedTags = [];
       _.each(Dashboards.selected.tags, function (tag) {
