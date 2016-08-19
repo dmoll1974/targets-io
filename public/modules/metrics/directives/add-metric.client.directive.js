@@ -31,6 +31,7 @@ function AddMetricDirective () {
     vm.progress = undefined;
 
 
+
     vm.dashboard = Dashboards.selected;
 
     vm.addTarget = addTarget;
@@ -151,16 +152,14 @@ function AddMetricDirective () {
 
       vm.metric.productName = $stateParams.productName;
       vm.metric.dashboardName = $stateParams.dashboardName;
-      vm.currentRequirement = '';
-      vm.currentBenchmark = '';
 
       Metrics.create(vm.metric).success(function (metric) {
 
         /* reset cloned metric */
         Metrics.clone = undefined;
 
-        var updateRequirements = vm.currentRequirement !== metric.requirementOperator + metric.requirementValue ? true : false;
-        var updateBenchmarks = vm.currentBenchmark !== metric.benchmarkOperator + metric.benchmarkValue ? true : false;
+        var updateRequirements = metric.requirementOperator && metric.requirementValue ? true : false;
+        var updateBenchmarks = metric.benchmarkOperator && metric.benchmarkValue ? true : false;
         /* if requirement or benchmark values have changed, update test runs */
         if (updateRequirements || (updateBenchmarks && Dashboards.selected.useInBenchmark )) {
 

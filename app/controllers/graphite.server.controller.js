@@ -120,13 +120,21 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
 function createUrl(from, until, targets, maxDataPoints) {
 
   /* convert epoch timestamps in ms to s*/
+  if(until === 'now'){
 
-  var from = from.match(/[a-z]/i) ? from : Math.round(from / 1000);
-  var until = until.match(/[a-z]/i) ? until : Math.round(until / 1000);
+    var fromInSeconds = from.match(/[a-z]/i) ? from : Math.round(from / 1000);
+    var untilInSeconds = until.match(/[a-z]/i) ? until : Math.round(until / 1000);
+
+  }else{
+
+    var fromInSeconds = Math.round(from / 1000);
+    var untilInSeconds = Math.round(until / 1000);
+
+  }
 
 
 
-  var graphiteTargetUrl = '/render?format=json&from=' + from + '&until=' + until + '&maxDataPoints=' + maxDataPoints;
+  var graphiteTargetUrl = '/render?format=json&from=' + fromInSeconds + '&until=' + untilInSeconds + '&maxDataPoints=' + maxDataPoints;
   if (_.isArray(targets)) {
     _.each(targets, function (target) {
       graphiteTargetUrl += '&target=' + target;

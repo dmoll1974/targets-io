@@ -699,17 +699,17 @@ function getDataForTestrun(testRun) {
 
           if (dashboard.startSteadyState && metric.type === 'Gradient') {
 
-            start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000);
+            start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000).getTime();
 
           } else {
 
             /* if include ramp up is false, add ramp up period to start of test run */
-            start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000) : testRun.start;
+            start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000).getTime() : testRun.start.getTime();
 
           }
           async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
 
-            graphite.getGraphiteData(start, testRun.end, target, 900, function (body) {
+            graphite.getGraphiteData(start, testRun.end.getTime(), target, 900, function (body) {
               _.each(body, function (bodyTarget) {
 
                 /* save value based on metric type */
