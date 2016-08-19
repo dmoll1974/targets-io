@@ -39,6 +39,8 @@ function DashboardMetricsDirective () {
     vm.openMenu = openMenu;
     vm.metricsInTestRunSummary = metricsInTestRunSummary;
     vm.resetAllBenchmarks = resetAllBenchmarks;
+    vm.searchAndReplace = searchAndReplace;
+
     //vm.filterTemplates = filterTemplates;
 
     vm.metricSelected = false;
@@ -378,6 +380,106 @@ function DashboardMetricsDirective () {
 
       };
 
+    function searchAndReplace($event){
+
+      var selectedMetrics = [];
+
+      _.each(vm.filteredMetrics, function (metric) {
+
+        if (metric.selected === true) {
+
+          selectedMetrics.push(metric);
+        }
+
+      })
+
+      var parentEl = angular.element(document.body);
+      $mdDialog.show({
+        parent: parentEl,
+        targetEvent: $event,
+        template: '<md-content aria-label="SearchAndReplace">' +
+                  ' <md-toolbar class="md-padding">' +
+                  '   <h4>SEARCH AND REPLACE</h4>' +
+                  ' </md-toolbar>' +
+                  ' <form class="md-padding" name="searchAndReplaceForm"> ' +
+                  '   <div layout="column">' +
+                  '   <md-input-container >' +
+                  '     <label>Search</label>' +
+                  '     <input name="searchInput" ng-model="search" required>' +
+                  '      <div ng-messages="searchAndReplaceForm.searchInput.$error" ' +
+                  '         ng-if=searchAndReplaceForm.searchInput.$touched || searchAndReplaceForm.$submitted"> ' +
+                  '        <div ng-message="required">Search text is required.</div> ' +
+                  '     </div>' +
+                  '   </md-input-container>' +
+                  '   <md-input-container >' +
+                  '     <label>Replace</label>' +
+                  '     <input name="replaceInput" ng-model="replace">' +
+                  '   </md-input-container>' +
+                  '  </div>' +
+                '   <div layout="row" layout-align="space-between" flex> ' +
+                  '      <md-button ng-click="closeDialogCancel()" class="md-primary">' +
+                  '        Cancel' +
+                  '     </md-button>' +
+                  '      <md-button ng-click="searchAndReplaceForm.$valid && closeDialogOK()" class="md-primary">' +
+                  '        OK' +
+                  '     </md-button>' +
+                  '   </div>' +
+                  '  </form>' +
+                  '</md-content>',
+        locals: {
+          selectedMetrics: selectedMetrics
+        },
+        controller: DialogController
+      });
+      function DialogController($scope, $mdDialog, selectedMetrics) {
+
+        $scope.selectedMetrics = selectedMetrics;
+
+
+        $scope.closeDialogCancel = function(){
+
+          $mdDialog.hide();
+
+        }
+
+        $scope.closeDialogOK = function(){
+
+          var updateMetricArrayOfPromises = [];
+          var searchRegExp = new RegExp($scope.search, 'g');
+
+          _.each($scope.selectedMetrics, function (metric) {
+
+            metric.alias = metric.alias.replace(searchRegExp, $scope.replace);
+
+              _.each(metric.targets, function(target, i){
+
+                metric.targets[i] = target.replace(searchRegExp, $scope.replace);
+
+              })
+
+            updateMetricArrayOfPromises.push(Metrics.update(metric));
+
+
+          })
+
+          $q.all(updateMetricArrayOfPromises)
+              .then(function () {
+                $mdDialog.hide();
+
+                //$state.go('viewDashboard', {
+                //  productName: $stateParams.productName,
+                //  dashboardName: dashboard.name
+                //});
+              });
+
+
+        }
+
+
+      }
+
+
+    }
     function addMetricFromTemplate($event, templates){
 
         var parentEl = angular.element(document.body);

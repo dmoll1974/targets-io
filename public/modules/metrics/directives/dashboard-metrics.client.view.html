@@ -66,6 +66,12 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
+                            <md-button class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.searchAndReplace()" " >
+
+                            <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
+                            SEARCH & REPLACE
+                            </md-button>
+                        </md-menu-item><md-menu-item>
                             <md-button class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.openDeleteSelectedMetricsModal('')" " >
 
                             <md-icon md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
