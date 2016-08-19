@@ -255,6 +255,8 @@ function DashboardMetricsDirective () {
 
       function setMetricsSelected(metricSelected) {
 
+        //vm.metricSelected = metricSelected;
+
         if (metricSelected === false) {
 
           vm.metricSelected = false;
@@ -407,7 +409,7 @@ function DashboardMetricsDirective () {
                   '     <label>Search</label>' +
                   '     <input name="searchInput" ng-model="search" required>' +
                   '      <div ng-messages="searchAndReplaceForm.searchInput.$error" ' +
-                  '         ng-if=searchAndReplaceForm.searchInput.$touched || searchAndReplaceForm.$submitted"> ' +
+                  '         ng-if=searchAndReplaceForm.replaceInput.$touched> ' +
                   '        <div ng-message="required">Search text is required.</div> ' +
                   '     </div>' +
                   '   </md-input-container>' +

@@ -409,6 +409,11 @@ md-toast {
     color: grey;
 }
 
+.menu-item-disabled svg{
+
+    fill: rgba(10, 10, 10, 0.09);
+}
+
 .switch-label-enabled{
 
     color: black;

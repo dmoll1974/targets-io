@@ -13,7 +13,7 @@
             </div>
             <div flex="66"  layout="row"  layout-align="end center">
 
-                <md-menu>
+                <md-menu >
                     <md-button  aria-label="Metric menu" class="md-icon-button"
                                ng-click="vm.openMenu($mdOpenMenu, $event)">
                         <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_24px.svg"></md-icon>
@@ -24,16 +24,16 @@
                     <md-menu-content>
                         <md-menu-item>
                             <md-menu flex>
-                                <md-button class="targets-io-menu-button" flex ng-class="{'disabled': !vm.metricSelected === false }" aria-label="Copy to dashboard"
+                                <md-button class="targets-io-menu-button" flex ng-disabled="vm.metricSelected === false" aria-label="Copy to dashboard"
                                      ng-click="vm.metricSelected && vm.openMenu($mdOpenMenu, $event)">
-                                    <md-icon style="margin-right:16px;" md-svg-src="images/assets/ic_content_copy_black_24px.svg"></md-icon>
+                                    <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" style="margin-right:16px;" md-svg-src="images/assets/ic_content_copy_black_24px.svg"></md-icon>
                                     Copy to dashboard
                                     <md-tooltip>
                                         Copy selected metrics to dashboard
                                     </md-tooltip>
 
                                 </md-button>
-                                <md-menu-content width="4">
+                                <md-menu-content ng-show="vm.metricSelected" width="4">
                                     <md-menu-item ng-repeat="dashboard in vm.dashboardsForProduct">
                                         <md-button class="targets-io-menu-button" data-ng-click="vm.copyMetricsToDashboard(dashboard)">
                                             {{dashboard.name}}
@@ -45,36 +45,37 @@
                         <md-menu-divider></md-menu-divider>
 
                         <md-menu-item>
-                            <md-button class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.resetAllBenchmarks()" >
+                            <md-button class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.resetAllBenchmarks()" >
 
-                                <md-icon md-menu-origin md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>
+                                <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>
                                 RESET BENCHMARK VALUES
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button  class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.metricsInTestRunSummary(true)"  >
+                            <md-button  class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.metricsInTestRunSummary(true)"  >
 
-                                <md-icon md-menu-origin md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
+                                <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
                                 ADD TO TEST RUN SUMMARY
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button  class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.metricsInTestRunSummary(false)"  >
+                            <md-button  class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.metricsInTestRunSummary(false)"  >
 
-                                <md-icon md-menu-origin md-svg-src="images/assets/ic_clear_black_36px.svg"></md-icon>
+                                <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_clear_black_36px.svg"></md-icon>
                                 REMOVE FROM TEST RUN SUMMARY
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.searchAndReplace()" " >
+                            <md-button class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.searchAndReplace()" " >
 
-                            <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
+                            <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
                             SEARCH & REPLACE
                             </md-button>
-                        </md-menu-item><md-menu-item>
-                            <md-button class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.openDeleteSelectedMetricsModal('')" " >
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.openDeleteSelectedMetricsModal('')" " >
 
-                            <md-icon md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
+                            <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
                             DELETE
                             </md-button>
                         </md-menu-item>
@@ -243,16 +244,16 @@
                     <md-menu-content>
                         <md-menu-item>
                             <md-menu flex>
-                                <md-button class="targets-io-menu-button" flex ng-class="{'disabled': !vm.metricSelected === false }" aria-label="Copy to dashboard"
+                                <md-button class="targets-io-menu-button" flex ng-disabled="vm.metricSelected === false" aria-label="Copy to dashboard"
                                            ng-click="vm.metricSelected && vm.openMenu($mdOpenMenu, $event)">
-                                    <md-icon style="margin-right:16px;" md-svg-src="images/assets/ic_content_copy_black_24px.svg"></md-icon>
+                                    <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" style="margin-right:16px;" md-svg-src="images/assets/ic_content_copy_black_24px.svg"></md-icon>
                                     Copy to dashboard
                                     <md-tooltip>
                                         Copy selected metrics to dashboard
                                     </md-tooltip>
 
                                 </md-button>
-                                <md-menu-content width="4">
+                                <md-menu-content ng-show="vm.metricSelected" width="4">
                                     <md-menu-item ng-repeat="dashboard in vm.dashboardsForProduct">
                                         <md-button class="targets-io-menu-button" data-ng-click="vm.copyMetricsToDashboard(dashboard)">
                                             {{dashboard.name}}
@@ -264,30 +265,37 @@
                         <md-menu-divider></md-menu-divider>
 
                         <md-menu-item>
-                            <md-button class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.resetAllBenchmarks()" >
+                            <md-button class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.resetAllBenchmarks()" >
 
-                                <md-icon md-menu-origin md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>
+                                <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>
                                 RESET BENCHMARK VALUES
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button  class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.metricsInTestRunSummary(true)"  >
+                            <md-button  class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.metricsInTestRunSummary(true)"  >
 
-                                <md-icon md-menu-origin md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
+                                <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
                                 ADD TO TEST RUN SUMMARY
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button  class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.metricsInTestRunSummary(false)"  >
+                            <md-button class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.searchAndReplace()" " >
 
-                                <md-icon md-menu-origin md-svg-src="images/assets/ic_clear_black_36px.svg"></md-icon>
+                            <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
+                            SEARCH & REPLACE
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button  class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.metricsInTestRunSummary(false)"  >
+
+                                <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_clear_black_36px.svg"></md-icon>
                                 REMOVE FROM TEST RUN SUMMARY
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button class="targets-io-menu-button" ng-class="{'disabled': vm.metricSelected === false }"  ng-click="vm.metricSelected && vm.openDeleteSelectedMetricsModal('')" " >
+                            <md-button class="targets-io-menu-button" ng-disabled="vm.metricSelected === false"  ng-click="vm.metricSelected && vm.openDeleteSelectedMetricsModal('')" " >
 
-                            <md-icon md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
+                            <md-icon ng-class="{'menu-item-disabled':vm.metricSelected === false}" md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
                             DELETE
                             </md-button>
                         </md-menu-item>
