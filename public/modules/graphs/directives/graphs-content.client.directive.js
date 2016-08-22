@@ -138,28 +138,7 @@ function GraphsContentDirective () {
         $mdDialog.show({
           parent: parentEl,
           targetEvent: $event,
-          template: '<md-dialog draggable class="pointer" aria-label="Annotations">' +
-                    '<md-toolbar class="md-padding"><h4>ADD METRIC TO SUMMARY</h4></md-toolbar>' +
-                    '  <div layout="column"' +
-                    '  <md-dialog-content class="md-padding">' +
-                    '    <h5>{{metric.alias | uppercase}}</h5>' +
-                    '    <md-input-container class="md-block" flex>' +
-                    '    <label>Annotation</label>' +
-                    '       <textarea name="metricAnnotations" ng-model="metric.defaultSummaryText" columns="1" md-maxlength="500" rows="10"></textarea>' +
-                    '    </md-input-container>' +
-                    '  </md-dialog-content>' +
-                    '  <md-dialog-actions>' +
-                    '   <div layout="row" layout-align="space-between" flex> ' +
-                    '      <md-button ng-click="closeDialogCancel()" class="md-primary">' +
-                    '        Cancel' +
-                    '     </md-button>' +
-                    '      <md-button ng-click="closeDialogOK()" class="md-primary">' +
-                    '        OK' +
-                    '     </md-button>' +
-                    '   </div>' +
-                    '  </md-dialog-actions>' +
-                    '  </div>' +
-                    '</md-dialog>',
+          templateUrl:'modules/graphs/views/add.metric.to.summary.client.view.html',
             locals: {
             metric: metric
           },
