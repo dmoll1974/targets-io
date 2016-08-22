@@ -399,35 +399,42 @@ function DashboardMetricsDirective () {
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
-        template: '<md-content aria-label="SearchAndReplace">' +
-                  ' <md-toolbar class="md-padding">' +
-                  '   <h4>SEARCH AND REPLACE</h4>' +
-                  ' </md-toolbar>' +
-                  ' <form class="md-padding" name="searchAndReplaceForm"> ' +
-                  '   <div layout="column">' +
-                  '   <md-input-container >' +
-                  '     <label>Search</label>' +
-                  '     <input name="searchInput" ng-model="search" required>' +
-                  '      <div ng-messages="searchAndReplaceForm.searchInput.$error" ' +
-                  '         ng-if=searchAndReplaceForm.replaceInput.$touched> ' +
-                  '        <div ng-message="required">Search text is required.</div> ' +
-                  '     </div>' +
-                  '   </md-input-container>' +
-                  '   <md-input-container >' +
-                  '     <label>Replace</label>' +
-                  '     <input name="replaceInput" ng-model="replace">' +
-                  '   </md-input-container>' +
-                  '  </div>' +
-                '   <div layout="row" layout-align="space-between" flex> ' +
-                  '      <md-button ng-click="closeDialogCancel()" class="md-primary">' +
-                  '        Cancel' +
-                  '     </md-button>' +
-                  '      <md-button ng-click="searchAndReplaceForm.$valid && closeDialogOK()" class="md-primary">' +
-                  '        OK' +
-                  '     </md-button>' +
-                  '   </div>' +
-                  '  </form>' +
-                  '</md-content>',
+        //template: '<md-content aria-label="SearchAndReplace">' +
+        //          ' <md-toolbar class="md-padding">' +
+        //          '   <h4>SEARCH AND REPLACE</h4>' +
+        //          ' </md-toolbar>' +
+        //          ' <form class="md-padding" name="searchAndReplaceForm"> ' +
+        //          '   <div layout="column">' +
+        //          '   <md-input-container >' +
+        //          '     <label>Search</label>' +
+        //          '     <input name="searchInput" ng-model="search" required>' +
+        //          '      <div ng-messages="searchAndReplaceForm.searchInput.$error" ' +
+        //          '         ng-if=searchAndReplaceForm.replaceInput.$touched> ' +
+        //          '        <div ng-message="required">Search text is required.</div> ' +
+        //          '     </div>' +
+        //          '   </md-input-container>' +
+        //          '   <md-input-container >' +
+        //          '     <label>Replace</label>' +
+        //          '     <input name="replaceInput" ng-model="replace">' +
+        //          '   </md-input-container>' +
+        //          '   <md-checkbox  ng-model="replaceInAlias" aria-label="Replace in alias">' +
+        //          '        Alias' +
+        //          '   </md-checkbox>' +
+        //          '   <md-checkbox  ng-model="replaceInTargets" aria-label="Replace in targets">' +
+        //          '        Targets' +
+        //          '   </md-checkbox>' +
+        //          '  </div>' +
+        //          '   <div layout="row" layout-align="space-between" flex> ' +
+        //          '      <md-button ng-click="closeDialogCancel()" class="md-primary">' +
+        //          '        Cancel' +
+        //          '     </md-button>' +
+        //          '      <md-button ng-click="searchAndReplaceForm.$valid && closeDialogOK()" class="md-primary">' +
+        //          '        OK' +
+        //          '     </md-button>' +
+        //          '   </div>' +
+        //          '  </form>' +
+        //          '</md-content>',
+        templateUrl:'modules/metrics/views/search.and.replace.client.view.html',
         locals: {
           selectedMetrics: selectedMetrics
         },
@@ -436,6 +443,8 @@ function DashboardMetricsDirective () {
       function DialogController($scope, $mdDialog, selectedMetrics) {
 
         $scope.selectedMetrics = selectedMetrics;
+        $scope.replaceInAlias = true;
+        $scope.replaceInTargets = true;
 
 
         $scope.closeDialogCancel = function(){
@@ -451,11 +460,11 @@ function DashboardMetricsDirective () {
 
           _.each($scope.selectedMetrics, function (metric) {
 
-            metric.alias = metric.alias.replace(searchRegExp, $scope.replace);
+           if($scope.replaceInAlias) metric.alias = metric.alias.replace(searchRegExp, $scope.replace);
 
               _.each(metric.targets, function(target, i){
 
-                metric.targets[i] = target.replace(searchRegExp, $scope.replace);
+                if($scope.replaceInTargets) metric.targets[i] = target.replace(searchRegExp, $scope.replace);
 
               })
 
