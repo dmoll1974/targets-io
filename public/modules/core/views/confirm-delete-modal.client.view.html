@@ -1,12 +1,32 @@
 <script type="text/ng-template" id="ConfirmDelete.html">
-    <div class="modal-header">
-        <h3 class="modal-title">Confirmation</h3>
-    </div>
-    <div class="modal-body">
-        <p>{{itemType}} {{selectedItemDescription}}?</p>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    </div>
+    <md-content aria-label="SearchAndReplace">
+        <md-toolbar class="md-padding">
+            <h4>CONFIRMATION</h4>
+        </md-toolbar>
+        <md-content layout="column">
+            <div class="md-padding">
+                <p>{{itemType}} {{selectedItemDescription}}?</p>
+            </div>
+            <div layout="row" layout-align="end center" flex>
+                <md-button ng-click="cancel()" class="md-primary">
+                    Cancel
+                </md-button>
+                <md-button ng-click="ok()" class="md-primary">
+                    OK
+                </md-button>
+            </div>
+
+        </md-content>
+    </md-content>
+
+    <!--<div class="modal-header">-->
+        <!--<h3 class="modal-title">Confirmation</h3>-->
+    <!--</div>-->
+    <!--<div class="modal-body">-->
+        <!--<p>{{itemType}} {{selectedItemDescription}}?</p>-->
+    <!--</div>-->
+    <!--<div class="modal-footer">-->
+        <!--<button class="btn btn-primary" ng-click="ok()">OK</button>-->
+        <!--<button class="btn btn-warning" ng-click="cancel()">Cancel</button>-->
+    <!--</div>-->
 </script>
