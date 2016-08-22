@@ -399,41 +399,6 @@ function DashboardMetricsDirective () {
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
-        //template: '<md-content aria-label="SearchAndReplace">' +
-        //          ' <md-toolbar class="md-padding">' +
-        //          '   <h4>SEARCH AND REPLACE</h4>' +
-        //          ' </md-toolbar>' +
-        //          ' <form class="md-padding" name="searchAndReplaceForm"> ' +
-        //          '   <div layout="column">' +
-        //          '   <md-input-container >' +
-        //          '     <label>Search</label>' +
-        //          '     <input name="searchInput" ng-model="search" required>' +
-        //          '      <div ng-messages="searchAndReplaceForm.searchInput.$error" ' +
-        //          '         ng-if=searchAndReplaceForm.replaceInput.$touched> ' +
-        //          '        <div ng-message="required">Search text is required.</div> ' +
-        //          '     </div>' +
-        //          '   </md-input-container>' +
-        //          '   <md-input-container >' +
-        //          '     <label>Replace</label>' +
-        //          '     <input name="replaceInput" ng-model="replace">' +
-        //          '   </md-input-container>' +
-        //          '   <md-checkbox  ng-model="replaceInAlias" aria-label="Replace in alias">' +
-        //          '        Alias' +
-        //          '   </md-checkbox>' +
-        //          '   <md-checkbox  ng-model="replaceInTargets" aria-label="Replace in targets">' +
-        //          '        Targets' +
-        //          '   </md-checkbox>' +
-        //          '  </div>' +
-        //          '   <div layout="row" layout-align="space-between" flex> ' +
-        //          '      <md-button ng-click="closeDialogCancel()" class="md-primary">' +
-        //          '        Cancel' +
-        //          '     </md-button>' +
-        //          '      <md-button ng-click="searchAndReplaceForm.$valid && closeDialogOK()" class="md-primary">' +
-        //          '        OK' +
-        //          '     </md-button>' +
-        //          '   </div>' +
-        //          '  </form>' +
-        //          '</md-content>',
         templateUrl:'modules/metrics/views/search.and.replace.client.view.html',
         locals: {
           selectedMetrics: selectedMetrics
@@ -497,38 +462,7 @@ function DashboardMetricsDirective () {
         $mdDialog.show({
           parent: parentEl,
           targetEvent: $event,
-          template: '<md-dialog aria-label="Templates">' +
-
-          '<md-toolbar class="md-padding">' +
-          ' <div class="md-toolbar-tools>" layout="row  ">' +
-          '   <h4>METRIC TEMPLATES</h4>' +
-          '   <span flex></span>' +
-          '   <md-button class="md-icon-button" ng-click="closeDialog()">' +
-          '     <md-icon md-svg-src="images/assets/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>' +
-          '   </md-button>' +
-          ' </div>' +
-          '</md-toolbar>' +
-          '<md-autocomplete' +
-          ' md-input-id="selectTemplateAutoComplete"' +
-          ' md-menu-class="template-autocomplete"' +
-          ' md-selected-item="template"' +
-          ' md-search-text="templateSearchText"' +
-          ' md-items="template in filterTemplates(templateSearchText)"' +
-          ' md-selected-item-change="mergeTemplate(template)"' +
-          ' md-item-text="vm.template.name"' +
-          ' md-min-length="0"' +
-          ' md-autoselect="true"' +
-          ' md-no-cache="true"' +
-          ' placeholder="Click or type to select template">' +
-          '<md-item-template>' +
-          '     <span>{{template.name}}: {{template.description}}</span>' +
-          '</md-item-template>' +
-          '<md-not-found>' +
-          'No templates matching "{{templateSearchText}}" were found.' +
-          '</md-not-found>' +
-          '</md-autocomplete>' +
-
-      '</md-dialog>',
+          templateUrl: 'modules/metrics/views/templates.client.view.html',
           locals: {
             templates: templates
           },

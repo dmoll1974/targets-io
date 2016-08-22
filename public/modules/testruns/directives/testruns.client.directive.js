@@ -568,22 +568,7 @@ function TestrunsDirective () {
       $mdDialog.show({
         parent: parentEl,
         targetEvent: $event,
-        template: '<md-dialog aria-label="Annotations">' +
-        '<md-toolbar class="md-padding"><h4>Test run annotations</h4></md-toolbar>' +
-        '  <div layout="column"' +
-        '  <md-dialog-content class="md-padding">' +
-        '    <h5><em>{{testRun.testRunId}}</em></h5>' +
-        '    <md-input-container class="md-block" flex>' +
-        '       <textarea name="testrunAnnotations" ng-model="testRun.annotations" columns="1" md-maxlength="500" rows="10"></textarea>' +
-        '    </md-input-container>' +
-        '  </md-dialog-content>' +
-        '  <md-dialog-actions>' +
-        '    <md-button ng-click="closeDialog()" class="md-primary">' +
-        '      OK' +
-        '    </md-button>' +
-        '  </md-dialog-actions>' +
-        '  </div>' +
-        '</md-dialog>',
+        templateUrl: 'modules/testruns/views/testrun.annotations.client.view.html',
         locals: {
           testRun: testRun
         },

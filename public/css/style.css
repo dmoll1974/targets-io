@@ -546,3 +546,8 @@ ul
 
     height: 18px;
 }
+
+div .modal-content{
+
+    width: 400px;
+}

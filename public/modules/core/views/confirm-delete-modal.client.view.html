@@ -1,13 +1,13 @@
 <script type="text/ng-template" id="ConfirmDelete.html">
     <md-content aria-label="SearchAndReplace">
-        <md-toolbar class="md-padding">
-            <h4>CONFIRMATION</h4>
+        <md-toolbar layout="row" layout-align="center center" class="md-padding">
+            <h3>CONFIRMATION</h3>
         </md-toolbar>
         <md-content layout="column">
-            <div class="md-padding">
-                <p>{{itemType}} {{selectedItemDescription}}?</p>
+            <div class="md-padding" layout="row" layout-align="center center">
+                <h4>{{itemType}} {{selectedItemDescription}}?</h4>
             </div>
-            <div layout="row" layout-align="end center" flex>
+            <div layout="row" layout-align="end center" >
                 <md-button ng-click="cancel()" class="md-primary">
                     Cancel
                 </md-button>
