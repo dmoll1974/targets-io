@@ -1,12 +1,30 @@
 <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
 <md-content layout="column">
-
-    <div layout="row" layout-align="space-between center">
+  <div layout="row" layout-align="space-between center">
+    <div layout="row" layout-align="start center">
         <span>
             <a data-ng-href="/#!/browse/{{product.name}}/">{{product.name}} / RELEASES </a>  /  {{product.productRelease}}
         </span>
+        <div  layout="row" layout-align="end center" >
+
+            <md-button  data-ng-click="setProductReleaseUrl()">
+                <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
+                <md-tooltip>Share product release URL</md-tooltip>
+            </md-button>
+
+            <button ng-if="productReleaseUrl && hasFlash()"
+                    class="copy-button"
+                    tooltip-size="medium" title="Copy URL"
+                    tooltip-side="top" clip-copy="productReleaseUrl"
+                    clip-click="clipClicked()">Copy
+            </button>
+            <input flex ng-readonly="true" ng-model="productReleaseUrl" ng-if="productReleaseUrl"
+                   share-graph-url/>
+        </div>
+        </div>
         <div ng-class="{'fix-to-top-release': editMode, 'md-padding' : editMode}" layout="row" layout-align="end center">
             <div id="summary-buttons" layout="row">
+
                 <md-button  ng-if="editMode === true" md-no-ink class="md-primary" data-ng-click="addLink()">Add link</md-button>
                 <md-button  ng-if="editMode === true && (releaseSaved === false || updated === true)" md-no-ink class="md-primary" data-ng-click="submitProductRelease()">Save</md-button>
                 <!--<md-button  ng-if="editMode === true && releaseSaved === true && updated === true;" md-no-ink class="md-primary" data-ng-click="submitProductRelease()">Update</md-button>-->

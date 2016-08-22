@@ -287,8 +287,37 @@ function createProductReleaseDetails(){
       });
     };
 
+      $scope.hasFlash = function() {
+          var hasFlash = false;
+          try {
+              var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+              if (fo) {
+                  hasFlash = true;
+                  return hasFlash;
+              }
+          } catch (e) {
+              if (navigator.mimeTypes && navigator.mimeTypes['application/x-shockwave-flash'] != undefined && navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin) {
+                  hasFlash = true;
+                  return hasFlash;
+              }
+          }
+      };
 
-    $scope.$on('$destroy', function () {
+      /* Zero copied logic */
+      $scope.clipClicked = function () {
+          $scope.productReleaseUrl = false;
+      };
+
+      /* generate deeplink to share view */
+
+      $scope.setProductReleaseUrl = function () {
+
+          $scope.productReleaseUrl = 'http://' + location.host + '/#!/product-release-details/' + $stateParams.productName + '/' + $stateParams.productRelease +  '/' ;
+
+      };
+
+
+      $scope.$on('$destroy', function () {
       /* if updates have been made and not saved, prompt the user */
       if($scope.updated === true && !$rootScope.currentState.includes('addProductReleaseLink') && !$rootScope.currentState.includes('productReleaseDetails')){
 

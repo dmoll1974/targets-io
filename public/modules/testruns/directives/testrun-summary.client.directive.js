@@ -522,6 +522,35 @@ function TestRunSummaryDirective () {
     });
 
 
+    $scope.hasFlash = function() {
+      var hasFlash = false;
+      try {
+        var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+        if (fo) {
+          hasFlash = true;
+          return hasFlash;
+        }
+      } catch (e) {
+        if (navigator.mimeTypes && navigator.mimeTypes['application/x-shockwave-flash'] != undefined && navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin) {
+          hasFlash = true;
+          return hasFlash;
+        }
+      }
+    };
+
+    /* Zero copied logic */
+    $scope.clipClicked = function () {
+      $scope.testRunSummaryUrl = false;
+    };
+
+    /* generate deeplink to share view */
+
+$scope.setTestRunSummaryUrl = function () {
+
+      $scope.testRunSummaryUrl = 'http://' + location.host + '/#!/testrun-summary/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.testRunId +  '/';
+
+    };
+
 
     $scope.openDeleteModal = function (size, testRunSummary) {
       ConfirmModal.itemType = 'Delete saved test run summary for ';
