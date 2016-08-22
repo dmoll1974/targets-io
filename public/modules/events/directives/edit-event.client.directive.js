@@ -13,11 +13,11 @@ function EditEventDirective () {
   return directive;
 
   /* @ngInject */
-  function EditEventDirectiveController ($scope, $state, Events, $filter, $rootScope) {
+  function EditEventDirectiveController ($scope, $state, Events, $filter, $rootScope, TestRuns) {
 
     $scope.event = Events.selected;
 
-    $scope.testRunIds = Events.getTestRunId(Events.list);
+    $scope.testRunIds = Events.getTestRunId(TestRuns.list);
     $scope.descriptions = Events.getDescriptions(Events.list);
 
 

@@ -28,10 +28,10 @@ angular.module('events').factory('Events', [
     function listEventsForTestRun(productName, dashboardName, from, until) {
       return $http.get('/events-testrun/' + productName + '/' + dashboardName + '/' + from + '/' + until);
     }
-    function getTestRunId(events) {
+    function getTestRunId(testRuns) {
       var listOfTestRunIds = [];
-      _.each(events, function (event) {
-        listOfTestRunIds.push(event.testRunId);
+      _.each(testRuns, function (testRun) {
+        listOfTestRunIds.push(testRun.testRunId);
       });
       return _.uniq(listOfTestRunIds);
     }

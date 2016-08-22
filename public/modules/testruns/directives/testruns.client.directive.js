@@ -265,6 +265,7 @@ function TestrunsDirective () {
         if(testRuns.length === 0) $scope.onlyIncompleteTestRunsAvailable = false;
         /* set test runs */
         $scope.testRuns = testRuns;
+        TestRuns.list = testRuns;
         $scope.loading = false;
       });
 
