@@ -1,48 +1,7 @@
-<md-button ng-show="!showTargetAutocomplete" aria-label="Merge metrics from template" class="md-icon-button" style="padding-bottom: 0px;"
-           ng-click="toggleShowTargetAutocomplete()">
+<md-button ng-show="!showTargetAutocomplete" aria-label="Merge metrics from template" class="md-icon-button"
+           ng-click="showTargetAutocompleteDialog($event)">
     <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
     <md-tooltip>
         Select target
     </md-tooltip>
 </md-button>
-<md-autocomplete tabindex="1" ng-if="showTargetAutocomplete"
-                 md-input-id="targetAutoComplete"
-                 md-selected-item="graphiteTarget"
-                 md-search-text="graphiteTargetSearchText"
-                 md-items="graphiteTarget in filterGraphiteTargets(graphiteTargetSearchText)"
-                 md-selected-item-change="getTargets(target, graphiteTarget.id, $parent.$index)"
-                 md-item-text="graphiteTarget.text"
-                 md-min-length="0"
-                 md-no-cache="true"
-                 md-autoselect="true"
-                 placeholder="Click or type to select">
-    <md-item-template>
-        <span>{{graphiteTarget.text}}</span>
-    </md-item-template>
-    <md-not-found>
-        No target matching "{{graphiteTargetSearchText}}" was found.
-    </md-not-found>
-</md-autocomplete>
-
-
-
-<!--<md-menu style="padding-top: 0px; padding-bottom: 0px;">-->
-    <!--<div aria-label="Select variable" class="md-icon-button"-->
-         <!--ng-click="openMenu($mdOpenMenu, $event, target)">-->
-        <!--<md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>-->
-        <!--<md-tooltip>-->
-            <!--Search target-->
-        <!--</md-tooltip>-->
-    <!--</div>-->
-    <!--<md-menu-content width="4" ng-attr-id="{{'targets-menu-content-' + index}}">-->
-        <!--&lt;!&ndash;<md-menu-item >&ndash;&gt;-->
-            <!--&lt;!&ndash;<input flex ng-model="targetFilter">&ndash;&gt;-->
-        <!--&lt;!&ndash;</md-menu-item>&ndash;&gt;-->
-        <!--&lt;!&ndash;<md-menu-item ng-repeat="graphiteTarget in graphiteTargets | filter: targetFilter">&ndash;&gt;-->
-            <!--<md-menu-item ng-repeat="graphiteTarget in graphiteTargets">-->
-            <!--<md-button md-menu-disable-close="md-menu-disable-close"  ng-click="getTargets(target, graphiteTarget.id, $parent.$index)">-->
-                <!--{{graphiteTarget.text}}-->
-            <!--</md-button>-->
-        <!--</md-menu-item>-->
-    <!--</md-menu-content>-->
-<!--</md-menu>-->

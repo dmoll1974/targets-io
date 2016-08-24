@@ -18,229 +18,207 @@ function CreateGraphiteQueryDirective () {
     return directive;
 
     /* @ngInject */
-    function CreateGraphiteQueryDirectiveController ($scope, $state, $timeout, Graphite, $mdMenu) {
-
-        console.log('target: ' + $scope.target);
+    function CreateGraphiteQueryDirectiveController ($scope, $state, $timeout, Graphite, $mdDialog) {
 
 
 
-        /* get initial values for graphite target picker*/
-        Graphite.findMetrics('*').success(function(graphiteTargetsLeafs) {
+        $scope.showTargetAutocompleteDialog = function($event){
 
-            var graphiteTargets = [];
-
-            _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
-                graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+            var parentEl = angular.element(document.body);
+            $mdDialog.show({
+                parent: parentEl,
+                targetEvent: $event,
+                preserveScope : true,
+                templateUrl: 'modules/core/views/create-graphite-query-dialog.client.view.html',
+                scope: $scope,
+                locals: {
+                    selectedTarget: $scope.target,
+                    index: $scope.index
+                },
+                onComplete: function () {
+                    setTimeout(function(){
+                        document.querySelector('#targetAutoComplete').focus();
+                    },1);
+                },
+                controller: DialogController
             });
 
-            $scope.defaultGraphiteTargets = graphiteTargets;
-            $scope.graphiteTargets = $scope.defaultGraphiteTargets;
-            $scope.expandable = true;
+            function DialogController($scope, $mdDialog, selectedTarget, index) {
 
-        });
+                $scope.selectedTarget = selectedTarget;
+                $scope.index = index;
 
+                $scope.filterGraphiteTargets = function(query) {
 
-        /* remove trailing dot */
-        if($scope.target.lastIndexOf('.') === ($scope.target.length - 1)){
-            $scope.target = $scope.target.substring(0, $scope.target.length - 1);
-        }
+                    var results = query ? $scope.graphiteTargets.filter( createFilterForTargets(query) ) : $scope.graphiteTargets;
 
-        /* Check if current target returns any 'leafs'*/
+                    return results;
 
-        Graphite.findMetrics($scope.target + '.*').success(function(graphiteTargetsLeafs) {
-
-            /* if leafs are present, add wildcard '*' */
-            if (graphiteTargetsLeafs.length > 0) {
-                var graphiteTargets = [];
-                graphiteTargets.push({text: '*', id: '*'});
-
-                _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
-                    graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
-                });
-
-                $scope.graphiteTargets = graphiteTargets;
-
-            /* if no leafs, show root query results*/
-            } else {
-
-                $scope.graphiteTargets = $scope.defaultGraphiteTargets;
-
-            }
-
-
-        });
-
-
-
-        //var menu = $mdOpenMenu($event);
-
-                /* hacks to prevent md-menyu from closing when navigating Graphite tree */
-        //        $timeout(function() {
-        //            var menuContentId = 'targets-menu-content-' + $scope.index;
-        //            var menuContent =  document.getElementById(menuContentId);
-        //
-        //            function hasAnyAttribute(target, attrs) {
-        //                if (!target) return false;
-        //                for (var i = 0, attr; attr = attrs[i]; ++i) {
-        //                    var altForms = [attr, "data-" + attr, "x-" + attr];
-        //                    for (var j = 0, rawAttr; rawAttr = altForms[j]; ++j) {
-        //                        if (target.hasAttribute(rawAttr)) {
-        //                            return true;
-        //                        }
-        //                    }
-        //                }
-        //                return false;
-        //            };
-        //
-        //            function getClosest(el, tagName, onlyParent) {
-        //                if (el instanceof angular.element) el = el[0];
-        //                tagName = tagName.toUpperCase();
-        //                if (onlyParent) el = el.parentNode;
-        //                if (!el) return null;
-        //                do {
-        //                    if (el.nodeName === tagName) {
-        //                        return el;
-        //                    }
-        //                } while (el = el.parentNode);
-        //                return null;
-        //            };
-        //            menuContent.parentElement.addEventListener('click', function(e) {
-        //                console.log('clicked');
-        //                var target = e.target;
-        //                do {
-        //                    if (target === menuContent) return;
-        //                    if (hasAnyAttribute(target, ["ng-click", "ng-href", "ui-sref"]) || target.nodeName == "BUTTON" || target.nodeName == "MD-BUTTON") {
-        //                        var closestMenu = getClosest(target, "MD-MENU");
-        //                        if (!target.hasAttribute("disabled") && (!closestMenu || closestMenu == opts.parent[0])) {
-        //                            if (target.hasAttribute("md-menu-disable-close") &&  $scope.expandable) {
-        //                                event.stopPropagation();
-        //                                angular.element(target).triggerHandler('click');
-        //                            }else{
-        //
-        //                                $mdMenu.hide(menu, { closeAll: true });
-        //                            }
-        //
-        //                            return; //let it propagate
-        //                        }
-        //                        break;
-        //                    }
-        //                } while (target = target.parentNode);
-        //            }, true);
-        //        });
-
-        /* get targets from Graphite */
-
-        $scope.getTargets = function(target, graphiteTargetId, targetIndex){
-
-
-            if(graphiteTargetId !== undefined && graphiteTargetId !== null && graphiteTargetId !== '') {
-
-                var query;
-                $scope.expandable = false;
-
-                if (graphiteTargetId === '*') {
-
-                    query = target + '.' + graphiteTargetId;// + '.*';
-
-                } else {
-
-                    query = graphiteTargetId + '.*';
                 }
 
-                Graphite.findMetrics(query).success(function (graphiteTargetsLeafs) {
+                console.log('target: ' + $scope.selectedTarget);
+
+                var initialQuery = $scope.selectedTarget.length > 0 ? $scope.selectedTarget : '*';
+
+                /* get initial values for graphite target picker*/
+                Graphite.findMetrics(initialQuery).success(function(graphiteTargetsLeafs) {
 
                     var graphiteTargets = [];
+
+                    _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
+                        graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+                    });
+
+                    $scope.defaultGraphiteTargets = graphiteTargets;
+                    $scope.graphiteTargets = $scope.defaultGraphiteTargets;
+                    $scope.expandable = true;
+
+                });
+
+
+                /* remove trailing dot */
+                if($scope.selectedTarget.lastIndexOf('.') === ($scope.selectedTarget.length - 1)){
+                    $scope.selectedTarget = $scope.selectedTarget.substring(0, $scope.selectedTarget.length - 1);
+                }
+
+                /* Check if current target returns any 'leafs'*/
+
+                Graphite.findMetrics($scope.selectedTarget + '.*').success(function(graphiteTargetsLeafs) {
+
+                    /* if leafs are present, add wildcard '*' */
                     if (graphiteTargetsLeafs.length > 0) {
-
-                        //$scope.expandable = isExpandable(graphiteTargetsLeafs);
-                        $scope.expandable = true;
-
+                        var graphiteTargets = [];
                         graphiteTargets.push({text: '*', id: '*'});
+
                         _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
                             graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
                         });
-                    }
 
-                    $scope.graphiteTargets = graphiteTargets;
+                        $scope.graphiteTargets = graphiteTargets;
 
-                    if (graphiteTargetId === '*') {
-
-                        //$timeout(function () {
-                            $scope.target = $scope.expandable ? target + '.' + graphiteTargetId + '.*' : target + '.' + graphiteTargetId;
-
-                            /* if not expandable, hide the autoComplete*/
-
-                            if ($scope.expandable === false) {
-
-                                $scope.showTargetAutocomplete = false;
-
-                            } else {
-
-                                $scope.$$childTail.graphiteTarget = null;
-                                $scope.$$childTail.graphiteTargetSearchText = '';
-
-                            }
-
-                        //}, 0);
-
+                        /* if no leafs, show root query results*/
                     } else {
-                        //$timeout(function () {
-                            $scope.target = $scope.expandable ? graphiteTargetId + '.*' : graphiteTargetId;
 
-                            /* if not expandable, hide the autoComplete*/
-
-                            if ($scope.expandable === false) {
-
-                                $scope.showTargetAutocomplete = false;
-
-                            } else {
-
-
-                                $scope.$$childTail.graphiteTarget = undefined;
-                                $scope.$$childTail.graphiteTargetSearchText = '';
-                            }
+                        $scope.graphiteTargets = $scope.defaultGraphiteTargets;
 
                     }
-
 
 
                 });
+
+
+
+                /* get targets from Graphite */
+
+                $scope.getTargets = function(selectedTarget, graphiteTargetId, targetIndex){
+
+
+                    if(graphiteTargetId !== undefined && graphiteTargetId !== null && graphiteTargetId !== '') {
+
+                        var query;
+                        $scope.expandable = false;
+
+                        if (graphiteTargetId === '*') {
+
+                            query = selectedTarget + '.' + graphiteTargetId;// + '.*';
+
+                        } else {
+
+                            query = graphiteTargetId + '.*';
+                        }
+
+                        Graphite.findMetrics(query).success(function (graphiteTargetsLeafs) {
+
+                            var graphiteTargets = [];
+                            if (graphiteTargetsLeafs.length > 0) {
+
+                                //$scope.expandable = isExpandable(graphiteTargetsLeafs);
+                                $scope.expandable = true;
+
+                                graphiteTargets.push({text: '*', id: '*'});
+                                _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
+                                    graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+                                });
+                            }
+
+                            $scope.graphiteTargets = graphiteTargets;
+
+                            if (graphiteTargetId === '*') {
+
+                                //$timeout(function () {
+                                $scope.selectedTarget = $scope.expandable ? selectedTarget + '.' + graphiteTargetId + '.*' : selectedTarget + '.' + graphiteTargetId;
+
+                                /* if not expandable, hide the autoComplete*/
+
+                                if ($scope.expandable === false) {
+
+                                    $scope.target = $scope.selectedTarget;
+                                    $mdDialog.cancel();
+
+                                } else {
+
+                                    //$scope.$$childTail.graphiteTarget = undefined;
+                                    //$scope.$$childTail.graphiteTargetSearchText = '';
+                                    $scope.graphiteTarget = undefined;
+                                    $scope.graphiteTargetSearchText = '';
+                                }
+
+                                //}, 0);
+
+                            } else {
+                                //$timeout(function () {
+                                $scope.selectedTarget = $scope.expandable ? graphiteTargetId + '.*' : graphiteTargetId;
+
+                                /* if not expandable, hide the autoComplete*/
+
+                                if ($scope.expandable === false) {
+
+                                    $scope.target = $scope.selectedTarget;
+                                    $mdDialog.cancel();
+
+                                } else {
+
+
+                                    //$scope.$$childTail.graphiteTarget = undefined;
+                                    //$scope.$$childTail.graphiteTargetSearchText = '';
+                                    $scope.graphiteTarget = undefined;
+                                    $scope.graphiteTargetSearchText = '';
+                                }
+
+                            }
+
+
+
+                        });
+                    }
+                };
+
+                $scope.done = function($event){
+
+                    $scope.target = $scope.selectedTarget;
+                    $mdDialog.cancel();
+                }
+
+                $scope.cancel = function($event){
+
+                    $mdDialog.cancel();
+                }
+
+                function createFilterForTargets(query) {
+                    var upperCaseQuery = angular.uppercase(query);
+                    return function filterFn(graphiteTarget) {
+                        return (graphiteTarget.text.toUpperCase().indexOf(upperCaseQuery) !== -1  );
+                    };
+                }
+
+
+
             }
-        };
-
-        function isExpandable(graphiteTargets){
-
-            var isExpandable = false;
-            _.each(graphiteTargets, function(target){
-                if(target.expandable === 1)isExpandable = true;
-            })
-            return isExpandable;
-        }
 
 
-        $scope.toggleShowTargetAutocomplete = function(){
-
-            $scope.showTargetAutocomplete = true;
-
-            setTimeout(function(){
-                document.querySelector('#targetAutoComplete').focus();
-            },10);
-        }
-
-        $scope.filterGraphiteTargets = function(query) {
-
-            var results = query ? $scope.graphiteTargets.filter( createFilterForTemplates(query) ) : $scope.graphiteTargets;
-
-            return results;
 
         }
 
-        function createFilterForTemplates(query) {
-            var upperCaseQuery = angular.uppercase(query);
-            return function filterFn(graphiteTarget) {
-                return (graphiteTarget.text.toUpperCase().indexOf(upperCaseQuery) !== -1  );
-            };
-        }
 
 
     }
