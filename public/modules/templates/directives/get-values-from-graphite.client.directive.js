@@ -62,13 +62,6 @@ function GetValuesFromGraphiteDirective () {
                 document.querySelector('#mergeTemplateAutoComplete').focus();
             },10);
         }
-        /* Open menu*/
-
-        //var originatorEv;
-        //$scope.openMenu = function ($mdOpenMenu, ev) {
-        //    originatorEv = ev;
-        //    $mdOpenMenu(ev);
-        //};
 
         $scope.filterGraphiteTargets = function(query) {
 
