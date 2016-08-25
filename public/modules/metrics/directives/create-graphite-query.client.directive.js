@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').directive('createGraphiteQuery', CreateGraphiteQueryDirective);
+angular.module('metrics').directive('createGraphiteQuery', CreateGraphiteQueryDirective);
 
 function CreateGraphiteQueryDirective () {
 
@@ -10,7 +10,7 @@ function CreateGraphiteQueryDirective () {
             index: '='
         },
         restrict: 'EA',
-        templateUrl: 'modules/core/directives/create-graphite-query.client.view.html',
+        templateUrl: 'modules/metrics/directives/create-graphite-query.client.view.html',
         controller: CreateGraphiteQueryDirectiveController,
         controllerAs: 'ctrlCreateGraphiteQuery'
     };
@@ -29,7 +29,7 @@ function CreateGraphiteQueryDirective () {
                 parent: parentEl,
                 targetEvent: $event,
                 preserveScope : true,
-                templateUrl: 'modules/core/views/create-graphite-query-dialog.client.view.html',
+                templateUrl: 'modules/metrics/views/create-graphite-query-dialog.client.view.html',
                 scope: $scope,
                 locals: {
                     selectedTarget: $scope.target,
@@ -110,7 +110,13 @@ function CreateGraphiteQueryDirective () {
 
                 /* get targets from Graphite */
 
-                $scope.getTargets = function(selectedTarget, graphiteTargetId, targetIndex){
+                $scope.getTargets = function(selectedTarget, graphiteTargetId, targetIndex) {
+
+                    updateTargets (selectedTarget, graphiteTargetId);
+                }
+
+
+                function updateTargets (selectedTarget, graphiteTargetId){
 
 
                     if(graphiteTargetId !== undefined && graphiteTargetId !== null && graphiteTargetId !== '') {
@@ -202,6 +208,40 @@ function CreateGraphiteQueryDirective () {
                 $scope.cancel = function($event){
 
                     $mdDialog.cancel();
+                }
+
+                $scope.revert = function(){
+
+                    $scope.selectedTarget = $scope.selectedTarget.match(/(.*)\..*\.\*$/) !== null ? $scope.selectedTarget.match(/(.*)\..*\.\*$/)[1] : '' ;
+
+                    /* remove trailing '.*' if there*/
+                    $scope.selectedTarget =  $scope.selectedTarget.indexOf('.*') !== -1 ? $scope.selectedTarget.substring(0,$scope.selectedTarget.indexOf('.*')) : $scope.selectedTarget;
+
+                    //updateTargets ($scope.selectedTarget, $scope.selectedTarget);
+
+                    Graphite.findMetrics($scope.selectedTarget + '.*').success(function(graphiteTargetsLeafs) {
+
+                        /* if leafs are present, add wildcard '*' */
+                        if (graphiteTargetsLeafs.length > 0) {
+                            var graphiteTargets = [];
+                            graphiteTargets.push({text: '*', id: '*'});
+
+                            _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
+                                graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+                            });
+
+                            $scope.graphiteTargets = graphiteTargets;
+
+                            /* if no leafs, show root query results*/
+                        } else {
+
+                            $scope.graphiteTargets = $scope.defaultGraphiteTargets;
+
+                        }
+
+
+                    });
+
                 }
 
                 function createFilterForTargets(query) {

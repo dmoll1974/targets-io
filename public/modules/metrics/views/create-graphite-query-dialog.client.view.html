@@ -16,6 +16,7 @@
                         <label>Selected target</label>
                         <input ng-model="selectedTarget" ng-readonly="true" >
                     </md-input-container>
+                    <md-button aria-label="Revert" ng-disabled="selectedTarget.length === 0" ng-click="revert()">Revert</md-button>
                     <md-button aria-label="Done" ng-click="done($event)">Done</md-button>
                 </div>
                 <md-autocomplete tabindex="1"
