@@ -239,6 +239,10 @@ function CreateGraphiteQueryDirective () {
 
                         }
 
+                        setTimeout(function(){
+                            document.querySelector('#targetAutoComplete').focus();
+                        },1);
+
 
                     });
 
