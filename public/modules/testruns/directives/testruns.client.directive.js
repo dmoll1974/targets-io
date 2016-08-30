@@ -420,6 +420,7 @@ function TestrunsDirective () {
 
     function liveGraphs(testRun) {
 
+
       $state.go('viewLiveGraphs', {
         'productName': $stateParams.productName,
         'dashboardName': $stateParams.dashboardName,

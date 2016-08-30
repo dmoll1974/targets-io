@@ -11,8 +11,8 @@ angular.module('graphs').factory('Utils', [
       zoomLock: true,
       graphType: '',
       zoomRange: {
-          value: '-10min',
-          label: 'Last 10 minutes'
+          value: '',
+          label: 'Since start test run'
       },
       zoomFrom: undefined,
       zoomUntil: undefined,
@@ -36,8 +36,8 @@ angular.module('graphs').factory('Utils', [
         Utils.zoomLock = true;
         //Utils.graphType = '';
         Utils.zoomRange = {
-            value: '-10min',
-            label: 'Last 10 minutes'
+            value: '',
+            label: 'Since start test run'
         };
         Utils.zoomFrom = undefined;
         Utils.zoomUntil = undefined;

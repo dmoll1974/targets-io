@@ -48,7 +48,7 @@ function GraphsContainerDirective () {
     }else{
       vm.zoomRange = Utils.zoomRange;
       /* set md-select selected item */
-      vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(vm.zoomRange.value);
+      vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf(vm.zoomRange.label);
     }
 
     /* get metricFilter */
