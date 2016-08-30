@@ -173,20 +173,25 @@
                                     MARK TEST RUN AS COMPLETE
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-divider></md-menu-divider>
                             <md-menu-item ng-show="progress === undefined">
                                 <md-button class="targets-io-menu-button"  data-ng-click="editTestRun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
                                     EDIT TEST RUN
                                 </md-button>
                             </md-menu-item>
-
+                            <md-menu-item ng-show="progress === undefined">
+                                <md-button class="targets-io-menu-button"  data-ng-click="showProductReleaseDialog($event, testRun)">
+                                    <md-icon md-svg-src="images/assets/ic_update_black_24px.svg"></md-icon>
+                                    Set product release
+                                </md-button>
+                            </md-menu-item>
                             <md-menu-item ng-show="progress === undefined">
                                 <md-button class="targets-io-menu-button"  data-ng-click="flushCache(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>
                                     FLUSH CACHE
                                 </md-button>
                             </md-menu-item>
+
                         </md-menu-content>
                     </md-menu>
                 </td>
