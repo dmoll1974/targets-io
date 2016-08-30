@@ -30,7 +30,7 @@
     "bootstrap-sass-official": "~3.3.3",
     "angular-ui-bootstrap-datetimepicker": "~0.11.2",
     "components-font-awesome": "~4.3.0",
-    "ng-tags-input": "~2.2.0",
+    "ng-tags-input": "~3.1.1",
     "zeroclipboard": "~2.2.0",
     "ng-clip": "~0.2.6",
     "moment": "~2.10.6",
