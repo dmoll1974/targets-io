@@ -87,7 +87,7 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
 
       } else {
 
-        var endTestPattern = new RegExp('completed|Build was aborted');
+        var endTestPattern = new RegExp('finished|completed|Build was aborted');
 
         var consoleArrayFirstSplit = body.split(endTestPattern);
         var consoleArray = consoleArrayFirstSplit[0].split('Requests');
