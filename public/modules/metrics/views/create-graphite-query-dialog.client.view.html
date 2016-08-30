@@ -18,6 +18,7 @@
                     </md-input-container>
                     <md-button aria-label="Revert" ng-disabled="selectedTarget.length === 0" ng-click="revert()">Revert</md-button>
                     <md-button aria-label="Done" ng-click="done($event)">Done</md-button>
+                    <md-button aria-label="Wrap in function" ng-click="wrapInFunction()">Functions</md-button>
                 </div>
                 <md-autocomplete tabindex="1" ng-show="!targetComplete"
                                  md-input-id="targetAutoComplete"

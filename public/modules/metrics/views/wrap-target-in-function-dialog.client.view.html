@@ -12,9 +12,9 @@
         <div class="md-dialog-content">
             <form ng-submit="$event.preventDefault()">
                 <div layout="row" flex layout-align="space-between top">
-                    <md-input-container class="target-dialog-input" >
+                    <md-input-container flex class="target-dialog-input" >
                         <label>Preview</label>
-                        <input ng-model="preview" ng-readonly="true" >
+                        <input ng-model="preview" >
                     </md-input-container>
                     <md-button aria-label="Done" ng-click="done($event)">Done</md-button>
                 </div>
@@ -23,7 +23,6 @@
                                  md-selected-item="graphiteFunction"
                                  md-search-text="graphiteFunctionSearchText"
                                  md-items="graphiteFunction in filterGraphiteFunctions(graphiteFunctionSearchText)"
-                                 md-selected-item-change="getTargets(selectedTarget, graphiteFunction.id, $parent.$index)"
                                  md-item-text="graphiteFunction.name"
                                  md-min-length="0"
                                  md-no-cache="true"
@@ -47,13 +46,12 @@
                     <p><code>{{graphiteFunction.example}}</code></p>
                 </div>
                 <md-divider></md-divider>
-                <div class="md-padding" layout="row">
-                <md-input-container ng-if="graphiteFunction.argument">
-                    <label>Argument(s)</label>
-                    <input ng-model="graphiteFunction.argument">
-                </md-input-container>
-                <md-button aria-label="Wrap" ng-if="graphiteFunction.argument.length > 0 || graphiteFunction.argument === undefined" ng-click="graphiteFunction.argument.length > 0 && wrap(graphiteFunction)">Wrap</md-button>
-
+                <div class="md-padding" layout="row" layout-align="space-between center">
+                    <md-input-container flex ng-show="graphiteFunction.argument !== undefined">
+                        <label>Argument(s)</label>
+                        <input ng-model="graphiteFunction.argument" >
+                    </md-input-container>
+                    <md-button aria-label="Wrap" ng-if="graphiteFunction.argument.length > 0 || graphiteFunction.argument === undefined" ng-click="(graphiteFunction.argument.length > 0 || graphiteFunction.argument === undefined) && wrap(graphiteFunction)">Wrap in function</md-button>
                 </div>
 
             </form>

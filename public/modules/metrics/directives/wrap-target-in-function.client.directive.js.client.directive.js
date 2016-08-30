@@ -79,7 +79,7 @@ function WrapTargetInFunctionDirective () {
                         description: 'Takes one metric or a wildcard seriesList followed by a constant, and multiplies the datapoint by the constant provided at each point.',
                         example: 'alias(scaleToSeconds(sumSeries(gatling2.icird.UC*_*_Agree*.ok.count),1),"Checkins per second") // summarizes all transactions count matching pattern',
                         argument: undefined,
-                        template: 'sumSeries($ARGUMENT)'
+                        template: 'sumSeries($TARGET)'
                     },
                     {
                         name: 'averageSeries',
@@ -89,11 +89,11 @@ function WrapTargetInFunctionDirective () {
                         template: 'averageSeries($TARGET)'
                     },
                     {
-                        name: 'averageSeries',
+                        name: 'asPercent',
                         description: 'Calculates a percentage of the total of a wildcard series. If total is specified, each series will be calculated as a percentage of that total. If total is not specified, the sum of all points in the wildcard series will be used instead.',
                         example: 'asPercent(integral(gatling2.icird.allRequests.ko.count), integral(gatling2.icird.allRequests.all.count)) // calculate percentage of failed transactions ',
                         argument: '',
-                        template: 'averageSeries($TARGET)'
+                        template: 'asPercent($TARGET,$ARGUMENT)'
                     },
 
                 ]
@@ -130,7 +130,7 @@ function WrapTargetInFunctionDirective () {
 
                     var targetRegExp = new RegExp('\\$TARGET', 'g');
                     var argumentRegExp = new RegExp('\\$ARGUMENT', 'g');
-                    $scope.preview = (graphiteFunction.argument) ? graphiteFunction.template.replace(targetRegExp, $scope.target).replace(argumentRegExp, graphiteFunction.argument) : graphiteFunction.template.replace(targetRegExp, $scope.target);
+                    $scope.preview = (graphiteFunction.argument !== undefined) ? graphiteFunction.template.replace(targetRegExp, $scope.target).replace(argumentRegExp, graphiteFunction.argument) : graphiteFunction.template.replace(targetRegExp, $scope.target);
                     $scope.target =  $scope.preview;
                 }
 
