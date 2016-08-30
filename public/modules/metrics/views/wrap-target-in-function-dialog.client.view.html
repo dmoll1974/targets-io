@@ -1,0 +1,63 @@
+<md-dialog draggable class="pointer" aria-label="Wrap target in graphiteFunction" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h4 class="md-padding" layout-align="center center">WRAP TARGET IN GRAPHITE FUNCTION</h4>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="images/assets/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <form ng-submit="$event.preventDefault()">
+                <div layout="row" flex layout-align="space-between top">
+                    <md-input-container flex class="target-dialog-input" >
+                        <label>Preview</label>
+                        <input ng-model="preview" >
+                    </md-input-container>
+                    <md-button aria-label="Done" ng-click="done($event)">Done</md-button>
+                </div>
+                <md-autocomplete tabindex="1"
+                                 md-input-id="graphiteFunctionAutoComplete"
+                                 md-selected-item="graphiteFunction"
+                                 md-search-text="graphiteFunctionSearchText"
+                                 md-items="graphiteFunction in filterGraphiteFunctions(graphiteFunctionSearchText)"
+                                 md-item-text="graphiteFunction.name"
+                                 md-min-length="0"
+                                 md-no-cache="true"
+                                 md-autoselect="true"
+                                 placeholder="Click or type to select">
+                    <md-item-template>
+                        <span>{{graphiteFunction.name}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No graphite function matching "{{graphiteFunctionSearchText}}" was found.
+                    </md-not-found>
+                </md-autocomplete>
+                <md-divider></md-divider>
+                <div ng-if="graphiteFunction" class="md-padding">
+                    <em>Description</em>
+                    <p>{{graphiteFunction.description}}</p>
+                </div>
+                <md-divider></md-divider>
+                <div ng-if="graphiteFunction" class="md-padding">
+                    <em>Example</em>
+                    <p><code>{{graphiteFunction.example}}</code></p>
+                </div>
+                <md-divider></md-divider>
+                <div class="md-padding" layout="row" layout-align="space-between center">
+                    <md-input-container flex ng-show="graphiteFunction.argument !== undefined">
+                        <label>Argument(s)</label>
+                        <input ng-model="graphiteFunction.argument" >
+                    </md-input-container>
+                    <md-button aria-label="Wrap" ng-if="graphiteFunction.argument.length > 0 || graphiteFunction.argument === undefined" ng-click="(graphiteFunction.argument.length > 0 || graphiteFunction.argument === undefined) && wrap(graphiteFunction)">Wrap in function</md-button>
+                </div>
+
+            </form>
+        </div>
+    </md-dialog-content>
+</md-dialog>
+
+
+
