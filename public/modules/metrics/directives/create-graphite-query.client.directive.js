@@ -123,6 +123,7 @@ function CreateGraphiteQueryDirective () {
 
                         var query;
                         $scope.expandable = false;
+                        $scope.targetComplete = false;
 
                         if (graphiteTargetId === '*') {
 
@@ -158,8 +159,7 @@ function CreateGraphiteQueryDirective () {
 
                                 if ($scope.expandable === false) {
 
-                                    $scope.target = $scope.selectedTarget;
-                                    $mdDialog.cancel();
+                                    $scope.targetComplete = true;
 
                                 } else {
 
@@ -179,8 +179,7 @@ function CreateGraphiteQueryDirective () {
 
                                 if ($scope.expandable === false) {
 
-                                    $scope.target = $scope.selectedTarget;
-                                    $mdDialog.cancel();
+                                    $scope.targetComplete = true;
 
                                 } else {
 
@@ -212,14 +211,13 @@ function CreateGraphiteQueryDirective () {
 
                 $scope.revert = function(){
 
-                    $scope.selectedTarget = $scope.selectedTarget.match(/(.*)\..*\.\*$/) !== null ? $scope.selectedTarget.match(/(.*)\..*\.\*$/)[1] : '' ;
-
                     /* remove trailing '.*' if there*/
-                    $scope.selectedTarget =  $scope.selectedTarget.indexOf('.*') !== -1 ? $scope.selectedTarget.substring(0,$scope.selectedTarget.indexOf('.*')) : $scope.selectedTarget;
+
+                    $scope.selectedTarget = $scope.selectedTarget.match(/\./g).length > 0 ? $scope.selectedTarget.substring(0,$scope.selectedTarget.indexOf($scope.selectedTarget.split('.')[$scope.selectedTarget.split('.').length - 2])) + '*' : '*' ;
 
                     //updateTargets ($scope.selectedTarget, $scope.selectedTarget);
 
-                    Graphite.findMetrics($scope.selectedTarget + '.*').success(function(graphiteTargetsLeafs) {
+                    Graphite.findMetrics($scope.selectedTarget).success(function(graphiteTargetsLeafs) {
 
                         /* if leafs are present, add wildcard '*' */
                         if (graphiteTargetsLeafs.length > 0) {
@@ -231,6 +229,13 @@ function CreateGraphiteQueryDirective () {
                             });
 
                             $scope.graphiteTargets = graphiteTargets;
+                            $scope.targetComplete = false;
+                            $scope.graphiteTarget = undefined;
+                            $scope.graphiteTargetSearchText = '';
+
+                            setTimeout(function(){
+                                document.querySelector('#targetAutoComplete').focus();
+                            },200);
 
                             /* if no leafs, show root query results*/
                         } else {
