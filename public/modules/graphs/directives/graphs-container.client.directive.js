@@ -258,7 +258,7 @@ function GraphsContainerDirective () {
 
             vm.zoomOptions.unshift(runningTestOption);
 
-            Utils.zoomRange = runningTestOption;
+            Utils.zoomRange = Utils.zoomRange.label === 'Since start test run' ? runningTestOption : Utils.zoomRange;
 
             vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(Utils.zoomRange.value);
 
