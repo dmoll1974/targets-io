@@ -14,6 +14,10 @@ angular.module('graphs').factory('Utils', [
           value: '',
           label: 'Since start test run'
       },
+      zoomRangeTargetPreview: {
+          value: '-10min',
+          label: 'Last 10 minutes'
+      },
       zoomFrom: undefined,
       zoomUntil: undefined,
       polling: undefined,
@@ -38,6 +42,10 @@ angular.module('graphs').factory('Utils', [
         Utils.zoomRange = {
             value: '',
             label: 'Since start test run'
+        };
+        Utils.zoomRangeTargetPreview = {
+            value: '-10min',
+            label: 'Last 10 minutes'
         };
         Utils.zoomFrom = undefined;
         Utils.zoomUntil = undefined;

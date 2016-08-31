@@ -338,6 +338,12 @@ html, body {
 
 }
 
+.target-preview-content{
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+}
 
 div#column-0-2.graph-column {
     position: fixed;

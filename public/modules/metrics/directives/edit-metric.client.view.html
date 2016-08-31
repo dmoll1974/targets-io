@@ -20,11 +20,13 @@
                         </md-input-container>
                         <create-graphite-query  target="vm.metric.targets[$index]" index="$index"></create-graphite-query>
                         <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg" data-ng-click="vm.duplicateTarget($index)"
-                                 data-ng-show="target.length>0">
+                                 data-ng-show="target.length > 0">
                             <md-tooltip>
-                            Duplicate target
+                                Duplicate target
                             </md-tooltip>
                         </md-icon>
+                        <target-preview  metric="vm.metric" index="$index" data-ng-show="target.length > 0"></target-preview>
+
                         <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="vm.removeTarget($index)"
                                  data-ng-show="vm.metric.targets.length>1">
                             <md-tooltip>

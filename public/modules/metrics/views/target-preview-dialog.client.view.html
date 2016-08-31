@@ -1,0 +1,27 @@
+<md-dialog draggable class="pointer" aria-label="Wrap target in graphiteFunction"   ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h4 class="md-padding" layout-align="center center">TARGET PREVIEW</h4>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="images/assets/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-padding target-preview-content">
+
+       <div layout="column">
+           <div class="md-padding">
+               <md-select class="md-padding time-range-selector" ng-model="zoomRange" style="padding-left: 5px;">
+                   <md-option ng-repeat="zoomOption in zoomOptions" ng-value="zoomOption" ng-selected="$index === selectedZoomOptionIndex">
+                       {{zoomOption.label}}
+                   </md-option>
+               </md-select>
+           </div>
+           <target-preview-dygraph style="width:500px;" metric="metric" index="index"></target-preview-dygraph>
+       </div>
+    </md-dialog-content>
+</md-dialog>
+
+
+
