@@ -341,7 +341,7 @@ html, body {
 .target-preview-content{
 
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 
 }
 
