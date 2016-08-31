@@ -6,7 +6,7 @@ function WrapTargetInFunctionDirective () {
 
     var directive = {
         scope: {
-            target: '=',
+            metric: '=',
             index: '='
         },
         restrict: 'EA',
@@ -32,7 +32,7 @@ function WrapTargetInFunctionDirective () {
                 templateUrl: 'modules/metrics/views/wrap-target-in-function-dialog.client.view.html',
                 scope: $scope,
                 locals: {
-                    preview: $scope.target,
+                    preview: $scope.metric.targets[$scope.index],
                     index: $scope.index
                 },
                 onComplete: function () {
@@ -99,6 +99,7 @@ function WrapTargetInFunctionDirective () {
                 ]
                 $scope.preview = preview;
                 $scope.index = index;
+                $scope.showPreview = false;
 
                 $scope.filterGraphiteFunctions = function(query) {
 
@@ -117,7 +118,7 @@ function WrapTargetInFunctionDirective () {
 
                 $scope.done = function($event){
 
-                    $scope.target = $scope.preview;
+                    $scope.metric.targets[$scope.index] = $scope.preview;
                     $mdDialog.cancel();
                 }
 
@@ -130,10 +131,49 @@ function WrapTargetInFunctionDirective () {
 
                     var targetRegExp = new RegExp('\\$TARGET', 'g');
                     var argumentRegExp = new RegExp('\\$ARGUMENT', 'g');
-                    $scope.preview = (graphiteFunction.argument !== undefined) ? graphiteFunction.template.replace(targetRegExp, $scope.target).replace(argumentRegExp, graphiteFunction.argument) : graphiteFunction.template.replace(targetRegExp, $scope.target);
-                    $scope.target =  $scope.preview;
+                    $scope.preview = (graphiteFunction.argument !== undefined) ? graphiteFunction.template.replace(targetRegExp, $scope.metric.targets[$scope.index]).replace(argumentRegExp, graphiteFunction.argument) : graphiteFunction.template.replace(targetRegExp, $scope.metric.targets[$scope.index]);
+                    $scope.metric.targets[$scope.index] =  $scope.preview;
                 }
 
+
+                $scope.zoomOptions = [
+                    {value: '-10min' , label: 'Last 10 minutes'},
+                    {value: '-30min' , label: 'Last 30 minutes'},
+                    {value: '-1h', label: 'Last hour'},
+                    {value: '-3h', label: 'Last 3 hours'}
+                ];
+
+                $scope.zoomRange = Utils.zoomRangeTargetPreview;
+                /* set md-select selected item */
+                $scope.selectedZoomOptionIndex = $scope.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf($scope.zoomRange.label);
+
+                //$scope.cancel = function($event){
+                //
+                //    $scope.metric.annotations = undefined;
+                //    $scope.metric.graphNumberOfValidDatapoints = undefined;
+                //    $scope.metric.legendData = undefined;
+                //
+                //    $mdDialog.cancel();
+                //}
+
+                $scope.updatePreview = function (){
+
+                    $scope.metric.targets[$scope.index] = $scope.preview;
+
+                    $scope.showPreview = false;
+
+                    //var myEl = angular.element( document.querySelector( '#targets-preview' ) );
+                    //myEl.remove();
+
+                    $scope.showPreview = true;
+                }
+                /* watch zoomRange */
+                $scope.$watch('zoomRange', function (newVal, oldVal) {
+
+
+                    Utils.zoomRangeTargetPreview = $scope.zoomRange;
+
+                });
 
 
 

@@ -18,7 +18,7 @@
                             <label>Target</label>
                             <input ng-model="vm.metric.targets[$index]">
                         </md-input-container>
-                        <create-graphite-query  target="vm.metric.targets[$index]" index="$index"></create-graphite-query>
+                        <create-graphite-query  metric="vm.metric" index="$index"></create-graphite-query>
                         <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg" data-ng-click="vm.duplicateTarget($index)"
                                  data-ng-show="target.length > 0">
                             <md-tooltip>

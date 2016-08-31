@@ -188,7 +188,6 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
     }, function (newVal, oldVal) {
       if (newVal !== oldVal) {
 
-        Interval.clearAll();
 
         $scope.zoomRange =  Utils.zoomRangeTargetPreview;
 
@@ -223,18 +222,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       }
     });
 
-    /* stop data polling when accordion is closed */
-    $scope.$watch('metric.isOpen', function (newVal, oldVal) {
-      //if (newVal !== oldVal) {
-      if(newVal === false) {
-        Interval.clearIntervalForMetric($scope.metric._id);
-      }else{
-        $scope.showProgressBar = true;
-        drawDypraph($scope.graphsType);
-      }
-      //}
 
-    });
     /* stop data polling when element is destroyed by ng-if */
     $scope.$on('$destroy', function () {
       Interval.clearIntervalForMetric($scope.metric._id);
