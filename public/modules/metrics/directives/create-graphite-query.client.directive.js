@@ -6,7 +6,7 @@ function CreateGraphiteQueryDirective () {
 
     var directive = {
         scope: {
-            target: '=',
+            metric: '=',
             index: '='
         },
         restrict: 'EA',
@@ -18,7 +18,7 @@ function CreateGraphiteQueryDirective () {
     return directive;
 
     /* @ngInject */
-    function CreateGraphiteQueryDirectiveController ($scope, $state, $timeout, Graphite, $mdDialog) {
+    function CreateGraphiteQueryDirectiveController ($scope, $state, $timeout, Graphite, $mdDialog, Utils) {
 
 
 
@@ -32,7 +32,7 @@ function CreateGraphiteQueryDirective () {
                 templateUrl: 'modules/metrics/views/create-graphite-query-dialog.client.view.html',
                 scope: $scope,
                 locals: {
-                    selectedTarget: $scope.target,
+                    selectedTarget: $scope.metric.targets[$scope.index],
                     index: $scope.index
                 },
                 onComplete: function () {
@@ -43,10 +43,11 @@ function CreateGraphiteQueryDirective () {
                 controller: DialogController
             });
 
-            function DialogController($scope, $mdDialog, selectedTarget, index) {
+            function DialogController($scope, $mdDialog, selectedTarget, index, Utils) {
 
                 $scope.selectedTarget = selectedTarget;
                 $scope.index = index;
+                $scope.showPreview = false;
 
                 $scope.filterGraphiteTargets = function(query) {
 
@@ -200,7 +201,7 @@ function CreateGraphiteQueryDirective () {
 
                 $scope.done = function($event){
 
-                    $scope.target = $scope.selectedTarget;
+                    $scope.metric.targets[$scope.index] = $scope.selectedTarget;
                     $mdDialog.hide();
                 }
 
@@ -263,10 +264,43 @@ function CreateGraphiteQueryDirective () {
                     };
                 }
 
+                $scope.zoomOptions = [
+                    {value: '-10min' , label: 'Last 10 minutes'},
+                    {value: '-30min' , label: 'Last 30 minutes'},
+                    {value: '-1h', label: 'Last hour'},
+                    {value: '-3h', label: 'Last 3 hours'}
+                ];
+
+                $scope.zoomRange = Utils.zoomRangeTargetPreview;
+                /* set md-select selected item */
+                $scope.selectedZoomOptionIndex = $scope.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf($scope.zoomRange.label);
+
+
+                $scope.updatePreview = function (){
+
+                    $scope.showPreview = false;
+
+                    $scope.metric.targets[$scope.index] = $scope.selectedTarget;
+
+                    $timeout(function(){
+
+                        $scope.showPreview = true;
+
+
+                    })
+                }
+                /* watch zoomRange */
+                $scope.$watch('zoomRange', function (newVal, oldVal) {
+
+
+                    Utils.zoomRangeTargetPreview = $scope.zoomRange;
+
+                });
+
 
                 $scope.wrapInFunction = function(){
 
-                    $scope.target = $scope.selectedTarget;
+                    $scope.metric.targets[$scope.index] = $scope.selectedTarget;
                     $mdDialog.hide();
 
                     $mdDialog.show({
@@ -276,7 +310,7 @@ function CreateGraphiteQueryDirective () {
                         templateUrl: 'modules/metrics/views/wrap-target-in-function-dialog.client.view.html',
                         scope: $scope,
                         locals: {
-                            preview: $scope.target,
+                            preview: $scope.metric.targets[$scope.index],
                             index: $scope.index
                         },
                         onComplete: function () {
@@ -287,7 +321,7 @@ function CreateGraphiteQueryDirective () {
                         controller: DialogController
                     });
 
-                    function DialogController($scope, $mdDialog, preview, index) {
+                    function DialogController($scope, $mdDialog, preview, index, Utils) {
 
                         $scope.graphiteFunctions = [
                             {
@@ -343,6 +377,7 @@ function CreateGraphiteQueryDirective () {
                         ]
                         $scope.preview = preview;
                         $scope.index = index;
+                        $scope.showPreview = false;
 
                         $scope.filterGraphiteFunctions = function(query) {
 
@@ -361,7 +396,7 @@ function CreateGraphiteQueryDirective () {
 
                         $scope.done = function($event){
 
-                            $scope.target = $scope.preview;
+                            $scope.metric.targets[$scope.index] = $scope.preview;
                             $mdDialog.cancel();
                         }
 
@@ -374,10 +409,42 @@ function CreateGraphiteQueryDirective () {
 
                             var targetRegExp = new RegExp('\\$TARGET', 'g');
                             var argumentRegExp = new RegExp('\\$ARGUMENT', 'g');
-                            $scope.preview = (graphiteFunction.argument !== undefined) ? graphiteFunction.template.replace(targetRegExp, $scope.target).replace(argumentRegExp, graphiteFunction.argument) : graphiteFunction.template.replace(targetRegExp, $scope.target);
-                            $scope.target =  $scope.preview;
+                            $scope.preview = (graphiteFunction.argument !== undefined) ? graphiteFunction.template.replace(targetRegExp, $scope.metric.targets[$scope.index]).replace(argumentRegExp, graphiteFunction.argument) : graphiteFunction.template.replace(targetRegExp, $scope.metric.targets[$scope.index]);
+                            $scope.metric.targets[$scope.index] =  $scope.preview;
                         }
 
+                        $scope.zoomOptions = [
+                            {value: '-10min' , label: 'Last 10 minutes'},
+                            {value: '-30min' , label: 'Last 30 minutes'},
+                            {value: '-1h', label: 'Last hour'},
+                            {value: '-3h', label: 'Last 3 hours'}
+                        ];
+
+                        $scope.zoomRange = Utils.zoomRangeTargetPreview;
+                        /* set md-select selected item */
+                        $scope.selectedZoomOptionIndex = $scope.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf($scope.zoomRange.label);
+
+
+                        $scope.updatePreview = function (){
+
+                            $scope.showPreview = false;
+
+                            $scope.metric.targets[$scope.index] = $scope.preview;
+
+                            $timeout(function(){
+
+                                $scope.showPreview = true;
+
+
+                            })
+                        }
+                        /* watch zoomRange */
+                        $scope.$watch('zoomRange', function (newVal, oldVal) {
+
+
+                            Utils.zoomRangeTargetPreview = $scope.zoomRange;
+
+                        });
 
 
 
