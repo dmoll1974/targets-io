@@ -47,6 +47,7 @@ function CreateGraphiteQueryDirective () {
 
                 $scope.selectedTarget = selectedTarget;
                 $scope.index = index;
+                $scope.showPreview = false;
 
                 $scope.filterGraphiteTargets = function(query) {
 
@@ -263,6 +264,39 @@ function CreateGraphiteQueryDirective () {
                     };
                 }
 
+                $scope.zoomOptions = [
+                    {value: '-10min' , label: 'Last 10 minutes'},
+                    {value: '-30min' , label: 'Last 30 minutes'},
+                    {value: '-1h', label: 'Last hour'},
+                    {value: '-3h', label: 'Last 3 hours'}
+                ];
+
+                $scope.zoomRange = Utils.zoomRangeTargetPreview;
+                /* set md-select selected item */
+                $scope.selectedZoomOptionIndex = $scope.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf($scope.zoomRange.label);
+
+
+                $scope.updatePreview = function (){
+
+                    $scope.showPreview = false;
+
+                    $scope.metric.targets[$scope.index] = $scope.selectedTarget;
+
+                    $timeout(function(){
+
+                        $scope.showPreview = true;
+
+
+                    })
+                }
+                /* watch zoomRange */
+                $scope.$watch('zoomRange', function (newVal, oldVal) {
+
+
+                    Utils.zoomRangeTargetPreview = $scope.zoomRange;
+
+                });
+
 
                 $scope.wrapInFunction = function(){
 
@@ -390,14 +424,6 @@ function CreateGraphiteQueryDirective () {
                         /* set md-select selected item */
                         $scope.selectedZoomOptionIndex = $scope.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf($scope.zoomRange.label);
 
-                        //$scope.cancel = function($event){
-                        //
-                        //    $scope.metric.annotations = undefined;
-                        //    $scope.metric.graphNumberOfValidDatapoints = undefined;
-                        //    $scope.metric.legendData = undefined;
-                        //
-                        //    $mdDialog.cancel();
-                        //}
 
                         $scope.updatePreview = function (){
 

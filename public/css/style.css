@@ -448,9 +448,9 @@ md-autocomplete.targets-io-header-autocomplete{
 /*.md-virtual-repeat-container.md-autocomplete-suggestions-container {*/
     /*width:500px !important;*/
 /*}*/
-/*md-autocomplete.template-autocomplete {*/
-    /*width:500px !important;*/
-/*}*/
+md-autocomplete.target-autocomplete {
+    width:500px !important;
+}
 
 .targetsio-header-text{
     font-size: 15px !important;

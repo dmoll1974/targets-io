@@ -20,12 +20,13 @@
                                     <input ng-model="preview" >
                                 </md-input-container>
                             </div>
-                            <div layout="row" layout-align="end start"><md-button aria-label="Done" ng-click="done($event)">Done</md-button>
+                            <div layout="row" layout-align="end start">
+                                <md-button aria-label="Done" ng-click="done($event)">Done</md-button>
                                 <md-button aria-label="Preview" ng-click="updatePreview()">Preview</md-button>
                             </div>
                         </div>
-                        <div>
-                            <md-autocomplete tabindex="1"
+                        <div layout="row" flex>
+                            <md-autocomplete  class="target-autocomplete"
                                          md-input-id="graphiteFunctionAutoComplete"
                                          md-selected-item="graphiteFunction"
                                          md-search-text="graphiteFunctionSearchText"
