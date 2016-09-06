@@ -83,15 +83,15 @@ function GraphsContentDirective () {
 
         case 'graphs-live':
 
-          vm.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?zoomRange=' + Utils.zoomRange.value;
+          vm.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?';
 
           if (Utils.zoomFrom) {
             vm.metricShareUrl = vm.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
           }
 
           /* zoom range */
-          if (Utils.zoomRange) {
-            vm.viewShareUrl = vm.viewShareUrl + '&zoomRange=' + Utils.zoomRange;
+          if (Utils.zoomRange && Utils.zoomRange.label !== 'Since start test run') {
+            vm.metricShareUrl = vm.metricShareUrl + '&zoomRange=' + Utils.zoomRange.value;
           }
           vm.metricShareUrl = vm.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
 

@@ -250,7 +250,7 @@ function GraphsContainerDirective () {
 
         TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function(runningTest) {
 
-          if (runningTest.start) {
+          if (runningTest.start && !$state.params.zoomRange) {
 
             var runningTestOption = {};
             runningTestOption.value = new Date(runningTest.start).getTime();
@@ -264,10 +264,14 @@ function GraphsContainerDirective () {
 
           }else{
 
-            Utils.zoomRange = {
-              value: '-10min',
-              label: 'Last 10 minutes'
-            };
+            if(!$state.params.zoomRange){ /* if zoomRange is not provided via query string, set it to 'Last 10 minutes'*/
+
+              Utils.zoomRange = {
+                value: '-10min',
+                label: 'Last 10 minutes'
+              };
+            }
+
 
             vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(Utils.zoomRange.value);
 
@@ -484,7 +488,7 @@ function GraphsContainerDirective () {
       }
 
      /* live graphs zoom range */
-      if (Utils.zoomRange && vm.graphsType == 'graphs-live') {
+      if (Utils.zoomRange && vm.graphsType == 'graphs-live' && Utils.zoomRange.label !== 'Since start test run')  {
         vm.viewShareUrl = vm.viewShareUrl + '&zoomRange=' + Utils.zoomRange.value;
       }
 
