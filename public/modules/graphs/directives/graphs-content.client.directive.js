@@ -130,8 +130,6 @@ function GraphsContentDirective () {
 
     function toggleTestRunSummary(metric, $event){
 
-      if(metric.includeInSummary === false){
-
 
         var parentEl = angular.element(document.body);
 
@@ -178,6 +176,29 @@ function GraphsContentDirective () {
 
           }
 
+          $scope.removeFromSummary = function(){
+
+                metric.includeInSummary = false;
+
+                Metrics.update($scope.metric).success(function () {
+
+                  var content = 'Metric has been removed from test run summary';
+                  var toast = $mdToast.simple()
+                      .action('OK')
+                      .highlightAction(true)
+                      .position('bottom center')
+                      .hideDelay(3000);
+
+                  $mdDialog.hide();
+
+                  $mdToast.show(toast.content(content)).then(function(response) {
+
+                  });
+
+
+                })
+          }
+
         }
 
         /* set focus */
@@ -188,27 +209,27 @@ function GraphsContentDirective () {
 
 
 
-    }else{
-
-        metric.includeInSummary = false;
-        metric.defaultSummaryText = undefined;
-
-        Metrics.update($scope.metric).success(function () {
-
-          var content = 'Metric has been removed from test run summary';
-          var toast = $mdToast.simple()
-              .action('OK')
-              .highlightAction(true)
-              .position('bottom center')
-              .hideDelay(3000);
-
-          $mdToast.show(toast.content(content)).then(function(response) {
-
-          });
-
-
-        })
-      }
+    //}else{
+    //
+    //    metric.includeInSummary = false;
+    //    metric.defaultSummaryText = undefined;
+    //
+    //    Metrics.update($scope.metric).success(function () {
+    //
+    //      var content = 'Metric has been removed from test run summary';
+    //      var toast = $mdToast.simple()
+    //          .action('OK')
+    //          .highlightAction(true)
+    //          .position('bottom center')
+    //          .hideDelay(3000);
+    //
+    //      $mdToast.show(toast.content(content)).then(function(response) {
+    //
+    //      });
+    //
+    //
+    //    })
+    //  }
 
 
 

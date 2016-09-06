@@ -1,5 +1,5 @@
 <md-dialog draggable class="pointer" aria-label="Annotations">
-    <md-toolbar class="md-padding" layout-align="center center"><h4>ADD METRIC TO SUMMARY</h4></md-toolbar>
+    <md-toolbar class="md-padding" layout-align="center center"><h4>METRIC IN TESTRUN SUMMARY</h4></md-toolbar>
     <div layout="column"
     <md-dialog-content class="md-padding">
         <h5>{{metric.alias | uppercase}}</h5>
@@ -11,7 +11,9 @@
     </md-dialog-content>
     <md-dialog-actions>
         <div layout="row" layout-align="space-between" flex>
-            <md-button ng-click="closeDialogCancel()" class="md-primary">
+            <md-button ng-click="removeFromSummary()" class="md-primary">
+                Remove
+            </md-button><md-button ng-click="closeDialogCancel()" class="md-primary">
                 Cancel
             </md-button>
             <md-button ng-click="closeDialogOK()" class="md-primary">
