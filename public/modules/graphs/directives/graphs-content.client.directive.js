@@ -280,9 +280,9 @@ function GraphsContentDirective () {
     };
 
     /* update Tags form graph */
-    function updateTags(tag) {
+    function updateTags(metricToUpdate, tag) {
       vm.showTags = false;
-      Metrics.update(vm.metric).success(function (metric) {
+      Metrics.update(metricToUpdate).success(function (metric) {
         Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, metric.tags, function (updated) {
           if (updated) {
             Dashboards.update(Dashboards.selected).success(function (dashboard) {
