@@ -4,7 +4,7 @@
         <!--<div class="graphs-header">-->
             <!--<div layout="column">-->
                 <div layout="row"  flex>
-                    <div flex="15" layout="row" layout-align="start center">
+                    <div flex="40" layout="row" layout-align="space-between center">
                         <span ng-if="vm.graphsType === 'testrun'" style="white-space: nowrap;">
                             <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /
                             <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>
@@ -14,9 +14,6 @@
                             <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
                             <a data-ng-href="/#!/browse/{{vm.productName}}/{{vm.dashboardName}}/">{{vm.dashboardName}}</a>
                         </span>
-
-                    </div>
-                    <div layout="row" flex="55" layout-align="end center">
                         <div  layout="row" layout-align="start center" ng-class="{'hidden-time-range': vm.graphsType !== 'graphs-live' }">
                             <span>Time range</span>
                             <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange" style="padding-left: 5px;">
@@ -25,12 +22,13 @@
                                 </md-option>
                             </md-select>
                         </div>
-                        <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="vm.zoomLock" >
-                            Apply zoom to all graphs
-                        </md-switch>
-                        <md-button md-no-ink class="md-primary" data-ng-click="vm.resetZoom()">Reset zoom</md-button>
+
+
+                    </div>
+                    <div layout="row" flex="20" layout-align="start center">
+
                         <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
-                        <div layout="row" layout-align="start center">
+                        <div layout="row" layout-align="end center">
                             <div>
                                 <md-input-container class="targetsio-header-text" ng-keypress="$event.which === 13 && vm.setMetricFilter()">
                                     <label>Filter metrics</label>
@@ -38,12 +36,12 @@
                                 </md-input-container>
                             </div>
                             <div>
-                                <md-icon ng-if="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                                <md-icon ng-show="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
                                           data-ng-click="vm.clearMetricFilter()">
                                 </md-icon>
                             </div>
                             <div>
-                                <md-icon  ng-if="!vm.metricFilter && vm.metricFilterInput !==''" md-svg-src="images/assets/ic_check_black_36px.svg"
+                                <md-icon  ng-show="!vm.metricFilter && vm.metricFilterInput !==''" md-svg-src="images/assets/ic_check_black_36px.svg"
                                           data-ng-click="vm.setMetricFilter()">
                                 </md-icon>
                             </div>
@@ -51,7 +49,7 @@
                         </div>
                     </div>
 
-                    <div layout="row" layout-align="end center" flex="30">
+                    <div layout="row" layout-align="end center" flex="40">
                         <div  layout="row" layout-align="end center" >
                             <button ng-if="vm.showViewUrl && vm.hasFlash()"
                                     class="copy-button"
@@ -99,11 +97,21 @@
                             </md-menu-content>
                         </md-menu>
                         <md-switch class="md-primary" md-no-ink aria-label="Show legend" ng-model="vm.showLegend" ng-change="vm.toggleLegend()">
-                            SHOW LEGEND
+                            LEGEND
                         </md-switch>
                         <md-switch class="md-primary" md-no-ink aria-label="Show tooltip" ng-model="vm.showTooltip" ng-change="vm.toggleTooltip()">
-                            SHOW POINTER DATA
+                            POINTER DATA
                         </md-switch>
+                        <md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="vm.zoomLock" >
+                            ZOOM ALL GRAPHS
+                        </md-switch>
+                        <md-button class="md-icon-button"  data-ng-click="vm.resetZoom()">
+                            <md-tooltip>
+                                Reset zoom
+                            </md-tooltip>
+                            <md-icon md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>
+                        </md-button>
+
                     </div>
                 </div>
             <!--</div>-->
