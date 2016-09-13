@@ -1,0 +1,20 @@
+<md-menu style="padding-top: 0px; padding-bottom: 0px;">
+    <div aria-label="Select variable" class="md-icon-button"
+         ng-click="openMenu($mdOpenMenu, $event, target)">
+        <md-icon md-menu-origin md-svg-src="images/assets/ic_search_black_36px.svg"></md-icon>
+        <md-tooltip>
+            Search target
+        </md-tooltip>
+    </div>
+    <md-menu-content width="4" ng-attr-id="{{'targets-menu-content-' + index}}">
+        <!--<md-menu-item >-->
+        <!--<input flex ng-model="targetFilter">-->
+        <!--</md-menu-item>-->
+        <!--<md-menu-item ng-repeat="graphiteTarget in graphiteTargets | filter: targetFilter">-->
+        <md-menu-item ng-repeat="graphiteTarget in graphiteTargets">
+            <md-button md-menu-disable-close="md-menu-disable-close"  ng-click="getTargets(target, graphiteTarget.id, $parent.$index)">
+                {{graphiteTarget.text}}
+            </md-button>
+        </md-menu-item>
+    </md-menu-content>
+</md-menu>
