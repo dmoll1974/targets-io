@@ -41,6 +41,11 @@ function TemplateMetricsDirective () {
       }
     });
 
+    $scope.clearMetricFilter = function(){
+
+      $scope.filterMetrics = '';
+    }
+
     $scope.setMetricsSelected = function(metricSelected){
 
       if (metricSelected === false){
