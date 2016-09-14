@@ -17,20 +17,22 @@ The requirements / benchmark thresholds can be set on any of the metrics you hav
 
 **Demo**
 
-To set up a local demo environment take the following steps (instructions for linux Ubuntu. If you use this [Vagrantfile](https://github.com/dmoll1974/targets-io/blob/master/Vagrantfile) to generate a box, you can skip the first two steps. This vagrant file requires the vagrant docker-compose plugin, `vagrant plugin install vagrant-docker-compose`):
-
+To set up a local demo environment take the following instruction steps for Linux Ubuntu:  
 - [Install docker](https://docs.docker.com/engine/installation/linux/ubuntulinux/)  
 - [Install docker compose](https://docs.docker.com/compose/install/)
-- Clone this repository
-- Run init script to prepare Graphite volumes on host
+- Clone this repository: `git clone https://github.com/dmoll1974/targets-io.git`
+- Change directory into targets-io: `cd targets-io`
+- Run init script to prepare Graphite volumes on host:   `sudo ./init-graphite-container-volumes.sh`
+- Run docker compose: `sudo docker-compose up -d`
 
-  `sudo chmod +x init-graphite-container-volumes.sh`
-  
-  `sudo ./init-graphite-container-volumes.sh`
-- Run docker compose  `sudo docker-compose up -d`
+or
 
+Another approach is to use [Vagrant](http://www.vagrantup,com) to create a virtual machine. This way the setting up of the environment is completely automated. You can use the following steps:
+- Required is the Vagrant plugin [vagrant-docker-compose](https://github.com/leighmcculloch/vagrant-docker-compose) to be installed first using the command line: `vagrant plugin install vagrant-docker-compose`  
+- Then you can use this [Vagrantfile](https://raw.githubusercontent.com/dmoll1974/targets-io/master/Vagrantfile) to generate a box in combination with shell script [bootstrap.sh](https://raw.githubusercontent.com/dmoll1974/targets-io/master/bootstrap.sh). Place both files in a directory and use command line in that directory: `vagrant up`.  
+Please note: you can also clone this repository instead of downloading both files.
 
-This fires up 6 docker containers:
+The end result will be 6 fired up docker containers:
 
 | Container  	| Description                                            	| port  	|
 |------------	|--------------------------------------------------------	|-------	|
