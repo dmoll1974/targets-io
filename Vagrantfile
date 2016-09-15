@@ -9,9 +9,14 @@ Vagrant.configure(2) do |config|
   config.vm.network :forwarded_port, guest: 8070, host: 8070
   config.vm.provision :docker
   config.vm.provision :docker_compose
-  config.vm.provision :shell, path: "bootstrap.sh"
+  config.vm.provision "shell", inline: <<-SHELL
+    cd /usr/local/src
+    sudo git clone https://github.com/dmoll1974/targets-io.git
+    cd targets-io/
+    sudo ./init-graphite-container-volumes.sh
+    sudo docker-compose up -d
+    SHELL
   config.vm.provider :virtualbox do |v|
     v.customize ["modifyvm", :id, "--memory", 3072]
-  end
-
+  end  
 end
