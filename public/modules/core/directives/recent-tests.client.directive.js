@@ -18,17 +18,6 @@ function RecentTestsDirective () {
 
         $scope.completedTestRunsOnly = true;
 
-        $scope.recentTestPeriod = 1;
-
-        $scope.$watch(function () {
-            $scope.filteredRecentTestRuns = $scope.$eval("recentTests | filter:testRunFilter");
-        });
-
-        $scope.clearTestRunFilter = function(){
-
-            $scope.testRunFilter = '';
-
-        };
 
         $scope.recentTestPeriodOptions = [
             {value: 1 , label: 'Last day'},
@@ -36,6 +25,36 @@ function RecentTestsDirective () {
             {value: 3, label: 'Last 3 days'},
             {value: 7, label: 'Last week'}
         ];
+
+        $scope.recentTestPeriod = TestRuns.recentTestPeriod;
+
+        $scope.selectedRecentTestPeriodOptionIndex = $scope.recentTestPeriodOptions.map(function(recentTestPeriod){ return recentTestPeriod.value;}).indexOf(parseInt($scope.recentTestPeriod));
+
+        $scope.$watch('recentTestPeriod', function (newVal, oldVal) {
+
+            if(newVal !== oldVal){
+
+                TestRuns.recentTestPeriod = $scope.recentTestPeriod;
+
+            }
+        });
+
+        $scope.$watch('testRunFilter', function (newVal, oldVal) {
+
+            if(newVal !== oldVal){
+
+                $scope.filteredRecentTestRuns = filterRecentTestRuns($scope.recentTests);
+
+            }
+        });
+
+
+        $scope.clearTestRunFilter = function(){
+
+            $scope.testRunFilter = '';
+
+        };
+
 
         /*socket.io*/
 
@@ -87,9 +106,36 @@ function RecentTestsDirective () {
             TestRuns.getRecentTestruns($scope.recentTestPeriod).success(function (recentTests) {
 
                 $scope.recentTests = recentTests;
+                $scope.filteredRecentTestRuns = filterRecentTestRuns($scope.recentTests);
+
 
             });
 
+        }
+
+        function filterRecentTestRuns(recentTestRuns){
+
+            if ($scope.testRunFilter === ''){
+
+                return recentTestRuns;
+
+            }else {
+                var filteredRecentTestRuns = [];
+                var recentTestRunFilterRegExp = new RegExp($scope.testRunFilter, 'i');
+
+
+                _.each(recentTestRuns, function (recentTestRun) {
+
+                    /* see if alias matches metricFilter */
+                    if (recentTestRunFilterRegExp.test(recentTestRun.productName) || recentTestRunFilterRegExp.test(recentTestRun.dashboardName)){
+
+                          filteredRecentTestRuns.push(recentTestRun);
+                    }
+
+                });
+
+                return filteredRecentTestRuns;
+            }
         }
 
 
