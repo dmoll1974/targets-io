@@ -33,6 +33,7 @@ exports.update = function (req, res) {
   product.description = req.body.description;
   product.markDown = req.body.markDown;
   product.requirements = req.body.requirements;
+  product.jenkinsHost = req.body.jenkinsHost;
 
   product.save(function (err) {
     if (err) {

@@ -1,0 +1,38 @@
+<md-dialog draggable class="pointer" aria-label="Select template" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h4 class="md-padding" layout-align="center center">SELECT JENKINS JOB</h4>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="images/assets/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <form ng-submit="$event.preventDefault()">
+                <p class="template-dialog"></p>
+                <md-autocomplete
+                        md-input-id="jenkinsJobAutoComplete"
+                        md-menu-class="template-autocomplete"
+                        md-selected-item="jenkinsJob"
+                        md-search-text="jenkinsJobSearchText"
+                        md-items="jenkinsJob in filterJenkinsJobs(jenkinsJobSearchText)"
+                        md-selected-item-change="selectJenkinsJob(jenkinsJob)"
+                        md-item-text="jenkinsJob.name"
+                        md-min-length="0"
+                        md-autoselect="true"
+                        md-no-cache="true"
+                        placeholder="Click or type to select jenkinsJob">
+                    <md-item-template>
+                        <span>{{jenkinsJob.name}}: {{jenkinsJob.description}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No Jenkins jobs matching "{{jenkinsJobSearchText}}" were found.
+                    </md-not-found>
+                </md-autocomplete>
+
+            </form>
+        </div>
+    </md-dialog-content>
+</md-dialog>

@@ -99,6 +99,8 @@ exports.update = function (req, res) {
   dashboard.useInBenchmark = req.body.useInBenchmark;
   dashboard.includeRampUp = req.body.includeRampUp;
   dashboard.startSteadyState = req.body.startSteadyState;
+  dashboard.triggerTestRunsWithJenkins = req.body.triggerTestRunsWithJenkins;
+  dashboard.jenkinsJobName = req.body.jenkinsJobName;
   dashboard.save(function (err) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });

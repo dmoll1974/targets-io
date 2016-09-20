@@ -9,8 +9,45 @@ var mongoose = require('mongoose'),
     GatlingDetails = mongoose.model('GatlingDetails');
 
 exports.getJenkinsData = getJenkinsData;
+exports.getJenkinsJobs = getJenkinsJobs;
+exports.getConsoleData = getConsoleData;
 
-exports.getConsoleData = function (req, res) {
+function getJenkinsJobs (req, res){
+
+
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/api/json?pretty=true';
+
+
+  /* if user and password are provided, add those as authentication */
+
+  var options;
+  if (config.jenkinsUser && config.jenkinsPassword){
+
+    options = {
+      'auth': {
+        'user': config.jenkinsUser,
+        'pass': config.jenkinsPassword,
+        'sendImmediately': true
+      }
+    }
+
+  }else{
+
+    options = {};
+  }
+
+  request.get(jenkinsJobsUrl, options, function (err, response, body) {
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+      res.send(body);
+    }
+  });
+}
+
+
+function getConsoleData (req, res) {
 
   /* first check if response is available in db */
   GatlingDetails.findOne({consoleUrl: req.body.consoleUrl},function(err, GatlingDetailsResponse) {
@@ -73,6 +110,7 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
 
     options = {};
   }
+
 
   request.get(consoleUrl, options, function (err, response, body) {
     if (err) {

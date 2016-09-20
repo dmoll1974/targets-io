@@ -313,6 +313,8 @@ function upload(req, res) {
                   newDashboard.startSteadyState = importDashboard.startSteadyState;
                   newDashboard.baseline = importDashboard.baseline;
                   newDashboard.useInBenchmark = importDashboard.useInBenchmark;
+                  newDashboard.triggerTestRunsWithJenkins = importDashboard.triggerTestRunsWithJenkins;
+                  newDashboard.jenkinsJobName = importDashboard.jenkinsJobName;
                   //
                   newDashboard.save(function (err, newDashboard) {
                     if (err)

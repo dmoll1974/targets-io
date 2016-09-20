@@ -44,6 +44,16 @@
                     <label>Steady state reached after n (seconds)</label>
                     <input name="startSteadyState" ng-model="dashboard.startSteadyState">
                 </md-input-container>
+                <md-switch ng-model="dashboard.triggerTestRunsWithJenkins" aria-label="Trigger test runs with Jenkins" ng-class="{'switch-label-disabled': dashboard.triggerTestRunsWithJenkins === false }">
+                    Trigger test runs from Jenkins
+                </md-switch>
+                <div ng-if="dashboard.triggerTestRunsWithJenkins"  layout="row" layout-align="start center">
+                    <md-input-container flex  >
+                        <label>Jenkins job</label>
+                        <input name="jenkinsJobName" ng-model="dashboard.jenkinsJobName">
+                    </md-input-container>
+                    <select-jenkins-job job="dashboard.jenkinsJobName"></select-jenkins-job>
+                </div>
             </div>
             <div layout="row">
                 <md-button md-no-ink class="md-primary" data-ng-click="dashboardForm.$valid &&  update()">Submit
