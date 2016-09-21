@@ -1,9 +1,12 @@
 'use strict';
-angular.module('graphs').factory('Jenkins', [
+angular.module('jenkins').factory('Jenkins', [
   '$http',
   function ($http) {
     var Jenkins = {
       getData: getData,
+      getJobStatus: getJobStatus,
+      startJob: startJob,
+      stopJob: stopJob,
       getJobs: getJobs
     };
     return Jenkins;
@@ -20,6 +23,21 @@ angular.module('graphs').factory('Jenkins', [
     function getJobs(productName) {
 
       return $http.get('/jenkins-jobs/' + productName);
+    }
+
+    function getJobStatus(productName, jenkinsJobName) {
+
+      return $http.get('/jenkins-job-status/' + productName + '/' + jenkinsJobName);
+    }
+
+    function startJob(productName, jenkinsJobName) {
+
+      return $http.get('/jenkins-start-job/' + productName + '/' + jenkinsJobName);
+    }
+
+    function stopJob(productName, jenkinsJobName) {
+
+      return $http.get('/jenkins-stop-job/' + productName + '/' + jenkinsJobName);
     }
   }
 ]);

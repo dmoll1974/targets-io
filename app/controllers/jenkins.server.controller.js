@@ -11,30 +11,133 @@ var mongoose = require('mongoose'),
 exports.getJenkinsData = getJenkinsData;
 exports.getJenkinsJobs = getJenkinsJobs;
 exports.getConsoleData = getConsoleData;
-
-function getJenkinsJobs (req, res){
-
-
-  var jenkinsJobsUrl = req.product.jenkinsHost + '/api/json?pretty=true';
+exports.getJenkinsJobStatus = getJenkinsJobStatus;
+exports.startJob = startJob;
+exports.stopJob = stopJob;
 
 
-  /* if user and password are provided, add those as authentication */
 
-  var options;
-  if (config.jenkinsUser && config.jenkinsPassword){
+/* if user and password are provided, add those as authentication */
 
-    options = {
-      'auth': {
-        'user': config.jenkinsUser,
-        'pass': config.jenkinsPassword,
-        'sendImmediately': true
-      }
+var options;
+if (config.jenkinsUser && config.jenkinsPassword){
+
+  options = {
+    'auth': {
+      'user': config.jenkinsUser,
+      'pass': config.jenkinsPassword,
+      'sendImmediately': true
     }
-
-  }else{
-
-    options = {};
   }
+
+}else{
+
+  options = {};
+}
+
+
+function stopJob(req, res){
+
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
+  var jenkinsCrumbsUrl = req.product.jenkinsHost + '/crumbIssuer/api/json';
+
+  request.get(jenkinsJobsUrl, options, function (err, response, body) {
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+      if(JSON.parse(body).inQueue === false){
+
+        var jenkinsStopUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/' + JSON.parse(body).builds[0].number + '/stop' ;
+
+      }else{
+
+        var jenkinsStopUrl = req.product.jenkinsHost + '/queue/cancelItem?id=' + JSON.parse(body).queueItem.id ;
+
+      }
+
+      request.get(jenkinsCrumbsUrl, options, function (err, response, body) {
+
+        if (err) {
+          res.send(400, {message : response.data})
+        } else {
+
+
+          options.headers = {
+
+            'Jenkins-Crumb': JSON.parse(body).crumb
+
+          }
+
+          request.post(jenkinsStopUrl, options, function (err, response, startBody) {
+            if (err) {
+              res.send(400, {message: response.data})
+            } else {
+
+              res.send(startBody);
+            }
+          });
+        }
+      });
+
+    }
+  });
+
+
+}
+function startJob(req, res){
+
+
+  var jenkinsCrumbsUrl = req.product.jenkinsHost + '/crumbIssuer/api/json';
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/build' ;
+
+  request.get(jenkinsCrumbsUrl, options, function (err, response, body) {
+
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+
+      options.headers = {
+
+        'Jenkins-Crumb': JSON.parse(body).crumb
+
+      }
+
+      request.post(jenkinsJobsUrl, options, function (err, response, startBody) {
+         if (err) {
+           res.send(400, {message: response.data})
+         } else {
+
+           res.send(startBody);
+         }
+       });
+    }
+  });
+
+}
+
+
+function getJenkinsJobStatus (req, res) {
+
+
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
+
+  request.get(jenkinsJobsUrl, options, function (err, response, body) {
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+      res.send(body);
+    }
+  });
+}
+  function getJenkinsJobs (req, res){
+
+
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/api/json';
+
+
 
   request.get(jenkinsJobsUrl, options, function (err, response, body) {
     if (err) {

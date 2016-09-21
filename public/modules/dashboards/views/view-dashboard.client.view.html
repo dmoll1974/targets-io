@@ -6,9 +6,8 @@
                 <div  style="margin-left:20px;">
                     <h3>{{dashboard.description}}</h3>
                 </div>
-
-
-    <div>
+        <div>
+        <jenkins-job-status ng-if="dashboard.triggerTestRunsWithJenkins" dashboard="dashboard"></jenkins-job-status></jenkins-job-status>
         <md-tabs md-dynamic-height md-selected="selectedIndex">
             <md-tab  label="Test runs" ng-click="setTab(0)">
                 <md-content class="md-padding" ng-if="selectedIndex === 0">

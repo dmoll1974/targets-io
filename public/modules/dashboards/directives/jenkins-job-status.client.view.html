@@ -1,0 +1,46 @@
+<md-toolbar  ng-class="{'jenkins-job-running': jenkinsJobStatus === 'Running','jenkins-job-stopped': jenkinsJobStatus === 'Stopped', 'jenkins-job-queued': jenkinsJobStatus === 'Queued' }">
+    <div class="md-toolbar-tools" layout="row" layout-align="space-between">
+
+        <div layout="row">
+            <div class="jenkins-logo md-padding"></div>
+            <h4 style="margin-left: 20px;">{{dashboard.jenkinsJobName | uppercase}}</h4>
+        </div>
+
+        <div layout="row" layout-align="start center">
+
+            <h5>Status: {{jenkinsJobStatus }}</h5>
+            <h5 ng-if="jenkinsJobStatus === 'Queued'">  ({{jenkinsJobQueueWhy}})</h5>
+
+        </div>
+
+        <div layout="row">
+
+            <md-button ng-if="jenkinsJobStatus === 'Stopped'" md-no-ink class="md-primary" data-ng-click="startJob()">Start job</md-button>
+            <md-button ng-if="jenkinsJobStatus === 'Running' || jenkinsJobStatus === 'Queued'"md-no-ink class="md-acccent"  data-ng-click="stopJob()">Stop job</md-button>
+            <md-button ng-if="jenkinsJobStatus !== 'Queued'" aria-label="Configure Jenkins job" class="md-icon-button"
+                       ng-click="jenkinsJobConsole()">
+                <md-icon md-menu-origin md-svg-src="images/assets/ic_live_tv_white_36px.svg"></md-icon>
+                <md-tooltip>
+                    Go to console output
+                </md-tooltip>
+
+            </md-button>
+
+            <md-button aria-label="Configure Jenkins job" class="md-icon-button"
+                       ng-click="jenkinsJobConfig()">
+                <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_white_24px.svg"></md-icon>
+                <md-tooltip>
+                    Configure Jenkins job
+                </md-tooltip>
+
+            </md-button>
+            <!--<div class="jenkins-logo md-padding"></div>-->
+
+
+
+
+        </div>
+    </div>
+</md-toolbar>
+
+
