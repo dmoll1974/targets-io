@@ -33,7 +33,7 @@ function JenkinsJobStatusDirective () {
 
                 $scope.jenkinsJobQueueWhy = status.inQueue ? status.queueItem.why : '';
 
-                $scope.jenkinsJobStatus = status.inQueue ? "Queued" : (status.builds[0].building) ? "Running" : "Stopped"
+                $scope.jenkinsJobStatus = status.inQueue ? 'Queued' : (status.builds[0])? (status.builds[0].building) ? 'Running' : 'Stopped' : 'Never built before';
 
             })
         }
@@ -50,7 +50,7 @@ function JenkinsJobStatusDirective () {
 
                     $scope.jenkinsJobQueueWhy = status.inQueue ? status.queueItem.why : '';
 
-                    $scope.jenkinsJobStatus = status.inQueue ? "Queued": (status.builds[0].building)? "Running": "Stopped"
+                    $scope.jenkinsJobStatus = status.inQueue ? 'Queued': (status.builds[0].building)? 'Running': 'Stopped'
 
                 })
 
@@ -66,7 +66,7 @@ function JenkinsJobStatusDirective () {
 
                     $scope.jenkinsJobQueueWhy = status.inQueue ? status.queueItem.why : '';
 
-                    $scope.jenkinsJobStatus = status.inQueue ? "Queued": (status.builds[0].building)? "Running": "Stopped"
+                    $scope.jenkinsJobStatus = status.inQueue ? 'Queued': (status.builds[0].building)? 'Running': 'Stopped'
 
                 })
 
