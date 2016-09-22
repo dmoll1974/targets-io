@@ -35,6 +35,7 @@ module.exports = {
                 'public/lib/jquery/dist/jquery.min.js',
                 'public/lib/jquery-ui/jquery-ui.min.js',
                 'public/lib/angular/angular.min.js',
+                'public/lib/angular-cookies/angular-cookies.min.js',
                 'public/lib/angular-sanitize/angular-sanitize.min.js',
                 'public/lib/angular-aria/angular-aria.min.js',
                 'public/lib/angular-animate/angular-animate.min.js',

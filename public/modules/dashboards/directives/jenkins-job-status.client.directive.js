@@ -17,7 +17,7 @@ function JenkinsJobStatusDirective () {
     return directive;
 
     /* @ngInject */
-    function JenkinsJobStatusDirectiveController ($scope, $state, $stateParams, $timeout, Graphite, $mdDialog, Jenkins, Utils, $interval, Products, $window) {
+    function JenkinsJobStatusDirectiveController ($scope, $state, $stateParams, $timeout, Graphite, $mdDialog, $mdToast, Jenkins, Utils, $interval, Products, $window, $rootScope, AuthenticationService) {
 
 
 
@@ -28,49 +28,82 @@ function JenkinsJobStatusDirective () {
 
         });
 
-        var jenkinsJobStatusPolling = function () {
-            Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (status) {
+        var jenkinsJobStatusPolling = function ($event) {
+
+            loginDialog($event, function (){
+
+                Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (status) {
 
                 $scope.jenkinsJobQueueWhy = status.inQueue ? status.queueItem.why : '';
 
                 $scope.jenkinsJobStatus = status.inQueue ? 'Queued' : (status.builds[0])? (status.builds[0].building) ? 'Running' : 'Stopped' : 'Never built before';
 
+                })
             })
+
         }
 
         jenkinsJobStatusPolling();
 
         Utils.polling = $interval(jenkinsJobStatusPolling, 15000);
 
-        $scope.startJob = function(){
-
-            Jenkins.startJob($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(){
-
-                Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(status){
-
-                    $scope.jenkinsJobQueueWhy = status.inQueue ? status.queueItem.why : '';
-
-                    $scope.jenkinsJobStatus = status.inQueue ? 'Queued': (status.builds[0].building)? 'Running': 'Stopped'
-
-                })
+        $scope.startJob = function($event){
 
 
-            });
+            loginDialog($event, function (){
+
+                Jenkins.startJob($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(){
+
+                    Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(status){
+
+                        $scope.jenkinsJobQueueWhy = status.inQueue ? status.queueItem.why : '';
+
+                        $scope.jenkinsJobStatus = status.inQueue ? 'Queued': (status.builds[0].building)? 'Running': 'Stopped'
+
+                        var content = 'Job has been started';
+                        var toast = $mdToast.simple()
+                            .action('OK')
+                            .highlightAction(true)
+                            .position('top center')
+                            .hideDelay(3000);
+
+                        $mdToast.show(toast.content(content)).then(function(response) {});
+
+                    })
+
+
+                });
+
+             })
+
+
         }
 
-        $scope.stopJob = function(){
+        $scope.stopJob = function($event){
 
-            Jenkins.stopJob($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(){
+            loginDialog($event, function (){
 
-                Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(status){
+                Jenkins.stopJob($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(){
 
-                    $scope.jenkinsJobQueueWhy = status.inQueue ? status.queueItem.why : '';
+                    Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(status){
 
-                    $scope.jenkinsJobStatus = status.inQueue ? 'Queued': (status.builds[0].building)? 'Running': 'Stopped'
+                        $scope.jenkinsJobQueueWhy = status.inQueue ? status.queueItem.why : '';
 
-                })
+                        $scope.jenkinsJobStatus = status.inQueue ? 'Queued': (status.builds[0].building)? 'Running': 'Stopped';
+
+                        var content = 'Job has been stopped';
+                        var toast = $mdToast.simple()
+                            .action('OK')
+                            .highlightAction(true)
+                            .position('top center')
+                            .hideDelay(3000);
+
+                        $mdToast.show(toast.content(content)).then(function(response) {});
+
+                    })
 
 
+                });
             });
         }
 
@@ -84,7 +117,8 @@ function JenkinsJobStatusDirective () {
 
         };
 
-        $scope.jenkinsJobConsole = function(){
+        $scope.jenkinsJobConsole = function($event){
+
 
             Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(status){
 
@@ -98,6 +132,55 @@ function JenkinsJobStatusDirective () {
 
         }
 
+        function loginDialog($event, callback) {
+
+            /* if not already set, show dialog to get user and password */
+
+            if (!$rootScope.globals || !$rootScope.globals.currentUser) {
+
+                var parentEl = angular.element(document.body);
+                $mdDialog.show({
+                    parent: parentEl,
+                    targetEvent: $event,
+                    preserveScope: true,
+                    templateUrl: 'modules/dashboards/views/jenkins-credentials.dialog.client.view.html',
+                    scope: $scope,
+                    //locals: {
+                    //    jenkinsJobs: $scope.metric.targets[$scope.index],
+                    //    index: $scope.index
+                    //},
+                    onComplete: function () {
+                        setTimeout(function () {
+                            //document.querySelector('#jenkinsJobAutoComplete').focus();
+                        }, 1);
+                    },
+                    controller: DialogController
+                });
+
+                function DialogController($scope, $mdDialog, Jenkins, $stateParams) {
+
+
+                    $scope.cancel = function ($event) {
+
+                        $mdDialog.cancel();
+                    }
+
+
+
+
+                    $scope.login = function () {
+
+                        AuthenticationService.SetCredentials($scope.user, $scope.password);
+                        callback();
+                        $mdDialog.hide();
+                    }
+                }
+
+            }else{
+
+                callback();
+            }
+        }
     }
 }
 

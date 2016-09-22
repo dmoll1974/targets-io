@@ -17,26 +17,17 @@ exports.stopJob = stopJob;
 
 
 
-/* if user and password are provided, add those as authentication */
-
-var options;
-if (config.jenkinsUser && config.jenkinsPassword){
-
-  options = {
-    'auth': {
-      'user': config.jenkinsUser,
-      'pass': config.jenkinsPassword,
-      'sendImmediately': true
-    }
-  }
-
-}else{
-
-  options = {};
-}
 
 
 function stopJob(req, res){
+
+  var options = {};
+
+  options.headers ={
+
+    'Authorization': req.header('Authorization')
+
+  };
 
   var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
   var jenkinsCrumbsUrl = req.product.jenkinsHost + '/crumbIssuer/api/json';
@@ -65,7 +56,9 @@ function stopJob(req, res){
 
           options.headers = {
 
-            'Jenkins-Crumb': JSON.parse(body).crumb
+            'Jenkins-Crumb': JSON.parse(body).crumb,
+            'Authorization': req.header('Authorization')
+
 
           }
 
@@ -87,6 +80,13 @@ function stopJob(req, res){
 }
 function startJob(req, res){
 
+  var options = {};
+
+  options.headers ={
+
+    'Authorization': req.header('Authorization')
+
+  };
 
   var jenkinsCrumbsUrl = req.product.jenkinsHost + '/crumbIssuer/api/json';
   var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/build' ;
@@ -98,9 +98,11 @@ function startJob(req, res){
     } else {
 
 
-      options.headers = {
+      options.headers ={
 
-        'Jenkins-Crumb': JSON.parse(body).crumb
+        'Jenkins-Crumb': JSON.parse(body).crumb,
+        'Authorization': req.header('Authorization')
+
 
       }
 
@@ -120,6 +122,13 @@ function startJob(req, res){
 
 function getJenkinsJobStatus (req, res) {
 
+  var options = {};
+
+  options.headers ={
+
+    'Authorization': req.header('Authorization')
+
+  };
 
   var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
 
@@ -135,8 +144,25 @@ function getJenkinsJobStatus (req, res) {
   function getJenkinsJobs (req, res){
 
 
-  var jenkinsJobsUrl = req.product.jenkinsHost + '/api/json';
+    /* if user and password are provided, add those as authentication */
 
+    var options;
+    if (config.jenkinsUser && config.jenkinsPassword){
+
+      options = {
+        'auth': {
+          'user': config.jenkinsUser,
+          'pass': config.jenkinsPassword,
+          'sendImmediately': true
+        }
+      }
+
+    }else{
+
+      options = {};
+    }
+
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/api/json';
 
 
   request.get(jenkinsJobsUrl, options, function (err, response, body) {
@@ -151,6 +177,15 @@ function getJenkinsJobStatus (req, res) {
 
 
 function getConsoleData (req, res) {
+
+  var options = {};
+  options.headers =[];
+
+  options.headers.push({
+
+    'Authorization': req.header('Authorization')
+
+  });
 
   /* first check if response is available in db */
   GatlingDetails.findOne({consoleUrl: req.body.consoleUrl},function(err, GatlingDetailsResponse) {
