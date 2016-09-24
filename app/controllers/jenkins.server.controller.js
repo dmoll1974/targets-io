@@ -14,6 +14,7 @@ exports.getConsoleData = getConsoleData;
 exports.getJenkinsJobStatus = getJenkinsJobStatus;
 exports.startJob = startJob;
 exports.stopJob = stopJob;
+exports.login = login;
 
 
 
@@ -62,12 +63,12 @@ function stopJob(req, res){
 
           }
 
-          request.post(jenkinsStopUrl, options, function (err, response, startBody) {
+          request.post(jenkinsStopUrl, options, function (err, response, stopBody) {
             if (err) {
               res.send(400, {message: response.data})
             } else {
 
-              res.send(startBody);
+              res.jsonp({"statusCode":response.statusCode, "body": response.statusCode === 200 ? JSON.parse(stopBody) : stopBody });
             }
           });
         }
@@ -111,7 +112,7 @@ function startJob(req, res){
            res.send(400, {message: response.data})
          } else {
 
-           res.send(startBody);
+           res.jsonp({"statusCode":response.statusCode, "body": response.statusCode === 200 ? JSON.parse(startBody) : startBody });
          }
        });
     }
@@ -137,7 +138,41 @@ function getJenkinsJobStatus (req, res) {
       res.send(400, {message : response.data})
     } else {
 
-      res.send(body);
+        res.jsonp({"statusCode":response.statusCode, "body": response.statusCode === 200 ? JSON.parse(body) : body });
+
+
+    }
+  });
+}
+
+function login (req, res) {
+
+  var options = {};
+
+  options.headers ={
+
+    'Authorization': req.header('Authorization')
+
+  };
+
+  var jenkinsLoginsUrl = req.product.jenkinsHost + '/j_acegi_security_check';
+
+  request.get(jenkinsLoginsUrl, options, function (err, response, body) {
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+        var loginFailed = new RegExp('loginError');
+
+        if(response.headers.location.test(loginFailed)){
+          res.jsonp({"authenticated": false});
+        }else{
+          res.jsonp({"authenticated": true});
+
+        }
+
+
+
     }
   });
 }
@@ -170,7 +205,7 @@ function getJenkinsJobStatus (req, res) {
       res.send(400, {message : response.data})
     } else {
 
-      res.send(body);
+      res.jsonp({"statusCode":response.statusCode, "body": response.statusCode === 200 ? JSON.parse(body) : body });
     }
   });
 }

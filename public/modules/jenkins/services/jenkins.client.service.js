@@ -4,6 +4,8 @@ angular.module('jenkins').factory('Jenkins', [
   function ($http) {
     var Jenkins = {
       getData: getData,
+      getData: getData,
+      login: login,
       getJobStatus: getJobStatus,
       startJob: startJob,
       stopJob: stopJob,
@@ -38,6 +40,11 @@ angular.module('jenkins').factory('Jenkins', [
     function stopJob(productName, jenkinsJobName) {
 
       return $http.get('/jenkins-stop-job/' + productName + '/' + jenkinsJobName);
+    }
+
+    function login(productName, jenkinsJobName) {
+
+      return $http.get('/jenkins-login/' + productName );
     }
   }
 ]);
