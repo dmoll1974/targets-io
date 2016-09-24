@@ -46,13 +46,13 @@ function SelectJenkinsJobDirective () {
 
                 Jenkins.getJobs($stateParams.productName).success(function (jenkinJobs) {
 
-                    $scope.jenkinJobs = jenkinJobs;
+                    $scope.jenkinJobs = jenkinJobs.body.jobs;
 
                 })
 
                 $scope.filterJenkinsJobs = function (query) {
 
-                    var results = query ? $scope.jenkinJobs.jobs.filter(createFilterForJenkinsJobs(query)) : $scope.jenkinJobs.jobs;
+                    var results = query ? $scope.jenkinJobs.filter(createFilterForJenkinsJobs(query)) : $scope.jenkinJobs;
 
                     return results;
 
@@ -73,9 +73,7 @@ function SelectJenkinsJobDirective () {
 
                 $scope.cancel = function ($event) {
 
-                    $scope.graphiteTarget = undefined;
-                    $scope.graphiteTargetSearchText = '';
-                    $scope.selectedTarget = undefined
+
                     $mdDialog.cancel();
                 }
 

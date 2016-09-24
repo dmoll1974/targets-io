@@ -13,7 +13,6 @@ angular.module('dashboards').controller('DashboardsController', [
   'Products',
   'Metrics',
   'TestRuns',
-  'SideMenu',
   'Templates',
   'Events',
   'Utils',
@@ -193,18 +192,11 @@ angular.module('dashboards').controller('DashboardsController', [
 
             Events.list = events;
 
-            /* Refresh sidebar */
-            Products.fetch().success(function (products) {
-
-              Products.items = products;
-
-              $scope.products = products;
 
               $state.go('viewDashboard', {
                 'productName': $stateParams.productName,
                 'dashboardName': $scope.dashboard.name
               });
-            });
 
           });
         });
