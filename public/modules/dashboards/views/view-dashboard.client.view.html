@@ -1,33 +1,34 @@
 <div data-ng-controller="DashboardsController" data-ng-init="">
     <div class="dashboardView" data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
-    <!--<div class="page-header">-->
-        <div layout="row" flex>
-            <div layout="column" flex>
-                <div  style="margin-left:20px;">
+    <div class="page-header">
+        <!--<div layout="row" flex>-->
+            <div class="md-padding"layout="column" flex>
+                <div>
                     <h3>{{dashboard.description}}</h3>
                 </div>
-        <div>
-        <jenkins-job-status class="md-padding" ng-if="dashboard.triggerTestRunsWithJenkins" dashboard="dashboard"></jenkins-job-status></jenkins-job-status>
-        <md-tabs md-dynamic-height md-selected="selectedIndex">
-            <md-tab  label="Test runs" ng-click="setTab(0)">
-                <md-content class="md-padding" ng-if="selectedIndex === 0">
-                    <!--<div data-ng-include="'modules/testruns/views/testruns.client.view.html'"></div>-->
-                    <testruns></testruns>
-                </md-content>
-            </md-tab>
-            <md-tab label="Metrics configuration" ng-click="setTab(1)">
-                <md-content class="md-padding">
-                    <!--<div data-ng-include="'modules/dashboards/views/view-dashboard-metrics.client.view.html'"></div>-->
-                    <dashboard-metrics ng-if="selectedIndex === 1"></dashboard-metrics>
-                </md-content>
-            </md-tab>
-            <md-tab label="Events" ng-click="setTab(2)">
-                <md-content class="md-padding" ng-if="selectedIndex === 2">
-                    <div data-ng-include="'modules/events/views/list-events-dashboard.client.view.html'"></div>
-                </md-content>
-            </md-tab>
+                <jenkins-job-status  ng-if="dashboard.triggerTestRunsWithJenkins" dashboard="dashboard"></jenkins-job-status>
+
+                <md-tabs md-dynamic-height md-selected="selectedIndex">
+                    <md-tab  label="Test runs" ng-click="setTab(0)">
+                        <md-content class="md-padding" ng-if="selectedIndex === 0">
+                            <!--<div data-ng-include="'modules/testruns/views/testruns.client.view.html'"></div>-->
+                            <testruns></testruns>
+                        </md-content>
+                    </md-tab>
+                    <md-tab label="Metrics configuration" ng-click="setTab(1)">
+                        <md-content class="md-padding">
+                            <!--<div data-ng-include="'modules/dashboards/views/view-dashboard-metrics.client.view.html'"></div>-->
+                            <dashboard-metrics ng-if="selectedIndex === 1"></dashboard-metrics>
+                        </md-content>
+                    </md-tab>
+                    <md-tab label="Events" ng-click="setTab(2)">
+                        <md-content class="md-padding" ng-if="selectedIndex === 2">
+                            <div data-ng-include="'modules/events/views/list-events-dashboard.client.view.html'"></div>
+                        </md-content>
+                    </md-tab>
 
 
-        </md-tabs>
-    </div>
+                </md-tabs>
+            </div>
+        </div>
 </div>

@@ -21,6 +21,11 @@ var ProductSchema = new mongoose.Schema({
         type: String,
         default: config.jenkinsHost
     },
+    'triggerTestRunsWithJenkins': {
+            type: Boolean,
+            default: false
+        },
+        'jenkinsJobName': String,
    'dashboards': [{
       type: Schema.Types.ObjectId,
       ref: 'Dashboard'

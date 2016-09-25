@@ -286,6 +286,9 @@ function upload(req, res) {
               newProduct.dashboards = importProduct.dashboards;
               newProduct.requirements = importProduct.requirements;
               newProduct.markDown = importProduct.markDown;
+              newProduct.jenkinsHost = importProduct.jenkinsHost;
+              newProduct.triggerTestRunsWithJenkins = importProduct.triggerTestRunsWithJenkins;
+              newProduct.jenkinsJobName = importProduct.jenkinsJobName;
 
               newProduct.save(function (err, NewProduct) {
                 if (err)
