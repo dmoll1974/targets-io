@@ -575,7 +575,7 @@ p.template-dialog{
 }
 
 md-toolbar.jenkins-job-stopped {
-    background-color: orangered;
+    background-color: darkgrey;
     color: white;
 }
 md-toolbar.jenkins-job-running {
