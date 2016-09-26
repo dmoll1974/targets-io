@@ -57,7 +57,7 @@ function stopJob(req, res){
 
           options.headers = {
 
-            'Jenkins-Crumb': JSON.parse(body).crumb,
+            'Jenkins-Crumb': response.statusCode === 200 ? JSON.parse(body).crumb : 'no crumb',
             'Authorization': req.header('Authorization')
 
 
@@ -95,13 +95,13 @@ function startJob(req, res){
   request.get(jenkinsCrumbsUrl, options, function (err, response, body) {
 
     if (err) {
-      res.send(400, {message : response.data})
+      res.send(400, {message : response.err})
     } else {
 
 
       options.headers ={
 
-        'Jenkins-Crumb': JSON.parse(body).crumb,
+        'Jenkins-Crumb': response.statusCode === 200 ? JSON.parse(body).crumb : 'no crumb',
         'Authorization': req.header('Authorization')
 
 
@@ -135,7 +135,7 @@ function getJenkinsJobStatus (req, res) {
 
   request.get(jenkinsJobsUrl, options, function (err, response, body) {
     if (err) {
-      res.send(400, {message : response.data})
+      res.send(400, {message : err})
     } else {
 
         res.jsonp({"statusCode":response.statusCode, "body": response.statusCode === 200 ? JSON.parse(body) : body });
