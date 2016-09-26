@@ -8,7 +8,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 	function($locationProvider) {
 		$locationProvider.hashPrefix('!');
 	}
-]).run(['$rootScope', 'Interval', 'Products', 'TargetsIoHeader', '$stateParams', function($rootScope, Interval, Products, TargetsIoHeader, $stateParams){
+]).run(['$rootScope', 'Interval', 'Products', 'TargetsIoHeader', '$stateParams', '$cookies', function($rootScope, Interval, Products, TargetsIoHeader, $stateParams, $cookies){
 
         $rootScope.previousState;
         $rootScope.currentState;
@@ -23,6 +23,11 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
             if ($rootScope.previousState === 'viewLiveGraphs') Interval.clearAll();
 
 
+            // keep user logged in after page refresh
+            $rootScope.globals = $cookies.get('globals') || {};
+            if ($rootScope.globals.currentUser) {
+                $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
+            }
 
 
             //    console.log('Previous state:'+$rootScope.previousState)

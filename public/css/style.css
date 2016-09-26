@@ -573,3 +573,25 @@ p.template-dialog{
     height: 0px;
     margin: 0px;
 }
+
+md-toolbar.jenkins-job-stopped {
+    background-color: darkgrey;
+    color: white;
+}
+md-toolbar.jenkins-job-running {
+    background-color: green;
+    color: white;
+}
+
+md-toolbar.jenkins-job-queued {
+    background-color: darkblue;
+    color: white;
+}
+
+div.jenkins-logo {
+    width: 35px;
+    height:35px;
+    /*background:url('../images/assets/Jenkins_logo.svg');*/
+    background:url('../images/assets/jenkins-icon.png');
+    background-size: 35px 35px;
+}

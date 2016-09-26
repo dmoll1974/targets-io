@@ -11,6 +11,7 @@ module.exports = {
 	logLevel: 'error',
 	graphiteRetentionPeriod: '90d', /*90 days*/
 	graphiteHost: process.env.GRAPHITE_HOST,
+	jenkinsHost: process.env.JENKINS_HOST,
 	db: process.env.MONGO_URL,
 	redisHost: process.env.REDIS_SERVICE_HOST,
 	redisPort: process.env.REDIS_SERVICE_PORT,
@@ -37,6 +38,7 @@ module.exports = {
 				'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/jquery-ui/jquery-ui.min.js',
 				'public/lib/angular/angular.min.js',
+				'public/lib/angular-cookies/angular-cookies.js',
 				'public/lib/angular-sanitize/angular-sanitize.min.js',
 				'public/lib/angular-aria/angular-aria.min.js',
 				'public/lib/angular-animate/angular-animate.min.js',

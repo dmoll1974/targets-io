@@ -5,6 +5,7 @@ module.exports = {
 	isDemo: true,
 	logLevel: 'error',
 	graphiteHost: process.env.GRAPHITE_HOST,
+	jenkinsHost: process.env.JENKINS_HOST,
 	db: process.env.MONGO_URL,
 	redisHost: process.env.REDIS_SERVICE_HOST,
 	redisPort: process.env.REDIS_SERVICE_PORT,

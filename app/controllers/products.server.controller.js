@@ -33,6 +33,9 @@ exports.update = function (req, res) {
   product.description = req.body.description;
   product.markDown = req.body.markDown;
   product.requirements = req.body.requirements;
+  product.jenkinsHost = req.body.jenkinsHost;
+  product.triggerTestRunsWithJenkins = req.body.triggerTestRunsWithJenkins;
+  product.jenkinsJobName = req.body.jenkinsJobName;
 
   product.save(function (err) {
     if (err) {

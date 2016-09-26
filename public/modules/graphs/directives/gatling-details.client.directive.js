@@ -15,7 +15,7 @@
     };
     return directive;
     /* @ngInject */
-    function GatlingDetailsController($scope, $timeout, $filter, $stateParams, GatlingConsoleDetails, TestRuns, ngTableParams) {
+    function GatlingDetailsController($scope, $timeout, $filter, $stateParams, Jenkins, TestRuns, ngTableParams) {
       $scope.tabNumber = 0;
 
 
@@ -47,7 +47,7 @@
           // length of data
           getData: function ($defer, params) {
             // ajax request to api
-            GatlingConsoleDetails.getData(TestRuns.selected.buildResultsUrl, false).success(function (response) {
+            Jenkins.getData(TestRuns.selected.buildResultsUrl, false).success(function (response) {
               $timeout(function () {
                 var data = $scope.tabNumber === 0 ? response.data : response.errors;
                 var filteredData = params.filter() ? $filter('filter')(data, params.filter()) : data;

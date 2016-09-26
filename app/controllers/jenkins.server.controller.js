@@ -9,8 +9,218 @@ var mongoose = require('mongoose'),
     GatlingDetails = mongoose.model('GatlingDetails');
 
 exports.getJenkinsData = getJenkinsData;
+exports.getJenkinsJobs = getJenkinsJobs;
+exports.getConsoleData = getConsoleData;
+exports.getJenkinsJobStatus = getJenkinsJobStatus;
+exports.startJob = startJob;
+exports.stopJob = stopJob;
+exports.login = login;
 
-exports.getConsoleData = function (req, res) {
+
+
+
+
+function stopJob(req, res){
+
+  var options = {};
+
+  options.headers ={
+
+    'Authorization': req.header('Authorization')
+
+  };
+
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
+  var jenkinsCrumbsUrl = req.product.jenkinsHost + '/crumbIssuer/api/json';
+
+  request.get(jenkinsJobsUrl, options, function (err, response, body) {
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+      if(JSON.parse(body).inQueue === false){
+
+        var jenkinsStopUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/' + JSON.parse(body).builds[0].number + '/stop' ;
+
+      }else{
+
+        var jenkinsStopUrl = req.product.jenkinsHost + '/queue/cancelItem?id=' + JSON.parse(body).queueItem.id ;
+
+      }
+
+      request.get(jenkinsCrumbsUrl, options, function (err, response, body) {
+
+        if (err) {
+          res.send(400, {message : response.data})
+        } else {
+
+
+          options.headers = {
+
+            'Jenkins-Crumb': JSON.parse(body).crumb,
+            'Authorization': req.header('Authorization')
+
+
+          }
+
+          request.post(jenkinsStopUrl, options, function (err, response, stopBody) {
+            if (err) {
+              res.send(400, {message: response.data})
+            } else {
+
+              res.jsonp({"statusCode":response.statusCode, "body": response.statusCode === 200 ? JSON.parse(stopBody) : stopBody });
+            }
+          });
+        }
+      });
+
+    }
+  });
+
+
+}
+function startJob(req, res){
+
+  var options = {};
+
+  options.headers ={
+
+    'Authorization': req.header('Authorization')
+
+  };
+
+  var jenkinsCrumbsUrl = req.product.jenkinsHost + '/crumbIssuer/api/json';
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/build' ;
+
+  request.get(jenkinsCrumbsUrl, options, function (err, response, body) {
+
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+
+      options.headers ={
+
+        'Jenkins-Crumb': JSON.parse(body).crumb,
+        'Authorization': req.header('Authorization')
+
+
+      }
+
+      request.post(jenkinsJobsUrl, options, function (err, response, startBody) {
+         if (err) {
+           res.send(400, {message: response.data})
+         } else {
+
+           res.jsonp({"statusCode":response.statusCode, "body": response.statusCode === 200 ? JSON.parse(startBody) : startBody });
+         }
+       });
+    }
+  });
+
+}
+
+
+function getJenkinsJobStatus (req, res) {
+
+  var options = {};
+
+  options.headers ={
+
+    'Authorization': req.header('Authorization')
+
+  };
+
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
+
+  request.get(jenkinsJobsUrl, options, function (err, response, body) {
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+        res.jsonp({"statusCode":response.statusCode, "body": response.statusCode === 200 ? JSON.parse(body) : body });
+
+
+    }
+  });
+}
+
+function login (req, res) {
+
+  var options = {};
+
+  options.headers ={
+
+    'Authorization': req.header('Authorization')
+
+  };
+
+  var jenkinsLoginsUrl = req.product.jenkinsHost + '/j_acegi_security_check';
+
+  request.get(jenkinsLoginsUrl, options, function (err, response, body) {
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+        var loginFailed = new RegExp('loginError');
+
+        if(response.headers.location.test(loginFailed)){
+          res.jsonp({"authenticated": false});
+        }else{
+          res.jsonp({"authenticated": true});
+
+        }
+
+
+
+    }
+  });
+}
+  function getJenkinsJobs (req, res){
+
+
+    /* if user and password are provided, add those as authentication */
+
+    var options;
+    if (config.jenkinsUser && config.jenkinsPassword){
+
+      options = {
+        'auth': {
+          'user': config.jenkinsUser,
+          'pass': config.jenkinsPassword,
+          'sendImmediately': true
+        }
+      }
+
+    }else{
+
+      options = {};
+    }
+
+  var jenkinsJobsUrl = req.product.jenkinsHost + '/api/json';
+
+
+  request.get(jenkinsJobsUrl, options, function (err, response, body) {
+    if (err) {
+      res.send(400, {message : response.data})
+    } else {
+
+      res.jsonp({"statusCode":response.statusCode, "body": response.statusCode === 200 ? JSON.parse(body) : body });
+    }
+  });
+}
+
+
+function getConsoleData (req, res) {
+
+  var options = {};
+  options.headers =[];
+
+  options.headers.push({
+
+    'Authorization': req.header('Authorization')
+
+  });
 
   /* first check if response is available in db */
   GatlingDetails.findOne({consoleUrl: req.body.consoleUrl},function(err, GatlingDetailsResponse) {
@@ -73,6 +283,7 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
 
     options = {};
   }
+
 
   request.get(consoleUrl, options, function (err, response, body) {
     if (err) {

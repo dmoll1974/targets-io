@@ -39,6 +39,12 @@ var dashboardSchema = new mongoose.Schema({
   },
   'lastUpdated': Date,
   'startSteadyState': Number,
+  'triggerTestRunsWithJenkins': {
+    type: Boolean,
+    default: false
+  },
+  'jenkinsJobName': String,
+
   'tags': {
     type: [{
         text: String,
