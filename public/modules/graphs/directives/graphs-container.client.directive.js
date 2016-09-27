@@ -48,7 +48,7 @@ function GraphsContainerDirective () {
     }else{
       vm.zoomRange = Utils.zoomRange;
       /* set md-select selected item */
-      vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(vm.zoomRange.value);
+      vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf(vm.zoomRange.label);
     }
 
     /* get metricFilter */
@@ -239,7 +239,7 @@ function GraphsContainerDirective () {
             /* if breadcrump is too long, crop it ...*/
 
             var breadCrumpLength = $stateParams.productName.length + $stateParams.dashboardName.length + testRun.testRunId.length;
-            testRun.testRunIdBreadCrump = ( breadCrumpLength < 50)? testRun.testRunId : testRun.testRunId.substring(0,(50-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
+            testRun.testRunIdBreadCrump = ( breadCrumpLength < 60)? testRun.testRunId : testRun.testRunId.substring(0,(60-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
 
             vm.testRun = testRun;
           });
@@ -250,7 +250,7 @@ function GraphsContainerDirective () {
 
         TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function(runningTest) {
 
-          if (runningTest.start) {
+          if (runningTest.start && !$state.params.zoomRange) {
 
             var runningTestOption = {};
             runningTestOption.value = new Date(runningTest.start).getTime();
@@ -258,16 +258,20 @@ function GraphsContainerDirective () {
 
             vm.zoomOptions.unshift(runningTestOption);
 
-            Utils.zoomRange = runningTestOption;
+            Utils.zoomRange = Utils.zoomRange.label === 'Since start test run' ? runningTestOption : Utils.zoomRange;
 
             vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(Utils.zoomRange.value);
 
           }else{
 
-            Utils.zoomRange = {
-              value: '-10min',
-              label: 'Last 10 minutes'
-            };
+            if(!$state.params.zoomRange){ /* if zoomRange is not provided via query string, set it to 'Last 10 minutes'*/
+
+              Utils.zoomRange = {
+                value: '-10min',
+                label: 'Last 10 minutes'
+              };
+            }
+
 
             vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf(Utils.zoomRange.value);
 
@@ -484,7 +488,7 @@ function GraphsContainerDirective () {
       }
 
      /* live graphs zoom range */
-      if (Utils.zoomRange && vm.graphsType == 'graphs-live') {
+      if (Utils.zoomRange && vm.graphsType == 'graphs-live' && Utils.zoomRange.label !== 'Since start test run')  {
         vm.viewShareUrl = vm.viewShareUrl + '&zoomRange=' + Utils.zoomRange.value;
       }
 

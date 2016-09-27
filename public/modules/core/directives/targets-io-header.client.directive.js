@@ -316,13 +316,21 @@ function TargetsIoHeaderDirective () {
 
         $scope.goHome = function(){
 
-            $scope.dashboardSelected = false;
 
+
+            $scope.dashboardSelected = false;
             $scope.dashboard = null;
             $scope.dashboardSearchText = null;
+
+
             $scope.product = null;
             $scope.productSearchText = null;
+
+
             $state.go('home');
+            /* somehow currentState is not set after reloading the page, so set it manually*/
+            $rootScope.currentState = 'home';
+
 
 
         }

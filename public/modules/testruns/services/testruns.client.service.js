@@ -10,6 +10,8 @@ angular.module('events').factory('TestRuns', [
       //            'get' : getFn,
       list: [],
       selected: {},
+      recentTestPeriod: 1,
+
       //metricFilter: '',
 
       listTestRunsForDashboard: listTestRunsForDashboard,

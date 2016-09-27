@@ -286,6 +286,9 @@ function upload(req, res) {
               newProduct.dashboards = importProduct.dashboards;
               newProduct.requirements = importProduct.requirements;
               newProduct.markDown = importProduct.markDown;
+              newProduct.jenkinsHost = importProduct.jenkinsHost;
+              newProduct.triggerTestRunsWithJenkins = importProduct.triggerTestRunsWithJenkins;
+              newProduct.jenkinsJobName = importProduct.jenkinsJobName;
 
               newProduct.save(function (err, NewProduct) {
                 if (err)
@@ -313,6 +316,8 @@ function upload(req, res) {
                   newDashboard.startSteadyState = importDashboard.startSteadyState;
                   newDashboard.baseline = importDashboard.baseline;
                   newDashboard.useInBenchmark = importDashboard.useInBenchmark;
+                  newDashboard.triggerTestRunsWithJenkins = importDashboard.triggerTestRunsWithJenkins;
+                  newDashboard.jenkinsJobName = importDashboard.jenkinsJobName;
                   //
                   newDashboard.save(function (err, newDashboard) {
                     if (err)

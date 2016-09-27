@@ -718,29 +718,28 @@ function getDataForTestrun(testRun) {
 
                   case 'Average':
 
-                    value = calculateAverage(bodyTarget.datapoints);
+                    value = bodyTarget.datapoints ? calculateAverage(bodyTarget.datapoints) : null;
                     break;
 
                   case 'Maximum':
 
-                    value = calculateMaximum(bodyTarget.datapoints);
+                    value = bodyTarget.datapoints ? calculateMaximum(bodyTarget.datapoints): null;
                     break;
 
                   case 'Minimum':
 
-                    value = calculateMinimum(bodyTarget.datapoints);
+                    value = bodyTarget.datapoints ? calculateMinimum(bodyTarget.datapoints): null;
                     break;
 
                   case 'Last':
 
-                    value = getLastDatapoint(bodyTarget.datapoints);
+                    value = bodyTarget.datapoints ? getLastDatapoint(bodyTarget.datapoints): null;
                     break;
 
                   case 'Gradient':
 
-                    value = calculateLinearFit(bodyTarget.datapoints);
+                    value = bodyTarget.datapoints ? calculateLinearFit(bodyTarget.datapoints): null;
                     break;
-
                 }
 
 

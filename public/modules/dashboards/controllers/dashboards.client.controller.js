@@ -13,89 +13,19 @@ angular.module('dashboards').controller('DashboardsController', [
   'Products',
   'Metrics',
   'TestRuns',
-  'SideMenu',
   'Templates',
   'Events',
   'Utils',
+  'Jenkins',
   '$q',
   '$interval',
-  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, SideMenu, Templates, Events, Utils, $q, $interval) {
+  function ($scope, $rootScope, $modal, $log, $stateParams, $state, $location, ConfirmModal, Dashboards, Products, Metrics, TestRuns, Templates, Events, Utils, Jenkins, $q, $interval) {
 
     $scope.productName = $stateParams.productName;
     $scope.dashboardName = $stateParams.dashboardName;
 
 
-    /* Get all dashboard names for product */
 
-  //  Dashboards.getDashboardsForProduct($stateParams.productName).success(function(dashboards){
-  //
-  //    $scope.dashboardsForProduct = dashboards;
-  //
-  //  });
-  //
-  //  $scope.copyMetricsToDashboard = function(dashboard){
-  //
-  //    var copyMetricArrayOfPromises = [];
-  //
-  //    _.each($scope.dashboard.metrics, function(metric){
-  //
-  //      if(metric.selected === true){
-  //        var metricClone = _.clone(metric);
-  //
-  //        metricClone.dashboardId = dashboard._id;
-  //        metricClone.dashboardName = dashboard.name;
-  //        metricClone._id = undefined;
-  //
-  //
-  //        copyMetricArrayOfPromises.push(Metrics.create(metricClone));
-  //        metric.selected = false;
-  //        $scope.metricSelected = false;
-  //
-  //      }
-  //
-  //    })
-  //
-  //
-  //    $q.all(copyMetricArrayOfPromises)
-  //        .then(function () {
-  //          $state.go('viewDashboard', {
-  //            productName: $stateParams.productName,
-  //            dashboardName: dashboard.name
-  //          });
-  //        });
-  //
-  //
-  //  }
-  //
-  ///* Get templates */
-  //
-  //  Templates.getAll().success(function(templates){
-  //
-  //    $scope.templates = templates;
-  //
-  //  });
-  //
-  //
-  //
-  //  $scope.editMetric = function(metricId){
-  //
-  //    $state.go('editMetric',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName, metricId: metricId });
-  //
-  //  }
-  //
-  //  $scope.clearMetricFilter = function(){
-  //
-  //    $scope.filterMetrics = '';
-  //
-  //  };
-  //
-  //
-  //
-  //  $scope.mergeTemplate = function(index){
-  //
-  //      Templates.selected = $scope.templates[index];
-  //      $state.go('mergeTemplate');
-  //  };
 
     if(Dashboards.selected !== {}) {
 
@@ -115,6 +45,8 @@ angular.module('dashboards').controller('DashboardsController', [
         Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
           $scope.dashboard = Dashboards.selected;
           $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+
+
         });
       }
     }else{
@@ -134,12 +66,8 @@ angular.module('dashboards').controller('DashboardsController', [
         $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
         Products.get($stateParams.productName).success(function (product) {
           Products.selected = product;
-          //$scope.loading = true;
-          //TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Dashboards.selected.useInBenchmark).success(function (testRuns) {
-          //  $scope.loading = false;
-          //  TestRuns.list = testRuns;
-          //  $scope.testRuns = testRuns;
-          //});
+
+
         });
       }
     });
@@ -264,18 +192,11 @@ angular.module('dashboards').controller('DashboardsController', [
 
             Events.list = events;
 
-            /* Refresh sidebar */
-            Products.fetch().success(function (products) {
-
-              Products.items = products;
-
-              $scope.products = products;
 
               $state.go('viewDashboard', {
                 'productName': $stateParams.productName,
                 'dashboardName': $scope.dashboard.name
               });
-            });
 
           });
         });

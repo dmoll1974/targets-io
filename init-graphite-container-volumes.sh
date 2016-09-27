@@ -40,6 +40,9 @@ rmdir $LOG_DIR/log
 
 docker rm -f $VOLUMES_INIT_CONTAINER_NAME
 
+echo "Removing .pid files"
+rm $DATA_DIR/*.pid
+
 echo "Content of storage directory"
 ls -alFtr $DATA_DIR
 

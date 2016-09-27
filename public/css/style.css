@@ -338,6 +338,12 @@ html, body {
 
 }
 
+.target-preview-content{
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+}
 
 div#column-0-2.graph-column {
     position: fixed;
@@ -439,10 +445,10 @@ md-autocomplete.targets-io-header-autocomplete{
     /*background-color: rgb(33,150,243) !important;*/
 /*}*/
 
-.md-virtual-repeat-container.md-autocomplete-suggestions-container {
-    width:500px !important;
-}
-md-autocomplete.template-autocomplete {
+/*.md-virtual-repeat-container.md-autocomplete-suggestions-container {*/
+    /*width:500px !important;*/
+/*}*/
+md-autocomplete.target-autocomplete {
     width:500px !important;
 }
 
@@ -555,4 +561,37 @@ div .modal-content{
 .shareReportUrl {
 
     width: 800px;
+}
+
+md-input-container.target-dialog-input{
+
+    width: 500px;
+}
+p.template-dialog{
+
+    width: 500px;
+    height: 0px;
+    margin: 0px;
+}
+
+md-toolbar.jenkins-job-stopped {
+    background-color: darkgrey;
+    color: white;
+}
+md-toolbar.jenkins-job-running {
+    background-color: green;
+    color: white;
+}
+
+md-toolbar.jenkins-job-queued {
+    background-color: darkblue;
+    color: white;
+}
+
+div.jenkins-logo {
+    width: 35px;
+    height:35px;
+    /*background:url('../images/assets/Jenkins_logo.svg');*/
+    background:url('../images/assets/jenkins-icon.png');
+    background-size: 35px 35px;
 }

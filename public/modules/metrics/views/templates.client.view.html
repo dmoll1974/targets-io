@@ -1,32 +1,75 @@
-<md-dialog aria-label="Templates">
-
-    <md-toolbar class="md-padding">
-        <div class="md-toolbar-tools>" layout="row  ">
-            <h4>METRIC TEMPLATES</h4>
+<md-dialog draggable class="pointer" aria-label="Select template" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h4 class="md-padding" layout-align="center center">SELECT METRIC TEMPLATE</h4>
             <span flex></span>
-            <md-button class="md-icon-button" ng-click="closeDialog()">
+            <md-button class="md-icon-button" ng-click="cancel()">
                 <md-icon md-svg-src="images/assets/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
             </md-button>
         </div>
     </md-toolbar>
-    <md-autocomplete
-            md-input-id="selectTemplateAutoComplete"
-            md-menu-class="template-autocomplete"
-            md-selected-item="template"
-            md-search-text="templateSearchText"
-            md-items="template in filterTemplates(templateSearchText)"
-            md-selected-item-change="mergeTemplate(template)"
-            md-item-text="vm.template.name"
-            md-min-length="0"
-            md-autoselect="true"
-            md-no-cache="true"
-            placeholder="Click or type to select template">
-        <md-item-template>
-            <span>{{template.name}}: {{template.description}}</span>
-        </md-item-template>
-        <md-not-found>
-            No templates matching "{{templateSearchText}}" were found.
-        </md-not-found>
-    </md-autocomplete>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <form ng-submit="$event.preventDefault()">
+                <p class="template-dialog"></p>
+                <md-autocomplete
+                        md-input-id="selectTemplateAutoComplete"
+                        md-menu-class="template-autocomplete"
+                        md-selected-item="template"
+                        md-search-text="templateSearchText"
+                        md-items="template in filterTemplates(templateSearchText)"
+                        md-selected-item-change="mergeTemplate(template)"
+                        md-item-text="vm.template.name"
+                        md-min-length="0"
+                        md-autoselect="true"
+                        md-no-cache="true"
+                        placeholder="Click or type to select template">
+                    <md-item-template>
+                        <span>{{template.name}}: {{template.description}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No templates matching "{{templateSearchText}}" were found.
+                    </md-not-found>
+                </md-autocomplete>
 
+            </form>
+        </div>
+    </md-dialog-content>
 </md-dialog>
+
+
+
+
+
+<!--<md-dialog aria-label="Templates">-->
+
+    <!--<md-toolbar class="md-padding">-->
+        <!--<div class="md-toolbar-tools>" layout="row  ">-->
+            <!--<h4>METRIC TEMPLATES</h4>-->
+            <!--<span flex></span>-->
+            <!--<md-button class="md-icon-button" ng-click="closeDialog()">-->
+                <!--<md-icon md-svg-src="images/assets/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>-->
+            <!--</md-button>-->
+        <!--</div>-->
+    <!--</md-toolbar>-->
+    <!--<md-autocomplete-->
+            <!--md-input-id="selectTemplateAutoComplete"-->
+            <!--md-menu-class="template-autocomplete"-->
+            <!--md-selected-item="template"-->
+            <!--md-search-text="templateSearchText"-->
+            <!--md-items="template in filterTemplates(templateSearchText)"-->
+            <!--md-selected-item-change="mergeTemplate(template)"-->
+            <!--md-item-text="vm.template.name"-->
+            <!--md-min-length="0"-->
+            <!--md-autoselect="true"-->
+            <!--md-no-cache="true"-->
+            <!--placeholder="Click or type to select template">-->
+        <!--<md-item-template>-->
+            <!--<span>{{template.name}}: {{template.description}}</span>-->
+        <!--</md-item-template>-->
+        <!--<md-not-found>-->
+            <!--No templates matching "{{templateSearchText}}" were found.-->
+        <!--</md-not-found>-->
+    <!--</md-autocomplete>-->
+
+<!--</md-dialog>-->

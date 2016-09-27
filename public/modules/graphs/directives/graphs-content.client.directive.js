@@ -83,15 +83,15 @@ function GraphsContentDirective () {
 
         case 'graphs-live':
 
-          vm.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?zoomRange=' + Utils.zoomRange.value;
+          vm.metricShareUrl = 'http://' + location.host + '/#!/graphs-live/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.tag +  '/?';
 
           if (Utils.zoomFrom) {
             vm.metricShareUrl = vm.metricShareUrl + '&zoomFrom=' + Utils.zoomFrom + '&zoomUntil=' + Utils.zoomUntil;
           }
 
           /* zoom range */
-          if (Utils.zoomRange) {
-            vm.viewShareUrl = vm.viewShareUrl + '&zoomRange=' + Utils.zoomRange;
+          if (Utils.zoomRange && Utils.zoomRange.label !== 'Since start test run') {
+            vm.metricShareUrl = vm.metricShareUrl + '&zoomRange=' + Utils.zoomRange.value;
           }
           vm.metricShareUrl = vm.metricShareUrl + '&metricFilter=' + encodeURIComponent(metric.alias);
 
@@ -129,8 +129,6 @@ function GraphsContentDirective () {
     };
 
     function toggleTestRunSummary(metric, $event){
-
-      if(metric.includeInSummary === false){
 
 
         var parentEl = angular.element(document.body);
@@ -178,6 +176,29 @@ function GraphsContentDirective () {
 
           }
 
+          $scope.removeFromSummary = function(){
+
+                metric.includeInSummary = false;
+
+                Metrics.update($scope.metric).success(function () {
+
+                  var content = 'Metric has been removed from test run summary';
+                  var toast = $mdToast.simple()
+                      .action('OK')
+                      .highlightAction(true)
+                      .position('bottom center')
+                      .hideDelay(3000);
+
+                  $mdDialog.hide();
+
+                  $mdToast.show(toast.content(content)).then(function(response) {
+
+                  });
+
+
+                })
+          }
+
         }
 
         /* set focus */
@@ -188,27 +209,27 @@ function GraphsContentDirective () {
 
 
 
-    }else{
-
-        metric.includeInSummary = false;
-        metric.defaultSummaryText = undefined;
-
-        Metrics.update($scope.metric).success(function () {
-
-          var content = 'Metric has been removed from test run summary';
-          var toast = $mdToast.simple()
-              .action('OK')
-              .highlightAction(true)
-              .position('bottom center')
-              .hideDelay(3000);
-
-          $mdToast.show(toast.content(content)).then(function(response) {
-
-          });
-
-
-        })
-      }
+    //}else{
+    //
+    //    metric.includeInSummary = false;
+    //    metric.defaultSummaryText = undefined;
+    //
+    //    Metrics.update($scope.metric).success(function () {
+    //
+    //      var content = 'Metric has been removed from test run summary';
+    //      var toast = $mdToast.simple()
+    //          .action('OK')
+    //          .highlightAction(true)
+    //          .position('bottom center')
+    //          .hideDelay(3000);
+    //
+    //      $mdToast.show(toast.content(content)).then(function(response) {
+    //
+    //      });
+    //
+    //
+    //    })
+    //  }
 
 
 
@@ -280,9 +301,9 @@ function GraphsContentDirective () {
     };
 
     /* update Tags form graph */
-    function updateTags(tag) {
+    function updateTags(metricToUpdate, tag) {
       vm.showTags = false;
-      Metrics.update(vm.metric).success(function (metric) {
+      Metrics.update(metricToUpdate).success(function (metric) {
         Dashboards.updateTags($stateParams.productName, $stateParams.dashboardName, metric.tags, function (updated) {
           if (updated) {
             Dashboards.update(Dashboards.selected).success(function (dashboard) {

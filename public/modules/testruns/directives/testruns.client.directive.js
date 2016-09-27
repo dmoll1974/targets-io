@@ -64,6 +64,7 @@ function TestrunsDirective () {
     $scope.go = go;
     $scope.openMenu = openMenu;
     $scope.flushCache = flushCache;
+    $scope.showProductReleaseDialog = showProductReleaseDialog;
     $scope.onlyIncompleteTestRunsAvailable = true;
     $scope.progress = undefined;
 
@@ -290,7 +291,7 @@ function TestrunsDirective () {
 
 
 
-  };
+    };
 
 
 
@@ -316,6 +317,77 @@ function TestrunsDirective () {
 
       })
     }
+
+    function showProductReleaseDialog($event, testRun){
+
+
+      var parentEl = angular.element(document.body);
+
+      $mdDialog.show({
+        parent: parentEl,
+        targetEvent: $event,
+        templateUrl:'modules/testruns/views/set.product.release.dialog.client.view.html',
+        locals: {
+          testRun: testRun
+        },
+        onComplete: function () {
+          setTimeout(function(){
+            document.querySelector('#productReleaseInput').focus().selectAll();
+          },1);
+        },
+        controller: DialogController
+      });
+      function DialogController($scope, $mdDialog, testRun, TestRuns) {
+
+        $scope.testRun = testRun;
+        $scope.productRelease = $scope.testRun.productRelease;
+
+        $scope.closeDialogCancel = function(){
+
+          $mdDialog.hide();
+
+
+        }
+
+        $scope.closeDialogOK = function(){
+
+          var originalProductRelease = testRun.productRelease;
+
+          var productReleaseRegExp = new RegExp(testRun.productRelease, 'gi');
+          var updatedTestRunId = testRun.testRunId.replace(productReleaseRegExp, $scope.productRelease);
+
+          testRun.productRelease = $scope.productRelease === '' ? '' : $scope.productRelease;
+
+          if($scope.productRelease !== '' && originalProductRelease !== '') testRun.testRunId = updatedTestRunId;
+
+          TestRuns.update(testRun).then(function (testrun) {
+
+            var toast = $mdToast.simple()
+                .action('OK')
+                .highlightAction(true)
+                .hideDelay(6000)
+
+            var content = 'Product release has been updated for test run ' + testRun.testRunId + '.';
+
+            if($scope.productRelease === '' || originalProductRelease === '') content += ' Could not update the test run ID, please edit manualy via edit test run';
+
+            $mdToast.show(toast.content(content)).then(function (response) {
+            })
+
+
+          });
+
+          $mdDialog.hide();
+        }
+
+      }
+
+
+}
+
+
+
+
 
 
     function go(url) {
@@ -347,6 +419,7 @@ function TestrunsDirective () {
 
 
     function liveGraphs(testRun) {
+
 
       $state.go('viewLiveGraphs', {
         'productName': $stateParams.productName,

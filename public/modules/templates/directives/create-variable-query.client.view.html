@@ -8,10 +8,10 @@
     </div>
     <md-menu-content width="4" ng-attr-id="{{'targets-menu-content-' + index}}">
         <!--<md-menu-item >-->
-            <!--<input flex ng-model="targetFilter">-->
+        <!--<input flex ng-model="targetFilter">-->
         <!--</md-menu-item>-->
         <!--<md-menu-item ng-repeat="graphiteTarget in graphiteTargets | filter: targetFilter">-->
-            <md-menu-item ng-repeat="graphiteTarget in graphiteTargets">
+        <md-menu-item ng-repeat="graphiteTarget in graphiteTargets">
             <md-button md-menu-disable-close="md-menu-disable-close"  ng-click="getTargets(target, graphiteTarget.id, $parent.$index)">
                 {{graphiteTarget.text}}
             </md-button>

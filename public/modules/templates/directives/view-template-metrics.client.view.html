@@ -3,14 +3,39 @@
     <div layout="row">
         <div flex="90"></div>
         <div flex="10">
-            <md-button ng-if="metricSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedMetricsModal('')" style="margin: 0px;" >Delete selected</md-button>
         </div>
     </div>
-    <md-input-container>
-        <label>Filter metrics</label>
-        <input ng-model="filterMetrics">
-    </md-input-container>
+    <div layout="row" layout-align="start top">
+        <div layout="row" flex="33">
+            <md-input-container flex>
+                <label>Filter metrics</label>
+                <input ng-model="filterMetrics">
+            </md-input-container>
+            <md-icon ng-if="filterMetrics && filterMetrics !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                     data-ng-click="clearMetricFilter()">
+
+            </md-icon>
+        </div>
+        <div flex="66"  layout="row"  layout-align="end center">
+            <md-button style="margin-left: 5px;" ng-class="{'disabled': metricSelected === false }" class="md-accent md-icon-button" ng-click="metricSelected && openDeleteSelectedMetricsModal('')" style="margin: 0px;" >
+                <md-tooltip>
+                    Delete selected metrics
+                </md-tooltip>
+                <md-icon md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
+            </md-button>
+        </div>
+
+    </div>
     <table class="table">
+        <colgroup>
+            <col span="1" style="width: 47%;">
+            <col span="1" style="width: 20%;">
+            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 1%;">
+            <col span="1" style="width: 2%;">
+        </colgroup>
         <thead>
         <tr>
             <th>

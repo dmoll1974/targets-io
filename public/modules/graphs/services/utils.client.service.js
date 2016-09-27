@@ -11,6 +11,10 @@ angular.module('graphs').factory('Utils', [
       zoomLock: true,
       graphType: '',
       zoomRange: {
+          value: '',
+          label: 'Since start test run'
+      },
+      zoomRangeTargetPreview: {
           value: '-10min',
           label: 'Last 10 minutes'
       },
@@ -36,6 +40,10 @@ angular.module('graphs').factory('Utils', [
         Utils.zoomLock = true;
         //Utils.graphType = '';
         Utils.zoomRange = {
+            value: '',
+            label: 'Since start test run'
+        };
+        Utils.zoomRangeTargetPreview = {
             value: '-10min',
             label: 'Last 10 minutes'
         };

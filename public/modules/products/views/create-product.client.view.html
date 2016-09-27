@@ -35,6 +35,16 @@
                         <label>Default report markdown</label>
                         <textarea  ng-model="product.markDown" placeholder="Enter Markdown text here"  class="markdown-textarea"></textarea>
                     </md-input-container>
+                    <md-switch ng-model="product.triggerTestRunsWithJenkins" aria-label="Trigger test runs with Jenkins" ng-class="{'switch-label-disabled': product.triggerTestRunsWithJenkins === false }">
+                        Trigger test runs from Jenkins
+                    </md-switch>
+                    <div ng-if="product.triggerTestRunsWithJenkins"  layout="row" layout-align="start center">
+                        <md-input-container flex  >
+                            <label>Jenkins job</label>
+                            <input name="jenkinsJobName" ng-model="product.jenkinsJobName">
+                        </md-input-container>
+                        <select-jenkins-job job="product.jenkinsJobName"></select-jenkins-job>
+                    </div>
                 </div>
                 <div layout="row">
                     <md-button md-no-ink class="md-primary" ng-click="productForm.$valid && create()">Submit</md-button>

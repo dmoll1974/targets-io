@@ -5,7 +5,7 @@
 
         <div layout="row" layout-align="start center">
             <md-select class="md-padding time-range-selector" ng-model="recentTestPeriod"  ng-change="updaterecentTestRuns()">
-            <md-option ng-repeat="recentTestPeriodOption in recentTestPeriodOptions" value="{{recentTestPeriodOption.value}}" ng-selected="$index === 0">
+            <md-option ng-repeat="recentTestPeriodOption in recentTestPeriodOptions" value="{{recentTestPeriodOption.value}}" ng-selected="$index === selectedRecentTestPeriodOptionIndex">
                 {{recentTestPeriodOption.label}}
             </md-option>
             </md-select>

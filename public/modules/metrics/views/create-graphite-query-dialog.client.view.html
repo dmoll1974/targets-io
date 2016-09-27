@@ -1,0 +1,68 @@
+<md-dialog draggable class="pointer" aria-label="Select target dialog" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h4 class="md-padding" layout-align="center center">SELECT TARGET</h4>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="images/assets/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <form ng-submit="$event.preventDefault()">
+                <div layout="row" ayout-align="start start">
+                  <div layout="column" layout-align="start start">
+                    <div layout="row" class="md-padding" layout-align="start start">
+
+                        <md-button aria-label="Revert" ng-disabled="selectedTarget.length === 0" ng-click="revert()">Revert</md-button>
+                        <md-button aria-label="Done" ng-click="done($event)">Done</md-button>
+                        <md-button aria-label="Wrap in function" ng-click="wrapInFunction()">Functions</md-button>
+                        <md-button aria-label="Preview" ng-disabled="!targetComplete" ng-click="updatePreview()">Preview</md-button>
+                    </div>
+                    <div>
+                      <md-input-container class="target-dialog-input" >
+                          <label>Selected target</label>
+                          <input ng-model="selectedTarget"  >
+                      </md-input-container>
+                    </div>
+
+                      <div flex>
+                        <md-autocomplete tabindex="1" ng-show="!targetComplete" class="target-autocomplete"
+                                     md-input-id="targetAutoComplete"
+                                     md-selected-item="graphiteTarget"
+                                     md-search-text="graphiteTargetSearchText"
+                                     md-items="graphiteTarget in filterGraphiteTargets(graphiteTargetSearchText)"
+                                     md-selected-item-change="getTargets(selectedTarget, graphiteTarget.id, $parent.$index)"
+                                     md-item-text="graphiteTarget.text"
+                                     md-min-length="0"
+                                     md-no-cache="true"
+                                     md-autoselect="true"
+                                     placeholder="Click or type to select">
+                        <md-item-template>
+                            <span>{{graphiteTarget.text}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            No target matching "{{graphiteTargetSearchText}}" was found.
+                        </md-not-found>
+                        </md-autocomplete>
+                        </div>
+                    </div>
+                    <div ng-if="showPreview" layout="column">
+                        <div class="md-padding">
+                            <md-select class="md-padding time-range-selector"  ng-model="zoomRange" style="padding-left: 5px;">
+                                <md-option ng-repeat="zoomOption in zoomOptions" ng-value="zoomOption" ng-selected="$index === selectedZoomOptionIndex">
+                                    {{zoomOption.label}}
+                                </md-option>
+                            </md-select>
+                        </div>
+                        <target-preview-dygraph style="width:500px;" metric="metric" index="index"  id="targets-preview"></target-preview-dygraph>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </md-dialog-content>
+</md-dialog>
+
+
+

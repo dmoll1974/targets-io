@@ -2,7 +2,8 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), Schema = mongoose.Schema;
+var mongoose = require('mongoose'), Schema = mongoose.Schema,
+    config = require('../../config/config');
 /**
  * Product Schema
  */
@@ -16,6 +17,15 @@ var ProductSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    'jenkinsHost':{
+        type: String,
+        default: config.jenkinsHost
+    },
+    'triggerTestRunsWithJenkins': {
+            type: Boolean,
+            default: false
+        },
+        'jenkinsJobName': String,
    'dashboards': [{
       type: Schema.Types.ObjectId,
       ref: 'Dashboard'

@@ -21,7 +21,7 @@
         Select target
     </md-tooltip>
 </md-button>
-<md-autocomplete tabindex="1" ng-if="showTargetAutocomplete"
+<md-autocomplete tabindex="1" ng-if="showTargetAutocomplete" class="target-autocomplete"
                  md-input-id="mergeTemplateAutoComplete"
                  md-selected-item="graphiteTarget"
                  md-search-text="graphiteTargetSearchText"
@@ -36,6 +36,6 @@
         <span>{{graphiteTarget.text}}</span>
     </md-item-template>
     <md-not-found>
-        No target matching "{{dashboardSearchText}}" was found.
+        No target matching "{{graphiteTargetSearchText}}" was found.
     </md-not-found>
 </md-autocomplete>

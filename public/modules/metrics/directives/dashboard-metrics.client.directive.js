@@ -466,6 +466,13 @@ function DashboardMetricsDirective () {
           locals: {
             templates: templates
           },
+          onComplete: function () {
+            /* set focus */
+
+            setTimeout(function(){
+              document.querySelector('#selectTemplateAutoComplete').focus();
+            },1);
+          },
           controller: DialogController
         });
         function DialogController($scope, $mdDialog, templates) {
@@ -473,7 +480,7 @@ function DashboardMetricsDirective () {
           $scope.templates = templates;
 
 
-          $scope.closeDialog = function(){
+          $scope.cancel = function(){
 
             $mdDialog.hide();
 
@@ -508,11 +515,7 @@ function DashboardMetricsDirective () {
 
         }
 
-      /* set focus */
 
-      setTimeout(function(){
-        document.querySelector('#selectTemplateAutoComplete').focus();
-      },200);
 
     }
 

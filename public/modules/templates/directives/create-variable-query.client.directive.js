@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('core').directive('createGraphiteQuery', CreateGraphiteQueryDirective);
+angular.module('templates').directive('createVariableQuery', CreateVariableQueryDirective);
 
-function CreateGraphiteQueryDirective () {
+function CreateVariableQueryDirective () {
 
     var directive = {
         scope: {
@@ -10,15 +10,15 @@ function CreateGraphiteQueryDirective () {
             index: '='
         },
         restrict: 'EA',
-        templateUrl: 'modules/core/directives/create-graphite-query.client.view.html',
-        controller: CreateGraphiteQueryDirectiveController,
+        templateUrl: 'modules/templates/directives/create-variable-query.client.view.html',
+        controller: CreateVariableQueryDirectiveController,
         controllerAs: 'ctrlCreateGraphiteQuery'
     };
 
     return directive;
 
     /* @ngInject */
-    function CreateGraphiteQueryDirectiveController ($scope, $state, $timeout, Graphite, $mdMenu) {
+    function CreateVariableQueryDirectiveController ($scope, $state, $timeout, Graphite, $mdMenu) {
 
         console.log('target: ' + $scope.target);
 
@@ -39,7 +39,7 @@ function CreateGraphiteQueryDirective () {
 
         /* Open menu*/
 
-            $scope.openMenu = function($mdOpenMenu, $event, target) {
+        $scope.openMenu = function($mdOpenMenu, $event, target) {
 
 
             /* remove trailing dot */
@@ -62,7 +62,7 @@ function CreateGraphiteQueryDirective () {
 
                     $scope.graphiteTargets = graphiteTargets;
 
-                /* if no leafs, show root query results*/
+                    /* if no leafs, show root query results*/
                 } else {
 
                     $scope.graphiteTargets = $scope.defaultGraphiteTargets;

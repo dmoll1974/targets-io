@@ -51,6 +51,7 @@ services:
        GRAPHITE_SERVICE_PORT: "80"
        JENKINS_USER: "admin"
        JENKINS_PASSWORD: "targets-io"
+       JENKINS_HOST: "http://jenkins"
     restart: always
   mean:
     image: dmoll1974/targets-io-demo-meanjs
