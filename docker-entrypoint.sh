@@ -27,6 +27,11 @@ if [ -z "$JENKINS_PASSWORD" ]; then
 
 			exit 1
 fi
+if [ -z "$JENKINS_HOST" ]; then
+			echo >&2 'error: Need to set JENKINS_HOST'
+
+			exit 1
+fi
 if [ -z "$REDIS_SERVICE_HOST" ]; then
 			echo >&2 'error: Need to set REDIS_SERVICE_HOST'
 
