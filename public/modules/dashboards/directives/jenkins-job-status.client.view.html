@@ -9,7 +9,6 @@
         <div layout="row" layout-align="start center">
 
             <h5  ng-cloak ng-if="jenkinsJobStatus">Status: {{jenkinsJobStatus}} </h5>
-            <md-button ng-if="authenticationFailed" md-no-ink class="md-primary md-raised" data-ng-click="signin()">Sign in</md-button>
             <h5 ng-if="jenkinsJobStatus === 'Queued'">, {{jenkinsJobQueueWhy}}</h5>
 
         </div>
@@ -28,7 +27,7 @@
                     Stop Jenkins job
                 </md-tooltip>
             </md-button>
-            <md-button ng-if="jenkinsJobStatus !== 'Queued'" aria-label="Configure Jenkins job" class="md-icon-button"
+            <md-button ng-if="!authenticationFailed && jenkinsJobStatus !== 'Queued'" aria-label="Configure Jenkins job" class="md-icon-button"
                        ng-click="jenkinsJobConsole()">
                 <md-icon md-menu-origin md-svg-src="images/assets/ic_live_tv_white_36px.svg"></md-icon>
                 <md-tooltip>
@@ -37,7 +36,7 @@
 
             </md-button>
 
-            <md-button aria-label="Configure Jenkins job" class="md-icon-button"
+            <md-button ng-if="!authenticationFailed" aria-label="Configure Jenkins job" class="md-icon-button"
                        ng-click="jenkinsJobConfig()">
                 <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_white_24px.svg"></md-icon>
                 <md-tooltip>
@@ -45,7 +44,7 @@
                 </md-tooltip>
 
             </md-button>
-            <!--<div class="jenkins-logo md-padding"></div>-->
+            <md-button ng-if="authenticationFailed" md-no-ink class="md-primary md-raised" data-ng-click="signin()">Sign in</md-button>
 
 
 
