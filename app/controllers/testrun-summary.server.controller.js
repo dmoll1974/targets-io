@@ -199,6 +199,8 @@ function updateTestRunSummaryMetric(testRunSummaryMetric, includeMetric, testRun
 
     }
 
+    testRunSummaryMetric.summaryText = includeMetric.defaultSummaryText;
+
     return testRunSummaryMetric;
 
   }
