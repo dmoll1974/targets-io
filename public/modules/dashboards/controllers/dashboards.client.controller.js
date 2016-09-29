@@ -193,10 +193,17 @@ angular.module('dashboards').controller('DashboardsController', [
             Events.list = events;
 
 
+            ///* Refresh header */
+            Products.fetch().success(function (products) {
+                Products.items = products;
+                $scope.products = products;
+
               $state.go('viewDashboard', {
                 'productName': $stateParams.productName,
                 'dashboardName': $scope.dashboard.name
               });
+
+            });
 
           });
         });

@@ -14,7 +14,7 @@ function DashboardMenuDirective () {
     return directive;
 
     /* @ngInject */
-    function DashboardMenuDirectiveController ($scope, $state, $stateParams, $interval, Products, Dashboards, Templates, ConfirmModal, $modal) {
+    function DashboardMenuDirectiveController ($scope, $state, $stateParams, $timeout, Products, Dashboards, Templates, ConfirmModal, $modal) {
 
         var originatorEv;
         $scope.openMenu = function ($mdOpenMenu, ev) {
@@ -48,11 +48,7 @@ function DashboardMenuDirective () {
 
         $scope.clone = function () {
             Dashboards.clone().success(function (dashboard) {
-                /* Refresh header */
-                Products.fetch().success(function (products) {
-                    Products.items = products;
-                    $scope.products = products;
-                });
+
                 $state.go('editDashboard', {
                     'productName': $stateParams.productName,
                     'dashboardName': dashboard.name
@@ -84,8 +80,9 @@ function DashboardMenuDirective () {
                     Products.fetch().success(function (products) {
                         Products.items = products;
                         $scope.products = products;
+                        $state.go('viewProduct', { 'productName': $stateParams.productName });
                     });
-                    $state.go('viewProduct', { 'productName': $stateParams.productName });
+
                 });
             }, function () {
             });
