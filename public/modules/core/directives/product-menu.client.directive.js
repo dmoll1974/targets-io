@@ -53,12 +53,15 @@ function ProductMenuDirective () {
                 Products.delete(productName).success(function (product) {
                     /* reset slected Product*/
                     Products.selected = {};
+                    /*update header product autocomplete*/
+                    $scope.product = undefined;
                     /* Refresh sidebar */
                     Products.fetch().success(function (products) {
                         Products.items = products;
                         $scope.products = products;
+                        $state.go('home');
+
                     });
-                    $state.go('home');
                 });
             }, function () {
             });
