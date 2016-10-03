@@ -92,10 +92,9 @@ function getRelease(req, res){
 
             if(release){
 
-                var numberOfRequirementsInStoredRelease = countRequirements(release);
-
-
                 /* check number of requirements to detect changes later*/
+
+                var numberOfRequirementsInStoredRelease = countRequirements(release);
 
                 var updatedRelease = new Release(release);
 
@@ -220,19 +219,24 @@ function synchronizeTestRunsForProductRelease(storedRelease){
 
         var synchronizedReleaseTestRuns = [];
 
+        synchronizedReleaseTestRuns = storedRelease.releaseTestRuns;
+
         testRunModule.testRunsForProductReleaseImpl(storedRelease.name, storedRelease.productRelease)
         .then(function(currentTestRuns){
 
 
-                _.each(currentTestRuns, function(currentTestRun){
+            if(currentTestRuns.length > 0) {
+                _.each(currentTestRuns, function (currentTestRun) {
 
-                    var index = storedRelease.releaseTestRuns.map(function(storedReleaseTestRun){return storedReleaseTestRun.testRunId; }).indexOf(currentTestRun.testRunId);
+                    var index = storedRelease.releaseTestRuns.map(function (storedReleaseTestRun) {
+                        return storedReleaseTestRun.testRunId;
+                    }).indexOf(currentTestRun.testRunId);
 
-                    if(index !== -1) {
+                    if (index !== -1) {
 
                         synchronizedReleaseTestRuns.push(storedRelease.releaseTestRuns[index]);
 
-                    }else {
+                    } else {
 
                         synchronizedReleaseTestRuns.push(currentTestRun);
 
@@ -240,9 +244,10 @@ function synchronizeTestRunsForProductRelease(storedRelease){
 
 
                 })
+            }
 
-                storedRelease.releaseTestRuns = synchronizedReleaseTestRuns;
-                resolve(storedRelease);
+            storedRelease.releaseTestRuns = synchronizedReleaseTestRuns;
+            resolve(storedRelease);
 
 
         });
