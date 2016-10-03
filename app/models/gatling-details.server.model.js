@@ -7,8 +7,16 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var gatlingDetailsSchema = new mongoose.Schema({
-  "consoleUrl": String,
-  "response": Object
+    'productName': {
+        type: String,
+        uppercase: true
+    },
+    'dashboardName': {
+        type: String,
+        uppercase: true
+    },
+    "consoleUrl": String,
+    "response": Object
 },
     {
       read: 'primary'

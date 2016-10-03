@@ -161,7 +161,9 @@ function TargetsIoHeaderDirective () {
                 'editProductRequirement',
                 'addProductReleaseLink',
                 'addDashboard',
-                'editDashboard'
+                'editDashboard',
+                'importDbProduct'
+
 
             ]
 

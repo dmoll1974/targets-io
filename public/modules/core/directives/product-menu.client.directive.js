@@ -14,7 +14,7 @@ function ProductMenuDirective () {
     return directive;
 
     /* @ngInject */
-    function ProductMenuDirectiveController ($scope, $state, $interval, Products, ConfirmModal, $modal) {
+    function ProductMenuDirectiveController ($scope, $state, $interval, Products, ConfirmModal, $modal, $window, $location, $stateParams) {
 
         var originatorEv;
         $scope.openMenu = function ($mdOpenMenu, ev) {
@@ -39,6 +39,17 @@ function ProductMenuDirective () {
             });
 
         }
+
+        $scope.backup = function(){
+
+            var url = 'http://' + $window.location.host + '/download/' + $stateParams.productName;
+            //	$log.log(url);
+            $window.location.href = url;
+        }
+
+        $scope.restore = function () {
+            $state.go('importDbProduct', {productName: $stateParams.productName });
+        };
 
         $scope.openDeleteProductModal = function (size) {
             ConfirmModal.itemType = 'Delete product ';

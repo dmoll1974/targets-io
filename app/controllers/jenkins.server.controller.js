@@ -233,7 +233,7 @@ function getConsoleData (req, res) {
     } else {
 
       console.log('Gatling details served from Jenkins');
-      getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, function (response) {
+      getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, req.body.productName, req.body.dashboardName, function (response) {
 
         if(response.status === 'fail'){
 
@@ -249,7 +249,7 @@ function getConsoleData (req, res) {
 
 };
 
-function getJenkinsData (jenkinsUrl, running, start, end, callback) {
+function getJenkinsData (jenkinsUrl, running, start, end, productName, dashboardName, callback) {
   var consoleResponse = {};
   var consoleData = [];
   var errorData = [];
@@ -347,7 +347,7 @@ function getJenkinsData (jenkinsUrl, running, start, end, callback) {
         /* if test is finished, put response  in db */
         if (running === false && consoleResponse.hasOwnProperty('data')) {
 
-          var GatlingDetailsResponse = new GatlingDetails({consoleUrl: jenkinsUrl, response: consoleResponse});
+          var GatlingDetailsResponse = new GatlingDetails({productName: productName, dashboardName: dashboardName, consoleUrl: jenkinsUrl, response: consoleResponse});
           GatlingDetailsResponse.save(function (err, savedResponse) {
             if (err) console.log(err);
           });

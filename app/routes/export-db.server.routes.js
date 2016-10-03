@@ -5,4 +5,5 @@ module.exports = function (app) {
   //app.route('/import-db')
   //    .get(importDb.dbImport);
   app.route('/download').get(exportDb.dbExport);
+  app.route('/download/:product').get(exportDb.dbExportForProduct);
 };
