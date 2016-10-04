@@ -14,7 +14,7 @@ function ViewTemplateDirective () {
   return directive;
 
   /* @ngInject */
-  function ViewTemplateDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, Utils) {
+  function ViewTemplateDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, Utils, $window) {
 
 
   /* Tab controller*/
@@ -34,6 +34,12 @@ function ViewTemplateDirective () {
 
   });
 
+    $scope.backup = function(){
+
+      var url = 'http://' + $window.location.host + '/download-template/' + Templates.selected.name;
+      //	$log.log(url);
+      $window.location.href = url;
+    }
     $scope.clone = function(){
 
       Templates.templateClone = _.clone(Templates.selected);

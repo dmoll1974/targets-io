@@ -8,5 +8,7 @@ module.exports = function (app) {
   //app.route('/import-db')
   //    .get(importDb.dbImport);
   app.route('/upload').post(multipartMiddleware, importDb.upload);
+  app.route('/upload-product').post(multipartMiddleware, importDb.uploadProduct);
+  app.route('/upload-template').post(multipartMiddleware, importDb.uploadTemplate);
   app.route('/upload-legacy').post(multipartMiddleware, importDbLegacy.upload);
 };

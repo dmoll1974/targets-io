@@ -5,13 +5,13 @@
 
     <form ng-hide="activated">
         <input type="file" file-model="myFile"/>
-        <button data-ng-click="uploadFile('/upload'), 'home'">Upload</button>
+        <button data-ng-click="uploadFile('/upload-product','home')">Upload</button>
 
     </form>
     <div class="container" ng-if="activated">
         <md-progress-circular md-mode="{{modes[4]}}" md-diameter="96"></md-progress-circular>
         <div class="bottom-block">
-            <span>Restoring database ...</span>
+            <span>Restoring product from file ...</span>
         </div>
     </div>
 </section>

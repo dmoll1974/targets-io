@@ -17,6 +17,7 @@ var mongoose = require('mongoose'),
     Benchmarks = require('./testruns.benchmarks.server.controller'),
     Metric = mongoose.model('Metric'),
     async = require('async'),
+    TestrunSummary = mongoose.model('TestrunSummary'),
     RunningTest = mongoose.model('RunningTest'),
     Release = mongoose.model('Release'),
     cache = require('./redis.server.controller'),
@@ -330,7 +331,7 @@ function distinctReleases(testRuns){
 function testRunsForProductRelease(req, res) {
 
   testRunsForProductReleaseImpl(req.params.productName, req.params.productRelease)
-  .then(function(testRuns){
+    .then(function(testRuns){
 
         res.jsonp(testRuns);
   })
@@ -350,8 +351,32 @@ function testRunsForProductReleaseImpl(productName, productRelease) {
             reject(err);
           } else {
 
-            resolve(filterTestRunsBasedOnRequirements(testRuns, product.requirements));
+            TestrunSummary.find({$and: [{productName: productName}, {productRelease: productRelease}]}).sort({end: 1}).exec(function (err, testRunSumaries) {
 
+              if (err) {
+                reject(err);
+              } else {
+
+                var combinedTestrunAndSummaries = [];
+
+                _.each(testRunSumaries, function(testRunSummary){
+
+                  combinedTestrunAndSummaries.push(testRunSummary);
+
+                })
+
+                _.each(testRuns, function(testRun){
+
+                  if (combinedTestrunAndSummaries.map(function(item){return item.testRunId;}).indexOf(testRun.testRunId) === -1) combinedTestrunAndSummaries.push(testRun);
+
+                })
+
+
+
+                resolve(filterTestRunsBasedOnRequirements(combinedTestrunAndSummaries, product.requirements));
+
+              }
+            });
           }
         });
       }
