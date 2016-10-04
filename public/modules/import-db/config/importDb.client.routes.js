@@ -9,6 +9,10 @@ angular.module('import-db').config([
       url: '/import-db',
       templateUrl: 'modules/import-db/views/import-db.client.upload.html'
     })
+    .state('importTemplate', {
+      url: '/import-template',
+      templateUrl: 'modules/import-db/views/import-db-template.client.upload.html'
+    })
     .state('importDbProduct', {
       url: '/import-product/:productName',
       templateUrl: 'modules/import-db/views/import-db-product.client.upload.html'
