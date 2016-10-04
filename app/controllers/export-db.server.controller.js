@@ -20,6 +20,38 @@ var wstream = fs.createWriteStream('myOutput.txt');
 
 exports.dbExport = dbExport;
 exports.dbExportForProduct = dbExportForProduct;
+exports.dbExportTemplate = dbExportTemplate;
+
+function dbExportTemplate(req, res){
+
+    var fileName = 'targets-io-template-' + req.params.templateName + '.json';
+
+    res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+    res.write('{\n');
+    res.write('"templates": [');
+
+    Template.find({name: req.params.templateName}).lean().stream({
+        transform: () => {
+            let index = 0;
+            return (data) => {
+                return (!(index++) ? '' : ',') + JSON.stringify(data);
+            };
+        }() // invoke
+    })
+    .on('data', function (template) {
+    res.write(template + '\n');
+    })
+    .on('close', function () {
+        res.write(']\n}');
+        res.end();
+    })
+    .on('error', function (err) {
+        res.send(500, {
+            err: err,
+            msg: 'Failed to get templates from db'
+        });
+    });
+}
 
 function dbExportForProduct (req, res) {
 
