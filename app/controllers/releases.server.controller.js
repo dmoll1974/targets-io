@@ -226,17 +226,18 @@ function synchronizeTestRunsForProductRelease(storedRelease){
 
 
             if(currentTestRuns.length > 0) {
+
                 _.each(currentTestRuns, function (currentTestRun) {
 
                     var index = storedRelease.releaseTestRuns.map(function (storedReleaseTestRun) {
                         return storedReleaseTestRun.testRunId;
                     }).indexOf(currentTestRun.testRunId);
 
-                    if (index !== -1) {
-
-                        synchronizedReleaseTestRuns.push(storedRelease.releaseTestRuns[index]);
-
-                    } else {
+                    if (index === -1) {
+                    //
+                    //    synchronizedReleaseTestRuns.push(storedRelease.releaseTestRuns[index]);
+                    //
+                    //} else {
 
                         synchronizedReleaseTestRuns.push(currentTestRun);
 
