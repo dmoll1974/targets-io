@@ -70,7 +70,7 @@ angular.module('metrics').factory('Metrics', [
       return $http.delete('/metrics/' + metricId);
     }
     function create(metric) {
-      metric.tags = metric.tags.sort(Utils.dynamicSort('text'));
+      metric.tags = metric.tags ? metric.tags.sort(Utils.dynamicSort('text')): metric.tags;
       return $http.post('/metrics', metric).success(function (metric) {
       });
     }
