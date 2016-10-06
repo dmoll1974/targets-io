@@ -159,7 +159,6 @@ angular.module('dashboards').controller('DashboardsController', [
           $scope.products = products;
 
 
-          SideMenu.addProducts(products);
 
             /* reset Test runs*/
           TestRuns.list = [];
