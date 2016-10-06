@@ -53,6 +53,10 @@ services:
        JENKINS_PASSWORD: "targets-io"
        JENKINS_HOST: "http://jenkins:8080"
     restart: always
+    depends_on:
+      - db
+      - redis
+      - graphite
   mean:
     image: dmoll1974/targets-io-demo-meanjs
     ports:
@@ -62,6 +66,10 @@ services:
     networks:
       - my-net
     restart: always
+    depends_on:
+      - db
+      - redis
+      - graphite
 
 networks:
   my-net:
