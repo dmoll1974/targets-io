@@ -234,7 +234,9 @@ function dbExportForProduct (req, res) {
 
 function dbExport (req, res) {
 
-    res.setHeader('Content-disposition', 'attachment; filename=targets-io.json');
+    var fileName = 'targets-io-' + new Date().toISOString().slice(0, 10) + '.json';
+
+    res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
     res.write('{\n');
     res.write('"products": [');
 

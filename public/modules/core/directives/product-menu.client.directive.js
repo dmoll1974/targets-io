@@ -40,9 +40,9 @@ function ProductMenuDirective () {
 
         }
 
-        $scope.backup = function(){
+        $scope.backupProduct = function(){
 
-            var url = 'http://' + $window.location.host + '/download/' + $stateParams.productName;
+            var url = 'http://' + $window.location.host + '/download-product/' + $stateParams.productName;
             //	$log.log(url);
             $window.location.href = url;
         }
