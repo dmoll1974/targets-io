@@ -45,6 +45,7 @@ sleep 5
 
 echo "Removing .pid files"
 
+cd $DATADIR
 count=`ls -1 *.pid 2>/dev/null | wc -l`
 if [ $count != 0 ]
 then 
