@@ -46,12 +46,11 @@ sleep 5
 echo "Removing .pid files"
 
 cd $DATADIR
-count=`ls -1 *.pid 2>/dev/null | wc -l`
-if [ $count != 0 ]
-then 
-rm -f *.pid
-fi 
 
+myarray=(`find ./ -maxdepth 1 -name "*.pid"`)
+if [ ${#myarray[@]} -gt 0 ]; then 
+    rm -f *.pid
+fi
 
 
 echo "Content of storage directory"
