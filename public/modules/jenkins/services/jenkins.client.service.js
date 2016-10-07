@@ -4,7 +4,6 @@ angular.module('jenkins').factory('Jenkins', [
   function ($http) {
     var Jenkins = {
       getData: getData,
-      getData: getData,
       login: login,
       getJobStatus: getJobStatus,
       startJob: startJob,
@@ -14,8 +13,10 @@ angular.module('jenkins').factory('Jenkins', [
     return Jenkins;
 
 
-    function getData(consoleUrl, running) {
+    function getData(consoleUrl, running, productName, dashboardName) {
       var postData = {
+        productName: productName,
+        dashboardName: dashboardName,
         consoleUrl: consoleUrl,
         running: running
       };

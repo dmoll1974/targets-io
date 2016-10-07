@@ -6,7 +6,8 @@ angular.module('import-db').controller('ImportDbController', [
   'SideMenu',
   '$location',
   '$interval',
-  function ($scope, FileUpload, Products, SideMenu, $location, $interval) {
+  '$state',
+  function ($scope, FileUpload, Products, SideMenu, $location, $interval, $state) {
     var j = 0, counter = 0;
     var spinner;
     $scope.modes = [];
@@ -38,7 +39,7 @@ angular.module('import-db').controller('ImportDbController', [
       // Make sure that the interval is destroyed too
       $interval.cancel(spinner);
     });
-    $scope.uploadFile = function (uploadUrl) {
+    $scope.uploadFile = function (uploadUrl, targetState) {
       var file = $scope.myFile;
       $scope.activated = true;
       j = counter = 0;
@@ -47,7 +48,7 @@ angular.module('import-db').controller('ImportDbController', [
         Products.fetch().success(function (products) {
           Products.items = products;
           SideMenu.addProducts(products);
-          $location.path('/#!/');
+          $state.go(targetState);
           $scope.activated = false;
         });
       });

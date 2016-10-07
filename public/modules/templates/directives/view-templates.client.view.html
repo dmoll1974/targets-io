@@ -20,7 +20,30 @@
         <tr>
             <th>Name</th>
             <th>Description</th>
-            <th><i class="glyphicon glyphicon-plus" data-ng-click="addTemplate()"></i></th>
+            <th>
+                <md-menu>
+                    <md-button aria-label="Merge metrics from template" class="md-icon-button" style="padding-bottom: 0px;"
+                               ng-click="openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin md-svg-src="images/assets/ic_add_black_24px.svg"></md-icon>
+                        <md-tooltip>
+                            Add template
+                        </md-tooltip>
+                    </md-button>
+                    <md-menu-content >
+                        <md-menu-item >
+                            <md-button class="targets-io-menu-button" data-ng-click="importTemplate()">
+                                <md-icon md-menu-origin md-svg-src="images/assets/ic_input_black_24px.svg"></md-icon>
+                                IMPORT TEMPLATE
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button class="targets-io-menu-button" data-ng-click="addTemplate()">
+                                <md-icon md-menu-origin md-svg-src="images/assets/ic_add_black_24px.svg"></md-icon>
+                                CREATE TEMPLATE
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
             <th>
                 <md-checkbox md-no-ink aria-label="select all templates" ng-model="allTemplatesSelected" ng-change="setAllTemplatesSelected(allTemplatesSelected)" style="margin: 0px;">
                 </md-checkbox>

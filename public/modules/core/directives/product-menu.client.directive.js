@@ -14,7 +14,7 @@ function ProductMenuDirective () {
     return directive;
 
     /* @ngInject */
-    function ProductMenuDirectiveController ($scope, $state, $interval, Products, ConfirmModal, $modal) {
+    function ProductMenuDirectiveController ($scope, $state, $interval, Products, ConfirmModal, $modal, $window, $location, $stateParams) {
 
         var originatorEv;
         $scope.openMenu = function ($mdOpenMenu, ev) {
@@ -40,6 +40,17 @@ function ProductMenuDirective () {
 
         }
 
+        $scope.backupProduct = function(){
+
+            var url = 'http://' + $window.location.host + '/download-product/' + $stateParams.productName;
+            //	$log.log(url);
+            $window.location.href = url;
+        }
+
+        $scope.restore = function () {
+            $state.go('importDbProduct', {productName: $stateParams.productName });
+        };
+
         $scope.openDeleteProductModal = function (size) {
             ConfirmModal.itemType = 'Delete product ';
             ConfirmModal.selectedItemId = Products.selected._id;
@@ -53,12 +64,15 @@ function ProductMenuDirective () {
                 Products.delete(productName).success(function (product) {
                     /* reset slected Product*/
                     Products.selected = {};
+                    /*update header product autocomplete*/
+                    $scope.product = undefined;
                     /* Refresh sidebar */
                     Products.fetch().success(function (products) {
                         Products.items = products;
                         $scope.products = products;
+                        $state.go('home');
+
                     });
-                    $state.go('home');
                 });
             }, function () {
             });

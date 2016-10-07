@@ -22,6 +22,19 @@ function ViewTemplatesDirective () {
 
     });
 
+    $scope.importTemplate = function () {
+      $state.go('importTemplate');
+    };
+
+    var originatorEv;
+
+    $scope.openMenu = function ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+
+    };
+
+
     $scope.viewTemplate = function(index){
 
         $state.go('viewTemplate', {templateName: $scope.templates[index].name})

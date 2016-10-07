@@ -36,6 +36,19 @@
                 Delete product
             </md-button>
         </md-menu-item>
+        <md-menu-divider ng-if="product"></md-menu-divider>
+        <md-menu-item ng-if="product">
+            <md-button class="targets-io-menu-button"  data-ng-click="backupProduct()">
+                <md-icon md-svg-src="images/assets/ic_backup_black_36px.svg"></md-icon>
+                Backup product
+            </md-button>
+        </md-menu-item>
+        <md-menu-item >
+            <md-button class="targets-io-menu-button"  data-ng-click="restore()">
+                <md-icon md-svg-src="images/assets/ic_settings_backup_restore_black_36px.svg"></md-icon>
+                Restore product
+            </md-button>
+        </md-menu-item>
 
     </md-menu-content>
 </md-menu>

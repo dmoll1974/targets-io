@@ -17,10 +17,44 @@ function JenkinsJobStatusDirective () {
     return directive;
 
     /* @ngInject */
-    function JenkinsJobStatusDirectiveController ($scope, $state, $stateParams, $timeout, Graphite, $mdDialog, $mdToast, Jenkins, Utils, $interval, Products, $window, $rootScope, AuthenticationService) {
+    function JenkinsJobStatusDirectiveController ($scope, $state, $stateParams, $timeout, Graphite, $mdDialog, $mdToast, Jenkins, Utils, $interval, Products, $window, $rootScope, AuthenticationService, $http) {
 
 
-        $scope.authenticationFailed = true;
+        if($http.defaults.headers.common['Authorization']) {
+            Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (loginResult) {
+
+                if (loginResult.statusCode === 200) {
+
+                    $scope.authenticationFailed = false;
+                    jenkinsJobStatusPolling();
+                    if (Utils.polling === undefined) Utils.polling = $interval(jenkinsJobStatusPolling, 15000);
+                    $mdDialog.hide();
+
+                } else {
+
+                    AuthenticationService.ClearCredentials();
+                    $scope.authenticationFailed = true;
+                    $mdDialog.hide();
+                    var content = 'Authentication failed';
+                    var toast = $mdToast.simple()
+                        .action('OK')
+                        .highlightAction(true)
+                        .position('top center')
+                        .hideDelay(3000);
+
+                    $mdToast.show(toast.content(content)).then(function (response) {
+                    });
+
+
+                }
+
+
+            })
+        }else{
+
+            $scope.authenticationFailed = true;
+
+        }
 
         $scope.$on('$destroy', function () {
           // Make sure that the interval is destroyed too

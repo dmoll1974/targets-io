@@ -21,31 +21,6 @@ function TargetsIoHeaderDirective () {
         })
 
 
-
-        //$scope.$watch(function (scope) {
-        //    return Dashboards.selected._id;
-        //}, function (newVal, oldVal) {
-        //    if (newVal !== oldVal && newVal) {
-        //        $scope.dashboard = Dashboards.selected;
-        //        $scope.dashboardSelected = true;
-        //        $scope.dashboardSearchText = $scope.dashboard.name;
-        //        Products.get($stateParams.productName).success(function (product) {
-        //            $scope.product = product;
-        //
-        //        });
-        //    }
-        //});
-        // $scope.$watch(function (scope) {
-        //    return Products.selected ;
-        //}, function (newVal, oldVal) {
-        //    if (newVal !== oldVal && newVal) {
-        //
-        //        $scope.product = newVal ;
-        //
-        //    }
-        //});
-
-
         $rootScope.$watch('currentStateParams', function (newVal, oldVal) {
             //if (newVal !== oldVal) {
 
@@ -186,7 +161,9 @@ function TargetsIoHeaderDirective () {
                 'editProductRequirement',
                 'addProductReleaseLink',
                 'addDashboard',
-                'editDashboard'
+                'editDashboard',
+                'importDbProduct'
+
 
             ]
 

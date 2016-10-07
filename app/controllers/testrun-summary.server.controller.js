@@ -90,7 +90,7 @@ function getTestrunSummary (req, res){
         dashboard.getDashboard (testRunSummary.productName, testRunSummary.dashboardName)
         .then(function(dashboard){
 
-          if(!testRunSummary.lastUpdated || testRunSummary.lastUpdated < dashboard.lastUpdated) {
+          if(!testRunSummary.lastUpdated || new Date(testRunSummary.lastUpdated).getTime() < new Date(dashboard.lastUpdated).getTime()) {
 
             updateTestrunSummaryBasedOnMetrics(testRunSummary)
                 .then(updateRequirements)
@@ -166,6 +166,7 @@ function updateTestrunSummaryBasedOnMetrics(testRunSummary){
                 updatedTestRunSummary.metrics[updatedTestRunSummary.metrics.length-1].dygraphData = undefined;
                 /* set annotations*/
                 updatedTestRunSummary.metrics[updatedTestRunSummary.metrics.length-1].summaryText = includeMetric.defaultSummaryText;
+
               }
 
           })
@@ -183,7 +184,7 @@ function updateTestrunSummaryBasedOnMetrics(testRunSummary){
 function updateTestRunSummaryMetric(testRunSummaryMetric, includeMetric, testRunSummaryLastUpdated){
 
   /* if last update of testrun summary is newer than metric last update, do nothing */
-  if(includeMetric.lastUpdated && testRunSummaryLastUpdated > includeMetric.lastUpdated){
+  if(!includeMetric.lastUpdated || (includeMetric.lastUpdated && new Date(testRunSummaryLastUpdated).getTime() > new Date(includeMetric.lastUpdated).getTime())){
 
     return testRunSummaryMetric;
 
@@ -197,7 +198,12 @@ function updateTestRunSummaryMetric(testRunSummaryMetric, includeMetric, testRun
       testRunSummaryMetric.dygraphData = undefined;
       testRunSummaryMetric.targets = includeMetric.targets;
 
+
+
     }
+
+    testRunSummaryMetric.summaryText = includeMetric.defaultSummaryText;
+    testRunSummaryMetric.unit = includeMetric.unit;
 
     return testRunSummaryMetric;
 
