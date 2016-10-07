@@ -45,11 +45,10 @@ sleep 5
 
 echo "Removing .pid files"
 
-cd $DATADIR
 
-myarray=(`find ./ -maxdepth 1 -name "*.pid"`)
+myarray=`find /var/lib/targets-io/graphite/storage/ -maxdepth 1 -name "*.pid"`
 if [ ${#myarray[@]} -gt 0 ]; then 
-    rm -f *.pid
+    rm -f /var/lib/targets-io/graphite/storage/*.pid
 fi
 
 
