@@ -27,7 +27,7 @@ services:
     networks:
       - my-net
     ports:
-     - "8070:8080"
+     - "8080:8080"
      - "50000:50000"
     restart: always
   redis:
