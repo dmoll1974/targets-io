@@ -144,6 +144,15 @@ function TestrunsDirective () {
             $scope.testRuns[index] = message.testrun;
           }
 
+          /* if this is first test run for dashoard with benchmarking enabled, refresh dashboard to show the fixed baseline that has been set*/
+            if(Dashboards.selected.useInBenchmark === true && $scope.testRuns.length === 1){
+
+              Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function(dashboard){
+
+                $scope.dashboard = Dashboards.selected;
+
+              })
+            }
           break;
 
         case 'removed':
