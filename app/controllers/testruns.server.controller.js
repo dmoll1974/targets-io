@@ -701,123 +701,124 @@ function getDataForTestrun(testRun) {
 
   return new Promise((resolve, reject) => {
 
-    Product.findOne({ name: testRun.productName }).exec(function (err, product) {
-    if (err)
-      console.log(err);
-    Dashboard.findOne({
-      $and: [
-        { productId: product._id },
-        { name: testRun.dashboardName }
-      ]
-    }).populate('metrics').exec(function (err, dashboard) {
-      if (err)
-        console.log(err);
-      var metrics = [];
-      async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
+    if(testRun.productName) {
+      Product.findOne({name: testRun.productName}).exec(function (err, product) {
+        if (err)
+          console.log(err);
+        Dashboard.findOne({
+          $and: [
+            {productId: product._id},
+            {name: testRun.dashboardName}
+          ]
+        }).populate('metrics').exec(function (err, dashboard) {
+          if (err)
+            console.log(err);
+          var metrics = [];
+          async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
 
-        if(metric.requirementValue !== null || metric.benchmarkValue !== null) {
+            if (metric.requirementValue !== null || metric.benchmarkValue !== null) {
 
-          let targets = [];
-          let value;
-          let start;
-          /* if dashboard has startSteadyState configured and metric type = gradient use steady state period only */
+              let targets = [];
+              let value;
+              let start;
+              /* if dashboard has startSteadyState configured and metric type = gradient use steady state period only */
 
-          if (dashboard.startSteadyState && metric.type === 'Gradient') {
+              if (dashboard.startSteadyState && metric.type === 'Gradient') {
 
-            start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000).getTime();
+                start = new Date(testRun.start.getTime() + dashboard.startSteadyState * 1000).getTime();
 
-          } else {
+              } else {
 
-            /* if include ramp up is false, add ramp up period to start of test run */
-            start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000).getTime() : testRun.start.getTime();
+                /* if include ramp up is false, add ramp up period to start of test run */
+                start = (testRun.rampUpPeriod && dashboard.includeRampUp === false) ? new Date(testRun.start.getTime() + testRun.rampUpPeriod * 1000).getTime() : testRun.start.getTime();
 
-          }
-          async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
+              }
+              async.forEachLimit(metric.targets, 16, function (target, callbackTarget) {
 
-            graphite.getGraphiteData(start, testRun.end.getTime(), target, 900, function (body) {
-              _.each(body, function (bodyTarget) {
+                graphite.getGraphiteData(start, testRun.end.getTime(), target, 900, function (body) {
+                  _.each(body, function (bodyTarget) {
 
-                /* save value based on metric type */
+                    /* save value based on metric type */
 
-                switch (metric.type) {
+                    switch (metric.type) {
 
-                  case 'Average':
+                      case 'Average':
 
-                    value = bodyTarget.datapoints ? calculateAverage(bodyTarget.datapoints) : null;
-                    break;
+                        value = bodyTarget.datapoints ? calculateAverage(bodyTarget.datapoints) : null;
+                        break;
 
-                  case 'Maximum':
+                      case 'Maximum':
 
-                    value = bodyTarget.datapoints ? calculateMaximum(bodyTarget.datapoints): null;
-                    break;
+                        value = bodyTarget.datapoints ? calculateMaximum(bodyTarget.datapoints) : null;
+                        break;
 
-                  case 'Minimum':
+                      case 'Minimum':
 
-                    value = bodyTarget.datapoints ? calculateMinimum(bodyTarget.datapoints): null;
-                    break;
+                        value = bodyTarget.datapoints ? calculateMinimum(bodyTarget.datapoints) : null;
+                        break;
 
-                  case 'Last':
+                      case 'Last':
 
-                    value = bodyTarget.datapoints ? getLastDatapoint(bodyTarget.datapoints): null;
-                    break;
+                        value = bodyTarget.datapoints ? getLastDatapoint(bodyTarget.datapoints) : null;
+                        break;
 
-                  case 'Gradient':
+                      case 'Gradient':
 
-                    value = bodyTarget.datapoints ? calculateLinearFit(bodyTarget.datapoints): null;
-                    break;
-                }
+                        value = bodyTarget.datapoints ? calculateLinearFit(bodyTarget.datapoints) : null;
+                        break;
+                    }
 
 
-                /* if target has values other than null values only, store it */
-                if (value !== null) {
-                  targets.push({
-                    target: bodyTarget.target,
-                    value: value
+                    /* if target has values other than null values only, store it */
+                    if (value !== null) {
+                      targets.push({
+                        target: bodyTarget.target,
+                        value: value
+                      });
+                    }
                   });
+                  callbackTarget();
+                });
+              }, function (err) {
+                if (err)
+                  return next(err);
+                if (targets.length > 0) {
+                  metrics.push({
+                    _id: metric._id,
+                    tags: metric.tags,
+                    alias: metric.alias,
+                    type: metric.type,
+                    benchmarkValue: metric.benchmarkValue,
+                    benchmarkOperator: metric.benchmarkOperator,
+                    requirementValue: metric.requirementValue,
+                    requirementOperator: metric.requirementOperator,
+                    targets: targets
+                  });
+
+                  targets = [];
                 }
-              });
-              callbackTarget();
-            });
-          }, function (err) {
-            if (err)
-              return next(err);
-            if (targets.length > 0) {
-              metrics.push({
-                _id: metric._id,
-                tags: metric.tags,
-                alias: metric.alias,
-                type: metric.type,
-                benchmarkValue: metric.benchmarkValue,
-                benchmarkOperator: metric.benchmarkOperator,
-                requirementValue: metric.requirementValue,
-                requirementOperator: metric.requirementOperator,
-                targets: targets
-              });
 
-              targets = [];
+                callbackMetric();
+
+
+              });
+            } else {
+
+              callbackMetric();
+
             }
-
-            callbackMetric();
-
-
-          });
-        }else{
-
-          callbackMetric();
-
-        }
-      }, function (err) {
-        if (err) {
-          reject(err);
-        }else {
-          /* save metrics to test run */
+          }, function (err) {
+            if (err) {
+              reject(err);
+            } else {
+              /* save metrics to test run */
 
               console.log('Retrieved data for:' + testRun.productName + '-' + testRun.dashboardName + 'testrunId: ' + testRun.testRunId);
 
               testRun.metrics = metrics;
 
 
-              testRun.save(function(err, savedTestrun){
+              testRun.save(function (err, savedTestrun) {
 
                 if (err) {
                   reject(err);
@@ -829,10 +830,14 @@ function getDataForTestrun(testRun) {
                 }
 
               });
-       }
+            }
+          });
+        });
       });
-    });
-  });
+    }else{
+
+      reject("Test run has no productName. Test run ID: " + testRun.testRunId);
+    }
  });
 }
 function calculateAverage(datapoints) {

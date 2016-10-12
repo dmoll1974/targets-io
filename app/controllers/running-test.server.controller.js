@@ -263,8 +263,6 @@ let saveTestRun = function (runningTest){
           console.log('emitting message to room: running-test');
           io.sockets.in('running-test').emit('runningTest', {event: 'removed', testrun: runningTest});
 
-          /* no matter if remove fails, still resolve*/
-          //resolve(savedTestRun);
           reject(err);
 
         });
