@@ -50,6 +50,13 @@ function getRunningTests(req, res){
   });
 }
 
+
+let runningTestHandler = function(err){
+
+  console.log('Error in running test  chain: ' + err.stack);
+}
+
+
 function runningTest(req, res){
 
   let runningTestKeepAlive = req.body;
@@ -76,7 +83,9 @@ function runningTest(req, res){
           .then(testRunsModule.benchmarkAndPersistTestRunById)
           .then(function(testRun){
             res.jsonp(testRun);
-          });
+          })
+          .catch(runningTestHandler);
+
       }else{
 
         return res.status(400).send({ message: 'No running test found for this test run ID!' });
@@ -255,7 +264,8 @@ let saveTestRun = function (runningTest){
           io.sockets.in('running-test').emit('runningTest', {event: 'removed', testrun: runningTest});
 
           /* no matter if remove fails, still resolve*/
-          resolve(savedTestRun);
+          //resolve(savedTestRun);
+          reject(err);
 
         });
 
