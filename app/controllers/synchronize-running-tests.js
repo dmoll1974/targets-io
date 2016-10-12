@@ -278,17 +278,25 @@ function synchronizeRunningTestRuns () {
           /* mark test as not completed */
           runningTest.completed = false;
 
-          saveTestRun(runningTest).then(function(savedTestRun){
+          saveTestRun(runningTest)
+          .then(function(savedTestRun){
 
             console.log('removed running test: ' + savedTestRun.testRunId);
 
-          });
+          })
+          .catch(runningTestErrorHandler);
+
 
         }
 
       });
     }
   });
+}
+
+let runningTestErrorHandler = function(err){
+
+  console.log('Error in saving test run: ' + err.stack);
 }
 
 
@@ -337,8 +345,8 @@ let saveTestRun = function (runningTest){
               testrun: runningTest
             });
 
-            resolve(savedTestRun);
-
+            //resolve(savedTestRun);
+            reject(err);
 
           });
 
