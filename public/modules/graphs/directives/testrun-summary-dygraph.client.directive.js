@@ -44,17 +44,17 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
           scope.graph.ready(function() {
 
             /* if selected series is provided (via deeplink), show this series only */
-            //if (Utils.selectedSeries && Utils.selectedSeries !== '' /*&& Utils.metricFilter === scope.metric.alias*/) {
-            //
-            //  /* show / hide selected series in legend */
-            //
-            //  _.each(scope.metric.legendData, function (legendItem, i) {
-            //
-            //    scope.graph.setVisibility(legendItem.id, legendItem.visible);
-            //
-            //  })
-            //
-            //}
+            if (Utils.selectedSeries && Utils.selectedSeries !== '' /*&& Utils.metricFilter === scope.metric.alias*/) {
+
+              /* show / hide selected series in legend */
+
+              _.each(scope.metric.legendData, function (legendItem, i) {
+
+                scope.graph.setVisibility(legendItem.id, legendItem.visible);
+
+              })
+
+            }
 
             /* if selected series have been set via the legend, set them again after reload or zoom */
             if(scope.selectedSeries){
@@ -288,26 +288,26 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       $scope.showProgressBar = false;
 
       /* if selected series is provided, show this series only */
-      //if (Utils.selectedSeries && Utils.selectedSeries !== '' ) {
-      //
-      //  $scope.selectAll = false;
-      //
-      //  _.each($scope.metric.legendData, function(legendItem, i){
-      //
-      //    if(legendItem.name === Utils.selectedSeries ) {
-      //
-      //      $scope.metric.legendData[i].visible = true;
-      //
-      //    }else{
-      //
-      //      $scope.metric.legendData[i].visible = false;
-      //
-      //    }
-      //
-      //  })
-      //
-      //
-      //}
+      if (Utils.selectedSeries && Utils.selectedSeries !== '' ) {
+
+        $scope.selectAll = false;
+
+        _.each($scope.metric.legendData, function(legendItem, i){
+
+          if(legendItem.name === Utils.selectedSeries ) {
+
+            $scope.metric.legendData[i].visible = true;
+
+          }else{
+
+            $scope.metric.legendData[i].visible = false;
+
+          }
+
+        })
+
+
+      }
 
     }
 

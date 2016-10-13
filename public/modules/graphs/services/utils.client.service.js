@@ -36,6 +36,7 @@ angular.module('graphs').factory('Utils', [
     function reset(){
 
         Utils.selectedIndex = '';
+        Utils.selectedSeries = '';
         Utils.metricFilter = '';
         Utils.zoomLock = true;
         //Utils.graphType = '';

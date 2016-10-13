@@ -135,6 +135,7 @@ function GraphsContainerDirective () {
       /* reset metricFilter when leaving graphs view */
       Utils.metricFilter = '';
       Utils.showTooltip = false;
+      Utils.selectedSeries = '';
 
     });
 

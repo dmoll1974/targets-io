@@ -34,6 +34,13 @@ function VisualBenchmarkDirective () {
 
     }
 
+
+    $scope.$on('$destroy', function () {
+      // Make sure to unselect series
+      Utils.selectedSeries = '';
+
+    });
+
     /* Get selected series params from query string */
 
     Utils.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
