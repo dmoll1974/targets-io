@@ -76,39 +76,6 @@ if(cluster.isMaster) {
 		cluster.fork();
 	});
 
-	/* spawn child process that synchronizes running tests */
-
-	var child_process = require('child_process');
-	var debug = typeof v8debug === 'object';
-	if (debug) {
-		//Set an unused port number.
-		process.execArgv.push('--debug=' + (40894));
-	}
-
-
-	var env = 	{
-		io: io,
-		isDemo: config.isDemo,
-		db: config.db,
-
-	};
-
-	if(config.dbUsername && config.dbPassword) {
-		env['dbUsername'] = config.dbUsername;
-		env['dbPassword'] = config.dbPassword;
-	}
-
-	var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
-
-	synchronizeRunningTestsDaemonFork.on('exit', function (code, signal) {
-		console.log("synchronizeRunningTestsDaemonFork process terminated with code: " + code);
-		synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js');
-	});
-	synchronizeRunningTestsDaemonFork.on('message', function (message) {
-
-		io.sockets.in(message.room).emit(message.type, {event: message.event, testrun: message.testrun});
-
-	});
 
 
 } else {
@@ -157,44 +124,44 @@ if(cluster.isMaster) {
 	});
 
 	/* the first worker should spawn the running tests saemon child process */
-    //
-	//if(cluster.worker.id === 1){
-    //
-	//	/* spawn child process that synchronizes running tests */
-    //
-	//	var child_process = require('child_process');
-	//	var debug = typeof v8debug === 'object';
-	//	if (debug) {
-	//		//Set an unused port number.
-	//		process.execArgv.push('--debug=' + (40894));
-	//	}
-    //
-    //
-	//	var env = 	{
-	//		io: io,
-	//		isDemo: config.isDemo,
-	//		db: config.db,
-    //
-	//	};
-    //
-	//	if(config.dbUsername && config.dbPassword) {
-	//		env['dbUsername'] = config.dbUsername;
-	//		env['dbPassword'] = config.dbPassword;
-	//	}
-    //
-	//	var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
-    //
-	//	synchronizeRunningTestsDaemonFork.on('exit', function (code, signal) {
-	//		console.log("synchronizeRunningTestsDaemonFork process terminated with code: " + code);
-	//		synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js');
-	//	});
-	//	synchronizeRunningTestsDaemonFork.on('message', function (message) {
-    //
-	//		io.sockets.in(message.room).emit(message.type, {event: message.event, testrun: message.testrun});
-    //
-	//	});
-    //
-	//}
+
+	if(cluster.worker.id === 1){
+
+		/* spawn child process that synchronizes running tests */
+
+		var child_process = require('child_process');
+		var debug = typeof v8debug === 'object';
+		if (debug) {
+			//Set an unused port number.
+			process.execArgv.push('--debug=' + (40894));
+		}
+
+
+		var env = 	{
+			io: io,
+			isDemo: config.isDemo,
+			db: config.db,
+
+		};
+
+		if(config.dbUsername && config.dbPassword) {
+			env['dbUsername'] = config.dbUsername;
+			env['dbPassword'] = config.dbPassword;
+		}
+
+		var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
+
+		synchronizeRunningTestsDaemonFork.on('exit', function (code, signal) {
+			console.log("synchronizeRunningTestsDaemonFork process terminated with code: " + code);
+			synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js');
+		});
+		synchronizeRunningTestsDaemonFork.on('message', function (message) {
+
+			io.sockets.in(message.room).emit(message.type, {event: message.event, testrun: message.testrun});
+
+		});
+
+	}
 
 	// Expose app
 	exports = module.exports = app;
