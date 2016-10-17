@@ -26,7 +26,8 @@
 
         <table class="table">
             <colgroup ng-if="!showBenchmarks">
-                <col span="1" style="width: 40%;">
+                <col span="1" style="width: 32%;">
+                <col span="1" style="width: 8%;">
                 <col span="1" style="width: 18%;">
                 <col span="1" style="width: 18%;">
                 <col span="1" style="width: 18%;">
@@ -39,9 +40,10 @@
             </colgroup>
             <colgroup ng-if="showBenchmarks">
                 <col span="1" style="width: 25%;">
+                <col span="1" style="width: 8%;">
                 <col span="1" style="width: 18%;">
                 <col span="1" style="width: 18%;">
-                <col span="1" style="width: 18%;">
+                <col span="1" style="width: 10%;">
                 <col span="1" style="width: 8%;">
                 <col span="1" style="width: 8%;">
                 <col span="1" style="width: 8%;">
@@ -52,6 +54,7 @@
             <thead>
             <tr>
                 <th>Test run ID</th>
+                <th>Release</th>
                 <th>Start</th>
                 <th>End</th>
                 <th>Duration</th>
@@ -108,9 +111,14 @@
                         <div   ng-if="testRun.annotations" class="fa fa-info-circle info-hover" data-ng-click="showAnnotations($event, testRun)" style="margin-left: 10px;"></div>
                     </div>
                 </td>
-                <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">
+                    {{testRun.productRelease}}
                 </td>
-                <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">
+                    {{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                </td>
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">
+                    {{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                     <md-progress-linear data-ng-if="runningTest && $index < numberOfRunningTests" flex md-mode="indeterminate"></md-progress-linear>
 
                 </td>
