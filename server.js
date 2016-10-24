@@ -37,6 +37,9 @@ if (config.graylog.host !== undefined) {
 		/*,
 		staticMeta: {environment: config.environment, source: os.hostname()}*/
 	});
+}else{
+
+	console.log ("No graylog host:port provided " );
 }
 
 /**
