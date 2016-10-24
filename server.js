@@ -23,7 +23,7 @@ if (config.isDevelopment) {
 	});
 }
 
-if (config.graylog) {
+if (config.graylog.host !== undefined) {
 
 	console.log ("graylog host: " + config.graylog.host + ':' + config.graylog.port );
 
