@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
+    winston = require('winston'),
     Event = mongoose.model('Event'),
     Testrun = mongoose.model('Testrun'),
     Dashboard = mongoose.model('Dashboard'),
@@ -50,9 +51,9 @@ function saveTestRunAfterBenchmark(testRun, callback) {
   /* Save updated test run */
   Testrun.findById(testRun._id, function (err, savedTestRun) {
     if(err !== null)
-      console.log(err);
+      winston.error(err);
     if (!savedTestRun)
-      console.log('Could not load Document');
+      winston.error('Could not load Document');
     else {
       savedTestRun.metrics = testRun.metrics;
       savedTestRun.baseline = testRun.baseline;
@@ -60,7 +61,7 @@ function saveTestRunAfterBenchmark(testRun, callback) {
       savedTestRun.benchmarkResultPreviousOK = testRun.benchmarkResultPreviousOK;
       savedTestRun.save(function (err) {
         if(err !== null) {
-          console.log(err);
+          winston.error(err);
         } else {
           callback(savedTestRun);
         }
@@ -81,7 +82,7 @@ function updateFixedBaselineBenchmark(req, res) {
         ]}, {benchmarkResultFixedOK: updatedBenchmark.benchmarkResultFixedOK}
         , {upsert:true}, function(err, savedTestRun){
           if(err !== null) {
-            console.log(err);
+            winston.error(err);
           } else {
             res.jsonp(savedTestRun);
           }
@@ -101,7 +102,7 @@ function setBenchmarkResultsFixedBaselineForTestRun(testRun) {
           if (fixedBaseline) {
             benchmarkTestRuns(testRunIncludingFixedBaseline, fixedBaseline, 'benchmarkResultFixedOK', function (updatedTestrun) {
 
-              console.log('Set benchmark fixed baseline for:' + updatedTestrun.productName + '-' + updatedTestrun.dashboardName + 'testrunId: ' + updatedTestrun.testRunId);
+              winston.info('Set benchmark fixed baseline for:' + updatedTestrun.productName + '-' + updatedTestrun.dashboardName + 'testrunId: ' + updatedTestrun.testRunId);
               resolve(updatedTestrun);
             });
           } else {
@@ -125,7 +126,7 @@ function setBenchmarkResultsPreviousBuildForTestRun(testRun) {
         Testruns.getTestRunById(testRunIncludingPreviousBuild.productName, testRunIncludingPreviousBuild.dashboardName, testRunIncludingPreviousBuild.previousBuild, function (previousBuildBaseline) {
           if (previousBuildBaseline) {
             benchmarkTestRuns(testRunIncludingPreviousBuild, previousBuildBaseline, 'benchmarkResultPreviousOK', function (updatedTestrun) {
-              console.log('Set benchmark previous build for:' + updatedTestrun.productName + '-' + updatedTestrun.dashboardName + 'testrunId: ' + updatedTestrun.testRunId);
+              winston.info('Set benchmark previous build for:' + updatedTestrun.productName + '-' + updatedTestrun.dashboardName + 'testrunId: ' + updatedTestrun.testRunId);
               resolve(updatedTestrun);
             });
           } else {

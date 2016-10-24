@@ -25,6 +25,8 @@ if (config.isDevelopment) {
 
 if (config.graylog) {
 
+	console.log ("graylog host: " + config.graylog.host + ':' + config.graylog.port );
+
 	winston.add(require('winston-graylog2'), {
 		name: 'Graylog',
 		graylog: {
@@ -41,9 +43,9 @@ if (config.graylog) {
  * Main application entry file.
  * Please note that the order of loading is important.
  */
-console.log ("mongoDb connect to: " + config.db);
-console.log ("graphite host: " + config.graphiteHost);
-console.log ("redis host: " + config.redisHost + ':' + config.redisPort );
+winston.info ("mongoDb connect to: " + config.db);
+winston.info ("graphite host: " + config.graphiteHost);
+winston.info ("redis host: " + config.redisHost + ':' + config.redisPort );
 
 
 
@@ -60,19 +62,19 @@ var db = mongoSetup.connect();
 if(cluster.isMaster) {
 	var numWorkers = (require('os').cpus().length - 1 === 0 || config.debugMode) ? 1 : require('os').cpus().length - 1; /* save one core for daemon, unless there is only one core */
 
-	console.log('Master cluster setting up ' + numWorkers + ' workers...');
+	winston.info('Master cluster setting up ' + numWorkers + ' workers...');
 
 	for(var i = 0; i < numWorkers; i++) {
 		cluster.fork();
 	}
 
 	cluster.on('online', function(worker) {
-		console.log('worker:' + worker.id + ', process ' + worker.process.pid + ' is online');
+		winston.info('worker:' + worker.id + ', process ' + worker.process.pid + ' is online');
 	});
 
 	cluster.on('exit', function(worker, code, signal) {
-		console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
-		console.log('Starting a new worker');
+		winston.error('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
+		winston.info('Starting a new worker');
 		cluster.fork();
 	});
 
@@ -86,7 +88,7 @@ if(cluster.isMaster) {
 	app.all('/*', function(req, res) {res.send('worker:' + cluster.worker.id + ', process ' + process.pid + ' says hello!').end();})
 
 	var server = app.listen(config.port, function() {
-		console.log('worker:' + cluster.worker.id + ', process ' + process.pid + ' is listening to all incoming requests');
+		winston.info('worker:' + cluster.worker.id + ', process ' + process.pid + ' is listening to all incoming requests');
 	});
 
 	var io = require('socket.io').listen(server, {'transports': ['websocket']});
@@ -100,26 +102,26 @@ if(cluster.isMaster) {
 
 	io.on('connection', function(socket) {
 
-		console.log('Client connected');
+		winston.info('Client connected');
 
 		// once a client has connected, we expect to get a ping from them saying what room they want to join
 		socket.on('room', function(room) {
 
 			socket.join(room);
-			console.log('Client joined room: ' + room);
+			winston.info('Client joined room: ' + room);
 
 		});
 
 		socket.on('exit-room', function(room) {
 
 			socket.leave(room);
-			console.log('Client left room: ' + room);
+			winston.info('Client left room: ' + room);
 
 
 		});
 
 		socket.on('disconnect', function() {
-			console.log('Client disconnected!');
+			winston.info('Client disconnected!');
 		});
 	});
 
@@ -140,8 +142,9 @@ if(cluster.isMaster) {
 		var env = 	{
 			io: io,
 			isDemo: config.isDemo,
-			db: config.db,
-
+			isProduction: config.isProduction,
+			isDevelopment: config.isDevelopment,
+			db: config.db
 		};
 
 		if(config.dbUsername && config.dbPassword) {
@@ -149,10 +152,16 @@ if(cluster.isMaster) {
 			env['dbPassword'] = config.dbPassword;
 		}
 
+		if(config.graylog.host && config.graylog.port) {
+			env['graylogHost'] = config.graylog.host;
+			env['graylogPort'] = config.graylog.port;
+			env['loglevel'] = config.logLevel;
+		}
+
 		var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
 
 		synchronizeRunningTestsDaemonFork.on('exit', function (code, signal) {
-			console.log("synchronizeRunningTestsDaemonFork process terminated with code: " + code);
+			winston.error("synchronizeRunningTestsDaemonFork process terminated with code: " + code);
 			synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js');
 		});
 		synchronizeRunningTestsDaemonFork.on('message', function (message) {
@@ -187,4 +196,4 @@ if(cluster.isMaster) {
 //exports = module.exports = app;
 
 // Logging initialization
-//console.log('MEAN.JS application started on port ' + config.port);
+//winston.info('MEAN.JS application started on port ' + config.port);

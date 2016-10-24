@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    winston = require('winston'),
     errorHandler = require('./errors.server.controller'),
     Event = mongoose.model('Event'),
     Testrun = mongoose.model('Testrun'),
@@ -138,7 +139,7 @@ function updateTestrunsResults(req, res) {
     ]
   }).sort({end: 1}).exec(function (err, testRuns) {
     if (err) {
-      console.log(err);
+      winston.error(err);
     } else {
       var count = 0;
       async.eachSeries(testRuns, function (testRun, callback) {
@@ -150,7 +151,7 @@ function updateTestrunsResults(req, res) {
           var io = global.io;
           var room = testRun.productName + '-' + testRun.dashboardName;
 
-          console.log('emitting message to room: ' + room);
+          winston.info('emitting message to room: ' + room);
           io.sockets.in(room).emit('progress', {progress: Math.round(count / testRuns.length * 100)  });
 
           callback();
@@ -158,7 +159,7 @@ function updateTestrunsResults(req, res) {
 
       }, function (err) {
         if (err)
-          console.log(err);
+          winston.error(err);
         /* return updated test runs */
 
         Testrun.find({
@@ -168,7 +169,7 @@ function updateTestrunsResults(req, res) {
           ]
         }).exec(function (err, testRuns) {
           if (err) {
-            console.log(err);
+            winston.error(err);
           } else {
             res.json(testRuns);
           }
@@ -240,7 +241,7 @@ function deleteTestRunById(req, res) {
             var io = global.io;
             var room = testRun.productName + '-' + testRun.dashboardName;
 
-            console.log('emitting message to room: ' + room);
+            winston.info('emitting message to room: ' + room);
             io.sockets.in(room).emit('testrun', {event: 'removed', testrun: testRun});
             io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: testRun});
             res.jsonp({message: 'test run deleted'});
@@ -580,7 +581,7 @@ function refreshTestrun(req, res) {
 
       graphite.flushGraphiteCacheForTestRun(testRun, true, function(result){
 
-        console.log(result);
+        winston.info(result);
       })
 
       let newTestRun = new Testrun();
@@ -661,9 +662,9 @@ let upsertTestRun = function(testRun){
         var io = global.io;
         var room = savedTestRun.productName + '-' + savedTestRun.dashboardName;
 
-        console.log('emitting message to room: ' + room);
+        winston.info('emitting message to room: ' + room);
         io.sockets.in(room).emit('testrun', {event: 'saved', testrun: savedTestRun});
-        console.log('emitting message to room: recent-test');
+        winston.info('emitting message to room: recent-test');
         io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: savedTestRun});
 
         resolve(savedTestRun);
@@ -691,7 +692,7 @@ function benchmarkAndPersistTestRunById(testRun) {
 
 let testRunErrorHandler = function(err){
 
-  console.log('Error in test run chain: ' + err.stack);
+  winston.error('Error in test run chain: ' + err.stack);
 }
 
 
@@ -704,7 +705,7 @@ function getDataForTestrun(testRun) {
     if(testRun.productName) {
       Product.findOne({name: testRun.productName}).exec(function (err, product) {
         if (err)
-          console.log(err);
+          winston.error(err);
         Dashboard.findOne({
           $and: [
             {productId: product._id},
@@ -712,7 +713,7 @@ function getDataForTestrun(testRun) {
           ]
         }).populate('metrics').exec(function (err, dashboard) {
           if (err)
-            console.log(err);
+            winston.error(err);
           var metrics = [];
           async.forEachLimit(dashboard.metrics, 16, function (metric, callbackMetric) {
 
@@ -813,7 +814,7 @@ function getDataForTestrun(testRun) {
             } else {
               /* save metrics to test run */
 
-              console.log('Retrieved data for:' + testRun.productName + '-' + testRun.dashboardName + 'testrunId: ' + testRun.testRunId);
+              winston.info('Retrieved data for:' + testRun.productName + '-' + testRun.dashboardName + 'testrunId: ' + testRun.testRunId);
 
               testRun.metrics = metrics;
 
@@ -914,10 +915,10 @@ function calculateLinearFit(datapoints){
   var gradient = ss.linear_regression()
       .data(data)
       .m()
-  //console.log('stijgings percentage: ' + (line(data.length-1)-line(0))/ line(0)) / data.length * 100;
-  //console.log('gradient: ' + gradient * 100);
-  //console.log('line(0): ' + line(0));
-  //console.log('line(data.length-1): ' + line(data.length-1));
+  //winston.info('stijgings percentage: ' + (line(data.length-1)-line(0))/ line(0)) / data.length * 100;
+  //winston.info('gradient: ' + gradient * 100);
+  //winston.info('line(0): ' + line(0));
+  //winston.info('line(data.length-1): ' + line(data.length-1));
 
   /* if no valid number is calculated, return null*/
 
@@ -946,7 +947,7 @@ function TempSaveTestruns(testruns,  callback) {
 
     persistTestrun.save(function (err) {
       if (err) {
-        console.log(err);
+        winston.error(err);
         callback(err);
       } else {
         //callback(persistTestrun);
@@ -975,7 +976,7 @@ function saveTestrun(testrun, metrics, callback) {
     persistTestrun.metrics = metrics;
     persistTestrun.save(function (err) {
       if (err) {
-        console.log(err);
+        winston.error(err);
         callback(err);
       } else {
         callback(persistTestrun);

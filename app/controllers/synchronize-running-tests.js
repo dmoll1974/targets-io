@@ -7,7 +7,7 @@ var Schema = mongoose.Schema;
 var _ = require('lodash');
 var chalk = require('chalk');
 var config = require('../../config/config');
-
+var winston = require('winston');
 
 
 
@@ -164,8 +164,36 @@ TestrunSchema.index({
 mongoose.model('Testrun', TestrunSchema);
 
 
-//console.log('isDemo: ' + process.env.isDemo);
-//console.log('mongoUrl: ' + process.env.db);
+//Better logging
+winston.remove(winston.transports.Console);
+if (process.env.isDevelopment) {
+  console.log('isDevelopment: ' + process.env.isDevelopment );
+  // only log to console in development environment
+  winston.add(winston.transports.Console, {
+    timestamp: true,
+    colorize: !process.env.isProduction,
+    level: process.env.logLevel
+  });
+}
+
+if (process.env.graylogHost) {
+
+
+  console.log ("graylog host: " + process.env.graylogHost + ':' + process.env.graylogPort );
+
+  winston.add(require('winston-graylog2'), {
+    name: 'Graylog',
+    graylog: {
+      servers: [{host: process.env.graylogHost, port: process.env.graylogPort}],
+      facility: 'targets-io-sync-running-tests'
+    },
+    level: process.env.logLevel
+    /*,
+     staticMeta: {environment: config.environment, source: os.hostname()}*/
+  });
+}
+
+
 
 var db = connect();
 
@@ -187,51 +215,38 @@ function connect() {
         }
       }
     };
-  }else{
+  }else {
 
-  if(config.dbUsername && config.dbPassword ){
-
-    var mongoUrl = 'mongodb://' + config.dbUsername + ':' + config.dbPassword + '@' + config.db;
-
-  }else{
-
-    var mongoUrl = 'mongodb://' + config.db;
-  }
-    var options = {};
-
-  }
-
-  if(process.env.dbUsername  && process.env.dbPassword  ){
+      if (process.env.dbUsername && process.env.dbPassword) {
 
 
-    console.log("User synchronize-running-tests: " + process.env.dbUsername);
-    console.log("User synchronize-running-tests: " + process.env.dbPassword);
-    console.log("Connect (with credentials) synchronize-running-tests to: " + process.env.db);
-    var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
+        winston.info("Connect (with credentials) synchronize-running-tests to: " + process.env.db);
+        var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
 
-  }else{
+      } else {
 
-    console.log("Connect synchronize-running-tests to: " + process.env.db);
-    var mongoUrl = 'mongodb://' + process.env.db;
+        winston.info("Connect synchronize-running-tests to: " + process.env.db);
+        var mongoUrl = 'mongodb://' + process.env.db;
+      }
   }
 
 
   mongoose.connection.once('open', function() {
-    console.log('Connected to MongoDB server with mongoose.');
+    winston.info('Connected to MongoDB server with mongoose.');
   });
 
-  mongoose.connection.on('error', function (err) { console.log("Synchronize-running-tests connect error: " + err) });
+  mongoose.connection.on('error', function (err) { winston.error("Synchronize-running-tests connect error: " + err) });
 
   mongoose.connection.on('disconnected', () => {
     // http://mongoosejs.com/docs/connections.html
-    console.log('Disconnected MongoDB with mongoose, will autoreconnect a number of times');
+    winston.error('Disconnected MongoDB with mongoose, will autoreconnect a number of times');
   });
 
   // If the Node process ends, gracefully close the Mongoose connection
   ['SIGINT', 'SIGTERM'].forEach(signal => {
     process.on(signal, function cleanup() {
       mongoose.connection.close(() => {
-        console.log('Mongoose default connection disconnected through app termination');
+        winston.error('Mongoose default connection disconnected through app termination');
         process.exit(0);
       });
     });
@@ -248,7 +263,8 @@ var RunningTest = mongoose.model('RunningTest');
 var Testrun = mongoose.model('Testrun');
 
 
-  /* start polling every minute */
+
+/* start polling every minute */
   setInterval(synchronizeRunningTestRuns, 60 * 1000);
 
 
@@ -265,10 +281,10 @@ function synchronizeRunningTestRuns () {
   RunningTest.find().exec(function (err, runningTests) {
     if(err){
 
-      console.log(err)
+      winston.error(err)
     }else {
 
-      console.log('checking running tests');
+      winston.info('checking running tests');
 
       _.each(runningTests, function (runningTest) {
 
@@ -281,7 +297,7 @@ function synchronizeRunningTestRuns () {
           saveTestRun(runningTest)
           .then(function(savedTestRun){
 
-            console.log('removed running test: ' + savedTestRun.testRunId);
+            winston.info('removed running test: ' + savedTestRun.testRunId);
 
           })
           .catch(runningTestErrorHandler);
@@ -296,7 +312,7 @@ function synchronizeRunningTestRuns () {
 
 let runningTestErrorHandler = function(err){
 
-  console.log('Error in saving test run: ' + err.stack);
+  winston.error('Error in saving test run: ' + err.stack);
 }
 
 
@@ -326,28 +342,33 @@ let saveTestRun = function (runningTest){
       testRun.save(function (err, savedTestRun) {
         if (err) {
 
-          console.log(err);
+          winston.error(err);
           /* In case of error still remove running test! */
           runningTest.remove(function (err) {
 
+            if (err) {
 
-            process.send({
-              room: room,
-              type: 'runningTest',
-              event: 'removed',
-              testrun: runningTest
-            });
+              winston.error(err);
+            }else {
 
-            process.send({
-              room: 'running-test',
-              type: 'runningTest',
-              event: 'removed',
-              testrun: runningTest
-            });
+              process.send({
+                room: room,
+                type: 'runningTest',
+                event: 'removed',
+                testrun: runningTest
+              });
 
-            //resolve(savedTestRun);
-            reject(err);
+              process.send({
+                room: 'running-test',
+                type: 'runningTest',
+                event: 'removed',
+                testrun: runningTest
+              });
 
+              //resolve(savedTestRun);
+              reject(err);
+
+            }
           });
 
         } else {

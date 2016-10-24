@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 var redis = require('redis'),
+    winston = require('winston'),
     config = require('../../config/config'),
     _ = require('lodash'),
     md5 = require('MD5');
@@ -18,7 +19,7 @@ var client = redis.createClient(config.redisPort, config.redisHost, {no_ready_ch
 
 
 client.on('connect', function() {
-  console.log('Redis host: ' + config.redisHost + ':' + config.redisPort );
+  winston.info('Redis host: ' + config.redisHost + ':' + config.redisPort );
 });
 
 function setCache(key, array, expiry, callback){
@@ -35,7 +36,7 @@ function getCache(key, callback){
   client.get(key, function(err, object){
 
     if(err){
-      console.log(err);
+      winston.error(err);
     }else{
 
       callback(object);
@@ -49,7 +50,7 @@ function flushCache(key, callback){
   //client.del(key, function(err, reply){
   //
   //  if(err){
-  //    console.log(err);
+  //    winston.error(err);
   //  }else{
 
       callback('flushed key: ' + key );

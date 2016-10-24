@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose'),
     _ = require('lodash'),
+    winston = require('winston'),
     fs = require('fs'),
     Event = mongoose.model('Event'),
     Dashboard = mongoose.model('Dashboard'),
@@ -38,8 +39,8 @@ function uploadTemplate (req, res){
 
       Template.remove({name: importItems.templates[0].name  }, function (err) {
         if (err)
-          console.log(err);
-        console.log('Template removed');
+          winston.error(err);
+        winston.info('Template removed');
         if (importItems.templates) {
           _.each(importItems.templates, function (importTemplate) {
 
@@ -102,7 +103,7 @@ function uploadTemplate (req, res){
 }
 
 function uploadProduct(req, res) {
-  console.log(req.files.file.path);
+  winston.info(req.files.file.path);
 
   var file = req.files.file.path;
   jsonfile.readFile(file, function (err, importItems) {
@@ -174,7 +175,7 @@ function uploadProduct(req, res) {
 
             } else {
 
-              console.log('removed items from db ...');
+              winston.info('removed items from db ...');
 
               /* import test run summaries */
 
@@ -251,7 +252,7 @@ function uploadProduct(req, res) {
 
                   testrun.save(function (err) {
                     if (err)
-                      console.log(err);
+                      winston.error(err);
                   });
                 });
               }
@@ -284,7 +285,7 @@ function uploadProduct(req, res) {
 
                   event.save(function (err) {
                     if (err)
-                      console.log(err);
+                      winston.error(err);
                   });
                 });
               }
@@ -372,7 +373,7 @@ function uploadProduct(req, res) {
                     //
                     newDashboard.save(function (err, newDashboard) {
                       if (err)
-                        console.log(err);
+                        winston.error(err);
                       if (newDashboard) {
                         var importDashboardMetrics = [];
                         _.each(importItems.metrics, function (metric) {
@@ -432,7 +433,7 @@ function uploadProduct(req, res) {
 
 
                           newMetric.save(function (err, newMetric) {
-                            //console.log('Saved metric #'+ m);
+                            //winston.info('Saved metric #'+ m);
                             metricCallback();
                           });
                         }, function (err) {
@@ -445,7 +446,7 @@ function uploadProduct(req, res) {
                   });
                 });
               }, function (err) {
-                console.log('import done!');
+                winston.info('import done!');
                 res.sendStatus(200);
               });
 
@@ -461,21 +462,21 @@ function uploadProduct(req, res) {
 
 
 function upload(req, res) {
-  console.log(req.files.file.path);
+  winston.info(req.files.file.path);
 
   var file = req.files.file.path;
   jsonfile.readFile(file, function(err, importItems) {
 
     if(err){
-      console.log(err);
+      winston.error(err);
     }else {
 
       /* Remove existing Templates and import from file*/
 
       Template.remove({}, function (err) {
         if (err)
-          console.log(err);
-        console.log('Template removed');
+          winston.error(err);
+        winston.error('Template removed');
         if (importItems.templates) {
           _.each(importItems.templates, function (importTemplate) {
 
@@ -528,8 +529,8 @@ function upload(req, res) {
 
       TestrunSummary.remove({}, function (err) {
         if (err)
-          console.log(err);
-        console.log('TestrunSummaries removed');
+          winston.error(err);
+        winston.info('TestrunSummaries removed');
         if (importItems.testrunSummaries) {
           _.each(importItems.testrunSummaries, function (importTestrunSummary) {
 
@@ -580,8 +581,8 @@ function upload(req, res) {
 
       Release.remove({}, function (err) {
         if (err)
-          console.log(err);
-        console.log('Releases removed');
+          winston.error(err);
+        winston.info('Releases removed');
 
         /* Drop indeces */
         //Release.collection.dropAllIndexes(function (err, results) {
@@ -603,8 +604,8 @@ function upload(req, res) {
 
       RunningTest.remove({}, function (err) {
         if (err)
-          console.log(err);
-        console.log('RunningTests removed');
+          winston.error(err);
+        winston.info('RunningTests removed');
 
 
         if (importItems.runningTests) {
@@ -624,8 +625,8 @@ function upload(req, res) {
 
       GatlingDetails.remove({}, function (err) {
         if (err)
-          console.log(err);
-        console.log('GatlingDetails removed');
+          winston.error(err);
+        winston.info('GatlingDetails removed');
         if (importItems.gatlingDetails) {
           _.each(importItems.gatlingDetails, function (importgatlingDetails) {
 
@@ -643,8 +644,8 @@ function upload(req, res) {
       /* remove existing collections */
       Event.remove({}, function (err) {
         if (err)
-          console.log(err);
-        console.log('Events removed');
+          winston.error(err);
+        winston.info('Events removed');
         _.each(importItems.events, function (importEvent) {
           var event = new Event();
           var splitDashboardName = importEvent.dashboardName.split('-');
@@ -669,15 +670,15 @@ function upload(req, res) {
 
           event.save(function (err) {
             if (err)
-              console.log(err);
+              winston.error(err);
           });
         });
       });
 
       Testrun.remove({}, function (err) {
         if (err)
-          console.log(err);
-        console.log('Testruns removed');
+          winston.error(err);
+        winston.info('Testruns removed');
         _.each(importItems.testruns, function (importTestrun) {
           var testrun = new Testrun();
 
@@ -702,23 +703,23 @@ function upload(req, res) {
 
           testrun.save(function (err) {
             if (err)
-              console.log(err);
+              winston.error(err);
           });
         });
       });
 
       Metric.remove({}, function (err) {
         if (err)
-          console.log(err);
-        console.log('Metrics removed');
+          winston.error(err);
+        winston.info('Metrics removed');
         Dashboard.remove({}, function (err) {
           if (err)
-            console.log(err);
-          console.log('Dashoards removed');
+            winston.error(err);
+          winston.info('Dashoards removed');
           Product.remove({}, function (err) {
             if (err)
-              console.log(err);
-            console.log('Products removed');
+              winston.error(err);
+            winston.info('Products removed');
             async.forEach(importItems.products, function (importProduct, productCallback) {
 
               var importProductDashboardIds=[];
@@ -770,7 +771,7 @@ function upload(req, res) {
                   //
                   newDashboard.save(function (err, newDashboard) {
                     if (err)
-                      console.log(err);
+                      winston.error(err);
                     if (newDashboard) {
                       var importDashboardMetrics = [];
                       _.each(importItems.metrics, function (metric) {
@@ -830,7 +831,7 @@ function upload(req, res) {
 
 
                         newMetric.save(function (err, newMetric) {
-                          //console.log('Saved metric #'+ m);
+                          //winston.info('Saved metric #'+ m);
                           metricCallback();
                         });
                       }, function (err) {
@@ -843,7 +844,7 @@ function upload(req, res) {
                 });
               });
             }, function (err) {
-              console.log('import done!');
+              winston.info('import done!');
               res.sendStatus(200);
             });
           });

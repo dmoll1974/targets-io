@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose'),
     _ = require('lodash'),
+    winston = require('winston'),
     request = require('request'),
     config = require('../../config/config'),
     GatlingDetails = mongoose.model('GatlingDetails');
@@ -227,12 +228,12 @@ function getConsoleData (req, res) {
 
     if (GatlingDetailsResponse) {
 
-      console.log('Gatling details served from db');
+      winston.info('Gatling details served from db');
       res.jsonp(GatlingDetailsResponse.response);
 
     } else {
 
-      console.log('Gatling details served from Jenkins');
+      winston.info('Gatling details served from Jenkins');
       getJenkinsData(req.body.consoleUrl, req.body.running, req.body.start, req.body.end, req.body.productName, req.body.dashboardName, function (response) {
 
         if(response.status === 'fail'){
@@ -307,7 +308,7 @@ function getJenkinsData (jenkinsUrl, running, start, end, productName, dashboard
           var consoleResultsArray = consoleArray[consoleArray.length - 1].split(endTestPattern);
 
           var consoleLineArray = consoleResultsArray[0].split(separator);
-          //            console.log(body);
+          //            winston.info(body);
           _.each(consoleLineArray, function (consoleLine, i) {
             if (i > 0) {
               var request = /(.*?)\s+\(OK.*/g.exec(consoleLine);
@@ -349,7 +350,7 @@ function getJenkinsData (jenkinsUrl, running, start, end, productName, dashboard
 
           var GatlingDetailsResponse = new GatlingDetails({productName: productName, dashboardName: dashboardName, consoleUrl: jenkinsUrl, response: consoleResponse});
           GatlingDetailsResponse.save(function (err, savedResponse) {
-            if (err) console.log(err);
+            if (err) winston.error(err);
           });
         }
       }

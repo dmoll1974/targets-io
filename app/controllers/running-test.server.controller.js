@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose');
 var _ = require('lodash');
+var winston = require('winston');
 var RunningTest = mongoose.model('RunningTest');
 var Event = mongoose.model('Event');
 var Testrun = mongoose.model('Testrun');
@@ -21,7 +22,7 @@ function runningTestForDashboard(req, res){
 
   RunningTest.findOne({$and:[{productName: req.params.productName}, {dashboardName: req.params.dashboardName}]}).exec(function(err, runningTest){
     if(err){
-      console.log(err);
+      winston.error(err);
     }else{
 
       if(runningTest) {
@@ -42,7 +43,7 @@ function getRunningTests(req, res){
   RunningTest.find().exec(function(err, runningTests){
 
     if(err){
-      console.log(err);
+      winston.error(err);
     }else{
       res.jsonp(runningTests);
     }
@@ -53,7 +54,7 @@ function getRunningTests(req, res){
 
 let runningTestHandler = function(err){
 
-  console.log('Error in running test  chain: ' + err.stack);
+  winston.error('Error in running test  chain: ' + err.stack);
 }
 
 
@@ -131,9 +132,9 @@ function runningTest(req, res){
             var room = testRun.productName + '-' + testRun.dashboardName;
 
 
-            console.log('emitting message to room: ' + room);
+            winston.info('emitting message to room: ' + room);
             io.sockets.in(room).emit('testrun', {event: 'removed', testrun: testRun});
-            console.log('emitting message to room: running-test');
+            winston.info('emitting message to room: running-test');
             io.sockets.in('recent-test').emit('testrun', {event: 'removed', testrun: testRun});
 
             updateRunningTest(runningTestKeepAlive)
@@ -185,9 +186,9 @@ function updateRunningTest(runningTest) {
           var io = global.io;
           var room = runningTest.productName + '-' + runningTest.dashboardName;
 
-          console.log('emitting message to room: ' + room);
+          winston.info('emitting message to room: ' + room);
           io.sockets.in(room).emit('runningTest', {event: 'saved', testrun: storedRunningTest});
-          console.log('emitting message to room: running-test');
+          winston.info('emitting message to room: running-test');
           io.sockets.in('running-test').emit('runningTest', {event: 'saved', testrun: storedRunningTest});
 
           resolve('running test updated!');
@@ -224,9 +225,9 @@ function updateRunningTest(runningTest) {
             var io = global.io;
             var room = runningTest.productName + '-' + runningTest.dashboardName;
 
-            console.log('emitting message to room: ' + room);
+            winston.info('emitting message to room: ' + room);
             io.sockets.in(room).emit('runningTest', {event: 'saved', testrun: newRunningTest});
-            console.log('emitting message to room: running-test ');
+            winston.info('emitting message to room: running-test ');
             io.sockets.in('running-test').emit('runningTest', {event: 'saved', testrun: newRunningTest});
 
             resolve('running test created!');
@@ -258,9 +259,9 @@ let saveTestRun = function (runningTest){
           var room = runningTest.productName + '-' + runningTest.dashboardName;
 
 
-          console.log('emitting message to room: ' + room);
+          winston.info('emitting message to room: ' + room);
           io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
-          console.log('emitting message to room: running-test');
+          winston.info('emitting message to room: running-test');
           io.sockets.in('running-test').emit('runningTest', {event: 'removed', testrun: runningTest});
 
           reject(err);
@@ -272,16 +273,16 @@ let saveTestRun = function (runningTest){
         var io = global.io;
         var room = runningTest.productName + '-' + runningTest.dashboardName;
 
-        console.log('emitting message to room: ' + room);
+        winston.info('emitting message to room: ' + room);
         io.sockets.in(room).emit('testrun', {event: 'saved', testrun: savedTestRun});
         io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: savedTestRun});
 
         runningTest.remove(function (err) {
 
 
-          console.log('emitting message to room: ' + room);
+          winston.info('emitting message to room: ' + room);
           io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
-          console.log('emitting message to room: running-test');
+          winston.info('emitting message to room: running-test');
           io.sockets.in('running-test').emit('runningTest', {event: 'removed', testrun: runningTest});
 
           /* no matter if remove fails, still resolve*/

@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    winston = require('winston'),
     errorHandler = require('./errors.server.controller'),
     Metric = mongoose.model('Metric'),
     Dashboard = mongoose.model('Dashboard'),
@@ -25,7 +26,7 @@ exports.create = function (req, res) {
 
       Dashboard.update({_id: metric.dashboardId}
         , { lastUpdated: new Date().getTime() }, { multi: false },function(err, testRuns){
-            if(err) console.log(err);
+            if(err) winston.error(err);
       })
       res.jsonp(savedMetric);
     }
@@ -58,7 +59,7 @@ exports.update = function (req, res) {
 
       Dashboard.update({_id: metric.dashboardId}
           , { lastUpdated: new Date().getTime() }, { multi: false },function(err, testRuns){
-            if(err) console.log(err);
+            if(err) winston.error(err);
       })
 
       res.jsonp(metric);

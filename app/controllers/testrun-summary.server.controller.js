@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    winston = require('winston'),
     errorHandler = require('./errors.server.controller'),
     dashboard = require('./dashboards.server.controller'),
     TestrunSummary = mongoose.model('TestrunSummary'),
@@ -286,7 +287,7 @@ function createTestrunSummary(req, res){
 
             if(response.status === 'fail') {
 
-              console.log('Persisting of Gatling data failed due to: ' + response.data);
+              winston.error('Persisting of Gatling data failed due to: ' + response.data);
 
             }
           });

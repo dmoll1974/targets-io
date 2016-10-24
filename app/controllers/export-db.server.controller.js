@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose'),
     _ = require('lodash'),
+    winston = require('winston'),
     fs = require('fs'),
     Event = mongoose.model('Event'),
     Testrun = mongoose.model('Testrun'),

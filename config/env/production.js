@@ -2,6 +2,7 @@
 
 module.exports = {
     isProduction: true,
+    isDevelopment: false,
     logLevel: 'error',
     graphiteRetentionPeriod: '90d', /*90 days*/
     graphiteHost: process.env.GRAPHITE_HOST,
@@ -10,8 +11,8 @@ module.exports = {
     dbUsername: process.env.MONGO_USER,
     dbPassword: process.env.MONGO_PASSWORD,
     graylog : {
-        host: 'graylog.ae1.klm.com',
-        port: 12201
+        host: process.env.GRAYLOG_HOST,
+        port: process.env.GRAYLOG_PORT
     },
     redisHost: process.env.REDIS_SERVICE_HOST,
     redisPort: process.env.REDIS_SERVICE_PORT,

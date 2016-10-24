@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     Metric = mongoose.model('Metric'),
     Product = mongoose.model('Product'),
     Template = mongoose.model('Template'),
+    winston = require('winston'),
     _ = require('lodash'),
     async = require('async');
 

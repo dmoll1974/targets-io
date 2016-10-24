@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose'),
     _ = require('lodash'),
+    winston = require('winston'),
     errorHandler = require('./errors.server.controller'),
     request = require('request'),
     requestjson = require('request-json'),
@@ -86,7 +87,7 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
     });
   } else {
     /* first check cache */
-    //console.log('get key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
+    //winston.info('get key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
 
     cache.getCache(cacheKey, function (result) {
 
@@ -94,7 +95,7 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
         console.dir('cache hit: ' + cacheKey);
         callback(eval(result));
       } else {
-        //console.log(graphiteTargetUrl);
+        //winston.info(graphiteTargetUrl);
         /* if no cache hit, go to graphite back end */
         client.get(graphiteTargetUrl, function (err, response, body) {
           if (err) {
@@ -193,11 +194,11 @@ function flushGraphiteCacheForTestRun(testRunParam, isBenchmark, callback){
                     /* create cache key*/
                     var cacheKey = cache.createKey(graphiteTargetUrl);
 
-                    console.log('flush key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
+                    winston.info('flush key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
 
                     cache.flushCache(cacheKey, function (message) {
 
-                      console.log(message);
+                      winston.info(message);
 
 
                     });
@@ -211,11 +212,11 @@ function flushGraphiteCacheForTestRun(testRunParam, isBenchmark, callback){
                   /* create cache key*/
                   var cacheKey = cache.createKey(graphiteTargetUrl);
 
-                  console.log('flush key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
+                  winston.info('flush key: ' + cacheKey + 'graphiteTargetUrl: ' + graphiteTargetUrl);
 
                   cache.flushCache(cacheKey, function (message) {
 
-                    console.log(message);
+                    winston.info(message);
 
 
                   });

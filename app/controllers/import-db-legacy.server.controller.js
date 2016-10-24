@@ -5,6 +5,7 @@
 var mongoose = require('mongoose'),
     _ = require('lodash'),
     fs = require('fs'),
+    winston = require('winston'),
     Event = mongoose.model('Event'),
     Dashboard = mongoose.model('Dashboard'),
     Product = mongoose.model('Product'),
@@ -13,20 +14,20 @@ var mongoose = require('mongoose'),
     async = require('async');
 
 function upload(req, res) {
-  console.log(req.files.file.path);
+  winston.info(req.files.file.path);
   try {
     eval(fs.readFileSync(req.files.file.path) + '');
   } catch (err) {
     if (err)
-      console.log(err);
+      winston.error(err);
   }
 
   /* Remove existing Gatling Details*/
 
   GatlingDetails.remove({}, function (err) {
     if (err)
-      console.log(err);
-    console.log('GatlingDetails removed');
+      winston.error(err);
+    winston.info('GatlingDetails removed');
     _.each(gatlingDetails, function (importgatlingDetails) {
 
       var gatlingDetailsDoc = new GatlingDetails();
@@ -42,12 +43,12 @@ function upload(req, res) {
   /* remove existing collections */
   Testrun.remove({}, function (err) {
     if (err)
-      console.log(err);
-    console.log('Testruns removed');
+      winston.error(err);
+    winston.info('Testruns removed');
     Event.remove({}, function (err) {
       if (err)
-        console.log(err);
-      console.log('Events removed');
+        winston.error(err);
+      winston.info('Events removed');
       _.each(events, function (importEvent, e) {
         var event = new Event();
         var splitDashboardName = importEvent.dashboardName.split('-');
@@ -70,23 +71,23 @@ function upload(req, res) {
         event.buildResultsUrl = importEvent.buildResultsUrl;
         event.save(function (err, savedEvent) {
           if (err)
-            console.log(err);  //console.log('Saved event #' + e);
+            winston.error(err);  //winston.info('Saved event #' + e);
         });
       });
     });
   });
   Metric.remove({}, function (err) {
     if (err)
-      console.log(err);
-    console.log('Metrics removed');
+      winston.error(err);
+    winston.info('Metrics removed');
     Dashboard.remove({}, function (err) {
       if (err)
-        console.log(err);
-      console.log('Dashoards removed');
+        winston.error(err);
+      winston.info('Dashoards removed');
       Product.remove({}, function (err) {
         if (err)
-          console.log(err);
-        console.log('Products removed');
+          winston.error(err);
+        winston.info('Products removed');
         async.forEach(products, function (importProduct, productCallback) {
           var dashboardCounter;
           var metricCounter;
@@ -97,7 +98,7 @@ function upload(req, res) {
           newProduct.save(function (err, NewProduct) {
             if (err)
               return console.error(err);
-            //console.log('Saved product #'+ i);
+            //winston.info('Saved product #'+ i);
             var importProductDashboards = [];
             _.each(dashboards, function (dashboard) {
               if (_.indexOf(importProduct.dashboards, dashboard._id) != -1)
@@ -120,10 +121,10 @@ function upload(req, res) {
               //
               newDashboard.save(function (err, newDashboard) {
                 if (err)
-                  console.log(err);
+                  winston.error(err);
                 dashboardCounter++;
                 if (newDashboard) {
-                  //console.log('Saved dashboard #'+ d);
+                  //winston.info('Saved dashboard #'+ d);
                   var importDashboardMetrics = [];
                   _.each(metrics, function (metric) {
                     if (_.indexOf(importDashboard.metrics, metric._id) != -1)
@@ -146,7 +147,7 @@ function upload(req, res) {
                     newMetric.type = importDashboardMetric.type;
                     newMetric.save(function (err, newMetric) {
                       metricCounter++;
-                      //console.log('Saved metric #'+ m);
+                      //winston.info('Saved metric #'+ m);
                       metricCallback();
                     });
                   }, function (err) {
@@ -161,7 +162,7 @@ function upload(req, res) {
             });
           });
         }, function (err) {
-          console.log('import done!');
+          winston.info('import done!');
           res.sendStatus(200);
         });
       });

@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    winston = require('winston'),
     errorHandler = require('./errors.server.controller'),
     Release = mongoose.model('Release'),
     Product = mongoose.model('Product'),

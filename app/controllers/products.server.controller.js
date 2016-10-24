@@ -2,7 +2,11 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Product = mongoose.model('Product'), _ = require('lodash');
+var mongoose = require('mongoose'),
+    winston = require('winston'),
+    errorHandler = require('./errors.server.controller'),
+    Product = mongoose.model('Product'),
+    _ = require('lodash');
 /**
  * Create a Product
  */
@@ -39,7 +43,7 @@ exports.update = function (req, res) {
 
   product.save(function (err) {
     if (err) {
-      console.log(err);
+      winston.error(err);
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
       res.jsonp(product);

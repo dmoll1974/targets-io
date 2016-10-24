@@ -2,7 +2,13 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'), errorHandler = require('./errors.server.controller'), Dashboard = mongoose.model('Dashboard'), Product = mongoose.model('Product'), Metric = mongoose.model('Metric'), _ = require('lodash');
+var mongoose = require('mongoose'),
+    errorHandler = require('./errors.server.controller'),
+    Dashboard = mongoose.model('Dashboard'),
+    Product = mongoose.model('Product'),
+    Metric = mongoose.model('Metric'),
+    _ = require('lodash'),
+    winston = require('winston');
 
 exports.listMetricsNotInTestRunSummary = listMetricsNotInTestRunSummary;
 

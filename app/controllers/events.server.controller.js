@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
     Product = mongoose.model('Product'),
     testruns = require('./testruns.server.controller.js'),
     _ = require('lodash'),
+    winston = require('winston'),
     runningTest = require('./running-test.server.controller');
 
 

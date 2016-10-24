@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    winston = require('winston'),
     errorHandler = require('./errors.server.controller'),
     Event = mongoose.model('Event'),
     Testrun = mongoose.model('Testrun'),
@@ -74,7 +75,7 @@ function setRequirementResultsForTestRun(testRun) {
     else
       testRun.meetsRequirement = null;
 
-    console.log('Set requirements for:' + testRun.productName + '-' + testRun.dashboardName + 'testrunId: ' + testRun.testRunId);
+    winston.info('Set requirements for:' + testRun.productName + '-' + testRun.dashboardName + 'testrunId: ' + testRun.testRunId);
     resolve(testRun);
   });
 }
