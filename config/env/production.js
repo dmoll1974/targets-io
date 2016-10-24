@@ -3,7 +3,7 @@
 module.exports = {
     isProduction: true,
     isDevelopment: false,
-    logLevel: 'info',
+    logLevel: 'error',
     graphiteRetentionPeriod: '90d', /*90 days*/
     graphiteHost: process.env.GRAPHITE_HOST,
     jenkinsHost: process.env.JENKINS_HOST,
