@@ -19,48 +19,66 @@ function JenkinsJobStatusDirective () {
     /* @ngInject */
     function JenkinsJobStatusDirectiveController ($scope, $state, $stateParams, $timeout, Graphite, $mdDialog, $mdToast, Jenkins, Utils, $interval, Products, $window, $rootScope, AuthenticationService, $http) {
 
+        $scope.startJob = startJob;
+        $scope.stopJob = stopJob;
+        $scope.jenkinsJobConfig = jenkinsJobConfig;
+        $scope.jenkinsJobConsole = jenkinsJobConsole;
+        $scope.signin = signin;
 
-        if($http.defaults.headers.common['Authorization']) {
-            Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (loginResult) {
+        /* activate */
+        activate();
 
-                if (loginResult.statusCode === 200) {
+        /* watches */
 
-                    $scope.authenticationFailed = false;
-                    jenkinsJobStatusPolling();
-                    if (Utils.polling === undefined) Utils.polling = $interval(jenkinsJobStatusPolling, 15000);
-                    $mdDialog.hide();
+        $scope.$on('$destroy', function () {
+            // Make sure that the interval is destroyed too
+            $interval.cancel(Utils.polling);
 
-                } else {
+        });
 
-                    AuthenticationService.ClearCredentials();
-                    $scope.authenticationFailed = true;
-                    $mdDialog.hide();
-                    var content = 'Authentication failed';
-                    var toast = $mdToast.simple()
-                        .action('OK')
-                        .highlightAction(true)
-                        .position('top center')
-                        .hideDelay(3000);
+        /* functions */
 
-                    $mdToast.show(toast.content(content)).then(function (response) {
-                    });
+        function activate(){
+
+            if($http.defaults.headers.common['Authorization']) {
+                Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (loginResult) {
+
+                    if (loginResult.statusCode === 200) {
+
+                        $scope.authenticationFailed = false;
+                        jenkinsJobStatusPolling();
+                        if (Utils.polling === undefined) Utils.polling = $interval(jenkinsJobStatusPolling, 15000);
+                        $mdDialog.hide();
+
+                    } else {
+
+                        AuthenticationService.ClearCredentials();
+                        $scope.authenticationFailed = true;
+                        $mdDialog.hide();
+                        var content = 'Authentication failed';
+                        var toast = $mdToast.simple()
+                            .action('OK')
+                            .highlightAction(true)
+                            .position('top center')
+                            .hideDelay(3000);
+
+                        $mdToast.show(toast.content(content)).then(function (response) {
+                        });
 
 
-                }
+                    }
 
 
-            })
-        }else{
+                })
+            }else{
 
-            $scope.authenticationFailed = true;
+                $scope.authenticationFailed = true;
+
+            }
+
 
         }
 
-        $scope.$on('$destroy', function () {
-          // Make sure that the interval is destroyed too
-          $interval.cancel(Utils.polling);
-
-        });
 
         var jenkinsJobStatusPolling = function ($event) {
 
@@ -77,10 +95,8 @@ function JenkinsJobStatusDirective () {
 
         }
 
-        //jenkinsJobStatusPolling();
 
-
-        $scope.startJob = function($event){
+        function startJob($event){
 
 
             Jenkins.startJob($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(){
@@ -122,7 +138,7 @@ function JenkinsJobStatusDirective () {
 
         }
 
-        $scope.stopJob = function($event){
+        function stopJob($event){
 
 
             Jenkins.stopJob($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(){
@@ -157,7 +173,7 @@ function JenkinsJobStatusDirective () {
             });
         }
 
-        $scope.jenkinsJobConfig = function (url) {
+        function jenkinsJobConfig(url) {
 
             Products.get($stateParams.productName).success(function (product) {
 
@@ -167,7 +183,7 @@ function JenkinsJobStatusDirective () {
 
         };
 
-        $scope.jenkinsJobConsole = function($event){
+        function jenkinsJobConsole($event){
 
 
             Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (status) {
@@ -177,7 +193,7 @@ function JenkinsJobStatusDirective () {
                     $scope.authenticationFailed = true;
                     AuthenticationService.ClearCredentials();
                     if (Utils.polling !== undefined) $interval.cancel(Utils.polling);
-                    jenkinsJobStatusPolling();
+                    //jenkinsJobStatusPolling();
 
                     var content = 'Authentication failed';
                     var toast = $mdToast.simple()
@@ -203,7 +219,7 @@ function JenkinsJobStatusDirective () {
             });
         }
 
-        $scope.signin = function($event){
+        function signin($event){
 
 
             /* if not already set, show dialog to get user and password */

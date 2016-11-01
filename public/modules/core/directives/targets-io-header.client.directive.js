@@ -16,48 +16,84 @@ function TargetsIoHeaderDirective () {
     /* @ngInject */
     function TargetsIoHeaderDirectiveController ($scope, $rootScope, $state, $stateParams, $location, $window, Products, Dashboards, Templates, TestRuns, ConfirmModal, $modal,$filter, $timeout, Utils, TargetsIoHeader) {
 
-        $scope.$on('$stateChangeSuccess',function(){
-            $scope.$state = $state;
-        })
+
+        $scope.go = go;
+        $scope.backup = backup;
+        $scope.goToProductHome = goToProductHome;
+        $scope.goToDashboardHome = goToDashboardHome;
+        $scope.selectedProductChange = selectedProductChange;
+        $scope.selectedDashboardChange = selectedDashboardChange;
+        $scope.filterProducts = filterProducts;
+        $scope.filterDashboards = filterDashboards;
+        $scope.filterTestRuns = filterTestRuns;
+        $scope.goHome = goHome;
+        $scope.viewLiveGraphs = viewLiveGraphs;
+        $scope.showTemplates = showTemplates;
+        $scope.gettingStarted = gettingStarted;
+        $scope.goToTestRunSummary = goToTestRunSummary;
+        $scope.editTestRun = editTestRun;
+
+            /* watches */
+
+        $scope.$watch('productSearchText', function (val) {
+            $scope.productSearchText = $filter('uppercase')(val);
+        }, true);
+
+
+        $scope.$watch('dashboardSearchText', function (val) {
+            $scope.dashboardSearchText = $filter('uppercase')(val);
+        }, true);
 
 
         $rootScope.$watch('currentStateParams', function (newVal, oldVal) {
             //if (newVal !== oldVal) {
 
-                fetchProducts(function(products){
-                    $scope.products = Products.items;
+            fetchProducts(function(products){
+                $scope.products = Products.items;
 
-                    if($rootScope.currentStateParams && $rootScope.currentStateParams.productName) {
+                if($rootScope.currentStateParams && $rootScope.currentStateParams.productName) {
 
 
-                        var productIndex = $scope.products.map(function(product){return product.name;}).indexOf($rootScope.currentStateParams.productName);
-                        $scope.product = $scope.products[productIndex];
+                    var productIndex = $scope.products.map(function(product){return product.name;}).indexOf($rootScope.currentStateParams.productName);
+                    $scope.product = $scope.products[productIndex];
 
-                        if($rootScope.currentStateParams.dashboardName) {
+                    if($rootScope.currentStateParams.dashboardName) {
 
-                            /* if switching dashboards, reset application state */
-                            if($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName && $rootScope.previousStateParams.dashboardName) {
-                                //TestRuns.list = [];
-                                /* reset utils variables */
-                                Utils.reset();
-
-                            }
-
-                            var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($rootScope.currentStateParams.dashboardName);
-                            $scope.dashboard = $scope.product.dashboards[dashboardIndex];
-
-                        }else{
-                            $scope.$$childTail.dashboard = null;
-                            $scope.$$childTail.dashboardSearchText = null;
-                            $scope.dashboard = null;
-                            $scope.dashboardSearchText = null;
+                        /* if switching dashboards, reset application state */
+                        if($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName && $rootScope.previousStateParams.dashboardName) {
+                            //TestRuns.list = [];
+                            /* reset utils variables */
+                            Utils.reset();
 
                         }
+
+                        var dashboardIndex = $scope.product.dashboards.map(function(dashboard){return dashboard.name;}).indexOf($rootScope.currentStateParams.dashboardName);
+                        $scope.dashboard = $scope.product.dashboards[dashboardIndex];
+
+                    }else{
+                        $scope.$$childTail.dashboard = null;
+                        $scope.$$childTail.dashboardSearchText = null;
+                        $scope.dashboard = null;
+                        $scope.dashboardSearchText = null;
+
                     }
-                });
+                }
+            });
 
             //}
         });
+
+
+        $scope.$on('$stateChangeSuccess',function(){
+            $scope.$state = $state;
+        })
+
+
+        /* activate */
+
+        activate();
+
+        /* functions */
 
         function fetchProducts(callback){
 
@@ -75,10 +111,12 @@ function TargetsIoHeaderDirective () {
         }
 
 
-        $scope.go = function (path) {
+        function go (path) {
             $location.path(path);
         };
-        $scope.backup = function () {
+
+
+        function backup () {
             var url = 'http://' + $window.location.host + '/download';
             //	$log.log(url);
             $window.location.href = url;
@@ -86,33 +124,22 @@ function TargetsIoHeaderDirective () {
 
 
 
-
-
-        $scope.$watch('productSearchText', function (val) {
-            $scope.productSearchText = $filter('uppercase')(val);
-        }, true);
-
-
-        $scope.$watch('dashboardSearchText', function (val) {
-            $scope.dashboardSearchText = $filter('uppercase')(val);
-        }, true);
-
-        $scope.goToProductHome = function(product){
+         function goToProductHome(product){
 
             $scope.dashboard = null;
 
             $state.go('viewProduct', {productName: product.name});
 
         };
-        $scope.goToDashboardHome = function(product, dashboard){
+
+        function goToDashboardHome(product, dashboard){
 
             TestRuns.list = [];
             Dashboards.selectedTab = 0;
             $state.go('viewDashboard', {productName: $scope.product.name, dashboardName: dashboard.name});
         };
 
-        $scope.selectedProductChange = function(product){
-
+        function selectedProductChange(product){
 
             if(product) {
                 if (checkProductState($rootScope.currentState) && !$stateParams.dashboardName ) {
@@ -179,7 +206,7 @@ function TargetsIoHeaderDirective () {
         }
 
 
-        $scope.selectedDashboardChange = function(dashboard){
+        function selectedDashboardChange(dashboard){
 
 
             if(dashboard) {
@@ -235,14 +262,14 @@ function TargetsIoHeaderDirective () {
             return stateCheck;
         }
 
-        $scope.filterProducts = function (query) {
+        function filterProducts (query) {
             var results = query ? $scope.products.filter( createFilterForProducts(query) ) : $scope.products;
 
             return results;
 
         }
 
-        $scope.filterDashboards = function (query) {
+        function filterDashboards (query) {
             var results = query ? $scope.product.dashboards.filter( createFilterForDashboards(query) ) : $scope.product.dashboards;
 
             return results;
@@ -250,7 +277,7 @@ function TargetsIoHeaderDirective () {
         }
 
 
-        $scope.filterTestRuns = function (query) {
+        function filterTestRuns(query) {
             var results = query ? $scope.testRuns.filter( createFilterForTestRuns(query) ) : $scope.testRuns;
 
             return results;
@@ -278,20 +305,20 @@ function TargetsIoHeaderDirective () {
             };
         }
 
-        /* If dashboardName is in $stateParams in case of deeplink, set dashboardSelected to true */
-        setTimeout(function(){
+        function activate() {
+            /* If dashboardName is in $stateParams in case of deeplink, set dashboardSelected to true */
+            setTimeout(function () {
 
-            if ($stateParams.dashboardName) {
-                $scope.dashboardSelected = true;
-            }
-
-
-
-        },0);
+                if ($stateParams.dashboardName) {
+                    $scope.dashboardSelected = true;
+                }
 
 
+            }, 0);
 
-        $scope.goHome = function(){
+        }
+
+        function goHome(){
 
 
 
@@ -312,7 +339,7 @@ function TargetsIoHeaderDirective () {
 
         }
 
-        $scope.viewLiveGraphs = function(){
+        function viewLiveGraphs(){
 
             $state.go('viewLiveGraphs', {
                 'productName': $stateParams.productName,
@@ -321,19 +348,19 @@ function TargetsIoHeaderDirective () {
             });
         }
 
-        $scope.showTemplates = function(){
+        function showTemplates(){
 
             $state.go('viewTemplates');
 
         };
 
-        $scope.gettingStarted = function(){
+        function gettingStarted(){
 
             $state.go('gettingStarted');
 
         };
 
-        $scope.goToTestRunSummary = function(){
+        function goToTestRunSummary(){
 
             $state.go('testRunSummary', {
                 'productName': $stateParams.productName,
@@ -343,7 +370,7 @@ function TargetsIoHeaderDirective () {
 
         }
 
-        $scope.editTestRun = function(){
+        function editTestRun(){
 
             $state.go('editTestRun', {
                 'productName': $stateParams.productName,

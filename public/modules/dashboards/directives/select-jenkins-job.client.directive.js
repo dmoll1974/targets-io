@@ -20,8 +20,9 @@ function SelectJenkinsJobDirective () {
     function SelectJenkinsJobDirectiveController ($scope, $state, $timeout, Graphite, $mdDialog, Utils) {
 
 
+        $scope.showTargetAutocompleteDialog = showTargetAutocompleteDialog;
 
-        $scope.showTargetAutocompleteDialog = function($event) {
+            function showTargetAutocompleteDialog($event) {
 
             var parentEl = angular.element(document.body);
             $mdDialog.show({

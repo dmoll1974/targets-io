@@ -16,23 +16,32 @@ function ProductMenuDirective () {
     /* @ngInject */
     function ProductMenuDirectiveController ($scope, $state, $interval, Products, ConfirmModal, $modal, $window, $location, $stateParams) {
 
+
+        $scope.openMenu = openMenu;
+        $scope.editProduct = editProduct;
+        $scope.addProduct = addProduct;
+        $scope.editProductRequirememts = editProductRequirememts;
+        $scope.backupProduct = backupProduct;
+        $scope.restore = restore;
+        $scope.openDeleteProductModal = openDeleteProductModal;
+
         var originatorEv;
-        $scope.openMenu = function ($mdOpenMenu, ev) {
+        function openMenu ($mdOpenMenu, ev) {
             originatorEv = ev;
             $mdOpenMenu(ev);
         };
 
         // Edit Product
-        $scope.editProduct = function (productName) {
+        function editProduct (productName) {
             $state.go('editProduct', { productName: productName });
         };
 
         // Add Product
-        $scope.addProduct = function (productName) {
+        function addProduct(productName) {
             $state.go('addProduct');
         };
 
-        $scope.editProductRequirememts = function (productName){
+        function editProductRequirememts (productName){
 
             $state.go('productRequirements', {
                 'productName': productName
@@ -40,18 +49,18 @@ function ProductMenuDirective () {
 
         }
 
-        $scope.backupProduct = function(){
+        function backupProduct(){
 
             var url = 'http://' + $window.location.host + '/download-product/' + $stateParams.productName;
             //	$log.log(url);
             $window.location.href = url;
         }
 
-        $scope.restore = function () {
+        function restore () {
             $state.go('importDbProduct', {productName: $stateParams.productName });
         };
 
-        $scope.openDeleteProductModal = function (size) {
+        function openDeleteProductModal (size) {
             ConfirmModal.itemType = 'Delete product ';
             ConfirmModal.selectedItemId = Products.selected._id;
             ConfirmModal.selectedItemDescription = Products.selected.name;

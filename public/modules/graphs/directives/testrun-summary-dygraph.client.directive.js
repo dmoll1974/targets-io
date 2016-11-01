@@ -136,20 +136,20 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
   /* @ngInject */
   function DygraphController($scope, $state, $stateParams, $rootScope, $timeout, TestRuns, Graphite, Events, Utils) {
 
-    $scope.selectAll = true;
-    $scope.showLegend =  true;
-    $scope.horizontalZoom = true;
 
-    var clickDetected = false;
+    $scope.resetZoom = resetZoom;
+    $scope.highlightSeries = highlightSeries;
+    $scope.updateSelectedSeries = updateSelectedSeries;
+    $scope.setAllSeriesSelected = setAllSeriesSelected;
+    $scope.selectSeriesToggle = selectSeriesToggle;
+    $scope.selectOtherSeriesToggle = selectOtherSeriesToggle;
 
-    /* set zoomLock to false */
-    $scope.zoomLock =  false;
-    $scope.graphType =  'testrun';
+    /* activate */
 
-    $scope.showProgressBar = true;
-    $scope.loading = true;
+    activate();
 
 
+    /* watches */
 
 
     /* watch zoomRange */
@@ -184,13 +184,25 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
 
 
+    /* functions */
 
+    function activate() {
 
+      $scope.selectAll = true;
+      $scope.showLegend = true;
+      $scope.horizontalZoom = true;
 
+      var clickDetected = false;
+
+      /* set zoomLock to false */
+      $scope.zoomLock = false;
+      $scope.graphType = 'testrun';
+
+      $scope.showProgressBar = true;
+      $scope.loading = true;
 
       /* if dygraphData is already available form db, and we are not zooming, use the data from db */
 
-    //setTimeout(function(){
 
 
       if($scope.metric.dygraphData && !$scope.graphZoomed){
@@ -206,21 +218,16 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
         drawDypraph($scope.graphType);
       }
 
+    }
+
+
+
 
     function convertTimeStamps(dygraphData){
 
       _.each(dygraphData.data, function(dataline){
 
             dataline[0] = new Date(dataline[0]);
-
-          ///* set null values to NaN to show holes in graphs */
-          //_.each(dataline, function(datalineItem){
-          //
-          //  if (datalineItem[0] === null) {
-          //    datalineItem[0] = NaN;
-          //  }
-          //
-          //})
 
 
       })
@@ -414,7 +421,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
     }
 
 
-    $scope.resetZoom = function(){
+    function resetZoom(){
 
       /* reset from and until */
       //Utils.zoomFrom = TestRuns.selected.startEpoch;
@@ -480,7 +487,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       });
     }
 
-    $scope.highlightSeries = function(seriesName){
+    function highlightSeries(seriesName){
 
       $scope.graph.setSelection(false, seriesName)
     }
@@ -499,7 +506,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
 
 
-    $scope.updateSelectedSeries = function() {
+    function updateSelectedSeries() {
 
       /* show / hide selected series in legend */
       setTimeout(function(){
@@ -525,7 +532,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       });
     }
 
-    $scope.setAllSeriesSelected = function(setAllSeriesTo){
+    function setAllSeriesSelected(setAllSeriesTo){
 
       _.each($scope.metric.legendData, function(legendItem, i){
 
@@ -548,7 +555,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     };
 
-    $scope.selectSeriesToggle = function (selectedLegendItem){
+    function selectSeriesToggle(selectedLegendItem){
 
       var selectedSeriesIndex = $scope.metric.legendData.map(function(legendItem){return legendItem.id;}).indexOf(selectedLegendItem.id);
 
@@ -590,7 +597,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     };
 
-    $scope.selectOtherSeriesToggle = function (selectedLegendItem){
+    function selectOtherSeriesToggle(selectedLegendItem){
 
       var selectedSeriesIndex = $scope.metric.legendData.map(function(legendItem){return legendItem.id;}).indexOf(selectedLegendItem.id);
 

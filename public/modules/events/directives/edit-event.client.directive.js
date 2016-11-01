@@ -15,11 +15,12 @@ function EditEventDirective () {
   /* @ngInject */
   function EditEventDirectiveController ($scope, $state, Events, $filter, $rootScope, TestRuns) {
 
-    $scope.event = Events.selected;
 
-    $scope.testRunIds = Events.getTestRunId(TestRuns.list);
-    $scope.descriptions = Events.getDescriptions(Events.list);
+    $scope.openCalendar = openCalendar;
+    $scope.update = update;
+    $scope.cancel = cancel;
 
+      /* watches */
 
     $scope.$watch('event.productName', function (val) {
       $scope.event.productName = $filter('uppercase')(val);
@@ -29,8 +30,22 @@ function EditEventDirective () {
       $scope.event.dashboardName = $filter('uppercase')(val);
     }, true);
 
-    $scope.isOpen = false;
-    $scope.openCalendar = function (e) {
+    /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      $scope.event = Events.selected;
+      $scope.testRunIds = Events.getTestRunId(TestRuns.list);
+      $scope.descriptions = Events.getDescriptions(Events.list);
+      $scope.isOpen = false;
+
+    }
+
+    function openCalendar(e) {
       e.preventDefault();
       e.stopPropagation();
       $scope.isOpen = true;
@@ -38,7 +53,7 @@ function EditEventDirective () {
 
 
     // Update Event
-    $scope.update = function () {
+    function update() {
       Events.update(Events.selected).then(function (event) {
         Events.selected = {};
         /* reset form*/
@@ -53,7 +68,8 @@ function EditEventDirective () {
         $scope.eventForm.eventDescription.$setValidity('server', false);
       });
     };
-    $scope.cancel = function () {
+
+    function cancel() {
       Events.selected = {};
       /* reset form*/
       $scope.eventForm.$setPristine();

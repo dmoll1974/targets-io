@@ -9,61 +9,77 @@
   function GatlingDetailsDirective() {
     var directive = {
       restrict: 'EA',
-      templateUrl: 'modules/graphs/views/gatling-details.client.view.html',
+      templateUrl: 'modules/graphs/directives/gatling-details.client.view.html',
       controller: GatlingDetailsController,
       controllerAs: 'vm'
     };
     return directive;
     /* @ngInject */
     function GatlingDetailsController($scope, $timeout, $filter, $stateParams, Jenkins, TestRuns, ngTableParams) {
-      $scope.tabNumber = 0;
+
+      $scope.setTab = setTab;
+      $scope.isSet = isSet;
 
 
+      /* activate */
 
-      $scope.setTab = function (newValue) {
+      activate();
+
+
+      /* functions */
+
+      function setTab(newValue) {
         $scope.tabNumber = newValue;
         $scope.tableParams.filter({});
         $scope.tableParams.reload();
       };
-      $scope.isSet = function (tabNumber) {
+
+      function isSet(tabNumber) {
         return $scope.tabNumber === tabNumber;
       };
-      TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
-        TestRuns.selected = testRun;
-        $scope.buildResultsUrl = TestRuns.selected.buildResultsUrl;
-        $scope.tableParams = new ngTableParams({
-          page: 1,
-          // show first page
-          count: 50,
-          // count per page
-          sorting: {
-            KO: 'desc',
-            // initial sorting
-            OK: 'desc',
-            numberOfErrors: 'desc'
-          }
-        }, {
-          total: 0,
-          // length of data
-          getData: function ($defer, params) {
-            // ajax request to api
-            Jenkins.getData(TestRuns.selected.buildResultsUrl, false, $stateParams.productName, $stateParams.dashboardName).success(function (response) {
-              $timeout(function () {
-                var data = $scope.tabNumber === 0 ? response.data : response.errors;
-                var filteredData = params.filter() ? $filter('filter')(data, params.filter()) : data;
-                var orderedData = params.sorting() ? $filter('orderBy')(filteredData, params.orderBy()) : filteredData;
-                // update table params
-                params.total(orderedData.length);
-                // set new data
-                $defer.resolve(orderedData);
-              }, 500);
-            }).error(function(data, status, header, config) {
-              // no console data available
-              $scope.noDataAvailable = true;
-            });;
-          }
+
+      function activate() {
+
+        $scope.tabNumber = 0;
+
+        TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
+          TestRuns.selected = testRun;
+          $scope.buildResultsUrl = TestRuns.selected.buildResultsUrl;
+          $scope.tableParams = new ngTableParams({
+            page: 1,
+            // show first page
+            count: 50,
+            // count per page
+            sorting: {
+              KO: 'desc',
+              // initial sorting
+              OK: 'desc',
+              numberOfErrors: 'desc'
+            }
+          }, {
+            total: 0,
+            // length of data
+            getData: function ($defer, params) {
+              // ajax request to api
+              Jenkins.getData(TestRuns.selected.buildResultsUrl, false, $stateParams.productName, $stateParams.dashboardName).success(function (response) {
+                $timeout(function () {
+                  var data = $scope.tabNumber === 0 ? response.data : response.errors;
+                  var filteredData = params.filter() ? $filter('filter')(data, params.filter()) : data;
+                  var orderedData = params.sorting() ? $filter('orderBy')(filteredData, params.orderBy()) : filteredData;
+                  // update table params
+                  params.total(orderedData.length);
+                  // set new data
+                  $defer.resolve(orderedData);
+                }, 500);
+              }).error(function (data, status, header, config) {
+                // no console data available
+                $scope.noDataAvailable = true;
+              });
+              ;
+            }
+          });
         });
-      });
+      }
     }
   }
   function LoadingContainerDirective() {

@@ -16,19 +16,16 @@ function RecentTestsDirective () {
     /* @ngInject */
     function RecentTestsDirectiveController ($scope, $state, $interval, $timeout, TestRuns, mySocket) {
 
-        $scope.completedTestRunsOnly = true;
+
+        $scope.clearTestRunFilter = clearTestRunFilter;
+        $scope.updaterecentTestRuns = updaterecentTestRuns;
+
+        activate()
 
 
-        $scope.recentTestPeriodOptions = [
-            {value: 1 , label: 'Last day'},
-            {value: 2, label: 'Last 2 days'},
-            {value: 3, label: 'Last 3 days'},
-            {value: 7, label: 'Last week'}
-        ];
 
-        $scope.recentTestPeriod = TestRuns.recentTestPeriod;
+        /* Watches */
 
-        $scope.selectedRecentTestPeriodOptionIndex = $scope.recentTestPeriodOptions.map(function(recentTestPeriod){ return recentTestPeriod.value;}).indexOf(parseInt($scope.recentTestPeriod));
 
         $scope.$watch('recentTestPeriod', function (newVal, oldVal) {
 
@@ -48,12 +45,10 @@ function RecentTestsDirective () {
             }
         });
 
-
-        $scope.clearTestRunFilter = function(){
-
-            $scope.testRunFilter = '';
-
-        };
+        $scope.$on('$destroy', function () {
+            //  leave the room
+            mySocket.emit('exit-room', room);
+        });
 
 
         /*socket.io*/
@@ -62,7 +57,6 @@ function RecentTestsDirective () {
 
         mySocket.emit('room', room);
         console.log('Joined room: ' + room);
-
 
 
         mySocket.on('testrun', function (message) {
@@ -100,9 +94,30 @@ function RecentTestsDirective () {
         });
 
 
-        getRecentTests();
 
-        function getRecentTests() {
+        function activate() {
+
+            $scope.completedTestRunsOnly = true;
+
+            $scope.recentTestPeriodOptions = [
+                {value: 1 , label: 'Last day'},
+                {value: 2, label: 'Last 2 days'},
+                {value: 3, label: 'Last 3 days'},
+                {value: 7, label: 'Last week'}
+            ];
+
+            $scope.recentTestPeriod = TestRuns.recentTestPeriod;
+
+            $scope.selectedRecentTestPeriodOptionIndex = $scope.recentTestPeriodOptions.map(function(recentTestPeriod){ return recentTestPeriod.value;}).indexOf(parseInt($scope.recentTestPeriod));
+
+
+            getRecentTests();
+
+
+        }
+
+        function getRecentTests () {
+
             TestRuns.getRecentTestruns($scope.recentTestPeriod).success(function (recentTests) {
 
                 $scope.recentTests = recentTests;
@@ -112,7 +127,6 @@ function RecentTestsDirective () {
             });
 
         }
-
         function filterRecentTestRuns(recentTestRuns){
 
             if ($scope.testRunFilter === ''){
@@ -139,15 +153,17 @@ function RecentTestsDirective () {
         }
 
 
-        $scope.updaterecentTestRuns = function(){
+        function clearTestRunFilter(){
+
+            $scope.testRunFilter = '';
+
+        };
+
+        function updaterecentTestRuns(){
 
             getRecentTests();
         }
 
-        $scope.$on('$destroy', function () {
-            //  leave the room
-            mySocket.emit('exit-room', room);
-        });
 
     }
 }

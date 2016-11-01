@@ -15,15 +15,11 @@ function AddEventDirective () {
   /* @ngInject */
   function AddEventDirectiveController ($scope, $state, Events, $filter, $rootScope, $stateParams, TestRuns) {
 
-    $scope.event = Events.selected;
-    $scope.event.eventTimestamp = Events.selected.eventTimestamp ? Events.selected.eventTimestamp : new Date();
-    $scope.event.productName = $stateParams.productName;
-    $scope.event.dashboardName = $stateParams.dashboardName;
-    $scope.event.testRunId = Events.selected.testRunId ? Events.selected.testRunId : '';
+    $scope.openCalendar = openCalendar;
+    $scope.create = create;
+    $scope.cancel = cancel;
 
-    $scope.testRunIds = Events.getTestRunId(TestRuns.list);
-    $scope.descriptions = Events.getDescriptions(Events.list);
-
+      /* watches */
 
     $scope.$watch('event.productName', function (val) {
       $scope.event.productName = $filter('uppercase')(val);
@@ -33,9 +29,26 @@ function AddEventDirective () {
       $scope.event.dashboardName = $filter('uppercase')(val);
     }, true);
 
+    /* activate */
 
-    $scope.isOpen = false;
-    $scope.openCalendar = function (e) {
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      $scope.event = Events.selected;
+      $scope.event.eventTimestamp = Events.selected.eventTimestamp ? Events.selected.eventTimestamp : new Date();
+      $scope.event.productName = $stateParams.productName;
+      $scope.event.dashboardName = $stateParams.dashboardName;
+      $scope.event.testRunId = Events.selected.testRunId ? Events.selected.testRunId : '';
+      $scope.testRunIds = Events.getTestRunId(TestRuns.list);
+      $scope.descriptions = Events.getDescriptions(Events.list);
+      $scope.isOpen = false;
+
+    }
+
+    function openCalendar (e) {
       e.preventDefault();
       e.stopPropagation();
       $scope.isOpen = true;
@@ -43,7 +56,7 @@ function AddEventDirective () {
 
 
     // Create new Event
-    $scope.create = function () {
+    function create() {
       Events.create($scope.event).then(function (event) {
         Events.selected = {};
 
@@ -57,7 +70,7 @@ function AddEventDirective () {
       });
     };
 
-    $scope.cancel = function () {
+    function cancel() {
       Events.selected = {};
       /* reset form*/
       $scope.eventForm.$setPristine();

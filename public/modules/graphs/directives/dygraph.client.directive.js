@@ -140,15 +140,20 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
   /* @ngInject */
   function DygraphController($scope, $state, $stateParams, $rootScope, $timeout, TestRuns, Graphite, Events, Utils) {
 
-    $scope.selectAll = true;
-    $scope.showLegend =  Utils.showLegend;
-    $scope.horizontalZoom = true;
 
-    var clickDetected = false;
 
-    /* set zoomLock */
+    $scope.highlightSeries = highlightSeries;
+    $scope.updateSelectedSeries = updateSelectedSeries;
+    $scope.setAllSeriesSelected = setAllSeriesSelected;
+    $scope.selectSeriesToggle = selectSeriesToggle;
+    $scope.selectOtherSeriesToggle = selectOtherSeriesToggle;
 
-    $scope.zoomLock =  Utils.zoomLock;
+    /* activate */
+
+    activate();
+
+
+      /* watches */
 
     /* watch zoomLock */
 
@@ -170,17 +175,6 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
         $scope.showLegend =  Utils.showLegend;
       }
     });
-
-    /* hide legend when switching to two column view*/
-
-    //$scope.$watch(function (scope) {
-    //  return Utils.numberOfColumns;
-    //}, function (newVal, oldVal) {
-    //  if (newVal !== oldVal) {
-    //
-    //    if(newVal == '2' || newVal == '3' ) $scope.showLegend =  false;
-    //  }
-    //});
 
     /* watch zoomRange */
     $scope.$watch(function (scope) {
@@ -226,12 +220,12 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
     /* stop data polling when accordion is closed */
     $scope.$watch('metric.isOpen', function (newVal, oldVal) {
       //if (newVal !== oldVal) {
-        if(newVal === false) {
-          Interval.clearIntervalForMetric($scope.metric._id);
-        }else{
-          $scope.showProgressBar = true;
-          drawDypraph($scope.graphsType);
-        }
+      if(newVal === false) {
+        Interval.clearIntervalForMetric($scope.metric._id);
+      }else{
+        $scope.showProgressBar = true;
+        drawDypraph($scope.graphsType);
+      }
       //}
 
     });
@@ -241,14 +235,34 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
     });
 
 
-    setTimeout(function(){
 
-      $scope.graphsType =  Utils.graphsType;
-      $scope.showProgressBar = true;
 
-      drawDypraph($scope.graphsType);
+    /* functions */
 
-    });
+    function activate() {
+
+      $scope.selectAll = true;
+      $scope.showLegend = Utils.showLegend;
+      $scope.horizontalZoom = true;
+
+      var clickDetected = false;
+
+      /* set zoomLock */
+
+      $scope.zoomLock = Utils.zoomLock;
+
+      setTimeout(function(){
+
+        $scope.graphsType =  Utils.graphsType;
+        $scope.showProgressBar = true;
+
+        drawDypraph($scope.graphsType);
+
+      });
+
+
+    }
+
 
 
     function drawDypraph(graphsType)  {
@@ -523,7 +537,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       });
     }
 
-    $scope.highlightSeries = function(seriesName){
+    function highlightSeries(seriesName){
 
       $scope.graph.setSelection(false, seriesName)
     }
@@ -542,7 +556,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
 
 
-    $scope.updateSelectedSeries = function() {
+    function updateSelectedSeries() {
 
       /* show / hide selected series in legend */
       setTimeout(function(){
@@ -568,7 +582,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       });
     }
 
-    $scope.setAllSeriesSelected = function(setAllSeriesTo){
+    function setAllSeriesSelected(setAllSeriesTo){
 
       _.each($scope.metric.legendData, function(legendItem, i){
 
@@ -591,7 +605,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     };
 
-    $scope.selectSeriesToggle = function (selectedLegendItem){
+    function selectSeriesToggle(selectedLegendItem){
 
       var selectedSeriesIndex = $scope.metric.legendData.map(function(legendItem){return legendItem.id;}).indexOf(selectedLegendItem.id);
 
@@ -633,7 +647,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     };
 
-    $scope.selectOtherSeriesToggle = function (selectedLegendItem){
+    function selectOtherSeriesToggle(selectedLegendItem){
 
       var selectedSeriesIndex = $scope.metric.legendData.map(function(legendItem){return legendItem.id;}).indexOf(selectedLegendItem.id);
 

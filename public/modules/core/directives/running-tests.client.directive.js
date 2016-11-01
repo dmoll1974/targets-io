@@ -16,21 +16,13 @@ function RunningTestsDirective () {
     /* @ngInject */
     function RunningTestsDirectiveController ($scope, $state, $interval, $timeout, RunningTests, TestRuns, mySocket) {
 
-            RunningTests.get().success(function(runningTests){
 
+        activate()
 
-                /* calculate progress */
-
-                _.each(runningTests, function(testRun, i){
-
-                    testRun.progress = (testRun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(testRun.start).getTime()) / testRun.lastKnownDuration * 100) : undefined;
-                    //testRun.humanReadablelastKnownDuration = (testRun.lastKnownDuration) ? TestRuns.humanReadbleDuration(testRun.lastKnownDuration): undefined;
-                    testRun.timeLeft = (testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime()))) + ' left (' + testRun.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(testRun.start).getTime())) - testRun.lastKnownDuration) + ' longer than last completed test run (' + testRun.progress + '%)';
-                })
-
-                $scope.runningTests = runningTests;
-
-            });
+        $scope.$on('$destroy', function () {
+            //  leave the room
+            mySocket.emit('exit-room', room);
+        });
 
         /*socket.io*/
 
@@ -81,12 +73,28 @@ function RunningTestsDirective () {
         });
 
 
+        function activate(){
+
+            RunningTests.get().success(function(runningTests){
 
 
-        $scope.$on('$destroy', function () {
-            //  leave the room
-            mySocket.emit('exit-room', room);
-        });
+                /* calculate progress */
+
+                _.each(runningTests, function(testRun, i){
+
+                    testRun.progress = (testRun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(testRun.start).getTime()) / testRun.lastKnownDuration * 100) : undefined;
+                    //testRun.humanReadablelastKnownDuration = (testRun.lastKnownDuration) ? TestRuns.humanReadbleDuration(testRun.lastKnownDuration): undefined;
+                    testRun.timeLeft = (testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime()))) + ' left (' + testRun.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(testRun.start).getTime())) - testRun.lastKnownDuration) + ' longer than last completed test run (' + testRun.progress + '%)';
+                })
+
+                $scope.runningTests = runningTests;
+
+            });
+
+        }
+
+
+
 
     }
 }

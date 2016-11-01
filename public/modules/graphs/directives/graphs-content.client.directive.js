@@ -22,14 +22,6 @@ function GraphsContentDirective () {
 
     var vm = this;
 
-    vm.productName = $stateParams.productName;
-    vm.dashboardName = $stateParams.dashboardName;
-    //vm.value = $stateParams.tag;
-    //vm.filteredMetrics = $scope.metrics;
-    //vm.numberOfColumns = $scope.numberofcolumns;
-    vm.graphsType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
-
-
 
     vm.setMetricShareUrl = setMetricShareUrl;
     vm.editMetric = editMetric;
@@ -44,34 +36,14 @@ function GraphsContentDirective () {
 
     activate();
 
-
-
-
-    /* Open accordion by default, except for the "All" tab */
-    //$scope.$watch('metrics', function (newVal, oldVal) {
-    //
-    //  if(newVal !== oldVal) {
-    //
-    //    vm.filteredMetrics = $scope.metrics;
-    //    vm.columnsArray =[];
-    //
-    //    var itemsPerColumn = Math.ceil( vm.filteredMetrics.length / vm.numberOfColumns);
-    //
-    //    //Populates the column array
-    //    for (var i=0; i< vm.filteredMetrics.length; i += itemsPerColumn) {
-    //      var col = { start: i, end: Math.min(i + itemsPerColumn,  vm.filteredMetrics.length) };
-    //      vm.columnsArray.push(col);
-    //    }
-    //  }
-    //});
-
-
-
-
-
-
+  /* functions*/
 
     function activate(){
+
+      vm.productName = $stateParams.productName;
+      vm.dashboardName = $stateParams.dashboardName;
+      vm.graphsType = $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
+
 
     }
 

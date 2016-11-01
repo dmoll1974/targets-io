@@ -476,7 +476,7 @@ function upload(req, res) {
       Template.remove({}, function (err) {
         if (err)
           winston.error(err);
-        winston.error('Template removed');
+        winston.info('Templates removed');
         if (importItems.templates) {
           _.each(importItems.templates, function (importTemplate) {
 

@@ -19,93 +19,6 @@ function GraphsContainerDirective () {
     var vm = this;
 
 
-    /* Releative interval options in live graphs */
-    vm.zoomOptions = [
-      {value: '-10min' , label: 'Last 10 minutes'},
-      {value: '-30min' , label: 'Last 30 minutes'},
-      {value: '-1h', label: 'Last hour'},
-      {value: '-3h', label: 'Last 3 hours'},
-      {value: '-6h', label: 'Last 6 hours'},
-      {value: '-12h', label: 'Last 12 hours'},
-      {value: '-1d', label: 'Last day'},
-      {value: '-2d', label: 'Last 2 days'},
-      {value: '-3d', label: 'Last 3 days'}
-    ];
-
-    /* Get deeplink params from query string */
-
-    /* If graph has been zoomed */
-    if ($state.params.zoomFrom)
-      Utils.zoomFrom = $state.params.zoomFrom;
-
-    if ($state.params.zoomUntil)
-      Utils.zoomUntil = $state.params.zoomUntil;
-
-    /* get zoomRange for live graphs*/
-    if ($state.params.zoomRange){
-      vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf($state.params.zoomRange);
-      vm.zoomRange = vm.zoomOptions[vm.selectedZoomOptionIndex];
-    }else{
-      vm.zoomRange = Utils.zoomRange;
-      /* set md-select selected item */
-      vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf(vm.zoomRange.label);
-    }
-
-    /* get metricFilter */
-    if ($state.params.metricFilter) {
-      vm.metricFilter = $state.params.metricFilter;
-      vm.metricFilterInput = $state.params.metricFilter;
-      Utils.metricFilter = $state.params.metricFilter;
-    }else{
-      vm.metricFilter = Utils.metricFilter;
-      vm.metricFilterInput = Utils.metricFilter;
-    }
-
-    /* get selectedSeries */
-    if ($state.params.selectedSeries) {
-      vm.selectedSeries = $state.params.selectedSeries;
-      Utils.selectedSeries = $state.params.selectedSeries;
-    }else{
-      vm.selectedSeries = Utils.selectedSeries;
-    }
-
-    /* reset Utils if not navigating the tabs */
-
-    if ($rootScope.currentState !== $rootScope.previousState && $rootScope.previousState && !$rootScope.previousState.includes('requirementsTestRun') ){
-
-      Utils.reset();
-    }
-
-    /* Get selected series params from query string */
-
-    //Utils.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
-
-    /* Get metricFilter params from query string */
-
-    //Utils.metricFilter = ($state.params.metricFilter) ? decodeURIComponent($state.params.metricFilter) : '';
-
-    /* get value form statParams */
-    //vm.value = $stateParams.tag;
-
-    vm.productName = $stateParams.productName;
-    vm.dashboardName = $stateParams.dashboardName;
-    vm.tag = $stateParams.tag;
-
-    vm.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
-
-
-    //vm.value = $stateParams.tag;
-    vm.numberOfColumns = Utils.numberOfColumns;
-    vm.flex = 100 / vm.numberOfColumns;
-    vm.showLegend = Utils.showLegend;
-    vm.showTooltip = Utils.showTooltip;
-    vm.zoomLock = Utils.zoomLock;
-    vm.metricFilter = Utils.metricFilter;
-    vm.showViewUrl = false;
-    vm.graphsType =  $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
-    Utils.graphsType = vm.graphsType;
-
-
     vm.toggleLegend = toggleLegend;
     vm.toggleTooltip = toggleTooltip;
     vm.toggleNumberOfColums = toggleNumberOfColums;
@@ -139,62 +52,13 @@ function GraphsContainerDirective () {
 
     });
 
-
-
-    /* watch showTooltip*/
-    //$scope.$watch(function (scope) {
-    //  return Utils.showTooltip;
-    //}, function (newVal, oldVal) {
-    //  if (newVal !== oldVal) {
-    //
-    //    vm.showTooltip =  Utils.showTooltip;
-    //  }
-    //});
-
-    /* watch metricFilter */
-    //$scope.$watch('vm.metricFilter', function (newVal, oldVal) {
-    //  if (newVal !== oldVal) {
-    //
-    //    $timeout(function(){
-    //      vm.metrics = filterOnTag(Dashboards.selected.metrics);
-    //      vm.filteredMetrics  = filterOnMetricFilter(vm.metrics);
-    //      populateColumns();
-    //    });
-    //  }
-    //});
-
+  /* Watches */
 
 
     /* watch zoomRange */
     $scope.$watch('vm.zoomRange', function (newVal, oldVal) {
 
-
-      //if(newVal.value === 'start' ){
-      //
-      //  TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function(runningTest){
-      //
-      //    if(runningTest.start){
-      //
-      //      Utils.zoomRange = {value: Math.round(new Date(runningTest.start).getTime() / 1000), label: 'Since start test run'} ;
-      //
-      //    }else{
-      //
-      //
-      //
-      //          Utils.zoomRange.value = '-10min';
-      //          Utils.zoomRange.label = 'Last 10 minutes';
-      //          vm.zoomRange.value = '-10min';
-      //          vm.zoomRange.label = 'Last 10 minutes';
-      //
-      //    }
-      //
-      //
-      //
-      //  });
-      //}else{
-
         Utils.zoomRange = vm.zoomRange;
-      //}
 
     });
 
@@ -208,6 +72,91 @@ function GraphsContainerDirective () {
     function activate(){
 
 
+      /* Releative interval options in live graphs */
+      vm.zoomOptions = [
+        {value: '-10min' , label: 'Last 10 minutes'},
+        {value: '-30min' , label: 'Last 30 minutes'},
+        {value: '-1h', label: 'Last hour'},
+        {value: '-3h', label: 'Last 3 hours'},
+        {value: '-6h', label: 'Last 6 hours'},
+        {value: '-12h', label: 'Last 12 hours'},
+        {value: '-1d', label: 'Last day'},
+        {value: '-2d', label: 'Last 2 days'},
+        {value: '-3d', label: 'Last 3 days'}
+      ];
+
+      /* Get deeplink params from query string */
+
+      /* If graph has been zoomed */
+      if ($state.params.zoomFrom)
+        Utils.zoomFrom = $state.params.zoomFrom;
+
+      if ($state.params.zoomUntil)
+        Utils.zoomUntil = $state.params.zoomUntil;
+
+      /* get zoomRange for live graphs*/
+      if ($state.params.zoomRange){
+        vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.value;}).indexOf($state.params.zoomRange);
+        vm.zoomRange = vm.zoomOptions[vm.selectedZoomOptionIndex];
+      }else{
+        vm.zoomRange = Utils.zoomRange;
+        /* set md-select selected item */
+        vm.selectedZoomOptionIndex = vm.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf(vm.zoomRange.label);
+      }
+
+      /* get metricFilter */
+      if ($state.params.metricFilter) {
+        vm.metricFilter = $state.params.metricFilter;
+        vm.metricFilterInput = $state.params.metricFilter;
+        Utils.metricFilter = $state.params.metricFilter;
+      }else{
+        vm.metricFilter = Utils.metricFilter;
+        vm.metricFilterInput = Utils.metricFilter;
+      }
+
+      /* get selectedSeries */
+      if ($state.params.selectedSeries) {
+        vm.selectedSeries = $state.params.selectedSeries;
+        Utils.selectedSeries = $state.params.selectedSeries;
+      }else{
+        vm.selectedSeries = Utils.selectedSeries;
+      }
+
+      /* reset Utils if not navigating the tabs */
+
+      if ($rootScope.currentState !== $rootScope.previousState && $rootScope.previousState && !$rootScope.previousState.includes('requirementsTestRun') ){
+
+        Utils.reset();
+      }
+
+      /* Get selected series params from query string */
+
+      //Utils.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
+
+      /* Get metricFilter params from query string */
+
+      //Utils.metricFilter = ($state.params.metricFilter) ? decodeURIComponent($state.params.metricFilter) : '';
+
+      /* get value form statParams */
+      //vm.value = $stateParams.tag;
+
+      vm.productName = $stateParams.productName;
+      vm.dashboardName = $stateParams.dashboardName;
+      vm.tag = $stateParams.tag;
+
+      vm.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
+
+
+      //vm.value = $stateParams.tag;
+      vm.numberOfColumns = Utils.numberOfColumns;
+      vm.flex = 100 / vm.numberOfColumns;
+      vm.showLegend = Utils.showLegend;
+      vm.showTooltip = Utils.showTooltip;
+      vm.zoomLock = Utils.zoomLock;
+      vm.metricFilter = Utils.metricFilter;
+      vm.showViewUrl = false;
+      vm.graphsType =  $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
+      Utils.graphsType = vm.graphsType;
 
 
       Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {

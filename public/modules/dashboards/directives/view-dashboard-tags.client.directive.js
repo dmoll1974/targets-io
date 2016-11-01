@@ -16,12 +16,13 @@ function ManageDashboardTagsDirective () {
   /* @ngInject */
   function ManageDashboardTagsDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, ConfirmModal, $modal, $q) {
 
-    $scope.productName = $stateParams.productName;
-    $scope.dashboardName = $stateParams.dashboardName;
 
-    $scope.tags = Dashboards.selected.tags;
-    $scope.defaultTag = Dashboards.getDefaultTag(Dashboards.selected.tags);
+    $scope.setTagsSelected = setTagsSelected;
+    $scope.setAllTagsSelected = setAllTagsSelected;
+    $scope.openDeleteSelectedTagsModal = openDeleteSelectedTagsModal;
 
+
+      /* watches */
     $scope.$watch('allTagsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         _.each($scope.tags, function (tag, i) {
@@ -30,7 +31,38 @@ function ManageDashboardTagsDirective () {
       }
     });
 
-    $scope.setTagsSelected = function(tagSelected){
+
+    $scope.$watch('defaultTag', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        setDefault($scope.defaultTag);
+        Dashboards.update(Dashboards.selected).success(function (dashboard) {
+          Dashboards.selected = dashboard;
+          $scope.tags = Dashboards.selected.tags;
+        });
+      }
+    });
+
+    /* activate */
+
+    activate();
+
+
+
+    /* functions */
+
+    function activate(){
+
+      $scope.productName = $stateParams.productName;
+      $scope.dashboardName = $stateParams.dashboardName;
+
+      $scope.tags = Dashboards.selected.tags;
+      $scope.defaultTag = Dashboards.getDefaultTag(Dashboards.selected.tags);
+
+
+    }
+
+
+    function setTagsSelected(tagSelected){
 
       if (tagSelected === false){
 
@@ -45,33 +77,13 @@ function ManageDashboardTagsDirective () {
       }
     };
 
-    $scope.setAllTagsSelected = function(tagSelected){
+    function setAllTagsSelected(tagSelected){
 
       $scope.tagSelected = tagSelected;
     };
 
 
-    //$scope.$watch(function (scope) {
-    //  return Dashboards.selected._id;
-    //}, function (newVal, oldVal) {
-    //  if (newVal !== oldVal) {
-    //    $scope.tags = Dashboards.selected.tags;
-    //    $scope.defaultTag = Dashboards.getDefaultTag(Dashboards.selected.tags);
-    //    //setDefault($scope.defaultTag);
-    //    //Dashboards.update(Dashboards.selected).success(function (dashboard) {
-    //    //  $scope.tags = dashboard.tags;
-    //    //});
-    //  }
-    //});
-    $scope.$watch('defaultTag', function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        setDefault($scope.defaultTag);
-        Dashboards.update(Dashboards.selected).success(function (dashboard) {
-          Dashboards.selected = dashboard;
-          $scope.tags = Dashboards.selected.tags;
-        });
-      }
-    });
+
     function setDefault(newDefaultTag) {
       _.each(Dashboards.selected.tags, function (tag, i) {
         if (tag.text === newDefaultTag) {
@@ -81,7 +93,8 @@ function ManageDashboardTagsDirective () {
         }
       });
     }
-    $scope.openDeleteSelectedTagsModal = function (size) {
+
+    function openDeleteSelectedTagsModal(size) {
 
       ConfirmModal.itemType = 'Delete ';
       ConfirmModal.selectedItemId = '';

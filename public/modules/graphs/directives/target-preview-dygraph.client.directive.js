@@ -140,15 +140,18 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
   /* @ngInject */
   function DygraphController($scope, $state, $stateParams, $rootScope, $timeout, TestRuns, Graphite, Events, Utils) {
 
-    $scope.selectAll = true;
-    $scope.showLegend =  true;;
-    $scope.horizontalZoom = true;
+    $scope.highlightSeries = highlightSeries;
+    $scope.updateSelectedSeries = updateSelectedSeries;
+    $scope.setAllSeriesSelected = setAllSeriesSelected;
+    $scope.selectSeriesToggle = selectSeriesToggle;
+    $scope.selectOtherSeriesToggle = selectOtherSeriesToggle;
 
-    var clickDetected = false;
+      /* activate */
 
-    /* set zoomLock */
+    activate();
 
-    $scope.zoomLock =  Utils.zoomLock;
+
+    /* watches */
 
     /* watch zoomLock */
 
@@ -228,15 +231,30 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       Interval.clearIntervalForMetric($scope.metric._id);
     });
 
+    /* functions */
 
-    setTimeout(function(){
+    function activate() {
+      $scope.selectAll = true;
+      $scope.showLegend = true;
+      $scope.horizontalZoom = true;
 
-      $scope.graphsType = 'graphs-live';
-      $scope.showProgressBar = true;
+      var clickDetected = false;
 
-      drawDypraph($scope.graphsType);
+      /* set zoomLock */
 
-    });
+      $scope.zoomLock = Utils.zoomLock;
+
+      setTimeout(function(){
+
+        $scope.graphsType = 'graphs-live';
+        $scope.showProgressBar = true;
+
+        drawDypraph($scope.graphsType);
+
+      });
+
+    }
+
 
 
     function drawDypraph(graphsType)  {
@@ -491,7 +509,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       });
     }
 
-    $scope.highlightSeries = function(seriesName){
+    function highlightSeries(seriesName){
 
       $scope.graph.setSelection(false, seriesName)
     }
@@ -510,7 +528,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
 
 
-    $scope.updateSelectedSeries = function() {
+    function updateSelectedSeries() {
 
       /* show / hide selected series in legend */
       setTimeout(function(){
@@ -536,7 +554,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       });
     }
 
-    $scope.setAllSeriesSelected = function(setAllSeriesTo){
+    function setAllSeriesSelected(setAllSeriesTo){
 
       _.each($scope.metric.legendData, function(legendItem, i){
 
@@ -559,7 +577,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     };
 
-    $scope.selectSeriesToggle = function (selectedLegendItem){
+    function selectSeriesToggle(selectedLegendItem){
 
       var selectedSeriesIndex = $scope.metric.legendData.map(function(legendItem){return legendItem.id;}).indexOf(selectedLegendItem.id);
 
@@ -601,7 +619,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     };
 
-    $scope.selectOtherSeriesToggle = function (selectedLegendItem){
+    function selectOtherSeriesToggle(selectedLegendItem){
 
       var selectedSeriesIndex = $scope.metric.legendData.map(function(legendItem){return legendItem.id;}).indexOf(selectedLegendItem.id);
 

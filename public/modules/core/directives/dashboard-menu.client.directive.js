@@ -16,37 +16,51 @@ function DashboardMenuDirective () {
     /* @ngInject */
     function DashboardMenuDirectiveController ($scope, $state, $stateParams, $timeout, Products, Dashboards, Templates, ConfirmModal, $modal) {
 
+
+
+        $scope.openMenu = openMenu;
+        $scope.addTestRun = addTestRun;
+        $scope.manageTags = manageTags;
+        $scope.addDashboard = addDashboard;
+        $scope.addTemplate = addTemplate;
+        $scope.clone = clone;
+        $scope.edit = edit;
+        $scope.openDeleteDashboardModal = openDeleteDashboardModal;
+
+
+
+
         var originatorEv;
-        $scope.openMenu = function ($mdOpenMenu, ev) {
+        function openMenu  ($mdOpenMenu, ev) {
             originatorEv = ev;
             $mdOpenMenu(ev);
         };
 
-        $scope.addTestRun = function (){
+        function addTestRun (){
 
             $state.go('addTestRun',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});
 
         }
 
-        $scope.manageTags = function(){
+        function manageTags(){
 
             $state.go('manageDashboardTags',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});
 
         }
 
-        $scope.addDashboard = function(){
+        function addDashboard(){
 
             $state.go('addDashboard', {productName: $stateParams.productName});
         }
 
-        $scope.addTemplate = function(){
+        function addTemplate(){
 
             Templates.selected = Dashboards.selected;
             $state.go('addTemplate');
 
         }
 
-        $scope.clone = function () {
+        function clone () {
             Dashboards.clone().success(function (dashboard) {
 
                 $state.go('editDashboard', {
@@ -58,14 +72,14 @@ function DashboardMenuDirective () {
             });
         };
 
-        $scope.edit = function () {
+        function edit() {
             $state.go('editDashboard', {
                 'productName': $stateParams.productName,
                 'dashboardName': $stateParams.dashboardName
             });
         };
 
-        $scope.openDeleteDashboardModal = function (size) {
+        function openDeleteDashboardModal (size) {
             ConfirmModal.itemType = 'Delete dashboard ';
             ConfirmModal.selectedItemId = Dashboards.selected._id;
             ConfirmModal.selectedItemDescription = Dashboards.selected.name;

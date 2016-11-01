@@ -543,6 +543,7 @@ function getTestRunBenchmarks(req, res) {
       { dashboardName: req.params.dashboardName },
       { testRunId: req.params.testRunId }
     ]
+
   }).sort('-end').exec(function (err, testRun) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
