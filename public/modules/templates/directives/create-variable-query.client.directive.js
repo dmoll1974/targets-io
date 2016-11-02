@@ -20,26 +20,37 @@ function CreateVariableQueryDirective () {
     /* @ngInject */
     function CreateVariableQueryDirectiveController ($scope, $state, $timeout, Graphite, $mdMenu) {
 
-        console.log('target: ' + $scope.target);
 
-        /* get initial values for graphite target picker*/
-        Graphite.findMetrics('*').success(function(graphiteTargetsLeafs) {
+        $scope.openMenu = openMenu;
+        $scope.getTargets = getTargets;
 
-            var graphiteTargets = [];
+            /* activate */
 
-            _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
-                graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+        activate();
+
+        /* functions */
+
+        function activate() {
+
+            /* get initial values for graphite target picker*/
+            Graphite.findMetrics('*').success(function (graphiteTargetsLeafs) {
+
+                var graphiteTargets = [];
+
+                _.each(graphiteTargetsLeafs, function (graphiteTargetsLeaf) {
+                    graphiteTargets.push({text: graphiteTargetsLeaf.text, id: graphiteTargetsLeaf.id});
+                });
+
+                $scope.defaultGraphiteTargets = graphiteTargets;
+                $scope.graphiteTargets = $scope.defaultGraphiteTargets;
+                $scope.expandable = true;
+
             });
-
-            $scope.defaultGraphiteTargets = graphiteTargets;
-            $scope.graphiteTargets = $scope.defaultGraphiteTargets;
-            $scope.expandable = true;
-
-        });
+        }
 
         /* Open menu*/
 
-        $scope.openMenu = function($mdOpenMenu, $event, target) {
+        function openMenu($mdOpenMenu, $event, target) {
 
 
             /* remove trailing dot */
@@ -129,7 +140,7 @@ function CreateVariableQueryDirective () {
 
         /* get targets from Graphite */
 
-        $scope.getTargets = function(target, graphiteTargetId, targetIndex){
+        function getTargets(target, graphiteTargetId, targetIndex){
 
             var query;
 

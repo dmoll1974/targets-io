@@ -31,26 +31,10 @@ function GraphsContainerDirective () {
     vm.switchTag = switchTag;
     vm.setMetricFilter = setMetricFilter;
     vm.clearMetricFilter = clearMetricFilter;
+    vm.openMenu = openMenu;
 
 
-    activate();
 
-
-    /* initialize menu */
-
-    var originatorEv;
-    vm.openMenu = function ($mdOpenMenu, ev) {
-      originatorEv = ev;
-      $mdOpenMenu(ev);
-    };
-
-    $scope.$on('$destroy', function () {
-      /* reset metricFilter when leaving graphs view */
-      Utils.metricFilter = '';
-      Utils.showTooltip = false;
-      Utils.selectedSeries = '';
-
-    });
 
   /* Watches */
 
@@ -68,6 +52,23 @@ function GraphsContainerDirective () {
         Utils.zoomLock = newVal;
       }
     });
+
+
+    $scope.$on('$destroy', function () {
+      /* reset metricFilter when leaving graphs view */
+      Utils.metricFilter = '';
+      Utils.showTooltip = false;
+      Utils.selectedSeries = '';
+
+    });
+
+    /* activate */
+
+    activate();
+
+
+    /* functions */
+
 
     function activate(){
 
@@ -231,6 +232,15 @@ function GraphsContainerDirective () {
       }
 
     }
+
+    /* initialize menu */
+
+    var originatorEv;
+    function openMenu($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
+
 
     function populateColumns(){
 

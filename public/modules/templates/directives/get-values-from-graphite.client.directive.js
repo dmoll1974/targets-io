@@ -22,14 +22,15 @@ function GetValuesFromGraphiteDirective () {
     function GetValuesFromGraphiteDirectiveController ($scope, $state, $timeout, Graphite) {
 
 
-        $scope.validQuery = true;
-        $scope.showTargetAutocomplete = false;
+        $scope.toggleShowTargetAutocomplete = toggleShowTargetAutocomplete;
+        $scope.filterGraphiteTargets = filterGraphiteTargets;
+        $scope.setTarget = setTarget;
 
-
+        /* Watches */
 
         $scope.$watch('query', function() {
 
-                /* get initial values for graphite target picker*/
+            /* get initial values for graphite target picker*/
             Graphite.findMetrics($scope.query).success(function(graphiteTargetsLeafs) {
 
                 var graphiteTargets = [];
@@ -54,7 +55,21 @@ function GetValuesFromGraphiteDirective () {
             });
         });
 
-        $scope.toggleShowTargetAutocomplete = function(){
+        /* activate */
+
+        activate();
+
+        /* functions */
+
+        function activate() {
+
+            $scope.validQuery = true;
+            $scope.showTargetAutocomplete = false;
+        }
+
+
+
+        function toggleShowTargetAutocomplete(){
 
             $scope.showTargetAutocomplete = true;
 
@@ -63,7 +78,7 @@ function GetValuesFromGraphiteDirective () {
             },10);
         }
 
-        $scope.filterGraphiteTargets = function(query) {
+        function filterGraphiteTargets(query) {
 
             var results = query ? $scope.graphiteTargets.filter( createFilterForTemplates(query) ) : $scope.graphiteTargets;
 
@@ -79,7 +94,7 @@ function GetValuesFromGraphiteDirective () {
         }
 
 
-        $scope.setTarget = function(target) {
+        function setTarget(target) {
 
             Graphite.findMetrics(target.text + '.*').success(function(graphiteTargetsLeafs) {
 

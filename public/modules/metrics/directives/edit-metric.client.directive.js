@@ -18,20 +18,7 @@ function EditMetricDirective () {
 
     var vm = this;
 
-    activate();
 
-    vm.productName = $stateParams.productName;
-    vm.dashboardName = $stateParams.dashboardName;
-
-    /* values for form drop downs*/
-    vm.metricTypes = Metrics.metricTypes;
-    vm.metricUnits = Metrics.metricUnits;
-    vm.operatorOptions = Metrics.operatorOptions;
-    vm.deviationOptions = Metrics.deviationOptions;
-    vm.progress = undefined;
-
-    vm.dashboard = Dashboards.selected;
-    
     vm.addTarget = addTarget;
     vm.removeTarget = removeTarget;
     vm.duplicateTarget = duplicateTarget;
@@ -61,6 +48,12 @@ function EditMetricDirective () {
       }
     });
 
+    $scope.$on('$destroy', function () {
+      //  leave the room
+      mySocket.emit('exit-room', room);
+    });
+
+
     /*socket.io*/
 
     var room = $stateParams.productName + '-' + $stateParams.dashboardName;
@@ -78,11 +71,49 @@ function EditMetricDirective () {
 
 
 
-    $scope.$on('$destroy', function () {
-      //  leave the room
-      mySocket.emit('exit-room', room);
-    });
 
+
+    /* activate */
+    activate();
+
+    /* functions */
+
+    function activate () {
+
+      vm.productName = $stateParams.productName;
+      vm.dashboardName = $stateParams.dashboardName;
+
+      /* values for form drop downs*/
+      vm.metricTypes = Metrics.metricTypes;
+      vm.metricUnits = Metrics.metricUnits;
+      vm.operatorOptions = Metrics.operatorOptions;
+      vm.deviationOptions = Metrics.deviationOptions;
+      vm.progress = undefined;
+
+      vm.dashboard = Dashboards.selected;
+
+
+      Metrics.get($stateParams.metricId).success(function (metric) {
+
+        vm.metric = metric;
+
+        /* if metric has custom unit, add it to the select list */
+
+        if(vm.metricUnits.indexOf(vm.metric.unit ) === -1){
+          vm.metricUnits.unshift(vm.metric.unit);
+        }
+
+        /* set benchmark and requirement toggles */
+        if (vm.metric.requirementValue !== null)
+          vm.enableRequirement = true;
+        if (vm.metric.benchmarkValue !== null)
+          vm.enableBenchmarking = true;
+        /* set current requirements */
+        vm.currentRequirement = metric.requirementOperator + metric.requirementValue;
+        /* set current benchmark values */
+        vm.currentBenchmark = metric.benchmarkOperator + metric.benchmarkValue;
+      });
+    };
 
     function addCustomUnit(){
 
@@ -174,28 +205,7 @@ function EditMetricDirective () {
     };
 
     // Find existing Metric
-    function activate () {
-      Metrics.get($stateParams.metricId).success(function (metric) {
 
-        vm.metric = metric;
-
-        /* if metric has custom unit, add it to the select list */
-
-        if(vm.metricUnits.indexOf(vm.metric.unit ) === -1){
-          vm.metricUnits.unshift(vm.metric.unit);
-        }
-
-        /* set benchmark and requirement toggles */
-        if (vm.metric.requirementValue !== null)
-          vm.enableRequirement = true;
-        if (vm.metric.benchmarkValue !== null)
-          vm.enableBenchmarking = true;
-        /* set current requirements */
-        vm.currentRequirement = metric.requirementOperator + metric.requirementValue;
-        /* set current benchmark values */
-        vm.currentBenchmark = metric.benchmarkOperator + metric.benchmarkValue;
-      });
-    };
     
     function clone() {
 

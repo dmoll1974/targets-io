@@ -18,21 +18,6 @@ function AddMetricDirective () {
 
     var vm = this;
 
-    activate();
-
-    vm.productName = $stateParams.productName;
-    vm.dashboardName = $stateParams.dashboardName;
-
-    /* values for form drop downs*/
-    vm.metricTypes = Metrics.metricTypes
-    vm.metricUnits = Metrics.metricUnits;
-    vm.operatorOptions = Metrics.operatorOptions;
-    vm.deviationOptions = Metrics.deviationOptions;
-    vm.progress = undefined;
-
-
-
-    vm.dashboard = Dashboards.selected;
 
     vm.addTarget = addTarget;
     vm.removeTarget = removeTarget;
@@ -41,6 +26,7 @@ function AddMetricDirective () {
     vm.loadTags = loadTags;
     vm.create = create;
     vm.cancel = cancel;
+
 
     /* watches*/
 
@@ -83,6 +69,13 @@ function AddMetricDirective () {
       mySocket.emit('exit-room', room);
     });
 
+
+
+    /* activate */
+    activate();
+
+    /* functions */
+
     function activate(){
 
       if(Metrics.clone === undefined){
@@ -106,6 +99,22 @@ function AddMetricDirective () {
 
 
       }
+
+      vm.productName = $stateParams.productName;
+      vm.dashboardName = $stateParams.dashboardName;
+
+      /* values for form drop downs*/
+      vm.metricTypes = Metrics.metricTypes
+      vm.metricUnits = Metrics.metricUnits;
+      vm.operatorOptions = Metrics.operatorOptions;
+      vm.deviationOptions = Metrics.deviationOptions;
+      vm.progress = undefined;
+
+
+
+      vm.dashboard = Dashboards.selected;
+
+
     }
 
      function addCustomUnit(){

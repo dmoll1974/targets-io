@@ -16,20 +16,15 @@ function AddTemplateMetricDirective () {
   function AddTemplateMetricDirectiveController ($scope, $rootScope, $state, Templates, Dashboards, Utils) {
 
 
-      if (Templates.metricClone.alias){
-          $scope.metric = Templates.metricClone;
-          Templates.metricClone = {};
-          /* set benchmark and requirement toggles */
-          if ($scope.metric.requirementValue)
-              $scope.enableRequirement = true;
-          if ($scope.metric.benchmarkValue)
-              $scope.enableBenchmarking = true;
-      }else {
-          $scope.metric = {};
-          $scope.metric.targets = [''];
-          $scope.enableBenchmarking = 'disabled';
-          $scope.enableRequirement = 'disabled';
-      }
+
+      $scope.addCustomUnit = addCustomUnit;
+      $scope.addTarget = addTarget;
+      $scope.removeTarget = removeTarget;
+      $scope.loadTags = loadTags;
+      $scope.create = create;
+      $scope.cancel = cancel;
+
+          /* Watches */
 
       /* watch benchmark and requirement toggles */
 
@@ -41,6 +36,7 @@ function AddTemplateMetricDirective () {
               }
           }
       });
+
       $scope.$watch('enableBenchmarking', function (newVal, oldVal) {
           if (newVal !== oldVal) {
               if ($scope.enableBenchmarking === false) {
@@ -50,47 +46,77 @@ function AddTemplateMetricDirective () {
           }
       });
 
-      /* values for form drop downs*/
-      $scope.metricTypes = [
-          'Average',
-          'Maximum',
-          'Minimum',
-          'Last',
-          'Gradient'
-      ];
+      /* activate */
+
+      activate();
+
+      /* functions */
+
+      function activate() {
 
 
-      $scope.metricUnits = [
-          'None',
-          'Count',
-          'Errors',
-          'Mb',
-          'Milliseconds',
-          'Percentage',
-          'Responses',
-          'Bytes/second',
-          'CPUsec',
-          'Users',
-          'Custom'
-      ];
+          if (Templates.metricClone.alias) {
+              $scope.metric = Templates.metricClone;
+              Templates.metricClone = {};
+              /* set benchmark and requirement toggles */
+              if ($scope.metric.requirementValue)
+                  $scope.enableRequirement = true;
+              if ($scope.metric.benchmarkValue)
+                  $scope.enableBenchmarking = true;
+          } else {
+              $scope.metric = {};
+              $scope.metric.targets = [''];
+              $scope.enableBenchmarking = 'disabled';
+              $scope.enableRequirement = 'disabled';
+          }
 
-      $scope.addCustomUnit = function(){
+          /* values for form drop downs*/
+          $scope.metricTypes = [
+              'Average',
+              'Maximum',
+              'Minimum',
+              'Last',
+              'Gradient'
+          ];
+
+
+          $scope.metricUnits = [
+              'None',
+              'Count',
+              'Errors',
+              'Mb',
+              'Milliseconds',
+              'Percentage',
+              'Responses',
+              'Bytes/second',
+              'CPUsec',
+              'Users',
+              'Custom'
+          ];
+
+          $scope.variables = Templates.selected.variables;
+
+      }
+
+
+      function addCustomUnit(){
 
           $scope.metricUnits.push($scope.metric.customUnit)
           $scope.metric.unit = $scope.metric.customUnit;
 
       }
 
-      $scope.variables = Templates.selected.variables;
 
-      $scope.addTarget = function () {
+      function addTarget() {
           $scope.metric.targets.push('');
           $scope.graphiteTargets = $scope.defaultGraphiteTargets;
       };
-      $scope.removeTarget = function (index) {
+
+      function removeTarget(index) {
           $scope.metric.targets.splice(index, 1);
       };
-      $scope.loadTags = function (query) {
+
+      function loadTags(query) {
 
           var matchedTags = [];
           _.each(Templates.selected.tags, function (tag) {
@@ -101,31 +127,31 @@ function AddTemplateMetricDirective () {
       };
 
 
-      $scope.create = function(){
+      function create(){
 
-      /* sort tags */
-      $scope.metric.tags = $scope.metric.tags.sort(Utils.dynamicSort('text'));
+          /* sort tags */
+          if($scope.metric.tags.length > 1)$scope.metric.tags = $scope.metric.tags.sort(Utils.dynamicSort('text'));
 
-      /* add tags */
+          /* add tags */
 
-          _.each($scope.metric.tags, function(tag){
+              _.each($scope.metric.tags, function(tag){
 
-              Templates.selected.tags.push(tag);
+                  Templates.selected.tags.push(tag);
 
-          });
+              });
 
-      Templates.selected.tags = _.uniq(Templates.selected.tags, 'text');
+          Templates.selected.tags = _.uniq(Templates.selected.tags, 'text');
 
-      Templates.selected.metrics.push($scope.metric);
+          Templates.selected.metrics.push($scope.metric);
 
-      Templates.update(Templates.selected).success(function (template){
-            Templates.selected = template;
-            Templates.selected.selectedIndex = 1;
-            $state.go('viewTemplate',{templateName: template.name});
-        });
+          Templates.update(Templates.selected).success(function (template){
+                Templates.selected = template;
+                Templates.selected.selectedIndex = 1;
+                $state.go('viewTemplate',{templateName: template.name});
+            });
       }
 
-      $scope.cancel = function () {
+      function cancel() {
           if ($rootScope.previousStateParams)
               $state.go($rootScope.previousState, $rootScope.previousStateParams);
           else

@@ -17,21 +17,15 @@ function TemplateMetricsDirective () {
   function TemplateMetricsDirectiveController ($scope, $state, Templates, ConfirmModal, $modal) {
 
 
-    $scope.sortType     = 'orderByTags'; // set the default sort type
-    $scope.sortReverse  = false;  // set the default sort order
-    $scope.searchMetrics  = ''; // set the default sort order
+    $scope.addMetric = addMetric;
+    $scope.editMetric = editMetric;
+    $scope.clearMetricFilter = clearMetricFilter;
+    $scope.setMetricsSelected = setMetricsSelected;
+    $scope.setAllMetricsSelected = setAllMetricsSelected;
+    $scope.orderByTags = orderByTags;
+    $scope.openDeleteSelectedMetricsModal = openDeleteSelectedMetricsModal;
 
-
-    $scope.addMetric = function(){
-
-        $state.go('addTemplateMetric');
-    };
-
-    $scope.editMetric = function(index){
-
-      Templates.metric = Templates.selected.metrics[index];
-      $state.go('editTemplateMetric', {metricId: Templates.metric._id});
-    }
+    /* Watches */
 
     $scope.$watch('allMetricsSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
@@ -41,12 +35,38 @@ function TemplateMetricsDirective () {
       }
     });
 
-    $scope.clearMetricFilter = function(){
+    /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      $scope.sortType = 'orderByTags'; // set the default sort type
+      $scope.sortReverse = false;  // set the default sort order
+      $scope.searchMetrics = ''; // set the default sort order
+
+    }
+
+    function addMetric(){
+
+        $state.go('addTemplateMetric');
+    };
+
+    function editMetric(index){
+
+      Templates.metric = Templates.selected.metrics[index];
+      $state.go('editTemplateMetric', {metricId: Templates.metric._id});
+    }
+
+
+    function clearMetricFilter(){
 
       $scope.filterMetrics = '';
     }
 
-    $scope.setMetricsSelected = function(metricSelected){
+    function setMetricsSelected(metricSelected){
 
       if (metricSelected === false){
 
@@ -61,17 +81,17 @@ function TemplateMetricsDirective () {
       }
     };
 
-    $scope.setAllMetricsSelected = function(metricSelected){
+    function setAllMetricsSelected(metricSelected){
 
       $scope.metricSelected = metricSelected;
     };
 
-    $scope.orderByTags= function(metric){
+    function orderByTags(metric){
 
       return metric.tags[0].text;
     };
 
-    $scope.openDeleteSelectedMetricsModal = function (size) {
+    function openDeleteSelectedMetricsModal(size) {
 
       ConfirmModal.itemType = 'Delete ';
       ConfirmModal.selectedItemId = '';

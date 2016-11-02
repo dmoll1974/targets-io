@@ -15,15 +15,30 @@ function EditProductRequirementDirective () {
   /* @ngInject */
   function EditProductRequirementDirectiveController ($scope, $state, Products, Dashboards, $filter, $rootScope) {
 
-    $scope.product = Products.selected;
 
-    $scope.requirement = Products.selectedRequirement;
+    $scope.submit = submit;
+    $scope.removeDashboard = removeDashboard;
+    $scope.addRelatedDashboards = addRelatedDashboards;
+    $scope.cancel = cancel;
+
+      /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      $scope.product = Products.selected;
+
+      $scope.requirement = Products.selectedRequirement;
 
 
-    $scope.requirement.relatedDashboards = $scope.requirement.relatedDashboards ? $scope.requirement.relatedDashboards : [''];
+      $scope.requirement.relatedDashboards = $scope.requirement.relatedDashboards ? $scope.requirement.relatedDashboards : [''];
 
+    }
 
-    $scope.submit = function(requirement) {
+    function submit(requirement) {
 
       var updateIndex = $scope.product.requirements.map(function(requirement){ return requirement.description}).indexOf(Products.selectedRequirement.description);
 
@@ -38,17 +53,17 @@ function EditProductRequirementDirective () {
 
     }
 
-    $scope.removeDashboard = function(index){
+    function removeDashboard(index){
 
       $scope.requirement.relatedDashboards.splice(index, 1);
 
     }
 
-    $scope.addRelatedDashboards = function () {
+    function addRelatedDashboards() {
       $scope.requirement.relatedDashboards.push('');
     };
 
-    $scope.cancel = function () {
+    function cancel() {
       if ($rootScope.previousStateParams)
         $state.go($rootScope.previousState, $rootScope.previousStateParams);
       else

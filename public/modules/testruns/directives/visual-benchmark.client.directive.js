@@ -16,24 +16,10 @@ function VisualBenchmarkDirective () {
   /* @ngInject */
   function VisualBenchmarkDirectiveController ($scope, $state, $timeout, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRuns, $mdToast, $modal, ConfirmModal) {
 
+    $scope.goBack = goBack;
 
-    $scope.graphType = 'testrun';
 
-    $scope.benchmarkTestRuns = [];
-
-    $scope.goBack = function(testRun){
-
-      if ($scope.benchmarkType === 'fixedBaseline'){
-
-        $state.go('benchmarkFixedBaselineTestRun', {productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId, benchmarkResult:  $scope.benchmarkResult ? 'passed' : 'failed'})
-
-      }else{
-
-        $state.go('benchmarkPreviousBuildTestRun', {productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId, benchmarkResult:  $scope.benchmarkResult ? 'passed' : 'failed'})
-      }
-
-    }
-
+    /* Watches */
 
     $scope.$on('$destroy', function () {
       // Make sure to unselect series
@@ -41,13 +27,26 @@ function VisualBenchmarkDirective () {
 
     });
 
-    /* Get selected series params from query string */
 
-    Utils.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
+    /* activate */
 
-    $scope.benchmarkType = $state.params.benchmarkType;
+    activate();
 
-    $scope.selectedSeries = Utils.selectedSeries;
+    /* functions */
+
+    function activate() {
+
+      $scope.graphType = 'testrun';
+
+      $scope.benchmarkTestRuns = [];
+
+      /* Get selected series params from query string */
+
+      Utils.selectedSeries = ($state.params.selectedSeries) ? decodeURIComponent($state.params.selectedSeries) : '';
+
+      $scope.benchmarkType = $state.params.benchmarkType;
+
+      $scope.selectedSeries = Utils.selectedSeries;
 
       Metrics.get($stateParams.metricId).success(function(baselineMetric){
 
@@ -72,12 +71,30 @@ function VisualBenchmarkDirective () {
 
               $scope.benchmarkTestRuns.push({metric: benchmarkMetric, testrun: benchmark, title:'Benchmark', value: benchmark.metrics[benchmarkMetricIndex].targets[benchmarkTargetIndex].value});
 
-              });
-
             });
+
           });
+        });
 
       });
+
+    }
+
+    function goBack(testRun){
+
+      if ($scope.benchmarkType === 'fixedBaseline'){
+
+        $state.go('benchmarkFixedBaselineTestRun', {productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId, benchmarkResult:  $scope.benchmarkResult ? 'passed' : 'failed'})
+
+      }else{
+
+        $state.go('benchmarkPreviousBuildTestRun', {productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId, benchmarkResult:  $scope.benchmarkResult ? 'passed' : 'failed'})
+      }
+
+    }
+
+
+
 
 
     function evaluateBenchmark(value, baselineValue, benchmarkOperator, benchmarkValue) {

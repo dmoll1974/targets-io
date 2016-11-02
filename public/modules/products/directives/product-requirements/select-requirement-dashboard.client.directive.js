@@ -19,27 +19,37 @@ function SelectRequirementDashboardDirective () {
   /* @ngInject */
   function SelectRequirementDashboardDirectiveController ($scope, $state, $stateParams,  Dashboards, Products) {
 
-    var originatorEv;
-    $scope.openMenu = function ($mdOpenMenu, ev) {
-      originatorEv = ev;
-      $mdOpenMenu(ev);
-    };
+
+    $scope.openMenu = openMenu;
+    $scope.selectDashboard = selectDashboard;
+
+      /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+
+      $scope.dashboards = [];
+
+      _.each(Products.selected.dashboards, function (dashboard) {
+
+        $scope.dashboards.push(dashboard.name);
+
+      })
+    }
+
+      var originatorEv;
+    function openMenu($mdOpenMenu, ev) {
+        originatorEv = ev;
+        $mdOpenMenu(ev);
+      };
 
 
 
-    $scope.dashboards = [];
-
-    _.each(Products.selected.dashboards, function(dashboard){
-
-      $scope.dashboards.push(dashboard.name);
-
-    })
-
-
-
-
-
-    $scope.selectDashboard = function (index){
+    function selectDashboard(index){
 
       $scope.dashboard = $scope.dashboards[index];
     }

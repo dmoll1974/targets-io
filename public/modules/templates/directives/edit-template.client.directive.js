@@ -16,14 +16,29 @@ function EditTemplateDirective () {
   /* @ngInject */
   function EditTemplateDirectiveController ($scope, $rootScope, $state, Templates, $filter) {
 
-  $scope.$watch('template.name', function (val) {
-      $scope.template.name = $filter('uppercase')(val);
-  }, true);
+      $scope.update = update;
+      $scope.cancel = cancel;
 
-      $scope.template = Templates.selected;
+          /* Watches */
+
+      $scope.$watch('template.name', function (val) {
+          $scope.template.name = $filter('uppercase')(val);
+      }, true);
 
 
-      $scope.update = function(){
+      /* activate */
+
+      activate();
+
+      /* functions */
+
+      function activate() {
+
+          $scope.template = Templates.selected;
+
+      }
+
+      function update(){
 
           Templates.update($scope.template).success(function (template){
               Templates.selected = template;
@@ -32,7 +47,7 @@ function EditTemplateDirective () {
       }
 
 
-      $scope.cancel = function () {
+      function cancel() {
           if ($rootScope.previousStateParams)
               $state.go($rootScope.previousState, $rootScope.previousStateParams);
           else

@@ -25,8 +25,7 @@ function JenkinsJobStatusDirective () {
         $scope.jenkinsJobConsole = jenkinsJobConsole;
         $scope.signin = signin;
 
-        /* activate */
-        activate();
+
 
         /* watches */
 
@@ -35,6 +34,9 @@ function JenkinsJobStatusDirective () {
             $interval.cancel(Utils.polling);
 
         });
+
+        /* activate */
+        activate();
 
         /* functions */
 

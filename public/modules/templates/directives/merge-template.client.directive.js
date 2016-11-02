@@ -15,37 +15,16 @@ function MergeTemplateDirective () {
   /* @ngInject */
   function MergeTemplateDirectiveController ($scope, $rootScope, $state, $stateParams,  $timeout, Templates, Dashboards, Metrics, Graphite) {
 
-      Templates.get($stateParams.templateName).success(function(template){
 
-        $scope.template = template;
+      $scope.addValue = addValue;
+      $scope.removeValue = removeValue;
+      $scope.cancel = cancel;
+      $scope.removeTarget = removeTarget;
+      $scope.removeMetric = removeMetric;
+      $scope.preview = preview;
+      $scope.merge = merge;
 
-      //$timeout(function(){
-
-
-          _.each($scope.template.variables, function(variable, index){
-
-              $scope.template.variables[index].values = [];
-
-              _.each(Templates.mergeData, function(mergeData){
-
-                  if(variable.name === mergeData.variable) {
-                      $scope.template.variables[index].values.push(mergeData.value);
-                  }
-              })
-
-              if($scope.template.variables[index].values.length === 0) {
-                  $scope.template.variables[index].values.push('');
-              }
-          })
-      });
-
-
-      $scope.addValue = function (index) {
-          $scope.template.variables[index].values.push('');
-      };
-      $scope.removeValue = function (parentIndex, index) {
-          $scope.template.variables[parentIndex].values.splice(index, 1);
-      };
+          /* Watches */
 
       $scope.$watch('template.variables', function(newValue, oldValue) {
           if(newValue !== oldValue) {
@@ -64,99 +43,146 @@ function MergeTemplateDirective () {
               });
 
               $timeout(function(){
-              _.each($scope.template.variables, function (variable) {
+                  _.each($scope.template.variables, function (variable) {
 
-                  valuesPerVariable= 0;
-                  regExp = new RegExp('\\$' + variable.name, 'g');
+                      valuesPerVariable= 0;
+                      regExp = new RegExp('\\$' + variable.name, 'g');
 
 
-                  if(variable.values.length > 1){
+                      if(variable.values.length > 1){
 
-                      var valueList = '{';
+                          var valueList = '{';
 
-                      _.each(variable.values, function (value, index) {
+                          _.each(variable.values, function (value, index) {
 
-                          if (value !== '') {
+                              if (value !== '') {
 
-                              valuesPerVariable = valuesPerVariable + 1;
+                                  valuesPerVariable = valuesPerVariable + 1;
 
-                              valueList += value;
-                              if(index !== variable.values.length -1) valueList += ',';
+                                  valueList += value;
+                                  if(index !== variable.values.length -1) valueList += ',';
+
+                              }
+                          });
+
+                          valueList += '}';
+
+                          replaceValue = valueList;
+
+
+
+                      }else{
+
+                          if (variable.values[0] !== '') {
+
+                              valuesPerVariable =  1;
+
+                              replaceValue = variable.values[0];
+
+
+                          }
+                      }
+
+                      var replaceItem = {};
+                      replaceItem.variable = variable.name;
+                      replaceItem.placeholder = regExp;
+                      replaceItem.replace = replaceValue;
+
+                      var index = Templates.replaceItems.map(function(replaceItem){ return replaceItem.variable;}).indexOf(variable.name);
+
+                      if(index === -1){
+                          Templates.replaceItems.push(replaceItem);
+                      }else{
+                          Templates.replaceItems[index] = replaceItem;
+                      }
+
+
+                      if(valuesPerVariable > 0) totalTemplateCombinations = totalTemplateCombinations * valuesPerVariable;
+                  });
+
+                  $scope.totalTemplateCombinations = totalTemplateCombinations;
+
+                  _.each($scope.template.variables, function (variable, index) {
+
+                      queryVariablesReplaced =  replacePlaceholders(variable.query, Templates.replaceItems);
+
+                      /* only replace variables in query when the new query returns results */
+                      Graphite.findMetrics(queryVariablesReplaced).success(function(graphiteTargetsLeafs) {
+
+
+                          if(graphiteTargetsLeafs.length > 0) {
+
+                              $scope.template.variables[index].dynamicQuery = replacePlaceholders(variable.query, Templates.replaceItems);
 
                           }
                       });
 
-                      valueList += '}';
-
-                      replaceValue = valueList;
-
-
-
-                  }else{
-
-                      if (variable.values[0] !== '') {
-
-                          valuesPerVariable =  1;
-
-                          replaceValue = variable.values[0];
-
-
-                      }
-                  }
-
-                  var replaceItem = {};
-                  replaceItem.variable = variable.name;
-                  replaceItem.placeholder = regExp;
-                  replaceItem.replace = replaceValue;
-
-                  var index = Templates.replaceItems.map(function(replaceItem){ return replaceItem.variable;}).indexOf(variable.name);
-
-                  if(index === -1){
-                      Templates.replaceItems.push(replaceItem);
-                  }else{
-                      Templates.replaceItems[index] = replaceItem;
-                  }
-
-
-                  if(valuesPerVariable > 0) totalTemplateCombinations = totalTemplateCombinations * valuesPerVariable;
-              });
-
-              $scope.totalTemplateCombinations = totalTemplateCombinations;
-
-              _.each($scope.template.variables, function (variable, index) {
-
-                  queryVariablesReplaced =  replacePlaceholders(variable.query, Templates.replaceItems);
-
-                  /* only replace variables in query when the new query returns results */
-                  Graphite.findMetrics(queryVariablesReplaced).success(function(graphiteTargetsLeafs) {
-
-
-                      if(graphiteTargetsLeafs.length > 0) {
-
-                          $scope.template.variables[index].dynamicQuery = replacePlaceholders(variable.query, Templates.replaceItems);
-
-                      }
                   });
-
-              });
               },0);
           }
       }, true);
 
 
-      $scope.cancel = function () {
+      /* activate */
+
+      activate();
+
+      /* functions */
+
+      function activate() {
+
+          Templates.get($stateParams.templateName).success(function (template) {
+
+              $scope.template = template;
+
+              //$timeout(function(){
+
+
+              _.each($scope.template.variables, function (variable, index) {
+
+                  $scope.template.variables[index].values = [];
+
+                  _.each(Templates.mergeData, function (mergeData) {
+
+                      if (variable.name === mergeData.variable) {
+                          $scope.template.variables[index].values.push(mergeData.value);
+                      }
+                  })
+
+                  if ($scope.template.variables[index].values.length === 0) {
+                      $scope.template.variables[index].values.push('');
+                  }
+              })
+          });
+      }
+
+      function addValue(index) {
+
+          $scope.template.variables[index].values.push('');
+
+      };
+
+      function removeValue(parentIndex, index) {
+
+          $scope.template.variables[parentIndex].values.splice(index, 1);
+
+      };
+
+
+
+      function cancel() {
           if ($rootScope.previousStateParams)
               $state.go($rootScope.previousState, $rootScope.previousStateParams);
           else
               $state.go($rootScope.previousState);
       };
 
-      $scope.removeTarget = function(parentIndex, index){
+      function removeTarget(parentIndex, index){
 
           $scope.metrics[parentIndex].targets.splice(index, 1);
       };
 
-      $scope.removeMetric = function(index){
+      function removeMetric(index){
 
           $scope.metrics.splice(index, 1);
       };
@@ -172,41 +198,11 @@ function MergeTemplateDirective () {
           return target;
       }
 
-      $scope.preview = function(){
+      function preview(){
 
           $scope.metrics = [];
           var targets = [];
           var regExp;
-
-
-          //var variables=[
-          //
-          //    {
-          //        name: 'EERSTE',
-          //        description: 'Eerste variabele',
-          //        values: [
-          //            'A',
-          //            'B'
-          //        ]
-          //    },
-          //    {
-          //        name: 'TWEEDE',
-          //        description: 'Tweede variabele',
-          //        values: [
-          //            'A',
-          //            'B'
-          //        ]
-          //    },
-          //    {
-          //        name: 'DERDE',
-          //        description: 'Derde variabele',
-          //        values: [
-          //            'A',
-          //            //'B'
-          //        ]
-          //    },
-          //
-          //];
 
           var variableArray = [];
 
@@ -249,23 +245,8 @@ function MergeTemplateDirective () {
 
           });
 
-          //_.each(variableArray, function(variableArrayItem){
-          //
-          //    console.log('name: ' + variableArrayItem.name)
-          //    _.each(variableArrayItem.replaceItems, function(replaceValue) {
-          //
-          //        console.log(replaceValue);
-          //        //console.log('placeholder: ' + replaceValue.placeholder);
-          //        //console.log('replace: ' + replaceValue.replace);
-          //    });
-          //
-          //});
-
-
           var replaceArray = [];
           var replace1, replace2, replace3, replace4, replace5;
-
-
 
           for(var j=0; j < variableArray[0].replaceItems.length; j++) {
 
@@ -384,7 +365,7 @@ function MergeTemplateDirective () {
 
       }
 
-      $scope.merge = function() {
+      function merge() {
 
 
 

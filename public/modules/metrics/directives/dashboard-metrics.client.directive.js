@@ -18,14 +18,7 @@ function DashboardMetricsDirective () {
 
     var vm = this;
 
-    activate();
 
-    vm.productName = $stateParams.productName;
-    vm.dashboardName = $stateParams.dashboardName;
-    vm.sortType     = Utils.sortType; // set the default sort type
-    vm.sortReverse  = Utils.sortReverse;  // set the default sort order
-    vm.dashboard = Dashboards.selected;
-    vm.metricFilter = Metrics.metricFilter;
     vm.addMetric = addMetric;
     vm.addMetricFromTemplate = addMetricFromTemplate;
     vm.editMetric = editMetric;
@@ -40,19 +33,6 @@ function DashboardMetricsDirective () {
     vm.metricsInTestRunSummary = metricsInTestRunSummary;
     vm.resetAllBenchmarks = resetAllBenchmarks;
     vm.searchAndReplace = searchAndReplace;
-
-    //vm.filterTemplates = filterTemplates;
-
-    vm.metricSelected = false;
-    vm.progress = undefined;
-    vm.showTemplates = false;
-    var originatorEv;
-
-    function openMenu ($mdOpenMenu, ev) {
-      originatorEv = ev;
-      $mdOpenMenu(ev);
-
-    };
 
 
 
@@ -129,6 +109,12 @@ function DashboardMetricsDirective () {
     }, true);
 
 
+    $scope.$on('$destroy', function () {
+      //  leave the room
+      mySocket.emit('exit-room', room);
+    });
+
+
     /*socket.io*/
 
     var room = $stateParams.productName + '-' + $stateParams.dashboardName;
@@ -144,16 +130,24 @@ function DashboardMetricsDirective () {
     });
 
 
+    /* activate */
+    activate();
 
-
-    $scope.$on('$destroy', function () {
-      //  leave the room
-      mySocket.emit('exit-room', room);
-    });
-
-    /* initialise view */
+    /* functions */
 
     function activate() {
+
+      vm.productName = $stateParams.productName;
+      vm.dashboardName = $stateParams.dashboardName;
+      vm.sortType     = Utils.sortType; // set the default sort type
+      vm.sortReverse  = Utils.sortReverse;  // set the default sort order
+      vm.dashboard = Dashboards.selected;
+      vm.metricFilter = Metrics.metricFilter;
+
+      vm.metricSelected = false;
+      vm.progress = undefined;
+      vm.showTemplates = false;
+
       /* Get all dashboard names for product */
 
       Dashboards.getDashboardsForProduct($stateParams.productName).success(function (dashboards) {
@@ -175,6 +169,14 @@ function DashboardMetricsDirective () {
       });
 
     }
+
+    var originatorEv;
+
+    function openMenu ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+
+    };
 
     function metricsInTestRunSummary(value){
 

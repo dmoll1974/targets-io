@@ -16,143 +16,195 @@ function ProductReleaseDetailsDirective () {
   /* @ngInject */
   function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, $mdToast, $location, $anchorScroll, $timeout) {
 
-    /* if coming from add link screen, set edit mode and updated to true */
-    $scope.editMode = $rootScope.previousState.includes('addProductReleaseLink')? true : false;
-    $scope.updated = $rootScope.previousState.includes('addProductReleaseLink')? true : false;
-    $scope.testRunIndexItems = [];
-    $scope.releaseTestRunsIndex = [];
+      $scope.openMenu = openMenu;
+      $scope.reloadProductRelease = reloadProductRelease;
+      $scope.addLink = addLink;
+      $scope.removeLink = removeLink;
+      $scope.submitProductRelease = submitProductRelease;
+      $scope.scrollTo = scrollTo;
+      $scope.openDeleteModal = openDeleteModal;
+      $scope.hasFlash = hasFlash;
+      $scope.clipClicked = clipClicked;
+      $scope.setProductReleaseUrl = setProductReleaseUrl;
+      /* watches */
 
-    var originatorEv;
-    $scope.openMenu = function ($mdOpenMenu, ev) {
-      originatorEv = ev;
-      $mdOpenMenu(ev);
-    };
+      var converter = new showdown.Converter({extensions: ['targetblank']});
 
-    var converter = new showdown.Converter({extensions: ['targetblank']});
+      $scope.$watch('product.markDown', function (newVal, oldVal) {
+
+          if (newVal !== undefined){
+
+              var markDownToHTML = converter.makeHtml(newVal);
+
+              $timeout(function () {
+
+                  document.getElementById('markdown').innerHTML = markDownToHTML;
+
+              }, 100);
+
+          }
+      });
+
+      $scope.$watchCollection('product.releaseTestRuns', function (newVal, oldVal) {
+          if (newVal !== oldVal && oldVal) {
+              $scope.updated = true;
+          }
+      }, true);
+
+      $scope.$on('$destroy', function () {
+          /* if updates have been made and not saved, prompt the user */
+          if($scope.updated === true && !$rootScope.currentState.includes('addProductReleaseLink') && !$rootScope.currentState.includes('productReleaseDetails')){
+
+              ConfirmModal.itemType = 'Save changes to ';
+              ConfirmModal.selectedItemDescription = $scope.product.name + ' ' + $scope.product.productRelease;
+              var modalInstance = $modal.open({
+                  templateUrl: 'ConfirmDelete.html',
+                  controller: 'ModalInstanceController',
+                  size: ''  //,
+              });
+              modalInstance.result.then(function () {
+                  submitProductRelease();
+
+              }, function () {
+
+                  /* return to previous state*/
+                  //$state.go($rootScope.previousState, $rootScope.previousStateParams);
+              });
+          }
+      });
 
 
-    $scope.$watch('product.markDown', function (newVal, oldVal) {
+      /* activate */
 
-      if (newVal !== undefined){
+      activate();
 
-        var markDownToHTML = converter.makeHtml(newVal);
+      /* functions */
 
-        $timeout(function () {
+      function activate() {
 
-          document.getElementById('markdown').innerHTML = markDownToHTML;
+          /* if coming from add link screen, set edit mode and updated to true */
+          $scope.editMode = $rootScope.previousState.includes('addProductReleaseLink') ? true : false;
+          $scope.updated = $rootScope.previousState.includes('addProductReleaseLink') ? true : false;
+          $scope.testRunIndexItems = [];
+          $scope.releaseTestRunsIndex = [];
 
-        }, 100);
+          Products.getProductRelease($stateParams.productName, $stateParams.productRelease).success(function(response){
 
-    }
-    });
+              if(response.productRelease){
+
+                  $scope.product = response.productRelease;
+                  $scope.releaseSaved = true;
+
+                  /* add test runs to index */
+                  _.each($scope.product.releaseTestRuns, function (testRun) {
+
+                      Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
+
+                          $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
+
+                      });
+                  });
+
+                  if(response.hasBeenUpdated) {
+                      $scope.updated = true;
+                      $scope.editMode = true;
+
+                      var toast = $mdToast.simple()
+                          .action('OK')
+                          .highlightAction(true)
+                          .position('top center')
+                          .hideDelay(6000);
+
+                      $mdToast.show(toast.content('Release report was updated based on updated data, save to persist!')).then(function (response) {
+
+                      });
+                  }
 
 
 
-    Products.getProductRelease($stateParams.productName, $stateParams.productRelease).success(function(response){
+              }else {
 
-        if(response.productRelease){
+                  $scope.releaseSaved = false;
 
-          $scope.product = response.productRelease;
-          $scope.releaseSaved = true;
+                  var toast = $mdToast.simple()
+                      .action('OK')
+                      .highlightAction(true)
+                      .position('top')
+                      .hideDelay(30000)
+                      //.parent(angular.element('#fixedBaselineToast'))
+                      .theme('error-toast');
 
-          /* add test runs to index */
-          _.each($scope.product.releaseTestRuns, function (testRun) {
+                  $mdToast.show(toast.content('Release report has not been verified / saved!')).then(function (response) {
+
+                  });
+
+                  createProductReleaseDetails();
+
+              }
+          });
+
+
+      }
+
+
+      var originatorEv;
+      function openMenu($mdOpenMenu, ev) {
+          originatorEv = ev;
+          $mdOpenMenu(ev);
+      };
+
+
+
+    function createProductReleaseDetails(){
+
+      /* get product */
+      Products.get($stateParams.productName).success(function (product) {
+
+
+        $scope.product = product;
+        $scope.product.productRelease = $stateParams.productRelease;
+
+
+        /* get test runs for release */
+        TestRuns.listTestRunsForProductRelease($scope.product.name, $stateParams.productRelease).success(function (testRuns) {
+
+            $scope.product.releaseTestRuns = testRuns;
+
+          _.each(testRuns, function (testRun) {
 
             Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
 
-              $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
+              /* create index */
 
-            });
-          });
+                $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
 
-          if(response.hasBeenUpdated) {
-            $scope.updated = true;
-            $scope.editMode = true;
+                testRun.requirements = [];
 
-            var toast = $mdToast.simple()
-                .action('OK')
-                .highlightAction(true)
-                .position('top center')
-                .hideDelay(6000);
+                _.each($scope.product.requirements, function (requirement, i) {
 
-            $mdToast.show(toast.content('Release report was updated based on updated data, save to persist!')).then(function (response) {
+                    /* set requirements results to false */
+                    requirement.result = false;
 
-            });
-          }
+                    _.each(requirement.relatedDashboards, function (dashboard) {
 
+                        if (testRun.dashboardName === dashboard) {
 
+                          testRun.requirements.push(requirement);
+                          testRun.description = dashboard.description;
+                        }
 
-        }else {
-
-          $scope.releaseSaved = false;
-
-          var toast = $mdToast.simple()
-              .action('OK')
-              .highlightAction(true)
-              .position('top')
-              .hideDelay(30000)
-              //.parent(angular.element('#fixedBaselineToast'))
-              .theme('error-toast');
-
-          $mdToast.show(toast.content('Release report has not been verified / saved!')).then(function (response) {
-
-          });
-
-          createProductReleaseDetails();
-
-        }
-    });
-
-function createProductReleaseDetails(){
-
-  /* get product */
-  Products.get($stateParams.productName).success(function (product) {
-
-
-    $scope.product = product;
-    $scope.product.productRelease = $stateParams.productRelease;
-
-
-    /* get test runs for release */
-    TestRuns.listTestRunsForProductRelease($scope.product.name, $stateParams.productRelease).success(function (testRuns) {
-
-        $scope.product.releaseTestRuns = testRuns;
-
-      _.each(testRuns, function (testRun) {
-
-        Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
-
-          /* create index */
-
-            $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
-
-            testRun.requirements = [];
-
-            _.each($scope.product.requirements, function (requirement, i) {
-
-                /* set requirements results to false */
-                requirement.result = false;
-
-                _.each(requirement.relatedDashboards, function (dashboard) {
-
-                    if (testRun.dashboardName === dashboard) {
-
-                      testRun.requirements.push(requirement);
-                      testRun.description = dashboard.description;
-                    }
+                    });
 
                 });
-
             });
+
+          });
         });
-
       });
-    });
-  });
 
-}
+    }
 
-    $scope.reloadProductRelease = function(){
+    function reloadProductRelease(){
 
       createProductReleaseDetails(true);
 
@@ -172,7 +224,7 @@ function createProductReleaseDetails(){
 
     }
 
-    $scope.addLink = function(){
+    function addLink(){
 
       $scope.updated = true;
       Products.selectedRelease = $scope.product;
@@ -180,24 +232,15 @@ function createProductReleaseDetails(){
 
     }
 
-    $scope.removeLink = function(index){
+    function removeLink(index){
 
       $scope.updated = true;
       $scope.product.releaseLinks.splice(index,1);
     }
 
-    $scope.$watchCollection('product.releaseTestRuns', function (newVal, oldVal) {
-      if (newVal !== oldVal && oldVal) {
-        $scope.updated = true;
-      }
-    }, true);
 
-    //$scope.toggleRequirementResult = function (parentIndex, index){
-    //  $scope.updated = true;
-    //  $scope.product.releaseTestRuns[parentIndex].requirements[index].result = !$scope.product.releaseTestRuns[parentIndex].requirements[index].result;
-    //}
 
-    $scope.submitProductRelease = function(){
+    function submitProductRelease(){
 
       submitProductRelease();
     }
@@ -251,12 +294,12 @@ function createProductReleaseDetails(){
     }
 
 
-    $scope.scrollTo = function(id) {
+    function scrollTo(id) {
       $location.hash(id);
       $anchorScroll();
     }
 
-    $scope.openDeleteModal = function (size, product) {
+    function openDeleteModal(size, product) {
       ConfirmModal.itemType = 'Delete saved results for release ';
       ConfirmModal.selectedItemDescription = product.productRelease;
       var modalInstance = $modal.open({
@@ -287,7 +330,7 @@ function createProductReleaseDetails(){
       });
     };
 
-      $scope.hasFlash = function() {
+      function hasFlash() {
           var hasFlash = false;
           try {
               var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
@@ -304,40 +347,19 @@ function createProductReleaseDetails(){
       };
 
       /* Zero copied logic */
-      $scope.clipClicked = function () {
+      function clipClicked() {
           $scope.productReleaseUrl = false;
       };
 
       /* generate deeplink to share view */
 
-      $scope.setProductReleaseUrl = function () {
+      function setProductReleaseUrl() {
 
           $scope.productReleaseUrl = 'http://' + location.host + '/#!/product-release-details/' + $stateParams.productName + '/' + $stateParams.productRelease +  '/' ;
 
       };
 
 
-      $scope.$on('$destroy', function () {
-      /* if updates have been made and not saved, prompt the user */
-      if($scope.updated === true && !$rootScope.currentState.includes('addProductReleaseLink') && !$rootScope.currentState.includes('productReleaseDetails')){
-
-        ConfirmModal.itemType = 'Save changes to ';
-        ConfirmModal.selectedItemDescription = $scope.product.name + ' ' + $scope.product.productRelease;
-        var modalInstance = $modal.open({
-          templateUrl: 'ConfirmDelete.html',
-          controller: 'ModalInstanceController',
-          size: ''  //,
-        });
-        modalInstance.result.then(function () {
-          submitProductRelease();
-
-        }, function () {
-
-          /* return to previous state*/
-          //$state.go($rootScope.previousState, $rootScope.previousStateParams);
-        });
-      }
-    });
 
 
   }

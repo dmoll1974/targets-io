@@ -15,9 +15,48 @@ function ProductTestRunsDirective () {
   /* @ngInject */
   function ProductTestRunsDirectiveController ($scope, $state, $stateParams, $window, Templates, Dashboards, $filter, $rootScope, $interval, TestRuns) {
 
-    /* By default, show completed test runs only */
-    $scope.completedTestRunsOnly = true;
-    $scope.loadNumberOfTestRuns = 10;
+
+    $scope.updateNumberOfTestRuns = updateNumberOfTestRuns;
+    $scope.openMenu = openMenu;
+    $scope.go = go;
+    $scope.editTestRun = editTestRun;
+    $scope.viewTestRunSummary = viewTestRunSummary;
+
+      /* Watches */
+
+    $scope.$on('$destroy', function () {
+      // Make sure that the interval is destroyed too
+      $interval.cancel(polling);
+
+    });
+
+    /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      /* By default, show completed test runs only */
+      $scope.completedTestRunsOnly = true;
+      $scope.loadNumberOfTestRuns = 10;
+
+      $scope.numberOfRowOptions = [
+        {value: 10},
+        {value: 25},
+        {value: 50},
+        {value: 75},
+        {value: 100}
+      ];
+
+
+      testRunPolling();
+      var polling = $interval(testRunPolling, 30000);
+
+    }
+
+
 
     var testRunPolling = function(){
 
@@ -38,52 +77,37 @@ function ProductTestRunsDirective () {
 
     };
 
-    testRunPolling();
-    var polling = $interval(testRunPolling, 30000);
 
-
-    $scope.$on('$destroy', function () {
-      // Make sure that the interval is destroyed too
-      $interval.cancel(polling);
-
-    });
-
-    $scope.updateNumberOfTestRuns = function(){
+    function updateNumberOfTestRuns(){
 
       $scope.loadingTestRuns = true;
       testRunPolling();
 
     }
 
-    $scope.numberOfRowOptions = [
-      {value: 10},
-      {value: 25},
-      {value: 50},
-      {value: 75},
-      {value: 100}
-    ];
 
 
     var originatorEv;
-    $scope.openMenu = function ($mdOpenMenu, ev) {
+
+    function openMenu($mdOpenMenu, ev) {
       originatorEv = ev;
       $mdOpenMenu(ev);
     };
 
-    $scope.go = function (url) {
+    function go(url) {
       //$window.location.href = url;
       $window.open(url, '_blank');
     };
 
 
-    $scope.editTestRun = function (testRun){
+    function editTestRun(testRun){
 
       TestRuns.selected = testRun;
       $state.go('editTestRun',{productName: testRun.productName, dashboardName: testRun.dashboardName, testRunId: testRun.testRunId});
 
     }
 
-    $scope.viewTestRunSummary = function(testRun){
+    function viewTestRunSummary(testRun){
 
 
       $state.go('testRunSummary', {

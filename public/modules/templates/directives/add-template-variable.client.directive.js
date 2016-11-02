@@ -16,14 +16,30 @@ function AddTemplateVariableDirective () {
   /* @ngInject */
   function AddTemplateVariableDirectiveController ($scope, $rootScope, $state, Templates, $filter) {
 
-  $scope.$watch('variable.name', function (val) {
-      $scope.variable.name = $filter('uppercase')(val);
-  }, true);
 
-    $scope.variable={};
-    $scope.variable.query='';
+      $scope.create = create;
+      $scope.cancel = cancel;
 
-    $scope.create = function(){
+          /* Watches */
+
+      $scope.$watch('variable.name', function (val) {
+          $scope.variable.name = $filter('uppercase')(val);
+      }, true);
+
+
+      /* activate */
+
+      activate();
+
+      /* functions */
+
+      function activate() {
+
+          $scope.variable = {};
+          $scope.variable.query = '';
+      }
+
+    function create(){
 
         $scope.variable.placeholder = '$' + $scope.variable.name;
         Templates.selected.variables.push($scope.variable);
@@ -33,7 +49,7 @@ function AddTemplateVariableDirective () {
         });
     }
 
-      $scope.cancel = function () {
+      function cancel() {
           if ($rootScope.previousStateParams)
               $state.go($rootScope.previousState, $rootScope.previousStateParams);
           else

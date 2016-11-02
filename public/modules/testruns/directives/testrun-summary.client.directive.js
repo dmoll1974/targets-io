@@ -16,36 +16,25 @@ function TestRunSummaryDirective () {
   function TestRunSummaryDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $timeout) {
 
 
-    Utils.graphType = 'testrun';
+    $scope.markAsUpdated = markAsUpdated;
+    $scope.openMenu = openMenu;
+    $scope.restoreDefaultAnnotation = restoreDefaultAnnotation;
+    $scope.setDefaultAnnotation = setDefaultAnnotation;
+    $scope.deleteFromTestRunSummary = deleteFromTestRunSummary;
+    $scope.gatlingDetails = gatlingDetails;
+    $scope.editMetric = editMetric;
+    $scope.testRunDetails = testRunDetails;
+    $scope.testRunSummaryConfig = testRunSummaryConfig;
+    $scope.addMetricToTestRunSummary = addMetricToTestRunSummary;
+    $scope.submitTestRunSummary = submitTestRunSummary;
+    $scope.hasFlash = hasFlash;
+    $scope.clipClicked = clipClicked;
+    $scope.setTestRunSummaryUrl = setTestRunSummaryUrl;
+    $scope.openDeleteModal = openDeleteModal;
 
-    $scope.testRunSummary = {};
-    $scope.testRunSummary.requirements = [];
-    /* if coming from edit metric screen, set edit mode and updated to true */
-    $scope.editMode = $rootScope.previousState.includes('editMetric')? true : false;
-    $scope.updated = $rootScope.previousState.includes('editMetric')? true : false;
-    $scope.hideGraphs = false;
+    /* Watches */
 
-
-    $scope.dragControlListeners = {
-      accept: $scope.editMode && $scope.hideGraphs,
-      itemMoved: function(){$scope.updated = true;},
-      orderChanged: updateMetricOrder
-     };
-
-    function updateMetricOrder(event){
-
-      $scope.updated = true;
-      _.each($scope.testRunSummary.metrics, function(testRunSummaryMetric, i){
-
-        testRunSummaryMetric.summaryIndex = i;
-        Metrics.update(testRunSummaryMetric).success(function(){
-
-        })
-      })
-    }
-
-        var converter = new showdown.Converter({extensions: ['targetblank']});
-
+    var converter = new showdown.Converter({extensions: ['targetblank']});
 
     $scope.$watch('testRunSummary.markDown', function (newVal, oldVal) {
 
@@ -69,62 +58,128 @@ function TestRunSummaryDirective () {
       }
     });
 
-    $scope.markAsUpdated = function(){
+    $scope.$on('$destroy', function () {
+      /* if updates have been made and not saved, prompt the user */
+      if($scope.updated === true  && !$rootScope.currentState.includes('testRunSummary')){
+
+        ConfirmModal.itemType = 'Save changes to test run summary ';
+        ConfirmModal.selectedItemDescription =  $scope.testRunSummary.testRunId;
+        var modalInstance = $modal.open({
+          templateUrl: 'ConfirmDelete.html',
+          controller: 'ModalInstanceController',
+          size: ''  //,
+        });
+        modalInstance.result.then(function () {
+          submitTestRunSummaryImpl()
+        }, function () {
+
+          /* return to previous state*/
+          //$state.go($rootScope.previousState, $rootScope.previousStateParams);
+
+        });
+      }
+    });
+
+
+    /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      Utils.graphType = 'testrun';
+
+      $scope.testRunSummary = {};
+      $scope.testRunSummary.requirements = [];
+      /* if coming from edit metric screen, set edit mode and updated to true */
+      $scope.editMode = $rootScope.previousState.includes('editMetric') ? true : false;
+      $scope.updated = $rootScope.previousState.includes('editMetric') ? true : false;
+      $scope.hideGraphs = false;
+
+
+      $scope.dragControlListeners = {
+        accept: $scope.editMode && $scope.hideGraphs,
+        itemMoved: function () {
+          $scope.updated = true;
+        },
+        orderChanged: updateMetricOrder
+      };
+
+      TestRunSummary.getTestRunSummary($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (response) {
+
+
+        if(response.testRunSummary){
+
+          $scope.testRunSummary = response.testRunSummary;
+
+          $scope.summarySaved = true;
+
+          if(response.hasBeenUpdated){
+            $scope.updated = true;
+            $scope.editMode = true;
+
+            var toast = $mdToast.simple()
+                .action('OK')
+                .highlightAction(true)
+                .position('top center')
+                .parent(angular.element('#summary-buttons'))
+                .hideDelay(6000);
+
+            $mdToast.show(toast.content('Test run summary was updated based on new metric configuration, save to persist!')).then(function(response) {
+
+            });
+
+          }
+
+        }else {
+
+          $scope.summarySaved = false;
+
+          createTestRunSummary (false);
+        }
+      });
+
+      /* get list of metrics not yet in test run summary */
+      Dashboards.listMetricsNotInTestRunSummary($stateParams.productName, $stateParams.dashboardName).success(function(metricsToAdd){
+
+        $scope.metricsToAdd = metricsToAdd;
+
+      })
+
+    }
+
+    function updateMetricOrder(event){
+
+      $scope.updated = true;
+      _.each($scope.testRunSummary.metrics, function(testRunSummaryMetric, i){
+
+        testRunSummaryMetric.summaryIndex = i;
+        Metrics.update(testRunSummaryMetric).success(function(){
+
+        })
+      })
+    }
+
+
+    function markAsUpdated(){
 
       $scope.updated = true;
     }
 
-    TestRunSummary.getTestRunSummary($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (response) {
-
-
-      if(response.testRunSummary){
-
-        $scope.testRunSummary = response.testRunSummary;
-
-        $scope.summarySaved = true;
-
-        if(response.hasBeenUpdated){
-          $scope.updated = true;
-          $scope.editMode = true;
-
-          var toast = $mdToast.simple()
-              .action('OK')
-              .highlightAction(true)
-              .position('top center')
-              .parent(angular.element('#summary-buttons'))
-              .hideDelay(6000);
-
-          $mdToast.show(toast.content('Test run summary was updated based on new metric configuration, save to persist!')).then(function(response) {
-
-          });
-
-        }
-
-      }else {
-
-        $scope.summarySaved = false;
-
-        createTestRunSummary (false);
-      }
-  });
 
 
     /* initialise menu */
 
     var originatorEv;
 
-    $scope.openMenu = function ($mdOpenMenu, ev) {
+    function openMenu($mdOpenMenu, ev) {
       originatorEv = ev;
       $mdOpenMenu(ev);
 
     };
 
-    /* get list of metrics not yet in test run summary */
-    Dashboards.listMetricsNotInTestRunSummary($stateParams.productName, $stateParams.dashboardName).success(function(metricsToAdd){
-
-      $scope.metricsToAdd = metricsToAdd;
-
-    })
 
     function createTestRunSummary (update){
 
@@ -219,7 +274,7 @@ function TestRunSummaryDirective () {
       return newMetrics;
     }
 
-    $scope.restoreDefaultAnnotation = function(metric){
+    function restoreDefaultAnnotation(metric){
 
       Metrics.get(metric._id).success(function(storedMetric){
 
@@ -241,7 +296,7 @@ function TestRunSummaryDirective () {
       })
     }
 
-    $scope.setDefaultAnnotation = function(metric){
+    function setDefaultAnnotation(metric){
 
       Metrics.get(metric._id).success(function(storedMetric){
 
@@ -263,7 +318,7 @@ function TestRunSummaryDirective () {
       })
     }
 
-    $scope.deleteFromTestRunSummary = function(metric){
+    function deleteFromTestRunSummary(metric){
 
       var index =  $scope.testRunSummary.metrics.map(function(testRunSummaryMetric){return testRunSummaryMetric._id;}).indexOf(metric._id);
 
@@ -288,7 +343,7 @@ function TestRunSummaryDirective () {
       $scope.updated = true;
     }
 
-    $scope.gatlingDetails = function(testRunId){
+    function gatlingDetails(testRunId){
 
       $state.go('viewGraphs', {
         'productName': $stateParams.productName,
@@ -355,13 +410,13 @@ function TestRunSummaryDirective () {
 
 
 
-    $scope.editMetric = function(metricId){
+    function editMetric(metricId){
 
       $state.go('editMetric',{productName: $stateParams.productName, dashboardName: $stateParams.dashboardName, metricId: metricId });
 
     };
 
-    $scope.testRunDetails = function (testRun, requirement) {
+    function testRunDetails(testRun, requirement) {
       TestRuns.selected = testRun;
 
       if (requirement === 'all')
@@ -389,7 +444,7 @@ function TestRunSummaryDirective () {
 
     };
 
-    $scope.testRunSummaryConfig = function(){
+    function testRunSummaryConfig(){
 
       $state.go('testRunSummaryConfig', {
         'productName': $stateParams.productName,
@@ -398,37 +453,37 @@ function TestRunSummaryDirective () {
     }
 
 
-    $scope.addMetricToTestRunSummary = function (addMetric){
+    function addMetricToTestRunSummary(addMetric){
 
         $scope.testRunSummary.metrics.push(addMetric);
 
-      var toast = $mdToast.simple()
-          .action('OK')
-          .highlightAction(true)
-          .position('bottom center')
-          //.parent(angular.element('#addMetric'))
-          .hideDelay(3000);
+        var toast = $mdToast.simple()
+            .action('OK')
+            .highlightAction(true)
+            .position('bottom center')
+            //.parent(angular.element('#addMetric'))
+            .hideDelay(3000);
 
-      $mdToast.show(toast.content(addMetric.alias.toUpperCase() + ' added to test run summary' )).then(function(response) {
+        $mdToast.show(toast.content(addMetric.alias.toUpperCase() + ' added to test run summary' )).then(function(response) {
 
-      });
+        });
 
 
-      /* remove metric from menu items */
-        var index= $scope.metricsToAdd.map(function(metricToAdd){return metricToAdd._id.toString()}).indexOf(addMetric._id.toString());
-      $scope.metricsToAdd.splice(index, 1);
+        /* remove metric from menu items */
+          var index= $scope.metricsToAdd.map(function(metricToAdd){return metricToAdd._id.toString()}).indexOf(addMetric._id.toString());
+        $scope.metricsToAdd.splice(index, 1);
 
-      $scope.updated = true;
+        $scope.updated = true;
     }
 
-    $scope.submitTestRunSummary = function() {
+    function submitTestRunSummary() {
 
-      submitTestRunSummary();
+      submitTestRunSummaryImpl();
     }
 
 
 
-    function submitTestRunSummary(){
+    function submitTestRunSummaryImpl(){
 
     /* update metric default annotations */
 
@@ -499,30 +554,9 @@ function TestRunSummaryDirective () {
     }
 
 
-    $scope.$on('$destroy', function () {
-      /* if updates have been made and not saved, prompt the user */
-      if($scope.updated === true  && !$rootScope.currentState.includes('testRunSummary')){
-
-        ConfirmModal.itemType = 'Save changes to test run summary ';
-        ConfirmModal.selectedItemDescription =  $scope.testRunSummary.testRunId;
-        var modalInstance = $modal.open({
-          templateUrl: 'ConfirmDelete.html',
-          controller: 'ModalInstanceController',
-          size: ''  //,
-        });
-        modalInstance.result.then(function () {
-          submitTestRunSummary()
-        }, function () {
-
-          /* return to previous state*/
-          //$state.go($rootScope.previousState, $rootScope.previousStateParams);
-
-        });
-      }
-    });
 
 
-    $scope.hasFlash = function() {
+    function hasFlash() {
       var hasFlash = false;
       try {
         var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
@@ -539,20 +573,20 @@ function TestRunSummaryDirective () {
     };
 
     /* Zero copied logic */
-    $scope.clipClicked = function () {
+    function clipClicked() {
       $scope.testRunSummaryUrl = false;
     };
 
     /* generate deeplink to share view */
 
-$scope.setTestRunSummaryUrl = function () {
+    function setTestRunSummaryUrl() {
 
       $scope.testRunSummaryUrl = 'http://' + location.host + '/#!/testrun-summary/' + $stateParams.productName + '/' + $stateParams.dashboardName +  '/' + $stateParams.testRunId +  '/';
 
     };
 
 
-    $scope.openDeleteModal = function (size, testRunSummary) {
+    function openDeleteModal(size, testRunSummary) {
       ConfirmModal.itemType = 'Delete saved test run summary for ';
       ConfirmModal.selectedItemDescription = testRunSummary.testRunId;
       var modalInstance = $modal.open({

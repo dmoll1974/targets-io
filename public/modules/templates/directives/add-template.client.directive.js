@@ -15,24 +15,38 @@ function AddTemplateDirective () {
   /* @ngInject */
   function AddTemplateDirectiveController ($scope, $state, Templates, Dashboards, $filter, $rootScope) {
 
+
+    $scope.create = create;
+    $scope.cancel = cancel;
+
+      /* Watches */
+
     $scope.$watch('template.name', function (val) {
       $scope.template.name = $filter('uppercase')(val);
     }, true);
 
 
-    if (Templates.templateClone.name){
-      $scope.template = Templates.templateClone;
-      Templates.templateClone = {};
+    /* activate */
 
-    }else {
-      Templates.selected.name = '';
-      Templates.selected.description = '';
-      $scope.template = Templates.selected;
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      if (Templates.templateClone.name) {
+        $scope.template = Templates.templateClone;
+        Templates.templateClone = {};
+
+      } else {
+        Templates.selected.name = '';
+        Templates.selected.description = '';
+        $scope.template = Templates.selected;
+      }
+
     }
 
-
-
-    $scope.create = function() {
+    function create() {
 
       Templates.create($scope.template).success(function(template) {
 
@@ -42,7 +56,7 @@ function AddTemplateDirective () {
       });
     }
 
-    $scope.cancel = function () {
+    function cancel() {
       if ($rootScope.previousStateParams)
         $state.go($rootScope.previousState, $rootScope.previousStateParams);
       else

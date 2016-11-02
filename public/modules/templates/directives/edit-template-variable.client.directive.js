@@ -16,13 +16,30 @@ function EditTemplateVariableDirective () {
   /* @ngInject */
   function EditTemplateVariableDirectiveController ($scope, $rootScope, $state, Templates, $filter) {
 
-  $scope.$watch('variable.name', function (val) {
+
+      $scope.update = update;
+      $scope.cancel = cancel;
+
+          /* Watches */
+
+      $scope.$watch('variable.name', function (val) {
       $scope.variable.name = $filter('uppercase')(val);
-  }, true);
+      }, true);
 
-      $scope.variable = Templates.variable;
 
-      $scope.update = function(){
+      /* activate */
+
+      activate();
+
+      /* functions */
+
+      function activate() {
+
+          $scope.variable = Templates.variable;
+
+      }
+
+      function update(){
 
           var updateIndex = Templates.selected.variables.map(function(variable) { return variable._id.toString(); }).indexOf('$scope.variable._id.toString()');
           Templates.selected.variables[updateIndex] = $scope.variable;
@@ -33,7 +50,7 @@ function EditTemplateVariableDirective () {
       }
 
 
-      $scope.cancel = function () {
+      function cancel() {
           if ($rootScope.previousStateParams)
               $state.go($rootScope.previousState, $rootScope.previousStateParams);
           else

@@ -17,32 +17,65 @@ function ProductRequirementsDirective () {
   function ProductRequirementsDirectiveController ($scope, $state,  Dashboards, $filter, $rootScope, Products, ConfirmModal, $modal, $stateParams) {
 
 
-    Products.fetch().success(function(products){
+    $scope.openMenu = openMenu;
+    $scope.cloneRequirements = cloneRequirements;
+    $scope.addRequirement = addRequirement;
+    $scope.editRequirement = editRequirement;
+    $scope.setRequirementSelected = setRequirementSelected;
+    $scope.setAllRequirementsSelected = setAllRequirementsSelected;
+    $scope.openDeleteSelectedRequirementsModal = openDeleteSelectedRequirementsModal;
 
-      $scope.productsWithRequirements = [];
 
-      _.each(products, function(product){
+      /* Watches */
 
-        if(product.requirements.length > 0 ) $scope.productsWithRequirements.push({product: product.name, requirements: product.requirements});
-      });
-
-    })
-
-    Products.get($stateParams.productName).success(function (product) {
-
-      $scope.product = product;
-      Products.selected = product;
-
+    $scope.$watch('allRequirementsSelected', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        _.each($scope.product.requirements, function (requirement, i) {
+          requirement.selected = newVal;
+        });
+      }
     });
 
-      var originatorEv;
-    $scope.openMenu = function ($mdOpenMenu, ev) {
+
+    /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+
+      Products.fetch().success(function (products) {
+
+        $scope.productsWithRequirements = [];
+
+        _.each(products, function (product) {
+
+          if (product.requirements.length > 0) $scope.productsWithRequirements.push({
+            product: product.name,
+            requirements: product.requirements
+          });
+        });
+
+      })
+
+      Products.get($stateParams.productName).success(function (product) {
+
+        $scope.product = product;
+        Products.selected = product;
+
+      });
+    }
+
+    var originatorEv;
+    function openMenu($mdOpenMenu, ev) {
       originatorEv = ev;
       $mdOpenMenu(ev);
     };
 
 
-    $scope.cloneRequirements = function(product){
+    function cloneRequirements(product){
 
       /* add cloned requirements */
       _.each(product.requirements, function(requirement){
@@ -58,12 +91,12 @@ function ProductRequirementsDirective () {
       });
     }
 
-    $scope.addRequirement = function(){
+    function addRequirement(){
 
       $state.go('addProductRequirement', {productName: $scope.product.name});
 
     }
-    $scope.editRequirement = function(index){
+    function editRequirement(index){
 
       Products.selectedRequirement = $scope.product.requirements[index];
       $state.go('editProductRequirement', {productName: $scope.product.name});
@@ -71,15 +104,7 @@ function ProductRequirementsDirective () {
     }
 
 
-    $scope.$watch('allRequirementsSelected', function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        _.each($scope.product.requirements, function (requirement, i) {
-          requirement.selected = newVal;
-        });
-      }
-    });
-
-    $scope.setRequirementSelected = function(requirementSelected){
+    function setRequirementSelected(requirementSelected){
 
       if (requirementSelected === false){
 
@@ -94,12 +119,12 @@ function ProductRequirementsDirective () {
       }
     };
 
-    $scope.setAllRequirementsSelected = function(requirementSelected){
+    function setAllRequirementsSelected(requirementSelected){
 
       $scope.requirementSelected = requirementSelected;
     };
 
-    $scope.openDeleteSelectedRequirementsModal = function (size) {
+    function openDeleteSelectedRequirementsModal(size) {
 
       ConfirmModal.itemType = 'Delete ';
       ConfirmModal.selectedItemId = '';

@@ -16,31 +16,48 @@ function ViewTemplateDirective () {
   /* @ngInject */
   function ViewTemplateDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, Utils, $window) {
 
+    $scope.setTab = setTab;
+    $scope.backup = backup;
+    $scope.clone = clone;
+    $scope.edit = edit;
+    $scope.openMenu = openMenu;
 
-  /* Tab controller*/
-    $scope.selectedIndex = Templates.selected.selectedIndex || 0;
+    /* activate */
 
-    $scope.setTab = function (newValue) {
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      /* Tab controller*/
+      $scope.selectedIndex = Templates.selected.selectedIndex || 0;
+
+      Templates.get($stateParams.templateName).success(function(template){
+
+        /* sort template metrics by tag[0]*/
+        template.metrics = template.metrics.sort(Utils.dynamicSortTags(''));
+
+        $scope.template = template;
+        Templates.selected = template;
+
+      });
+
+    }
+
+    function setTab(newValue) {
       Templates.selected.selectedIndex = newValue;
     };
 
-  Templates.get($stateParams.templateName).success(function(template){
 
-    /* sort template metrics by tag[0]*/
-    template.metrics = template.metrics.sort(Utils.dynamicSortTags(''));
-
-    $scope.template = template;
-      Templates.selected = template;
-
-  });
-
-    $scope.backup = function(){
+    function backup(){
 
       var url = 'http://' + $window.location.host + '/download-template/' + Templates.selected.name;
       //	$log.log(url);
       $window.location.href = url;
     }
-    $scope.clone = function(){
+
+    function clone(){
 
       Templates.templateClone = _.clone(Templates.selected);
       Templates.templateClone.name += '-CLONE';
@@ -48,13 +65,15 @@ function ViewTemplateDirective () {
       $state.go('addTemplate');
 
     };
-  $scope.edit = function(){
+
+  function edit(){
 
     $state.go('editTemplate', {templateName: Templates.selected.name});
 
   };
+
     var originatorEv;
-    $scope.openMenu = function ($mdOpenMenu, ev) {
+    function openMenu($mdOpenMenu, ev) {
       originatorEv = ev;
       $mdOpenMenu(ev);
     };

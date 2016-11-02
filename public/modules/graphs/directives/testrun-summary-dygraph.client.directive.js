@@ -144,9 +144,6 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
     $scope.selectSeriesToggle = selectSeriesToggle;
     $scope.selectOtherSeriesToggle = selectOtherSeriesToggle;
 
-    /* activate */
-
-    activate();
 
 
     /* watches */
@@ -181,6 +178,9 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       }
     });
 
+    /* activate */
+
+    activate();
 
 
 

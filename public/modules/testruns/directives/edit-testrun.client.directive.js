@@ -15,17 +15,11 @@ function EditTestrunDirective () {
   /* @ngInject */
   function EditTestrunDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams) {
 
-    $scope.testrun = TestRuns.selected;
 
-    $scope.testRunIds = [];
-
-    _.each(TestRuns.list, function(testRun){
-
-      $scope.testRunIds.push(testRun.testRunId);
-
-    });
-
-
+    $scope.openCalendar = openCalendar;
+    $scope.update = update;
+    $scope.cancel = cancel;
+      /* Watches */
 
     $scope.$watch('testrun.productName', function (val) {
       $scope.testrun.productName = $filter('uppercase')(val);
@@ -39,10 +33,31 @@ function EditTestrunDirective () {
       $scope.testrun.testRunId = $filter('uppercase')(val);
     }, true);
 
-    $scope.isOpenStart = false;
-    $scope.isOpenEnd = false;
+    /* activate */
 
-    $scope.openCalendar = function (e, input) {
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      $scope.testrun = TestRuns.selected;
+
+      $scope.testRunIds = [];
+
+      _.each(TestRuns.list, function (testRun) {
+
+        $scope.testRunIds.push(testRun.testRunId);
+
+      });
+
+      $scope.isOpenStart = false;
+      $scope.isOpenEnd = false;
+
+    }
+
+
+    function openCalendar(e, input) {
       e.preventDefault();
       e.stopPropagation();
       switch(input){
@@ -57,8 +72,8 @@ function EditTestrunDirective () {
     };
 
 
-    // Create new Testrun
-    $scope.update = function () {
+    // Update Testrun
+    function update() {
       TestRuns.update($scope.testrun).then(function (testrun) {
 
         if ($rootScope.previousStateParams)
@@ -71,7 +86,7 @@ function EditTestrunDirective () {
       });
     };
 
-    $scope.cancel = function () {
+    function cancel() {
       /* reset form*/
       $scope.testrunForm.$setPristine();
       if ($rootScope.previousStateParams)

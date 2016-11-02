@@ -23,81 +23,14 @@ function ReleaseTestRunSummaryDirective () {
   function ReleaseTestRunSummaryDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $timeout) {
 
 
-    console.log("relatedTestRun: " + $scope.testrun);
-
-    Utils.graphType = 'testrun';
-
-    $scope.testRunSummary = {};
-    $scope.testRunSummary.requirements = [];
-    $scope.showTestRunDetails = false;
-
-    $scope.productName = $scope.testrun.productName;
-    $scope.dashboardName = $scope.testrun.dashboardName;
-    $scope.testRunId = $scope.testrun.testRunId;
-
-    TestRunSummary.getTestRunSummaryForRelease($scope.productName, $scope.dashboardName, $scope.testRunId).success(function (testRunSummary) {
-
-      if(testRunSummary){
-
-        $scope.testRunSummary = testRunSummary;
-        $scope.summarySaved = true;
-
-        console.log('got test run summary from db!')
-
-      }else {
-
-        $scope.summarySaved = false;
-
-        ///* get test run info */
-
-        TestRuns.getTestRunById($scope.productName, $scope.dashboardName, $scope.testRunId).success(function (testRun) {
-
-          $scope.testRunSummary.productName = testRun.productName;
-          $scope.testRunSummary.productRelease = testRun.productRelease;
-          $scope.testRunSummary.dashboardName = testRun.dashboardName;
-          $scope.testRunSummary.testRunId = testRun.testRunId;
-          $scope.testRunSummary.start = testRun.start;
-          $scope.testRunSummary.end = testRun.end;
-          $scope.testRunSummary.humanReadableDuration = testRun.humanReadableDuration;
-          $scope.testRunSummary.annotations = (testRun.annotations)? testRun.annotations : 'None';
-          if (testRun.buildResultsUrl){
-            $scope.testRunSummary.buildResultsUrl = testRun.buildResultsUrl;
-            /* in case of Jenkins CI server, get last two url parameters to display */
-            var splitbuildResultsUrl = testRun.buildResultsUrl.split('/');
-            $scope.testRunSummary.buildResultsUrlDisplay = splitbuildResultsUrl[splitbuildResultsUrl.length -3] + ' #' + splitbuildResultsUrl[splitbuildResultsUrl.length -2];
-          }
+    $scope.goToTestRunSummary = goToTestRunSummary;
+    $scope.toggleShowTestRunDetails = toggleShowTestRunDetails;
+    $scope.gatlingDetails = gatlingDetails;
+    $scope.toggleRequirementResult = toggleRequirementResult;
+    $scope.testRunDetails = testRunDetails;
 
 
-          /* get dashboard info */
-
-          Dashboards.get($scope.productName, $scope.dashboardName).success(function (dashboard) {
-
-            $scope.testRunSummary.description = dashboard.description;
-            $scope.testRunSummary.goal = dashboard.goal;
-
-            });
-          });
-
-        //    /* merge requirements results from test run data*/
-        //
-        //    $scope.testRunSummary.metrics = addRequirementsResultsForTestRun(dashboard.metrics, testRun.metrics);
-        //
-        //
-        //    /* add default annotation texts to model */
-        //
-        //    _.each($scope.testRunSummary.metrics, function (metric) {
-        //
-        //      metric.summaryText = (metric.defaultSummaryText) ? metric.defaultSummaryText : '';
-        //
-        //    })
-        //
-        //
-        //  });
-        //
-        //
-        //});
-      }
-  });
+    /* Watches */
 
     var converter = new showdown.Converter({extensions: ['targetblank']});
 
@@ -114,7 +47,74 @@ function ReleaseTestRunSummaryDirective () {
 
     });
 
-    $scope.goToTestRunSummary = function(){
+    /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      Utils.graphType = 'testrun';
+
+      $scope.testRunSummary = {};
+      $scope.testRunSummary.requirements = [];
+      $scope.showTestRunDetails = false;
+
+      $scope.productName = $scope.testrun.productName;
+      $scope.dashboardName = $scope.testrun.dashboardName;
+      $scope.testRunId = $scope.testrun.testRunId;
+
+      TestRunSummary.getTestRunSummaryForRelease($scope.productName, $scope.dashboardName, $scope.testRunId).success(function (testRunSummary) {
+
+        if (testRunSummary) {
+
+          $scope.testRunSummary = testRunSummary;
+          $scope.summarySaved = true;
+
+          console.log('got test run summary from db!')
+
+        } else {
+
+          $scope.summarySaved = false;
+
+          ///* get test run info */
+
+          TestRuns.getTestRunById($scope.productName, $scope.dashboardName, $scope.testRunId).success(function (testRun) {
+
+            $scope.testRunSummary.productName = testRun.productName;
+            $scope.testRunSummary.productRelease = testRun.productRelease;
+            $scope.testRunSummary.dashboardName = testRun.dashboardName;
+            $scope.testRunSummary.testRunId = testRun.testRunId;
+            $scope.testRunSummary.start = testRun.start;
+            $scope.testRunSummary.end = testRun.end;
+            $scope.testRunSummary.humanReadableDuration = testRun.humanReadableDuration;
+            $scope.testRunSummary.annotations = (testRun.annotations) ? testRun.annotations : 'None';
+            if (testRun.buildResultsUrl) {
+              $scope.testRunSummary.buildResultsUrl = testRun.buildResultsUrl;
+              /* in case of Jenkins CI server, get last two url parameters to display */
+              var splitbuildResultsUrl = testRun.buildResultsUrl.split('/');
+              $scope.testRunSummary.buildResultsUrlDisplay = splitbuildResultsUrl[splitbuildResultsUrl.length - 3] + ' #' + splitbuildResultsUrl[splitbuildResultsUrl.length - 2];
+            }
+
+
+            /* get dashboard info */
+
+            Dashboards.get($scope.productName, $scope.dashboardName).success(function (dashboard) {
+
+              $scope.testRunSummary.description = dashboard.description;
+              $scope.testRunSummary.goal = dashboard.goal;
+
+            });
+          });
+
+        }
+      });
+
+    }
+
+
+    function goToTestRunSummary(){
 
       $state.go('testRunSummary', {
         'productName': $scope.testrun.productName,
@@ -124,7 +124,7 @@ function ReleaseTestRunSummaryDirective () {
 
     }
 
-    $scope.toggleShowTestRunDetails = function(){
+    function toggleShowTestRunDetails(){
 
       $scope.showTestRunDetails = ($scope.showTestRunDetails === false)? true : false;
 
@@ -146,7 +146,7 @@ function ReleaseTestRunSummaryDirective () {
 
     }
 
-    $scope.gatlingDetails = function(testRunId){
+    function gatlingDetails(testRunId){
 
       $state.go('viewGraphs', {
         'productName': $scope.productName,
@@ -202,7 +202,7 @@ function ReleaseTestRunSummaryDirective () {
     }
 
 
-    $scope.toggleRequirementResult = function (index){
+    function toggleRequirementResult(index){
 
       $scope.productrequirements[index].result = !$scope.productrequirements[index].result;
 
@@ -215,7 +215,7 @@ function ReleaseTestRunSummaryDirective () {
     }
 
 
-    $scope.testRunDetails = function (testRun, requirement) {
+    function testRunDetails(testRun, requirement) {
       TestRuns.selected = testRun;
 
       if (requirement === 'all')

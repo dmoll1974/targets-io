@@ -16,36 +16,16 @@ function ViewTemplatesDirective () {
   /* @ngInject */
   function ViewTemplatesDirectiveController ($scope, $state, $stateParams, Templates, Dashboards, ConfirmModal, $modal, $q) {
 
-    Templates.getAll().success(function(templates){
 
-      $scope.templates = templates;
+    $scope.importTemplate = importTemplate;
+    $scope.openMenu = openMenu;
+    $scope.viewTemplate = viewTemplate;
+    $scope.addTemplate = addTemplate;
+    $scope.setTemplatesSelected = setTemplatesSelected;
+    $scope.setAllTemplatesSelected = setAllTemplatesSelected;
+    $scope.openDeleteSelectedTemplatesModal = openDeleteSelectedTemplatesModal;
 
-    });
-
-    $scope.importTemplate = function () {
-      $state.go('importTemplate');
-    };
-
-    var originatorEv;
-
-    $scope.openMenu = function ($mdOpenMenu, ev) {
-      originatorEv = ev;
-      $mdOpenMenu(ev);
-
-    };
-
-
-    $scope.viewTemplate = function(index){
-
-        $state.go('viewTemplate', {templateName: $scope.templates[index].name})
-    }
-
-    $scope.addTemplate = function (){
-
-      /* reset Templates.selected */
-      Templates.selected = {};
-      $state.go('addTemplate');
-    };
+    /* Watches */
 
     $scope.$watch('allTemplatesSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
@@ -55,7 +35,48 @@ function ViewTemplatesDirective () {
       }
     });
 
-    $scope.setTemplatesSelected = function(templateSelected){
+    /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      Templates.getAll().success(function (templates) {
+
+        $scope.templates = templates;
+
+      });
+    }
+
+    function importTemplate() {
+      $state.go('importTemplate');
+    };
+
+    var originatorEv;
+
+    function openMenu($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+
+    };
+
+
+    function viewTemplate(index){
+
+        $state.go('viewTemplate', {templateName: $scope.templates[index].name})
+    }
+
+    function addTemplate(){
+
+      /* reset Templates.selected */
+      Templates.selected = {};
+      $state.go('addTemplate');
+    };
+
+
+    function setTemplatesSelected(templateSelected){
 
       if (templateSelected === false){
 
@@ -70,12 +91,12 @@ function ViewTemplatesDirective () {
       }
     };
 
-    $scope.setAllTemplatesSelected = function(templateSelected){
+    function setAllTemplatesSelected(templateSelected){
 
       $scope.templateSelected = templateSelected;
     };
 
-    $scope.openDeleteSelectedTemplatesModal = function (size) {
+    function openDeleteSelectedTemplatesModal(size) {
 
       ConfirmModal.itemType = 'Delete ';
       ConfirmModal.selectedItemId = '';

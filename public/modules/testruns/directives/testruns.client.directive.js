@@ -18,33 +18,6 @@ function TestrunsDirective () {
   function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $q, $interval, $timeout, $window, $mdDialog, mySocket, Graphite) {
 
 
-    var vm = this;
-
-    $scope.productName = $stateParams.productName;
-    $scope.dashboardName = $stateParams.dashboardName;
-
-    /* spinner stuff */
-
-    var j = 0, counter = 0;
-    var spinner;
-    $scope.modes = [];
-    $scope.determinateValue = 30;
-
-
-    /* By default, show completed test runs only */
-    $scope.completedTestRunsOnly = true;
-
-
-    $scope.loadNumberOfTestRuns = 10;
-
-    $scope.numberOfRowOptions = [
-      {value: 10},
-      {value: 25},
-      {value: 50},
-      {value: 75},
-      {value: 100}
-    ];
-
 
     $scope.showAnnotations = showAnnotations;
     $scope.updateNumberOfTestRuns = updateNumberOfTestRuns;
@@ -210,31 +183,39 @@ function TestrunsDirective () {
 
     });
 
-    /* initialise */
+    /* activate */
+
     activate();
 
+    /* functions */
 
     function activate() {
 
+      $scope.productName = $stateParams.productName;
+      $scope.dashboardName = $stateParams.dashboardName;
+
+      /* spinner stuff */
+
+      var j = 0, counter = 0;
+      var spinner;
+      $scope.modes = [];
+      $scope.determinateValue = 30;
 
 
-      /* only get test runs from db when neccessary */
-      /* if switching dashboards, reset application state */
-      //if (($rootScope.currentStateParams.dashboardName !== $rootScope.previousStateParams.dashboardName && $rootScope.previousStateParams.dashboardName) || !$rootScope.previousStateParams.dashboardName) {
-      //
-      //
-      //  $scope.loading = true;
-      //
-      //
-      //} else {
-      //
-      //  $scope.testRuns = [];
-      //  $scope.testRuns = TestRuns.list;
-      //  $scope.runningTest = (TestRuns.runningTest) ? TestRuns.runningTest : false;
-      //  $scope.numberOfRunningTests = (TestRuns.runningTest) ? TestRuns.runningTest : 0;
-      //
-      //}
-      //
+      /* By default, show completed test runs only */
+      $scope.completedTestRunsOnly = true;
+
+
+      $scope.loadNumberOfTestRuns = 10;
+
+      $scope.numberOfRowOptions = [
+        {value: 10},
+        {value: 25},
+        {value: 50},
+        {value: 75},
+        {value: 100}
+      ];
+
 
       /* Check if baseline test run exists */
 
@@ -300,7 +281,7 @@ function TestrunsDirective () {
 
 
 
-    };
+  };
 
 
 

@@ -15,17 +15,12 @@ function AddTestrunDirective () {
   /* @ngInject */
   function AddTestrunDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, $mdToast) {
 
-    $scope.testrun = {};
-    $scope.testrun.productName = $state.params.productName;
-    $scope.testrun.dashboardName = $state.params.dashboardName;
-    $scope.testRunIds = [];
 
-    _.each(TestRuns.list, function(testRun){
+    $scope.openCalendar = openCalendar;
+    $scope.create = create;
+    $scope.cancel = cancel;
 
-      $scope.testRunIds.push(testRun.testRunId);
-
-    });
-
+      /* Watches */
 
     $scope.$watch('testrun.productName', function (val) {
       $scope.testrun.productName = $filter('uppercase')(val);
@@ -39,10 +34,33 @@ function AddTestrunDirective () {
       $scope.testrun.testRunId = $filter('uppercase')(val);
     }, true);
 
-    $scope.isOpenStart = false;
-    $scope.isOpenEnd = false;
+    /* activate */
 
-    $scope.openCalendar = function (e, input) {
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      $scope.testrun = {};
+      $scope.testrun.productName = $state.params.productName;
+      $scope.testrun.dashboardName = $state.params.dashboardName;
+      $scope.testRunIds = [];
+
+      _.each(TestRuns.list, function (testRun) {
+
+        $scope.testRunIds.push(testRun.testRunId);
+
+      });
+
+      $scope.isOpenStart = false;
+      $scope.isOpenEnd = false;
+
+    }
+
+
+
+    function openCalendar(e, input) {
       e.preventDefault();
       e.stopPropagation();
       switch(input){
@@ -58,35 +76,34 @@ function AddTestrunDirective () {
 
 
     // Create new Testrun
-    $scope.create = function () {
+    function create() {
 
+        var toast = $mdToast.simple()
+            .action('OK')
+            .highlightAction(true)
+            .position('bottom center')
+            .parent(angular.element('#submit'))
+            .hideDelay(6000);
 
-      var toast = $mdToast.simple()
-          .action('OK')
-          .highlightAction(true)
-          .position('bottom center')
-          .parent(angular.element('#submit'))
-          .hideDelay(6000);
+        $mdToast.show(toast.content('Test run data is being collected ... (could take a while)')).then(function(response) {
 
-      $mdToast.show(toast.content('Test run data is being collected ... (could take a while)')).then(function(response) {
+        });
 
-      });
+        TestRuns.addTestRun($scope.testrun).success(function (testrun) {
 
-      TestRuns.addTestRun($scope.testrun).success(function (testrun) {
+          TestRuns.list.unshift(testrun);
 
-        TestRuns.list.unshift(testrun);
-
-        if ($rootScope.previousStateParams)
-          $state.go($rootScope.previousState, $rootScope.previousStateParams);
-        else
-          $state.go($rootScope.previousState);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-        $scope.testrunForm.testRunId.$setValidity('server', false);
-      });
+          if ($rootScope.previousStateParams)
+            $state.go($rootScope.previousState, $rootScope.previousStateParams);
+          else
+            $state.go($rootScope.previousState);
+        }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+          $scope.testrunForm.testRunId.$setValidity('server', false);
+        });
     };
 
-    $scope.cancel = function () {
+    function cancel() {
       /* reset form*/
       $scope.testrunForm.$setPristine();
       if ($rootScope.previousStateParams)

@@ -17,30 +17,14 @@ function TemplateVariablesDirective () {
   /* @ngInject */
   function TemplateVariablesDirectiveController ($scope, $state, Templates, ConfirmModal, $modal) {
 
+    $scope.moveUp = moveUp;
+    $scope.addVariable = addVariable;
+    $scope.editVariable = editVariable;
+    $scope.setVariablesSelected = setVariablesSelected;
+    $scope.setAllVariablesSelected = setAllVariablesSelected;
+    $scope.openDeleteSelectedVariablesModal = openDeleteSelectedVariablesModal;
 
-    $scope.moveUp = function(index){
-
-      var tempArrayItem = $scope.template.variables[index -1];
-      $scope.template.variables[index -1] = $scope.template.variables[index];
-      $scope.template.variables[index] = tempArrayItem;
-
-      Templates.update($scope.template).success(function (template){
-        Templates.selected = template;
-      });
-
-    };
-      $scope.addVariable = function(){
-
-        $state.go('addVariable');
-
-      };
-
-    $scope.editVariable = function(index){
-
-      Templates.variable = Templates.selected.variables[index];
-      $state.go('editTemplateVariable', {variableId: Templates.variable._id});
-    }
-
+      /* Watches */
 
     $scope.$watch('allVariablesSelected', function (newVal, oldVal) {
       if (newVal !== oldVal) {
@@ -50,7 +34,38 @@ function TemplateVariablesDirective () {
       }
     });
 
-    $scope.setVariablesSelected = function(variableSelected){
+
+    /* functions */
+
+
+    function moveUp(index){
+
+        var tempArrayItem = $scope.template.variables[index -1];
+        $scope.template.variables[index -1] = $scope.template.variables[index];
+        $scope.template.variables[index] = tempArrayItem;
+
+        Templates.update($scope.template).success(function (template){
+          Templates.selected = template;
+        });
+
+    };
+
+
+    function addVariable(){
+
+        $state.go('addVariable');
+
+    };
+
+    function editVariable(index){
+
+      Templates.variable = Templates.selected.variables[index];
+      $state.go('editTemplateVariable', {variableId: Templates.variable._id});
+    }
+
+
+
+    function setVariablesSelected(variableSelected){
 
       if (variableSelected === false){
 
@@ -65,12 +80,12 @@ function TemplateVariablesDirective () {
       }
     };
 
-    $scope.setAllVariablesSelected = function(variableSelected){
+    function setAllVariablesSelected(variableSelected){
 
       $scope.variableSelected = variableSelected;
     };
 
-    $scope.openDeleteSelectedVariablesModal = function (size) {
+    function openDeleteSelectedVariablesModal(size) {
 
       ConfirmModal.itemType = 'Delete ';
       ConfirmModal.selectedItemId = '';

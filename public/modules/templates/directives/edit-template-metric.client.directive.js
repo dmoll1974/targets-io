@@ -16,44 +16,16 @@ function EditTemplateMetricDirective () {
   function EditTemplateMetricDirectiveController ($scope, $rootScope, $state, Templates, Dashboards, Utils) {
 
 
-      $scope.metric = Templates.metric;
+      $scope.addCustomUnit = addCustomUnit;
+      $scope.addTarget = addTarget;
+      $scope.removeTarget = removeTarget;
+      $scope.loadTags = loadTags;
+      $scope.update = update;
+      $scope.clone = clone;
+      $scope.cancel = cancel;
 
-      /* values for form drop downs*/
-      $scope.metricTypes = [
-          'Average',
-          'Maximum',
-          'Minimum',
-          'Last',
-          'Gradient'
-      ];
 
-      $scope.metricUnits = [
-          'None',
-          'Count',
-          'Errors',
-          'Mb',
-          'Milliseconds',
-          'Percentage',
-          'Responses',
-          'Bytes/second',
-          'CPUsec',
-          'Users',
-          'Custom'
-      ];
-
-      /* if metric has custom unit, add it to the select list */
-
-      if($scope.metricUnits.indexOf($scope.metric.unit ) === -1){
-          $scope.metricUnits.unshift($scope.metric.unit);
-      }
-
-      $scope.addCustomUnit = function(){
-
-          $scope.metricUnits.push($scope.metric.customUnit)
-          $scope.metric.unit = $scope.metric.customUnit;
-
-      }
-
+      /* Watches */
 
       /* watch benchmark and requirement toggles */
 
@@ -74,21 +46,71 @@ function EditTemplateMetricDirective () {
           }
       });
 
-      /* set benchmark and requirement toggles */
-      if ($scope.metric.requirementValue)
-          $scope.enableRequirement = true;
-      if ($scope.metric.benchmarkValue)
-          $scope.enableBenchmarking = true;
+
+      /* activate */
+
+      activate();
+
+      /* functions */
+
+      function activate() {
+
+          $scope.metric = Templates.metric;
+
+          /* values for form drop downs*/
+          $scope.metricTypes = [
+              'Average',
+              'Maximum',
+              'Minimum',
+              'Last',
+              'Gradient'
+          ];
+
+          $scope.metricUnits = [
+              'None',
+              'Count',
+              'Errors',
+              'Mb',
+              'Milliseconds',
+              'Percentage',
+              'Responses',
+              'Bytes/second',
+              'CPUsec',
+              'Users',
+              'Custom'
+          ];
+
+          /* if metric has custom unit, add it to the select list */
+
+          if ($scope.metricUnits.indexOf($scope.metric.unit) === -1) {
+              $scope.metricUnits.unshift($scope.metric.unit);
+          }
+
+          /* set benchmark and requirement toggles */
+          if ($scope.metric.requirementValue)
+              $scope.enableRequirement = true;
+          if ($scope.metric.benchmarkValue)
+              $scope.enableBenchmarking = true;
+
+      }
+
+      function addCustomUnit(){
+
+          $scope.metricUnits.push($scope.metric.customUnit)
+          $scope.metric.unit = $scope.metric.customUnit;
+
+      }
 
 
-      $scope.addTarget = function () {
+      function addTarget() {
           $scope.metric.targets.push('');
           $scope.graphiteTargets = $scope.defaultGraphiteTargets;
       };
-      $scope.removeTarget = function (index) {
+
+      function removeTarget(index) {
           $scope.metric.targets.splice(index, 1);
       };
-      $scope.loadTags = function (query) {
+      function loadTags(query) {
 
           var matchedTags = [];
           _.each(Templates.selected.tags, function (tag) {
@@ -99,32 +121,32 @@ function EditTemplateMetricDirective () {
       };
 
 
-      $scope.update = function(){
+      function update(){
 
-        /* sort tags */
-        $scope.metric.tags = $scope.metric.tags.sort(Utils.dynamicSort('text'));
+            /* sort tags */
+          if($scope.metric.tags.length > 1) $scope.metric.tags = $scope.metric.tags.sort(Utils.dynamicSort('text'));
 
-      /* add tags */
+          /* add tags */
 
-      _.each($scope.metric.tags, function(tag){
+          _.each($scope.metric.tags, function(tag){
 
-          Templates.selected.tags.push(tag);
+              Templates.selected.tags.push(tag);
 
-      });
+          });
 
-      Templates.selected.tags = _.uniq(Templates.selected.tags, 'text');
+          Templates.selected.tags = _.uniq(Templates.selected.tags, 'text');
 
 
-        //var updateIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
-        //Templates.selected.metrics[updateIndex] = $scope.metric;
-        Templates.update(Templates.selected).success(function (template){
-            Templates.selected = template;
-            Templates.selected.selectedIndex = 1;
-            $state.go('viewTemplate',{templateName: template.name});
-        });
+            //var updateIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
+            //Templates.selected.metrics[updateIndex] = $scope.metric;
+            Templates.update(Templates.selected).success(function (template){
+                Templates.selected = template;
+                Templates.selected.selectedIndex = 1;
+                $state.go('viewTemplate',{templateName: template.name});
+            });
       }
 
-      $scope.clone = function () {
+      function clone() {
           //$scope.metric._id = undefined;
           //var cloneIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
           Templates.metricClone = _.clone($scope.metric);
@@ -133,7 +155,7 @@ function EditTemplateMetricDirective () {
           $state.go('addTemplateMetric');
       };
 
-      $scope.cancel = function () {
+      function cancel() {
           if ($rootScope.previousStateParams)
               $state.go($rootScope.previousState, $rootScope.previousStateParams);
           else

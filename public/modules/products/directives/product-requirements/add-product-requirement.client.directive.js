@@ -15,18 +15,33 @@ function AddProductRequirementDirective () {
   /* @ngInject */
   function AddProductRequirementDirectiveController ($scope, $state, Products, Dashboards, $filter, $rootScope) {
 
-    $scope.product = Products.selected;
+    $scope.create = create;
+    $scope.removeDashboard = removeDashboard;
+    $scope.cancel = cancel;
+    $scope.addRelatedDashboards = addRelatedDashboards;
 
-    $scope.requirement = {};
-    $scope.requirement.relatedDashboards = [];
-    $scope.requirement.relatedDashboards.push('');
 
-    $scope.addRelatedDashboards = function () {
+      /* activate */
+
+    activate();
+
+    /* functions */
+
+    function activate() {
+
+      $scope.product = Products.selected;
+      $scope.requirement = {};
+      $scope.requirement.relatedDashboards = [];
+      $scope.requirement.relatedDashboards.push('');
+
+    }
+
+    function addRelatedDashboards() {
       $scope.requirement.relatedDashboards.push('');
     };
 
 
-    $scope.create = function(requirement) {
+    function create(requirement) {
 
       $scope.product.requirements.push(requirement);
 
@@ -38,13 +53,13 @@ function AddProductRequirementDirective () {
       });
     }
 
-    $scope.removeDashboard = function(index){
+    function removeDashboard(index){
 
       $scope.requirement.relatedDashboards.splice(index, 1);
 
     }
 
-    $scope.cancel = function () {
+    function cancel() {
       if ($rootScope.previousStateParams)
         $state.go($rootScope.previousState, $rootScope.previousStateParams);
       else

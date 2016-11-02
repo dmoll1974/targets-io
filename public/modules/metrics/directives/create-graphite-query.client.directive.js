@@ -21,8 +21,22 @@ function CreateGraphiteQueryDirective () {
     function CreateGraphiteQueryDirectiveController ($scope, $state, $timeout, Graphite, $mdDialog, Utils) {
 
 
+        $scope.showTargetAutocompleteDialog = showTargetAutocompleteDialog;
 
-        $scope.showTargetAutocompleteDialog = function($event){
+
+        /* Watches */
+
+        /* watch zoomRange */
+        $scope.$watch('zoomRange', function (newVal, oldVal) {
+
+            if(oldVal && oldVal !== newVal)
+            Utils.zoomRangeTargetPreview = $scope.zoomRange;
+
+        });
+
+        /* Functions */
+
+        function showTargetAutocompleteDialog($event){
 
             var parentEl = angular.element(document.body);
             $mdDialog.show({
@@ -264,6 +278,7 @@ function CreateGraphiteQueryDirective () {
                     };
                 }
 
+
                 $scope.zoomOptions = [
                     {value: '-10min' , label: 'Last 10 minutes'},
                     {value: '-30min' , label: 'Last 30 minutes'},
@@ -274,6 +289,8 @@ function CreateGraphiteQueryDirective () {
                 $scope.zoomRange = Utils.zoomRangeTargetPreview;
                 /* set md-select selected item */
                 $scope.selectedZoomOptionIndex = $scope.zoomOptions.map(function(zoomOption){return zoomOption.label;}).indexOf($scope.zoomRange.label);
+
+
 
 
                 $scope.updatePreview = function (){
@@ -289,13 +306,7 @@ function CreateGraphiteQueryDirective () {
 
                     })
                 }
-                /* watch zoomRange */
-                $scope.$watch('zoomRange', function (newVal, oldVal) {
 
-
-                    Utils.zoomRangeTargetPreview = $scope.zoomRange;
-
-                });
 
 
                 $scope.wrapInFunction = function(){

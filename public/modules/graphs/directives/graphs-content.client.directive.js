@@ -30,13 +30,16 @@ function GraphsContentDirective () {
     vm.updateTags = updateTags;
     vm.tagRemoved = tagRemoved;
     vm.hasFlash = hasFlash;
-    vm.clipClicked =clipClicked;
+    vm.clipClicked = clipClicked;
     vm.toggleTestRunSummary = toggleTestRunSummary;
 
 
+    /* activate */
+
     activate();
 
-  /* functions*/
+
+    /* functions */
 
     function activate(){
 
