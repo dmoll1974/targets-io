@@ -4,10 +4,12 @@
     </div>
     <form name="metricForm" novalidate>
         <div layout="column">
-            <md-input-container flex class="well">
-                <label>Alias</label>
-                <input ng-model="metric.alias">
-            </md-input-container>
+            <div  class="well">
+                <md-input-container layout-fill>
+                    <label>Alias</label>
+                    <input ng-model="metric.alias">
+                </md-input-container>
+            </div>
             <div layout="column" class="well">
                 <div ng-repeat="target in metric.targets track by $index">
                     <div layout="row" layout-align="end center">
