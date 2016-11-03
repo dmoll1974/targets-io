@@ -26,7 +26,7 @@
   exports.eventByID = eventByID;
 
 
-      function updateAllDashboardEvents(req, res){
+  function updateAllDashboardEvents(req, res){
 
     var regExpDashboardName = new RegExp(req.params.oldDashboardName, 'igm');
 
