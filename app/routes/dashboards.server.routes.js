@@ -5,13 +5,14 @@ module.exports = function (app) {
   // Dashboards Routes
 
   app.route('/get-dashboards-for-product/:productName').get(dashboards.getDashboardsForProduct);
-  app.route('/dashboards/:productName').get(dashboards.list).post(dashboards.create);
+  app.route('/dashboards/:productName').get(dashboards.list)
+                                       .post(dashboards.create);
   //users.requiresLogin,
   app.route('/dashboards/:productName/:dashboardName').get(dashboards.read);
   app.route('/list-metrics-not-in-testrun-summary/:productName/:dashboardName').get(dashboards.listMetricsNotInTestRunSummary);
 
   app.route('/dashboards/:dashboardId').put(dashboards.update)  // users.requiresLogin, dashboards.hasAuthorization,
-.delete(dashboards.delete);
+                                       .delete(dashboards.delete);
   //users.requiresLogin, dashboards.hasAuthorization,
   app.route('/clone/dashboards/:dashboardId').get(dashboards.clone);
   // Finish by binding the Dashboard middleware

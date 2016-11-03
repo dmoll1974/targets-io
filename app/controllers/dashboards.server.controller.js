@@ -11,6 +11,17 @@ var mongoose = require('mongoose'),
     winston = require('winston');
 
 exports.listMetricsNotInTestRunSummary = listMetricsNotInTestRunSummary;
+exports.clone = clone;
+exports.create = create;
+exports.update = update;
+exports.delete = deleteFn;
+exports.getDashboardsForProduct = getDashboardsForProduct;
+exports.list = list;
+exports.read = read;
+exports.dashboardByID = dashboardByID;
+exports.dashboardByProductName = dashboardByProductName;
+exports.getDashboard = getDashboard;
+
 
 function listMetricsNotInTestRunSummary(req, res) {
 
@@ -45,7 +56,7 @@ function listMetricsNotInTestRunSummary(req, res) {
   })
 
 }
-exports.clone = function (req, res) {
+function clone (req, res) {
   var dashboardClone = new Dashboard();
   var metricCloneArray = [];
   _.each(req.dashboard.metrics, function (metric) {
@@ -80,7 +91,7 @@ exports.clone = function (req, res) {
 /**
  * Create a Dashboard
  */
-exports.create = function (req, res) {
+function create(req, res) {
   var dashboard = new Dashboard(req.body);
   dashboard.user = req.user;
   dashboard.productId = req.product._id;
@@ -95,7 +106,7 @@ exports.create = function (req, res) {
 /**
  * Update a Dashboard
  */
-exports.update = function (req, res) {
+function update(req, res) {
   var dashboard = req.dashboard;
   dashboard.name = req.body.name;
   dashboard.description = req.body.description;
@@ -118,7 +129,7 @@ exports.update = function (req, res) {
 /**
  * Delete an Dashboard
  */
-exports.delete = function (req, res) {
+function deleteFn(req, res) {
   var dashboard = req.dashboard;
   dashboard.remove(function (err) {
     if (err) {
@@ -132,7 +143,7 @@ exports.delete = function (req, res) {
  * List of Dashboards
  */
 
-exports.getDashboardsForProduct = function(req, res) {
+function getDashboardsForProduct(req, res) {
 
   Dashboard.find({productId: req.product._id}).sort().exec(function(err, dashboards) {
 
@@ -143,7 +154,7 @@ exports.getDashboardsForProduct = function(req, res) {
 }
 
 
-exports.list = function (req, res) {
+function list(req, res) {
   Dashboard.find().sort('-created').populate('metrics').exec(function (err, dashboards) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
@@ -155,7 +166,7 @@ exports.list = function (req, res) {
 /**
  * Show the current Dashboard
  */
-exports.read = function (req, res) {
+function read(req, res) {
   Dashboard.findOne({
     productId: req.product._id,
     name: req.params.dashboardName.toUpperCase()
@@ -178,7 +189,7 @@ exports.read = function (req, res) {
 /**
  * Dashboard middleware
  */
-exports.dashboardByID = function (req, res, next, id) {
+function dashboardByID(req, res, next, id) {
   Dashboard.findById(id).populate({
     path: 'metrics',
     options: {
@@ -196,7 +207,7 @@ exports.dashboardByID = function (req, res, next, id) {
     next();
   });
 };
-exports.dashboardByProductName = function (req, res, next, productName) {
+function dashboardByProductName(req, res, next, productName) {
   Product.findOne({ name: productName.toUpperCase() }).exec(function (err, product) {
     if (err)
       return next(err);
@@ -209,14 +220,14 @@ exports.dashboardByProductName = function (req, res, next, productName) {
 /**
  * Dashboard authorization middleware
  */
-exports.hasAuthorization = function (req, res, next) {
-  if (req.dashboard.user.id !== req.user.id) {
-    return res.status(403).send('User is not authorized');
-  }
-  next();
-};
+//exports.hasAuthorization = function (req, res, next) {
+//  if (req.dashboard.user.id !== req.user.id) {
+//    return res.status(403).send('User is not authorized');
+//  }
+//  next();
+//};
 
-exports.getDashboard = function(productName, dashboardName) {
+function getDashboard(productName, dashboardName) {
 
   return new Promise((resolve, reject) => {
 

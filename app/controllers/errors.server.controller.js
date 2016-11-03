@@ -1,4 +1,7 @@
 'use strict';
+
+exports.getErrorMessage = getErrorMessage;
+
 /**
  * Get unique error field name
  */
@@ -27,7 +30,7 @@ var getUniqueErrorMessage = function (err) {
 /**
  * Get the error message from error object
  */
-exports.getErrorMessage = function (err) {
+function getErrorMessage(err) {
   var message = '';
   if (err.code) {
     switch (err.code) {
