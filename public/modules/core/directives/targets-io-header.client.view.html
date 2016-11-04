@@ -34,7 +34,7 @@
                     <span>{{product.name}}</span>
                 </md-item-template>
                 <md-not-found>
-                    No products matching "{{productSearchText}}" were found.
+                    <a ui-sref="addProduct">Add Product</a>
                 </md-not-found>
             </md-autocomplete>
 
@@ -64,7 +64,7 @@
                     <span>{{dashboard.name}}</span>
                 </md-item-template>
                 <md-not-found>
-                    No dashboards matching "{{dashboardSearchText}}" were found.
+                    <a ng-click="addDashboard()">Add Dashboard</a>
                 </md-not-found>
             </md-autocomplete>
             <md-button ng-if="dashboardSelected" style="margin-left: 20px;"  class="md-icon-button" ng-click="goToDashboardHome(product, dashboard)">

@@ -32,8 +32,12 @@ function TargetsIoHeaderDirective () {
         $scope.gettingStarted = gettingStarted;
         $scope.goToTestRunSummary = goToTestRunSummary;
         $scope.editTestRun = editTestRun;
+        $scope.addDashboard = addDashboard;
+        $scope.addProduct = addProduct;
 
-            /* watches */
+
+
+        /* watches */
 
         $scope.$watch('productSearchText', function (val) {
             $scope.productSearchText = $filter('uppercase')(val);
@@ -110,6 +114,19 @@ function TargetsIoHeaderDirective () {
 
         }
 
+
+        // Add Product
+        function addProduct(productName) {
+            $state.go('addProduct');
+
+
+        };
+
+
+        function addDashboard(){
+
+            $state.go('addDashboard', {productName: $stateParams.productName});
+        }
 
         function go (path) {
             $location.path(path);
