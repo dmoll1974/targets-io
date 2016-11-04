@@ -1,4 +1,4 @@
-<section data-ng-controller="DashboardsController" data-ng-init="init()">
+<section>
     <div class="page-header">
         <h1>New Dashboard</h1>
     </div>
@@ -9,7 +9,7 @@
                         md-is-error="dashboardForm.dashboardName.$invalid && (dashboardForm.$submitted || dashboardForm.dashboardName.$dirty)"
                         flex>
                     <label>Dashboard name</label>
-                    <input name="dashboardName" ng-model="dashboard.name"
+                    <input id="dashboardName" name="dashboardName" ng-model="dashboard.name"
                            record-availability-validator="/dashboards/{{productName}}" required>
 
                     <div ng-messages="dashboardForm.dashboardName.$error"

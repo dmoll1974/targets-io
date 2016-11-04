@@ -27,36 +27,36 @@ angular.module('dashboards').controller('DashboardsController', [
 
 
 
-    if(Dashboards.selected !== {}) {
-
-      $scope.dashboard = Dashboards.selected;
-      $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
-
-      if (Dashboards.selected.productName !== $stateParams.productName || Dashboards.selected.name !== $stateParams.dashboardName) {
-
-        /* reset all test run related state */
-        TestRuns.list = [];
-        TestRuns.runningTest = '';
-        TestRuns.numberOfRunningTests = '';
-        //Utils.reset();
-        //Utils.zoomFrom = '';
-        //Utils.zoomUntil = '';
-
-        Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
-          $scope.dashboard = Dashboards.selected;
-          $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
-
-
-        });
-      }
-    }else{
-      if($stateParams.dashboardName) {
-        Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
-          $scope.dashboard = Dashboards.selected;
-          $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
-        });
-      }
-    }
+    //if(Dashboards.selected !== {}) {
+    //
+    //  $scope.dashboard = Dashboards.selected;
+    //  $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+    //
+    //  if (Dashboards.selected.productName !== $stateParams.productName || Dashboards.selected.name !== $stateParams.dashboardName) {
+    //
+    //    /* reset all test run related state */
+    //    TestRuns.list = [];
+    //    TestRuns.runningTest = '';
+    //    TestRuns.numberOfRunningTests = '';
+    //    //Utils.reset();
+    //    //Utils.zoomFrom = '';
+    //    //Utils.zoomUntil = '';
+    //
+    //    Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+    //      $scope.dashboard = Dashboards.selected;
+    //      $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+    //
+    //
+    //    });
+    //  }
+    //}else{
+    //  if($stateParams.dashboardName) {
+    //    Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+    //      $scope.dashboard = Dashboards.selected;
+    //      $scope.showBenchmarks = Dashboards.selected.useInBenchmark;
+    //    });
+    //  }
+    //}
 
     $scope.$watch(function (scope) {
       return Dashboards.selected._id;
@@ -107,20 +107,20 @@ angular.module('dashboards').controller('DashboardsController', [
     //};
 
 
-    /* Tab controller */
-    $scope.$watch(function (scope) {
-      return Dashboards.selectedTab;
-    }, function () {
-      $scope.selectedIndex = Dashboards.selectedTab;
-    });
-
-    $scope.setTab = function (newValue) {
-      Dashboards.selectedTab = newValue;
-      /* stop test run polling*/
-      if(newValue !== 0 )
-        $interval.cancel(Utils.polling);
-
-    };
+    ///* Tab controller */
+    //$scope.$watch(function (scope) {
+    //  return Dashboards.selectedTab;
+    //}, function () {
+    //  $scope.selectedIndex = Dashboards.selectedTab;
+    //});
+    //
+    //$scope.setTab = function (newValue) {
+    //  Dashboards.selectedTab = newValue;
+    //  /* stop test run polling*/
+    //  if(newValue !== 0 )
+    //    $interval.cancel(Utils.polling);
+    //
+    //};
 
     ///* Watch on dashboard */
     //$scope.$watch(function (scope) {
@@ -140,91 +140,91 @@ angular.module('dashboards').controller('DashboardsController', [
     //  });
     //};
 
-    // Create new Dashboard
-    $scope.create = function () {
-      // Create new Dashboard object
-      //var dashboard = {};
-      //dashboard.name = this.name;
-      //dashboard.description = this.description;
-      //dashboard.useInBenchmark = this.useInBenchmark;
-      Dashboards.create($scope.dashboard, $stateParams.productName).success(function (dashboard) {
-        /* Refresh sidebar */
-
-        Dashboards.selected = dashboard;
-
-        Products.fetch().success(function (products) {
-
-          Products.items = products;
-
-          $scope.products = products;
-
-
-
-            /* reset Test runs*/
-          TestRuns.list = [];
-
-          $state.go('viewDashboard', {
-            productName: $stateParams.productName,
-            dashboardName: Dashboards.selected.name
-          });
-
-          $scope.dashboardForm.$setPristine();  //
-
-        });
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
+    //// Create new Dashboard
+    //$scope.create = function () {
+    //  // Create new Dashboard object
+    //  //var dashboard = {};
+    //  //dashboard.name = this.name;
+    //  //dashboard.description = this.description;
+    //  //dashboard.useInBenchmark = this.useInBenchmark;
+    //  Dashboards.create($scope.dashboard, $stateParams.productName).success(function (dashboard) {
+    //    /* Refresh sidebar */
+    //
+    //    Dashboards.selected = dashboard;
+    //
+    //    Products.fetch().success(function (products) {
+    //
+    //      Products.items = products;
+    //
+    //      $scope.products = products;
+    //
+    //
+    //
+    //        /* reset Test runs*/
+    //      TestRuns.list = [];
+    //
+    //      $state.go('viewDashboard', {
+    //        productName: $stateParams.productName,
+    //        dashboardName: Dashboards.selected.name
+    //      });
+    //
+    //      $scope.dashboardForm.$setPristine();  //
+    //
+    //    });
+    //  }, function (errorResponse) {
+    //    $scope.error = errorResponse.data.message;
+    //  });
+    //};
 
 
     // Update existing Dashboard
-    $scope.update = function () {
-      Dashboards.update($scope.dashboard).success(function (dashboard) {
+    //$scope.update = function () {
+    //  Dashboards.update($scope.dashboard).success(function (dashboard) {
+    //
+    //    Dashboards.selected = dashboard;
+    //
+    //    TestRuns.updateAllTestRunsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function(testruns) {
+    //
+    //      TestRuns.list = testruns;
+    //
+    //      Events.updateAllEventsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function (events) {
+    //
+    //        Events.list = events;
+    //
+    //
+    //        ///* Refresh header */
+    //        Products.fetch().success(function (products) {
+    //            Products.items = products;
+    //            $scope.products = products;
+    //
+    //          $state.go('viewDashboard', {
+    //            'productName': $stateParams.productName,
+    //            'dashboardName': $scope.dashboard.name
+    //          });
+    //
+    //        });
+    //
+    //      });
+    //    });
+    //  });
+    //};
 
-        Dashboards.selected = dashboard;
 
-        TestRuns.updateAllTestRunsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function(testruns) {
-
-          TestRuns.list = testruns;
-
-          Events.updateAllEventsForDashboard($state.params.productName, $state.params.dashboardName, dashboard.name).success(function (events) {
-
-            Events.list = events;
-
-
-            ///* Refresh header */
-            Products.fetch().success(function (products) {
-                Products.items = products;
-                $scope.products = products;
-
-              $state.go('viewDashboard', {
-                'productName': $stateParams.productName,
-                'dashboardName': $scope.dashboard.name
-              });
-
-            });
-
-          });
-        });
-      });
-    };
-
-
-    $scope.init = function () {
-      /* reset form*/
-      //$scope.dashboardForm.$setPristine();
-      $scope.dashboard = {};
-      Dashboards.selected = {};
-    };
-    $scope.cancel = function () {
-      /* reset form*/
-      $scope.dashboardForm.$setPristine();
-      if ($rootScope.previousStateParams)
-        $state.go($rootScope.previousState, $rootScope.previousStateParams);
-      else
-        $state.go($rootScope.previousState);
-    };
-
+    //$scope.init = function () {
+    //  /* reset form*/
+    //  //$scope.dashboardForm.$setPristine();
+    //  $scope.dashboard = {};
+    //  Dashboards.selected = {};
+    //};
+    //$scope.cancel = function () {
+    //  /* reset form*/
+    //  $scope.dashboardForm.$setPristine();
+    //  if ($rootScope.previousStateParams)
+    //    $state.go($rootScope.previousState, $rootScope.previousStateParams);
+    //  else
+    //    $state.go($rootScope.previousState);
+    //};
+    //
     //$scope.openDeleteMetricModal = function (size, index) {
     //  Metrics.selected = $scope.dashboard.metrics[index];
     //  ConfirmModal.itemType = 'Delete metric ';

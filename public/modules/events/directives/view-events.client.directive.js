@@ -13,7 +13,7 @@ function ViewEventsDirective () {
   return directive;
 
   /* @ngInject */
-  function ViewEventsDirectiveController ($scope, $state, $stateParams, Events, $filter, $rootScope, ConfirmModal, $modal) {
+  function ViewEventsDirectiveController ($scope, $state, $stateParams, Events, $filter, $rootScope, Dashboards, ConfirmModal, $modal) {
 
 
     $scope.editEvent = editEvent;
@@ -40,7 +40,7 @@ function ViewEventsDirective () {
 
     function activate() {
 
-      Events.listEventsForDashboard($scope.productName, $scope.dashboardName).success(function (events) {
+      Events.listEventsForDashboard($stateParams.productName, $stateParams.dashboardName).success(function (events) {
         Events.list = events;
         $scope.events = events;
       }, function (errorResponse) {
