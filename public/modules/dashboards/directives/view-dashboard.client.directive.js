@@ -67,9 +67,7 @@ function ViewDashboardDirective () {
                 }
             }
 
-            setTimeout(function () {
-                document.querySelector('#dashboardName').focus();
-            }, 1);
+
         }
 
 
