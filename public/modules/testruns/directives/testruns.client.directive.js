@@ -17,6 +17,14 @@ function TestrunsDirective () {
   /* @ngInject */
   function TestrunsDirectiveController ($scope, $state, TestRuns, $filter, $rootScope, $stateParams, Dashboards, Utils, Metrics, TestRunSummary, $mdToast, $modal, ConfirmModal, $q, $interval, $timeout, $window, $mdDialog, mySocket, Graphite) {
 
+    /* spinner stuff */
+
+    var j = 0, counter = 0;
+    var spinner;
+    $scope.modes = [];
+    $scope.determinateValue = 30;
+
+
 
 
     $scope.showAnnotations = showAnnotations;
@@ -38,17 +46,20 @@ function TestrunsDirective () {
     $scope.openMenu = openMenu;
     $scope.flushCache = flushCache;
     $scope.showProductReleaseDialog = showProductReleaseDialog;
-    $scope.onlyIncompleteTestRunsAvailable = true;
-    $scope.progress = undefined;
 
+
+
+    /* activate */
+
+    activate();
 
     /* watches */
 
     $scope.$watch('loading', function (current, old) {
-      if (current !== old) {
+      //if (current !== old) {
         if (current === true) {
           // Iterate every 100ms, non-stop
-          spinner = $interval(function () {
+            spinner = $interval(function () {
             // Increment the Determinate loader
             $scope.determinateValue += 1;
             if ($scope.determinateValue > 100) {
@@ -68,7 +79,7 @@ function TestrunsDirective () {
           $interval.cancel(spinner);
 
         }
-      }
+      //}
     });
 
 
@@ -183,9 +194,6 @@ function TestrunsDirective () {
 
     });
 
-    /* activate */
-
-    activate();
 
     /* functions */
 
@@ -194,12 +202,6 @@ function TestrunsDirective () {
       $scope.productName = $stateParams.productName;
       $scope.dashboardName = $stateParams.dashboardName;
 
-      /* spinner stuff */
-
-      var j = 0, counter = 0;
-      var spinner;
-      $scope.modes = [];
-      $scope.determinateValue = 30;
 
 
       /* By default, show completed test runs only */
@@ -216,6 +218,8 @@ function TestrunsDirective () {
         {value: 100}
       ];
 
+      $scope.onlyIncompleteTestRunsAvailable = true;
+      $scope.progress = undefined;
 
       /* Check if baseline test run exists */
 
@@ -241,6 +245,8 @@ function TestrunsDirective () {
 
         }
       });
+
+      $scope.loading = true;
 
       /* get test runs */
       TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (testRuns) {
