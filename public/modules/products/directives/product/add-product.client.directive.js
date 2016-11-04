@@ -40,7 +40,6 @@ function AddProductDirective () {
       Products.create(product).then(function (response) {
         Products.fetch().success(function (products) {
           Products.items = products;
-          SideMenu.addProducts(products);
           $scope.products = products;
           $state.go('viewProduct', { productName: response.data.name });
           $scope.productForm.$setPristine();
