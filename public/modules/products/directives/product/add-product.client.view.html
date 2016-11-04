@@ -10,7 +10,7 @@
                             md-is-error="productForm.productName.$invalid && (productForm.$submitted || productForm.productName.$dirty)"
                             flex>
                         <label>Product name</label>
-                        <input name="productName" ng-model="product.name" record-availability-validator="/products"
+                        <input id="productName" name="productName" ng-model="product.name" record-availability-validator="/products"
                                required>
 
                         <div ng-messages="productForm.productName.$error"

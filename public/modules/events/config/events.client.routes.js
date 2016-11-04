@@ -6,7 +6,7 @@ angular.module('events').config([
     // Events state routing
     $stateProvider.state('listEvents', {
       url: '/events',
-      templateUrl: 'modules/events/views/list-events-dashboard.client.view.html'
+      template: '<view-events></view-events>'
     }).state('createEvent', {
       url: '/create/event/:productName/:dashboardName/',
       template: '<add-event></add-event>'

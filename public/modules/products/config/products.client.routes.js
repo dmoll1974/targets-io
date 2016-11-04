@@ -9,13 +9,13 @@ angular.module('products').config([
       templateUrl: 'modules/products/views/list-products.client.view.html'
     }).state('addProduct', {
       url: '/add/product',
-      templateUrl: 'modules/products/views/create-product.client.view.html'
+      template: '<add-product></add-product>'
     }).state('viewProduct', {
       url: '/browse/:productName/',
-      templateUrl: 'modules/products/views/view-product.client.view.html'
+      template: '<view-product></view-product>'
     }).state('editProduct', {
       url: '/edit/product/:productName/',
-      templateUrl: 'modules/products/views/edit-product.client.view.html'
+      template: '<edit-product></edit-product>'
     }).state('productRequirements', {
       url: '/product-requirements/:productName/',
       template: '<product-requirements></product-requirements>'

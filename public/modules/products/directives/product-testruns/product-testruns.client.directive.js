@@ -22,19 +22,15 @@ function ProductTestRunsDirective () {
     $scope.editTestRun = editTestRun;
     $scope.viewTestRunSummary = viewTestRunSummary;
 
-      /* Watches */
-
-    $scope.$on('$destroy', function () {
-      // Make sure that the interval is destroyed too
-      $interval.cancel(polling);
-
-    });
 
     /* activate */
 
     activate();
 
+
+
     /* functions */
+
 
     function activate() {
 
@@ -51,14 +47,13 @@ function ProductTestRunsDirective () {
       ];
 
 
-      testRunPolling();
-      var polling = $interval(testRunPolling, 30000);
+     
+      getTestRuns()
 
     }
 
 
-
-    var testRunPolling = function(){
+    function getTestRuns(){
 
       $scope.loadingTestRuns = true;
 
@@ -74,14 +69,15 @@ function ProductTestRunsDirective () {
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
+    }
 
-    };
+
 
 
     function updateNumberOfTestRuns(){
 
       $scope.loadingTestRuns = true;
-      testRunPolling();
+      getTestRuns();
 
     }
 
