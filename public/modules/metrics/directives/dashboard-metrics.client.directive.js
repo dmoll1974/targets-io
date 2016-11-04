@@ -111,7 +111,9 @@ function DashboardMetricsDirective () {
 
     $scope.$on('$destroy', function () {
       //  leave the room
-      mySocket.emit('exit-room', room);
+
+      if($rootScope.currentState !== 'addMetric' && $rootScope.currentState !== 'editMetric' )
+        mySocket.emit('exit-room', room);
     });
 
 
@@ -141,9 +143,7 @@ function DashboardMetricsDirective () {
       vm.dashboardName = $stateParams.dashboardName;
       vm.sortType     = Utils.sortType; // set the default sort type
       vm.sortReverse  = Utils.sortReverse;  // set the default sort order
-      vm.dashboard = Dashboards.selected;
       vm.metricFilter = Metrics.metricFilter;
-
       vm.metricSelected = false;
       vm.progress = undefined;
       vm.showTemplates = false;
@@ -155,6 +155,8 @@ function DashboardMetricsDirective () {
         vm.dashboardsForProduct = dashboards;
 
       });
+
+
 
       Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
         vm.dashboard = dashboard;
@@ -248,7 +250,10 @@ function DashboardMetricsDirective () {
 
     function addMetric() {
         //            console.log('add/metric/' + $stateParams.productName + '/' + $stateParams.dashboardName)
-        $state.go('addMetric', {
+
+      mySocket.emit('exit-room', room);
+
+      $state.go('addMetric', {
           'productName': $stateParams.productName,
           'dashboardName': $stateParams.dashboardName
         });
@@ -279,6 +284,8 @@ function DashboardMetricsDirective () {
 
 
       function editMetric(metricId) {
+
+        mySocket.emit('exit-room', room);
 
         $state.go('editMetric', {
           productName: $stateParams.productName,

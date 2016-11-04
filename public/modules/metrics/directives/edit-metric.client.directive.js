@@ -48,10 +48,10 @@ function EditMetricDirective () {
       }
     });
 
-    $scope.$on('$destroy', function () {
-      //  leave the room
-      mySocket.emit('exit-room', room);
-    });
+    //$scope.$on('$destroy', function () {
+    //  //  leave the room
+    //  mySocket.emit('exit-room', room);
+    //});
 
 
     /*socket.io*/
@@ -190,13 +190,18 @@ function EditMetricDirective () {
           TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName).success(function (testRuns) {
             TestRuns.list = testRuns;
 
+            mySocket.emit('exit-room', room);
+
             if ($rootScope.previousStateParams)
               $state.go($rootScope.previousState, $rootScope.previousStateParams);
             else
               $state.go($rootScope.previousState);
           });
         } else {
-        if ($rootScope.previousStateParams)
+
+          mySocket.emit('exit-room', room);
+
+          if ($rootScope.previousStateParams)
           $state.go($rootScope.previousState, $rootScope.previousStateParams);
         else
           $state.go($rootScope.previousState);
@@ -243,7 +248,11 @@ function EditMetricDirective () {
         $log.info('Modal dismissed at: ' + new Date());
       });
     };
+
     function cancel() {
+
+      mySocket.emit('exit-room', room);
+
       if ($rootScope.previousStateParams)
         $state.go($rootScope.previousState, $rootScope.previousStateParams);
       else

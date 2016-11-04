@@ -186,10 +186,15 @@ function AddMetricDirective () {
          TestRuns.updateTestruns($stateParams.productName, $stateParams.dashboardName).success(function (testRuns) {
             TestRuns.list = testRuns;
             vm.progress = undefined;
+
+           mySocket.emit('exit-room', room);
+
            $state.go('viewDashboard', {productName:  $stateParams.productName, dashboardName: $stateParams.dashboardName});
 
          });
         }else{
+
+          mySocket.emit('exit-room', room);
 
           $state.go('viewDashboard', {productName:  $stateParams.productName, dashboardName: $stateParams.dashboardName});
 
@@ -202,6 +207,9 @@ function AddMetricDirective () {
     };
 
     function cancel() {
+
+      mySocket.emit('exit-room', room);
+
       if ($rootScope.previousStateParams)
         $state.go($rootScope.previousState, $rootScope.previousStateParams);
       else
