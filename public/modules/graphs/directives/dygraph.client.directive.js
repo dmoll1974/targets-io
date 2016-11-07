@@ -140,7 +140,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
   /* @ngInject */
   function DygraphController($scope, $state, $stateParams, $rootScope, $timeout, TestRuns, Graphite, Events, Utils) {
 
-
+    var clickDetected = false;
 
     $scope.highlightSeries = highlightSeries;
     $scope.updateSelectedSeries = updateSelectedSeries;
@@ -245,7 +245,6 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       $scope.showLegend = Utils.showLegend;
       $scope.horizontalZoom = true;
 
-      var clickDetected = false;
 
       /* set zoomLock */
 
