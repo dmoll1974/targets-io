@@ -159,23 +159,37 @@ function GraphsContainerDirective () {
       vm.graphsType =  $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
       Utils.graphsType = vm.graphsType;
 
+      refresh();
+
+    }
+
+    /* initialize menu */
+
+    var originatorEv;
+    function openMenu($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
+
+
+    function refresh(){
 
       Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
 
 
-          vm.dashboard = Dashboards.selected;
+        vm.dashboard = Dashboards.selected;
 
-          /* Get tags used in metrics */
-          vm.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+        /* Get tags used in metrics */
+        vm.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
 
-          /* if reloading a non-existing tag is in $statParams */
-          vm.value = checkIfTagExists($stateParams.tag) ? $stateParams.tag : 'All';
+        /* if reloading a non-existing tag is in $statParams */
+        vm.value = checkIfTagExists($stateParams.tag) ? $stateParams.tag : 'All';
 
-          vm.metrics = filterOnTag(Dashboards.selected.metrics);
+        vm.metrics = filterOnTag(Dashboards.selected.metrics);
 
-          vm.filteredMetrics  = vm.metricFilter !=='' ? filterOnMetricFilter(vm.metrics) : vm.metrics;
+        vm.filteredMetrics  = vm.metricFilter !=='' ? filterOnMetricFilter(vm.metrics) : vm.metrics;
 
-          populateColumns();
+        populateColumns();
 
         $timeout(function(){
 
@@ -233,15 +247,6 @@ function GraphsContainerDirective () {
 
     }
 
-    /* initialize menu */
-
-    var originatorEv;
-    function openMenu($mdOpenMenu, ev) {
-      originatorEv = ev;
-      $mdOpenMenu(ev);
-    };
-
-
     function populateColumns(){
 
 
@@ -290,7 +295,7 @@ function GraphsContainerDirective () {
       }
 
       Utils.numberOfColumns = vm.numberOfColumns;
-      activate();
+      refresh();
 
     }
 
@@ -355,7 +360,7 @@ function GraphsContainerDirective () {
     function setMetricFilter(){
 
       vm.metricFilter = vm.metricFilterInput;
-      activate();
+      refresh();
 
 
 
@@ -365,7 +370,7 @@ function GraphsContainerDirective () {
 
       vm.metricFilter = '';
       vm.metricFilterInput = '';
-      activate();
+      refresh();
     };
 
     function checkIfTagExists(tag) {
@@ -417,7 +422,7 @@ function GraphsContainerDirective () {
       /*reset zoom*/
       Utils.zoomFrom = '';
       Utils.zoomUntil = '';
-      activate();
+      refresh();
       //$state.go($state.current, {}, { reload: true });
     };
 
@@ -502,7 +507,7 @@ function GraphsContainerDirective () {
       vm.metricFilter = metric.alias;
       vm.numberOfColumns = 1;
       Utils.numberOfColumns = vm.numberOfColumns;
-      activate();
+      refresh();
     }
 
     function switchTag(route) {
