@@ -16,12 +16,15 @@ var mongoose = require('mongoose'),
     Product = mongoose.model('Product');
 
 exports.getGraphiteData = getGraphiteData;
+exports.findMetrics = findMetrics;
+exports.getData = getData;
+exports.flushCache = flushCache;
 
-/**
+    /**
  * Find metrics
  */
 
-exports.findMetrics = function (req, res) {
+function findMetrics(req, res) {
 
 
   // Set the headers
@@ -50,7 +53,7 @@ exports.findMetrics = function (req, res) {
 /**
  * Get  Graphite data
  */
-exports.getData = function (req, res) {
+function getData(req, res) {
   /* get url params */
   var from = req.query.from;
   var until = req.query.until;
@@ -147,7 +150,7 @@ function createUrl(from, until, targets, maxDataPoints) {
 }
 
 
-exports.flushCache = function (req, res) {
+function flushCache(req, res) {
   /* gettestRun */
   var testRun = req.body;
 

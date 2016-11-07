@@ -7,10 +7,20 @@ var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     Product = mongoose.model('Product'),
     _ = require('lodash');
-/**
+
+exports.create = create;
+exports.read = read;
+exports.update = update;
+exports.delete = deleteFn;
+exports.list = list;
+exports.productByName = productByName;
+exports.productById = productById;
+
+
+    /**
  * Create a Product
  */
-exports.create = function (req, res) {
+function create(req, res) {
   var product = new Product(req.body);
   product.user = req.user;
   product.save(function (err) {
@@ -24,13 +34,13 @@ exports.create = function (req, res) {
 /**
  * Show the current Product
  */
-exports.read = function (req, res) {
+function read(req, res) {
   res.jsonp(req.product);
 };
 /**
  * Update a Product
  */
-exports.update = function (req, res) {
+function update(req, res) {
   var product = req.product;
   //product = _.extend(product , req.body);
   product.name = req.body.name;
@@ -53,7 +63,7 @@ exports.update = function (req, res) {
 /**
  * Delete an Product
  */
-exports.delete = function (req, res) {
+function deleteFn(req, res) {
   var product = req.product;
   product.remove(function (err) {
     if (err) {
@@ -66,7 +76,7 @@ exports.delete = function (req, res) {
 /**
  * List of Products
  */
-exports.list = function (req, res) {
+function list(req, res) {
   Product.find().sort('name').populate({
     path: 'dashboards',
     options: { sort: { name: 1 } }
@@ -81,7 +91,7 @@ exports.list = function (req, res) {
 /**
  * Product middleware
  */
-exports.productByName = function (req, res, next, name) {
+function productByName(req, res, next, name) {
   Product.findOne({ name: name.toUpperCase() }).populate('user', 'displayName').populate('dashboards').exec(function (err, product) {
     if (err)
       return next(err);
@@ -91,7 +101,7 @@ exports.productByName = function (req, res, next, name) {
     next();
   });
 };
-exports.productById = function (req, res, next, id) {
+function productById(req, res, next, id) {
   Product.findById(id).exec(function (err, product) {
     if (err)
       return next(err);
@@ -104,9 +114,9 @@ exports.productById = function (req, res, next, id) {
 /**
  * Product authorization middleware
  */
-exports.hasAuthorization = function (req, res, next) {
-  if (req.product.user.id !== req.user.id) {
-    return res.status(403).send('User is not authorized');
-  }
-  next();
-};
+//exports.hasAuthorization = function (req, res, next) {
+//  if (req.product.user.id !== req.user.id) {
+//    return res.status(403).send('User is not authorized');
+//  }
+//  next();
+//};

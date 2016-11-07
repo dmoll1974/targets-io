@@ -17,6 +17,8 @@ var mongoose = require('mongoose'),
 
 exports.setRequirementResultsForTestRun = setRequirementResultsForTestRun;
 exports.updateRequirementResults = updateRequirementResults;
+
+
 function updateRequirementResults(testRun) {
 
   return new Promise((resolve, reject) => {

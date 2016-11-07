@@ -19,6 +19,7 @@ exports.setBenchmarkResultsPreviousBuildForTestRun = setBenchmarkResultsPrevious
 exports.setBenchmarkResultsFixedBaselineForTestRun = setBenchmarkResultsFixedBaselineForTestRun;
 exports.updateFixedBaselineBenchmark = updateFixedBaselineBenchmark;
 exports.updateBenchmarkResults = updateBenchmarkResults;
+
 function updateBenchmarkResults(testRun) {
 
   return new Promise((resolve, reject) => {

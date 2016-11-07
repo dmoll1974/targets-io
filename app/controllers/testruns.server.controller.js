@@ -26,7 +26,7 @@ var mongoose = require('mongoose'),
 
 
 
-
+exports.getTestRunById = getTestRunById;
 exports.productReleasesFromTestRuns = productReleasesFromTestRuns;
 exports.benchmarkAndPersistTestRunById = benchmarkAndPersistTestRunById;
 exports.testRunsForDashboard = testRunsForDashboard;
@@ -618,7 +618,7 @@ function refreshTestrun(req, res) {
     }
   });
 }
-exports.getTestRunById = function (productName, dashboardName, testRunId, callback) {
+function getTestRunById(productName, dashboardName, testRunId, callback) {
   Testrun.findOne({
     $and: [
       { productName: productName },

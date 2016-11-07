@@ -3,8 +3,11 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'), _ = require('lodash');
+
 exports.dynamicSort = dynamicSort;
 exports.dynamicSortMultiple = dynamicSortMultiple;
+
+
 function dynamicSort(property) {
   var sortOrder = 1;
   if (property[0] === '-') {
