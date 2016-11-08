@@ -74,7 +74,11 @@ function addTestRun(req, res){
  */
 function update (req, res) {
 
-  Testrun.findOne({_id: req.body._id}).exec(function(err, testRun){
+  Testrun.findOne({$and: [
+    { testRunId: req.body.testRunId },
+    { productName: req.body.productName },
+    { dashboardName: req.body.dashboardName }
+  ]}).exec(function(err, testRun){
 
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
