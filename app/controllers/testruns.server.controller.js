@@ -70,7 +70,7 @@ function addTestRun(req, res){
 }
 
 /**
- * Update a Dashboard
+ * Update a test run
  */
 function update (req, res) {
 
@@ -467,7 +467,54 @@ function testRunsForDashboard(req, res) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
 
-      res.jsonp(testRuns);
+      /* check if fixed baseline is in the results */
+     Product.findOne({name: req.params.productName}).exec(function(err, product){
+
+
+      Dashboard.findOne({
+        $and: [
+          { productId: product._id },
+          { name: req.params.dashboardName }
+        ]
+      }).exec(function(err, dashboard){
+
+        var index = testRuns.map(function(testRun){return testRun.testRunId;}).indexOf(dashboard.baseline);
+
+        /* if baseline is present in testRuns, return testRuns*/
+        if (index !== -1){
+
+          res.jsonp(testRuns);
+
+        }else{
+
+          /* else fetch the baseline and push to testRuns */
+
+          Testrun.findOne({
+            $and: [
+              { productName: product.name },
+              { dashboardName: dashboard.name },
+              { testRunId: dashboard.baseline }
+            ]
+          }).exec(function(err, baseline){
+
+            if(baseline){
+
+              testRuns.push(baseline);
+              res.jsonp(testRuns);
+
+            }else{
+
+              res.jsonp(testRuns);
+
+            }
+
+          })
+
+        }
+
+      })
+
+     })
 
     }
   });

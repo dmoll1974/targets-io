@@ -248,24 +248,8 @@ function TestrunsDirective () {
 
       $scope.loading = true;
 
-      /* get test runs */
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (testRuns) {
 
-
-        /* determine if there are only incomplete test runs*/
-        _.each(testRuns, function(testRun){
-
-          if (testRun.completed === true) $scope.onlyIncompleteTestRunsAvailable = false;
-
-        });
-
-        if(testRuns.length === 0) $scope.onlyIncompleteTestRunsAvailable = false;
-        /* set test runs */
-        $scope.testRuns = testRuns;
-        TestRuns.list = testRuns;
-        $scope.loading = false;
-      });
-
+      getTestruns();
 
    /* get running tests */
       TestRuns.listRunningTestsForDashboard($scope.productName, $scope.dashboardName).success(function (runningTests) {
@@ -290,6 +274,27 @@ function TestrunsDirective () {
   };
 
 
+    function getTestruns(){
+
+      /* get test runs */
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (testRuns) {
+
+
+        /* determine if there are only incomplete test runs*/
+        _.each(testRuns, function(testRun){
+
+          if (testRun.completed === true) $scope.onlyIncompleteTestRunsAvailable = false;
+
+        });
+
+        if(testRuns.length === 0) $scope.onlyIncompleteTestRunsAvailable = false;
+        /* set test runs */
+        $scope.testRuns = testRuns;
+        TestRuns.list = testRuns;
+        $scope.loading = false;
+      });
+
+    }
 
     var originatorEv;
 
@@ -626,7 +631,7 @@ function TestrunsDirective () {
 
       $scope.loading = true;
 
-      activate();
+      getTestruns();
 
     }
 
