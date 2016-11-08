@@ -93,6 +93,9 @@ function AddMetricDirective () {
 
         vm.metric = Metrics.clone;
         vm.metric.targets = Metrics.clone.targets;
+        vm.metric.type = Metrics.clone.type;
+        vm.metric.unit = Metrics.clone.unit;
+        vm.metric.tags = Metrics.clone.tags;
         vm.enableBenchmarking = Metrics.clone.benchmarkValue ? true : false;
         vm.enableRequirement = Metrics.clone.requirementValue ? true : false;
         vm.metric.includeInSummary = Metrics.clone.includeInSummary;
