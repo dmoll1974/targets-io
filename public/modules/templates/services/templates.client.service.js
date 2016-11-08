@@ -10,6 +10,7 @@ angular.module('events').factory('Templates', [
       numberOfRunningTest: '',
       replaceItems: [],
       selected: {},
+      selectedIndex: 0,
       metric: {},
       variable: {},
       metricClone: {},

@@ -31,7 +31,7 @@ function ViewTemplateDirective () {
     function activate() {
 
       /* Tab controller*/
-      $scope.selectedIndex = Templates.selected.selectedIndex || 0;
+      $scope.selectedIndex = Templates.selectedIndex || 0;
 
       Templates.get($stateParams.templateName).success(function(template){
 
@@ -46,7 +46,7 @@ function ViewTemplateDirective () {
     }
 
     function setTab(newValue) {
-      Templates.selected.selectedIndex = newValue;
+      Templates.selectedIndex = newValue;
     };
 
 
