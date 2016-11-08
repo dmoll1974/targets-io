@@ -12,7 +12,7 @@
                                ng-click="openMenu($mdOpenMenu, $event)">
                         <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_36px.svg"></md-icon>
                         <md-tooltip>
-                            Edit menu
+                            Template menu
                         </md-tooltip>
                     </md-button>
                     <md-menu-content width="4">
@@ -38,6 +38,9 @@
                     </md-menu-content>
                 </md-menu>
             </div>
+            <md-toolbar class="md-accent" layout-align="center center" ng-if="template.variables.length === 0">
+                <div layout="row" layout-align="center center"><h5>Template {{template.name}} cannot be used until variables have been added. <a ui-sref="addVariable">Add variable</a></h5></div>
+            </md-toolbar>
             <div>
                 <md-tabs md-dynamic-height md-selected="selectedIndex">
 

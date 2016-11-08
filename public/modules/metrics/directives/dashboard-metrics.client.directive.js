@@ -166,7 +166,14 @@ function DashboardMetricsDirective () {
 
       Templates.getAll().success(function (templates) {
 
-        vm.templates = templates;
+        vm.templates = [];
+
+        /* only add templates that have variables */
+        _.each(templates, function(template){
+
+          if(template.variables.length > 0) vm.templates.push(template);
+
+        });
 
       });
 
