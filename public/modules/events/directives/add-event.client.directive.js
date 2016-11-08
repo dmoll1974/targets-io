@@ -42,9 +42,24 @@ function AddEventDirective () {
       $scope.event.productName = $stateParams.productName;
       $scope.event.dashboardName = $stateParams.dashboardName;
       $scope.event.testRunId = Events.selected.testRunId ? Events.selected.testRunId : '';
-      $scope.testRunIds = Events.getTestRunId(TestRuns.list);
+
       $scope.descriptions = Events.getDescriptions(Events.list);
       $scope.isOpen = false;
+
+      $scope.testRunIds = Events.getTestRunId(TestRuns.list);
+
+      /* If  test is running, set running test testRunId and add it to autocomplete list */
+      TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function(runningTest){
+
+
+        if(runningTest) {
+
+          $scope.event.testRunId = runningTest.testRunId;
+          $scope.testRunIds.push(runningTest.testRunId);
+        }
+
+      })
+
 
     }
 

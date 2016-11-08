@@ -440,27 +440,12 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
         Events.selected.testRunId = $stateParams.testRunId;
 
 
-        /* in case of live graphs, try to get running test testRunId*/
-        if($scope.graphsType === 'graphs-live') {
-
-          TestRuns.listRunningTestsForDashboard($stateParams.productName, $stateParams.dashboardName, 1).success(function (runningTest) {
-
-            Events.selected.testRunId = runningTest[0].testRunId;
-
-            $state.go('createEvent', {
-              productName: $stateParams.productName,
-              dashboardName: $stateParams.dashboardName
-            });
-
-          })
-        }else{
 
           $state.go('createEvent', {
             productName: $stateParams.productName,
             dashboardName: $stateParams.dashboardName
           });
 
-        }
 
 
       } else {
