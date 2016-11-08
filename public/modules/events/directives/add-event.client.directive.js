@@ -48,13 +48,12 @@ function AddEventDirective () {
 
       $scope.testRunIds = Events.getTestRunId(TestRuns.list);
 
-      /* If  test is running, set running test testRunId and add it to autocomplete list */
+      /* If  test is running, add running test testRunId to autocomplete list */
       TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function(runningTest){
 
 
         if(runningTest) {
 
-          $scope.event.testRunId = runningTest.testRunId;
           $scope.testRunIds.push(runningTest.testRunId);
         }
 
