@@ -592,7 +592,7 @@ function getTestRunBenchmarks(req, res) {
     $and: [
       { productName: req.params.productName },
       { dashboardName: req.params.dashboardName },
-      { testRunId: req.params.testRunId }
+      { testRunId: req.params.testRunId.toUpperCase() }
     ]
 
   }).sort('-end').exec(function (err, testRun) {
