@@ -125,7 +125,7 @@ function TargetsIoHeaderDirective () {
 
         function addDashboard(){
 
-            $state.go('addDashboard', {productName: $stateParams.productName});
+            $state.go('addDashboard', {productName: $scope.product.name});
         }
 
         function go (path) {
