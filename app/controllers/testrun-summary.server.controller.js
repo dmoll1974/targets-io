@@ -56,7 +56,7 @@ function getTestrunSummary (req, res){
     $and: [
       { productName: req.params.productName },
       { dashboardName: req.params.dashboardName },
-      { testRunId: req.params.testRunId }
+      { testRunId: req.params.testRunId.toUpperCase() }
     ]
   }).exec(function (err, testRunSummary) {
 
