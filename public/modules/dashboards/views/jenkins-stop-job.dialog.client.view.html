@@ -1,0 +1,24 @@
+<md-dialog draggable class="pointer" aria-label="Annotations">
+    <md-toolbar class="md-padding" layout-align="center center"><h4>CONFIRM STOP JENKINS JOB</h4></md-toolbar>
+    <div layout="column"
+    <md-dialog-content class="md-padding">
+        <div layout="row" layout-align="start center">
+            <h5>Are you sure you want to stop the job?</h5>
+        </div>
+        <md-checkbox class="md-padding" ng-if="testRunning" ng-model="markTestRunAsComplete"  ng-change="toggleMarkTestRunAsComplete()" aria-label="Mark test run as completed">
+            Mark test run {{runningTest.testRunId}} as completed
+        </md-checkbox>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <div layout="row" layout-align="end center" flex>
+            <md-button ng-click="complete()" class="md-primary">
+                OK
+            </md-button>
+            <md-button ng-click="closeDialogCancel()" class="md-primary">
+                Cancel
+            </md-button>
+
+        </div>
+    </md-dialog-actions>
+    </div>
+</md-dialog>

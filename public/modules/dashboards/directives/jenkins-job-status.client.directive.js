@@ -17,7 +17,7 @@ function JenkinsJobStatusDirective () {
     return directive;
 
     /* @ngInject */
-    function JenkinsJobStatusDirectiveController ($scope, $state, $stateParams, $timeout, Graphite, $mdDialog, $mdToast, Jenkins, Utils, $interval, Products, $window, $rootScope, AuthenticationService, $http) {
+    function JenkinsJobStatusDirectiveController ($scope, $state, $stateParams, $timeout, TestRuns, $mdDialog, $mdToast, Jenkins, Utils, $interval, Products, $window, $rootScope, AuthenticationService, $http) {
 
         $scope.startJob = startJob;
         $scope.stopJob = stopJob;
@@ -115,23 +115,31 @@ function JenkinsJobStatusDirective () {
 
                 }else {
 
-                    Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (status) {
 
-                        $scope.jenkinsJobQueueWhy = status.body.inQueue ? status.body.queueItem.why : '';
+                        Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (status) {
 
-                        $scope.jenkinsJobStatus = status.body.inQueue ? 'Queued' : (status.body.builds[0].building) ? 'Running' : 'Stopped'
+                            $scope.jenkinsJobQueueWhy = status.body.inQueue ? status.body.queueItem.why : '';
 
-                        var content = 'Job has been started';
-                        var toast = $mdToast.simple()
-                            .action('OK')
-                            .highlightAction(true)
-                            .position('top center')
-                            .hideDelay(3000);
+                            $scope.jenkinsJobStatus = status.body.inQueue ? 'Queued' : (status.body.builds[0].building) ? 'Running' : 'Stopped'
 
-                        $mdToast.show(toast.content(content)).then(function (response) {
-                        });
+                            var content = 'Job has been started';
+                            var toast = $mdToast.simple()
+                                .action('OK')
+                                .highlightAction(true)
+                                .position('top center')
+                                .hideDelay(3000);
 
-                    })
+                            $mdToast.show(toast.content(content)).then(function (response) {
+                            });
+
+                         });
+
+                        $timeout(function(){
+
+                            jenkinsJobStatusPolling();
+
+                        },6000);
+
                 }
 
             });
@@ -140,41 +148,135 @@ function JenkinsJobStatusDirective () {
 
         }
 
-        function stopJob($event){
+        function stopJob($event) {
 
 
-            Jenkins.stopJob($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function(){
+            /* check for running tests for dashboard */
 
-                if(status.statusCode === 401){
+            TestRuns.getRunningTest($stateParams.productName, $stateParams.dashboardName).success(function (runningTest) {
 
-                    $scope.authenticationFailed = true;
-                    AuthenticationService.ClearCredentials();
-                    jenkinsJobStatusPolling();
+                $scope.testRunning = runningTest.testRunId ? true : false;
+                $scope.runningTest = runningTest;
 
-                }else {
 
-                    Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (status) {
+                var parentEl = angular.element(document.body);
 
-                        $scope.jenkinsJobQueueWhy = status.body.inQueue ? status.body.queueItem.why : '';
+                $mdDialog.show({
+                    parent: parentEl,
+                    targetEvent: $event,
+                    templateUrl: 'modules/dashboards/views/jenkins-stop-job.dialog.client.view.html',
+                    locals: {
+                        dashboard: $scope.dashboard,
+                        runningTest: $scope.runningTest,
+                        testRunning: $scope.testRunning
 
-                        $scope.jenkinsJobStatus = status.body.inQueue ? 'Queued' : (status.body.builds[0].building) ? 'Running' : 'Stopped';
+                    },
+                    controller: DialogController
+                });
+                function DialogController($scope, $mdDialog, dashboard, testRunning, runningTest,  TestRuns) {
 
-                        var content = 'Job has been stopped';
-                        var toast = $mdToast.simple()
-                            .action('OK')
-                            .highlightAction(true)
-                            .position('top center')
-                            .hideDelay(3000);
+                    $scope.dashboard = dashboard;
+                    $scope.runningTest = runningTest;
+                    $scope.testRunning = testRunning;
+                    $scope.markTestRunAsComplete = false;
 
-                        $mdToast.show(toast.content(content)).then(function (response) {
+                    $scope.toggleMarkTestRunAsComplete = function(){
+
+                        $scope.markTestRunAsComplete = $scope.markTestRunAsComplete ? false : true;
+
+                    }
+
+
+                    $scope.closeDialogCancel = function () {
+
+                        $mdDialog.hide();
+
+
+                    }
+
+                    $scope.complete = function () {
+
+
+
+                            Jenkins.stopJob($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function () {
+
+                            if (status.statusCode === 401) {
+
+                                $scope.authenticationFailed = true;
+                                AuthenticationService.ClearCredentials();
+                                jenkinsJobStatusPolling();
+
+                            } else {
+
+
+
+                                Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (status) {
+
+                                    $scope.jenkinsJobQueueWhy = status.body.inQueue ? status.body.queueItem.why : '';
+
+                                    $scope.jenkinsJobStatus = status.body.inQueue ? 'Queued' : (status.body.builds[0].building) ? 'Running' : 'Stopped';
+
+                                    if ($scope.markTestRunAsComplete) {
+
+                                        TestRuns.endRunningTestAsComleted($scope.runningTest).success(function (stoppedTestRun) {
+
+
+                                            var content = stoppedTestRun ? 'Job has been stopped and marked as completed' : 'Job has been stopped';
+
+                                            var toast = $mdToast.simple()
+                                                .action('OK')
+                                                .highlightAction(true)
+                                                .position('top center')
+                                                .hideDelay(3000);
+
+                                            $mdToast.show(toast.content(content)).then(function (response) {
+
+                                            });
+
+                                            $mdDialog.hide();
+
+
+                                        })
+
+                                    } else {
+
+                                        var content = 'Job has been stopped';
+
+
+                                        var toast = $mdToast.simple()
+                                            .action('OK')
+                                            .highlightAction(true)
+                                            .position('top center')
+                                            .hideDelay(3000);
+
+                                        $mdToast.show(toast.content(content)).then(function (response) {
+
+
+                                        });
+
+                                        $mdDialog.hide();
+                                    }
+
+                                })
+
+                                $timeout(function(){
+
+                                    jenkinsJobStatusPolling();
+
+                                },3000);
+
+                            }
+
                         });
 
-                    })
+
+                    }
+
+
                 }
 
             });
         }
-
         function jenkinsJobConfig(url) {
 
             Products.get($stateParams.productName).success(function (product) {

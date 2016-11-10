@@ -24,6 +24,7 @@ angular.module('events').factory('TestRuns', [
       addTestRun: addTestRun,
       getTestRunById: getTestRunById,
       getRunningTest: getRunningTest,
+      endRunningTestAsComleted: endRunningTestAsComleted,
       refreshTestrun: refreshTestrun,
       delete: deleteFn,
       updateFixedBaseline: updateFixedBaseline,
@@ -86,6 +87,10 @@ angular.module('events').factory('TestRuns', [
     }
     function deleteFn(productName, dashboardName, testRunId) {
       return $http.delete('/testrun/' + productName + '/' + dashboardName + '/' + testRunId);
+    }
+
+    function endRunningTestAsComleted(testRun) {
+      return $http.post('/running-test/end/', testRun);
     }
 
     function updateAllTestRunsForProduct(productName, newProductName){
