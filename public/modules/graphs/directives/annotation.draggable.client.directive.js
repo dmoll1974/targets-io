@@ -9,7 +9,6 @@ angular.module('graphs').directive('draggable', function() {
             //setTimeout(function(){
                 element.draggable({
                     stop: function(event, ui) {
-                        console.log("Check if its printing")
                         event.stopPropagation();
                     }
                 });
