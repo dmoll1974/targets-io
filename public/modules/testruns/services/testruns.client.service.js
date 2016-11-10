@@ -48,7 +48,7 @@ angular.module('events').factory('TestRuns', [
       return $http.get('/running-test/' + productName + '/' + dashboardName);
     }
     function getTestRunById(productName, dashboardName, testRunId) {
-      return $http.get('/testrun/' + productName + '/' + dashboardName + '/' + testRunId);
+      return $http.get('/testrun/' + productName + '/' + dashboardName + '/' + testRunId.toUpperCase());
     }
 
     function update(testRun){

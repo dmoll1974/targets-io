@@ -24,7 +24,7 @@ angular.module('testruns').factory('TestRunSummary', [
 
     function getTestRunSummary(productName, dashboardName, testRunId){
 
-      return $http.get('/testrun-summary/' + productName + '/' + dashboardName + '/' + testRunId);
+      return $http.get('/testrun-summary/' + productName + '/' + dashboardName + '/' + testRunId.toUpperCase());
 
     }
     function getTestRunSummaryForRelease(productName, dashboardName, testRunId){
