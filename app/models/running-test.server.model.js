@@ -21,6 +21,7 @@ var RunningTestSchema = new mongoose.Schema({
     'end': {
         type: Date
     },
+    'annotations': String,
     'keepAliveTimestamp': {
         type: Date,
         default: Date.now

@@ -636,7 +636,7 @@ function TestrunsDirective () {
     }
 
 
-    function showAnnotations($event, testRun) {
+    function showAnnotations($event, testRun, runningTest) {
 
       var parentEl = angular.element(document.body);
       $mdDialog.show({
@@ -650,13 +650,55 @@ function TestrunsDirective () {
       });
       function DialogController($scope, $mdDialog, testRun, TestRuns) {
         $scope.testRun = testRun;
-        $scope.closeDialog = function () {
-          TestRuns.update(testRun).success(function () {
 
+      $scope.cancel = function(){
 
-            $mdDialog.hide();
-          })
+        $mdDialog.hide();
 
+      }
+
+      $scope.closeDialog = function () {
+
+          if(runningTest){
+
+            TestRuns.updateRunningTestAnnotations($scope.testRun).success(function () {
+
+              $mdDialog.hide();
+
+            }, function(){
+
+              var toast = $mdToast.simple()
+                  .action('OK')
+                  .highlightAction(true)
+                  .hideDelay(3000)
+
+              $mdToast.show(toast.content('Something went wrong saving test run annotations!')).then(function (response) {
+              })
+
+              $mdDialog.hide();
+
+            });
+
+          }else{
+
+            TestRuns.update(testRun).success(function () {
+
+              $mdDialog.hide();
+            }, function(){
+
+              var toast = $mdToast.simple()
+                  .action('OK')
+                  .highlightAction(true)
+                  .hideDelay(3000)
+
+              $mdToast.show(toast.content('Something went wrong saving test run annotations!')).then(function (response) {
+              })
+
+              $mdDialog.hide();
+
+            });
+
+          }
         }
       }
 

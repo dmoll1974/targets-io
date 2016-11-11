@@ -27,6 +27,7 @@ var RunningTestSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+   'annotations': String,
   'completed': {
     type: Boolean,
     default: false
@@ -328,6 +329,7 @@ let saveTestRun = function (runningTest){
       testRunId: runningTest.testRunId,
       start: runningTest.start,
       end: runningTest.end,
+      annotations: runningTest.annotations,
       rampUpPeriod: runningTest.rampUpPeriod,
       completed: runningTest.completed,
       humanReadableDuration: humanReadbleDuration(runningTest.end.getTime() - runningTest.start.getTime()),

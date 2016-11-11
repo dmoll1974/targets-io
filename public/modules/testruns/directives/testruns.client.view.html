@@ -27,7 +27,8 @@
         <table class="table">
             <colgroup ng-if="!showBenchmarks">
                 <col span="1" style="width: 32%;">
-                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 4%;">
+                <col span="1" style="width: 4%;">
                 <col span="1" style="width: 18%;">
                 <col span="1" style="width: 18%;">
                 <col span="1" style="width: 18%;">
@@ -40,7 +41,8 @@
             </colgroup>
             <colgroup ng-if="showBenchmarks">
                 <col span="1" style="width: 25%;">
-                <col span="1" style="width: 8%;">
+                <col span="1" style="width: 4%;">
+                <col span="1" style="width: 4%;">
                 <col span="1" style="width: 18%;">
                 <col span="1" style="width: 18%;">
                 <col span="1" style="width: 10%;">
@@ -54,6 +56,7 @@
             <thead>
             <tr>
                 <th>Test run ID</th>
+                <th></th>
                 <th>Release</th>
                 <th>Start</th>
                 <th>End</th>
@@ -77,17 +80,28 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="runningTest in runningTests" class="running-test" data-ng-click="liveGraphs(runningTest)">
-                <td>
-                    {{runningTest.testRunId}}
+            <tr ng-repeat="runningTest in runningTests" class="running-test" >
+                <td >
+                    <div layout="row"><div class="pointer" data-ng-click="liveGraphs(runningTest)">{{runningTest.testRunId}}</div>
+                    </div>
                 </td>
-                <td>
+                <td class="testrun-annotations-button">
+                    <div class="pointer">
+                        <md-button class="md-icon-button testrun-annotations-button running-test-annotations-icon" data-ng-click="showAnnotations($event, runningTest, true)">
+                            <md-icon md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
+                            <md-tooltip>
+                                Test run annotations
+                            </md-tooltip>
+                        </md-button>
+                    </div>
+                </td>
+                <td class="pointer"  data-ng-click="liveGraphs(runningTest)">
                     {{runningTest.productRelease}}
                 </td>
-                <td class="pointer" >
+                <td class="pointer" data-ng-click="liveGraphs(runningTest)">
                     {{runningTest.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
-                <td class="pointer">
+                <td class="pointer" data-ng-click="liveGraphs(runningTest)">
                     <div layout="column" data-ng-if="runningTest.progress !== undefined" layout-align="center left">
                         <md-progress-linear  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
                         <div class="running-test">{{runningTest.timeLeft}}</div>
@@ -97,7 +111,7 @@
                         <div class="running-test">No data available</div>
                     </div>
                 </td>
-                <td class="pointer">{{runningTest.humanReadableDuration}}
+                <td class="pointer" data-ng-click="liveGraphs(runningTest)">{{runningTest.humanReadableDuration}}
                 </td>
                 <td></td>
                 <td></td>
@@ -109,9 +123,17 @@
             <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } "
                 ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true}" >
                 <td>
-                    <div id="testRunInfo"  layout="row">
                         <div class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.testRunId}}</div>
-                        <div   ng-if="testRun.annotations" class="fa fa-info-circle info-hover" data-ng-click="showAnnotations($event, testRun)" style="margin-left: 10px;"></div>
+
+                </td>
+                <td class="testrun-annotations-button">
+                    <div class="pointer" >
+                        <md-button  ng-show="testRun.annotations" class="md-icon-button testrun-annotations-button" data-ng-click="showAnnotations($event, testRun, false)">
+                            <md-icon md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
+                            <md-tooltip>
+                                Test run annotations
+                            </md-tooltip>
+                        </md-button>
                     </div>
                 </td>
                 <td class="pointer" data-ng-click="testRunDetails(testRun)">
@@ -190,6 +212,12 @@
                                 <md-button class="targets-io-menu-button"  data-ng-click="editTestRun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_mode_edit_black_36px.svg"></md-icon>
                                     EDIT TEST RUN
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item ng-show="progress === undefined">
+                                <md-button class="targets-io-menu-button"  data-ng-click="showAnnotations($event, testRun, false)">
+                                    <md-icon md-svg-src="images/assets/ic_info_outline_black_24px.svg"></md-icon>
+                                    ANNOTATE TEST RUN
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item ng-show="progress === undefined">

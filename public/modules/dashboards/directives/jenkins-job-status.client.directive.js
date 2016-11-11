@@ -218,27 +218,55 @@ function JenkinsJobStatusDirective () {
 
                                     if ($scope.markTestRunAsComplete) {
 
-                                        TestRuns.endRunningTestAsComleted($scope.runningTest).success(function (stoppedTestRun) {
+                                        if($scope.runningTest.annotations) {
 
+                                            TestRuns.updateRunningTestAnnotations($scope.runningTest).success(function (annotatedTestRun) {
 
-                                            var content = stoppedTestRun ? 'Job has been stopped and marked as completed' : 'Job has been stopped';
+                                                TestRuns.updateRunningTest($scope.runningTest, 'end').success(function (stoppedTestRun) {
 
-                                            var toast = $mdToast.simple()
-                                                .action('OK')
-                                                .highlightAction(true)
-                                                .position('top center')
-                                                .hideDelay(3000);
+                                                    var content = stoppedTestRun ? 'Job has been stopped and marked as completed' : 'Job has been stopped';
 
-                                            $mdToast.show(toast.content(content)).then(function (response) {
+                                                    var toast = $mdToast.simple()
+                                                        .action('OK')
+                                                        .highlightAction(true)
+                                                        .position('top center')
+                                                        .hideDelay(3000);
+
+                                                    $mdToast.show(toast.content(content)).then(function (response) {
+
+                                                    });
+                                                });
 
                                             });
 
-                                            $mdDialog.hide();
+                                        }else{
+
+                                                TestRuns.updateRunningTest($scope.runningTest, 'end').success(function (stoppedTestRun) {
+
+                                                    var content = stoppedTestRun ? 'Job has been stopped and marked as completed' : 'Job has been stopped';
+
+                                                    var toast = $mdToast.simple()
+                                                        .action('OK')
+                                                        .highlightAction(true)
+                                                        .position('top center')
+                                                        .hideDelay(3000);
+
+                                                    $mdToast.show(toast.content(content)).then(function (response) {
+
+                                                    });
+                                                });
+                                        }
 
 
-                                        })
 
-                                    } else {
+
+
+                                        $mdDialog.hide();
+
+
+
+
+                                        } else {
 
                                         var content = 'Job has been stopped';
 

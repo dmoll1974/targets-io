@@ -422,6 +422,28 @@ md-toast {
     fill: rgba(10, 10, 10, 0.09);
 }
 
+.running-test-annotations-icon{
+
+    padding: 0px;
+}
+
+.md-button.md-icon-button.testrun-annotations-button{
+
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.testrun-annotations-button{
+
+    padding: 0px !important;
+    margin: 0px !important;
+}
+.running-test-annotations-icon svg{
+
+    fill: rgb(33, 150, 243);
+
+}
+
 .switch-label-enabled{
 
     color: black;

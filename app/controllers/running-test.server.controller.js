@@ -15,6 +15,7 @@ var testRunsModule = require('./testruns.server.controller');
 
 exports.runningTest = runningTest;
 exports.updateRunningTest = updateRunningTest;
+exports.updateRunningTestAnnotations = updateRunningTestAnnotations;
 exports.getRunningTests = getRunningTests;
 exports.runningTestForDashboard = runningTestForDashboard;
 
@@ -163,7 +164,37 @@ function runningTest(req, res){
 
 }
 
-function updateRunningTest(runningTest) {
+function updateRunningTestAnnotations(req, res) {
+
+  RunningTest.findOne({$and:[{productName: req.body.productName}, {dashboardName: req.body.dashboardName}, {testRunId: req.body.testRunId.toUpperCase()}]}).exec(function(err, storedRunningTest){
+
+    if(storedRunningTest) {
+
+      storedRunningTest.annotations = req.body.annotations;
+
+      storedRunningTest.save(function (err, runningTestSaved) {
+
+
+        var io = global.io;
+        var room = runningTestSaved.productName + '-' + runningTestSaved.dashboardName;
+
+        winston.info('emitting message to room: ' + room);
+        io.sockets.in(room).emit('runningTest', {event: 'saved', testrun: runningTestSaved});
+        winston.info('emitting message to room: running-test');
+        io.sockets.in('running-test').emit('runningTest', {event: 'saved', testrun: runningTestSaved});
+
+        res.jsonp(runningTestSaved)
+
+      });
+    }else{
+
+      return res.status(400).send({ message: 'No running test found for this test run ID!' });
+
+    }
+
+  });
+}
+  function updateRunningTest(runningTest) {
 
   return new Promise((resolve, reject) => {
 
@@ -180,6 +211,7 @@ function updateRunningTest(runningTest) {
         storedRunningTest.end = dateNow + 30 * 1000;
         storedRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date().getTime() - storedRunningTest.start.getTime());
         storedRunningTest.rampUpPeriod = runningTest.rampUpPeriod;
+        storedRunningTest.annotations = runningTest.annotations;
 
         storedRunningTest.save(function(err, runnigTestSaved){
 
