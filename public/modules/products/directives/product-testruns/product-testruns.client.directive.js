@@ -21,6 +21,7 @@ function ProductTestRunsDirective () {
     $scope.go = go;
     $scope.editTestRun = editTestRun;
     $scope.viewTestRunSummary = viewTestRunSummary;
+    $scope.testRunDetails = testRunDetails;
 
 
     /* activate */
@@ -51,6 +52,24 @@ function ProductTestRunsDirective () {
       getTestRuns()
 
     }
+
+
+    function testRunDetails(testRun) {
+
+      TestRuns.selected = testRun;
+
+      Dashboards.get(testRun.productName,testRun.dashboardName).success(function(dashboard){
+
+        $state.go('viewGraphs', {
+          'productName': testRun.productName,
+          'dashboardName': testRun.dashboardName,
+          'testRunId': testRun.testRunId,
+          tag: Dashboards.getDefaultTag(dashboard.tags)
+        });
+
+      })
+
+    };
 
 
     function getTestRuns(){
