@@ -86,11 +86,19 @@
                     </div>
                 </td>
                 <td class="testrun-annotations-button">
-                    <div class="pointer">
+                    <div class="pointer" ng-show="runningTest.annotations">
                         <md-button class="md-icon-button testrun-annotations-button running-test-annotations-icon" data-ng-click="showAnnotations($event, runningTest, true)">
                             <md-icon md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
                             <md-tooltip>
                                 Test run annotations
+                            </md-tooltip>
+                        </md-button>
+                    </div>
+                    <div class="pointer" ng-show="!runningTest.annotations">
+                        <md-button class="md-icon-button testrun-annotations-button running-test-annotations-icon" data-ng-click="showAnnotations($event, runningTest, true)">
+                            <md-icon md-svg-src="images/assets/ic_mode_edit_black_24px.svg"></md-icon>
+                            <md-tooltip>
+                                Annotate test run
                             </md-tooltip>
                         </md-button>
                     </div>
