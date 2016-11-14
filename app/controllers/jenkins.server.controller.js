@@ -23,7 +23,7 @@ exports.login = login;
 
 function stopJob(req, res){
 
-  var options = {};
+  var options = {rejectUnauthorized: false};
 
   options.headers ={
 
@@ -82,7 +82,7 @@ function stopJob(req, res){
 }
 function startJob(req, res){
 
-  var options = {};
+  var options = {rejectUnauthorized: false};
 
   options.headers ={
 
@@ -124,7 +124,7 @@ function startJob(req, res){
 
 function getJenkinsJobStatus (req, res) {
 
-  var options = {};
+  var options = {rejectUnauthorized: false};
 
   options.headers ={
 
@@ -148,7 +148,7 @@ function getJenkinsJobStatus (req, res) {
 
 function login (req, res) {
 
-  var options = {};
+  var options = {rejectUnauthorized: false};
 
   options.headers ={
 
@@ -190,7 +190,9 @@ function login (req, res) {
           'user': config.jenkinsUser,
           'pass': config.jenkinsPassword,
           'sendImmediately': true
-        }
+
+        },
+        'rejectUnauthorized': false
       }
 
     }else{
@@ -214,7 +216,8 @@ function login (req, res) {
 
 function getConsoleData (req, res) {
 
-  var options = {};
+  var options = {rejectUnauthorized: false};
+
   options.headers =[];
 
   options.headers.push({
@@ -277,7 +280,9 @@ function getJenkinsData (jenkinsUrl, running, start, end, productName, dashboard
         'user': config.jenkinsUser,
         'pass': config.jenkinsPassword,
         'sendImmediately': true
-      }
+
+      },
+      'rejectUnauthorized': false
     }
 
   }else{
