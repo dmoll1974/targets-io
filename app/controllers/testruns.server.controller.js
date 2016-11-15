@@ -355,9 +355,9 @@ function distinctReleases(testRuns){
 
   _.each(testRuns, function(testRun){
 
-    if(distinctReleases.indexOf(testRun.productRelease) === -1){
+    if(distinctReleases.indexOf(testRun.productRelease) === -1 && testRun.productRelease !== undefined  && testRun.productRelease !== ''){
 
-      if(testRun.productRelease !== '') distinctReleases.push(testRun.productRelease);
+      distinctReleases.push(testRun.productRelease);
     }
   })
 
