@@ -45,7 +45,7 @@ function SelectJenkinsJobDirective () {
 
             function DialogController($scope, $mdDialog, Jenkins, $stateParams) {
 
-                Jenkins.getJobs($stateParams.productName).success(function (jenkinJobs) {
+                Jenkins.getJobs().success(function (jenkinJobs) {
 
                     $scope.jenkinJobs = jenkinJobs.body.jobs;
 

@@ -23,9 +23,9 @@ angular.module('jenkins').factory('Jenkins', [
       return $http.post('/jenkins-stdout', postData);
     }
 
-    function getJobs(productName) {
+    function getJobs() {
 
-      return $http.get('/jenkins-jobs/' + productName);
+      return $http.get('/jenkins-jobs');
     }
 
     function getJobStatus(productName, jenkinsJobName) {
