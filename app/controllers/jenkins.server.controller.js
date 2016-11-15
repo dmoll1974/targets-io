@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
     config = require('../../config/config'),
     GatlingDetails = mongoose.model('GatlingDetails');
 
+exports.getJenkinsHost = getJenkinsHost;
 exports.getJenkinsData = getJenkinsData;
 exports.getJenkinsJobs = getJenkinsJobs;
 exports.getConsoleData = getConsoleData;
@@ -20,7 +21,13 @@ exports.stopJob = stopJob;
 exports.login = login;
 
 
+function getJenkinsHost(req, res){
 
+  var jenkinsHost = {
+    jenkinsHost: config.jenkinsHost
+  }
+  res.jsonp(jenkinsHost);
+}
 
 
 function stopJob(req, res){
