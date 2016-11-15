@@ -161,7 +161,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
         $scope.showProgressBar = true;
 
-        drawDypraph($scope.graphType);
+        drawDypraph();
       }
     });
 
@@ -173,7 +173,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
         $scope.showProgressBar = true;
 
-        drawDypraph($scope.graphType);
+        drawDypraph();
 
       }
     });
@@ -215,7 +215,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       }else {
 
 
-        drawDypraph($scope.graphType);
+        drawDypraph();
       }
 
     }
@@ -318,47 +318,32 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     }
 
-    function drawDypraph(graphType)  {
+    function drawDypraph() {
 
-        switch (graphType) {
 
-          case 'testrun':
+        var testRunId = $stateParams.testRunId ? $stateParams.testRunId : $scope.testrun.testRunId;
 
-              var testRunId = $stateParams.testRunId ? $stateParams.testRunId : $scope.testrun.testRunId;
+        TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, testRunId).success(function (testRun) {
+          TestRuns.selected = testRun;
+          var from = /*Utils.zoomFrom ? Utils.zoomFrom : */TestRuns.selected.startEpoch;
+          var until = /* Utils.zoomUntil ? Utils.zoomUntil :*/ TestRuns.selected.endEpoch;
 
-            TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, testRunId).success(function (testRun) {
-              TestRuns.selected = testRun;
-              var from = /*Utils.zoomFrom ? Utils.zoomFrom : */TestRuns.selected.startEpoch;
-              var until =/* Utils.zoomUntil ? Utils.zoomUntil :*/ TestRuns.selected.endEpoch;
+          processGraph(from, until);
 
-              processGraph(from, until);
-
-            });
-
-            break;
-
-          case 'live-graph':
-
-            $scope.zoomRange = Utils.zoomRange;
-
-            var from = Utils.zoomFrom ? Utils.zoomFrom : $scope.zoomRange.value;
-            var until = Utils.zoomUntil ? Utils.zoomUntil : 'now';
-
-            processGraph(from, until);
-
-            break;
-        }
-
-        function processGraph(from, until) {
-
-          getGraphData(from, until, $scope.metric.targets, function (dygraphData) {
-
-            processGraphData(dygraphData);
-          });
-
-        }
+        });
 
     }
+
+    function processGraph(from, until) {
+
+      getGraphData(from, until, $scope.metric.targets, function (dygraphData) {
+
+        processGraphData(dygraphData);
+      });
+
+    }
+
+
 
     function createUnderlayFormEvents  (canvas, area, g) {
       if($scope.metric.data.length > 0) {
