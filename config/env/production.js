@@ -1,5 +1,8 @@
 'use strict';
 
+var path = require('path');
+
+
 module.exports = {
     isProduction: true,
     isDevelopment: false,
@@ -18,6 +21,8 @@ module.exports = {
     redisPort: process.env.REDIS_SERVICE_PORT,
     jenkinsUser: process.env.JENKINS_USER,
     jenkinsPassword: process.env.JENKINS_PASSWORD,
+    jenkinsCaFile: path.resolve('./config/ssl-ca', 'Jenkins_root_CA.cer'),
+    jenkinsSSL: true,
 
     assets: {
         lib: {

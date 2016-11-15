@@ -3,6 +3,8 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    fs = require('fs'),
+    config = require('../../config/config'),
     _ = require('lodash'),
     winston = require('winston'),
     request = require('request'),
@@ -23,16 +25,31 @@ exports.login = login;
 
 function stopJob(req, res){
 
-  var options = {rejectUnauthorized: false};
-
-  options.headers ={
-
-    'Authorization': req.header('Authorization')
-
+  var options = {
+    headers: {
+      'Authorization': req.header('Authorization')
+    }
   };
 
-  var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
-  var jenkinsCrumbsUrl = req.product.jenkinsHost + '/crumbIssuer/api/json';
+  /* if Jenkins is running on SSL */
+  if(config.jenkinsSSL){
+
+    options['rejectUnauthorized'] =  true;
+    options['requestCert'] =  true;
+    options['agent'] =  false;
+  }
+
+  /* if Jenkins is using a self-signed certificate */
+  if(config.jenkinsCaFile) {
+
+    options['ca'] = fs.readFileSync(config.jenkinsCaFile);
+
+  }
+
+
+
+  var jenkinsJobsUrl = config.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
+  var jenkinsCrumbsUrl = config.jenkinsHost + '/crumbIssuer/api/json';
 
   request.get(jenkinsJobsUrl, options, function (err, response, body) {
     if (err) {
@@ -41,11 +58,11 @@ function stopJob(req, res){
 
       if(JSON.parse(body).inQueue === false){
 
-        var jenkinsStopUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/' + JSON.parse(body).builds[0].number + '/stop' ;
+        var jenkinsStopUrl = config.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/' + JSON.parse(body).builds[0].number + '/stop' ;
 
       }else{
 
-        var jenkinsStopUrl = req.product.jenkinsHost + '/queue/cancelItem?id=' + JSON.parse(body).queueItem.id ;
+        var jenkinsStopUrl = config.jenkinsHost + '/queue/cancelItem?id=' + JSON.parse(body).queueItem.id ;
 
       }
 
@@ -82,16 +99,30 @@ function stopJob(req, res){
 }
 function startJob(req, res){
 
-  var options = {rejectUnauthorized: false};
-
-  options.headers ={
-
-    'Authorization': req.header('Authorization')
-
+  var options = {
+    headers: {
+      'Authorization': req.header('Authorization')
+    }
   };
 
-  var jenkinsCrumbsUrl = req.product.jenkinsHost + '/crumbIssuer/api/json';
-  var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/build' ;
+  /* if Jenkins is running on SSL */
+  if(config.jenkinsSSL){
+
+    options['rejectUnauthorized'] =  true;
+    options['requestCert'] =  true;
+    options['agent'] =  false;
+  }
+
+  /* if Jenkins is using a self-signed certificate */
+  if(config.jenkinsCaFile) {
+
+    options['ca'] = fs.readFileSync(config.jenkinsCaFile);
+
+  }
+
+
+  var jenkinsCrumbsUrl = config.jenkinsHost + '/crumbIssuer/api/json';
+  var jenkinsJobsUrl = config.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/build' ;
 
   request.get(jenkinsCrumbsUrl, options, function (err, response, body) {
 
@@ -124,15 +155,28 @@ function startJob(req, res){
 
 function getJenkinsJobStatus (req, res) {
 
-  var options = {rejectUnauthorized: false};
-
-  options.headers ={
-
-    'Authorization': req.header('Authorization')
-
+  var options = {
+    headers: {
+      'Authorization': req.header('Authorization')
+    }
   };
 
-  var jenkinsJobsUrl = req.product.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
+  /* if Jenkins is running on SSL */
+  if(config.jenkinsSSL){
+
+    options['rejectUnauthorized'] =  true;
+    options['requestCert'] =  true;
+    options['agent'] =  false;
+  }
+
+  /* if Jenkins is using a self-signed certificate */
+  if(config.jenkinsCaFile) {
+
+    options['ca'] = fs.readFileSync(config.jenkinsCaFile);
+
+  }
+
+  var jenkinsJobsUrl = config.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
 
   request.get(jenkinsJobsUrl, options, function (err, response, body) {
     if (err) {
@@ -148,15 +192,28 @@ function getJenkinsJobStatus (req, res) {
 
 function login (req, res) {
 
-  var options = {rejectUnauthorized: false};
-
-  options.headers ={
-
-    'Authorization': req.header('Authorization')
-
+  var options = {
+    headers: {
+      'Authorization': req.header('Authorization')
+    }
   };
 
-  var jenkinsLoginsUrl = req.product.jenkinsHost + '/j_acegi_security_check';
+  /* if Jenkins is running on SSL */
+  if(config.jenkinsSSL){
+
+    options['rejectUnauthorized'] =  true;
+    options['requestCert'] =  true;
+    options['agent'] =  false;
+  }
+
+  /* if Jenkins is using a self-signed certificate */
+  if(config.jenkinsCaFile) {
+
+    options['ca'] = fs.readFileSync(config.jenkinsCaFile);
+
+  }
+
+  var jenkinsLoginsUrl = config.jenkinsHost + '/j_acegi_security_check';
 
   request.get(jenkinsLoginsUrl, options, function (err, response, body) {
     if (err) {
@@ -186,13 +243,12 @@ function login (req, res) {
     if (config.jenkinsUser && config.jenkinsPassword){
 
       options = {
-        'auth': {
-          'user': config.jenkinsUser,
-          'pass': config.jenkinsPassword,
-          'sendImmediately': true
+        auth: {
+          user: config.jenkinsUser,
+          pass: config.jenkinsPassword,
+          sendImmediately: true
 
-        },
-        'rejectUnauthorized': false
+        }
       }
 
     }else{
@@ -200,7 +256,22 @@ function login (req, res) {
       options = {};
     }
 
-  var jenkinsJobsUrl = req.product.jenkinsHost + '/api/json';
+    /* if Jenkins is running on SSL */
+    if(config.jenkinsSSL){
+
+      options['rejectUnauthorized'] =  true;
+      options['requestCert'] =  true;
+      options['agent'] =  false;
+    }
+
+    /* if Jenkins is using a self-signed certificate */
+    if(config.jenkinsCaFile) {
+
+      options['ca'] = fs.readFileSync(config.jenkinsCaFile);
+
+    }
+
+  var jenkinsJobsUrl = config.jenkinsHost + '/api/json';
 
 
   request.get(jenkinsJobsUrl, options, function (err, response, body) {
@@ -216,15 +287,6 @@ function login (req, res) {
 
 function getConsoleData (req, res) {
 
-  var options = {rejectUnauthorized: false};
-
-  options.headers =[];
-
-  options.headers.push({
-
-    'Authorization': req.header('Authorization')
-
-  });
 
   /* first check if response is available in db */
   GatlingDetails.findOne({consoleUrl: req.body.consoleUrl},function(err, GatlingDetailsResponse) {
@@ -273,21 +335,40 @@ function getJenkinsData (jenkinsUrl, running, start, end, productName, dashboard
   /* if user and password are provided, add those as authentication */
 
   var options;
+
   if (config.jenkinsUser && config.jenkinsPassword){
 
     options = {
-      'auth': {
-        'user': config.jenkinsUser,
-        'pass': config.jenkinsPassword,
-        'sendImmediately': true
+      auth: {
+        user: config.jenkinsUser,
+        pass: config.jenkinsPassword,
+        sendImmediately: true,
+
 
       },
-      'rejectUnauthorized': false
-    }
+      
+
+  }
 
   }else{
 
     options = {};
+  }
+
+
+  /* if Jenkins is running on SSL */
+  if(config.jenkinsSSL){
+
+    options['rejectUnauthorized'] =  true;
+    options['requestCert'] =  true;
+    options['agent'] =  false;
+  }
+
+  /* if Jenkins is using a self-signed certificate */
+  if(config.jenkinsCaFile) {
+
+    options['ca'] = fs.readFileSync(config.jenkinsCaFile);
+
   }
 
 
