@@ -353,6 +353,7 @@ function TestrunsDirective () {
         $scope.closeDialogOK = function(){
 
           var originalProductRelease = testRun.productRelease;
+          var originalTestRunId = testRun.testRunId;
 
           var productReleaseRegExp = new RegExp(testRun.productRelease, 'gi');
           var updatedTestRunId = testRun.testRunId.replace(productReleaseRegExp, $scope.productRelease);
@@ -361,7 +362,7 @@ function TestrunsDirective () {
 
           if($scope.productRelease !== '' && originalProductRelease !== '') testRun.testRunId = updatedTestRunId;
 
-          TestRuns.update(testRun).then(function (testrun) {
+          TestRuns.updateProductRelease(testRun, originalTestRunId).then(function (testrun) {
 
             var toast = $mdToast.simple()
                 .action('OK')

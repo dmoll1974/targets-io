@@ -21,6 +21,7 @@ angular.module('events').factory('TestRuns', [
       listProductReleasesFromTestRuns: listProductReleasesFromTestRuns,
       getRecentTestruns: getRecentTestruns,
       update: update,
+      updateProductRelease: updateProductRelease,
       addTestRun: addTestRun,
       getTestRunById: getTestRunById,
       getRunningTest: getRunningTest,
@@ -56,6 +57,12 @@ angular.module('events').factory('TestRuns', [
     function update(testRun){
 
       return $http.put('/testrun/', testRun);
+
+    }
+
+    function updateProductRelease(testRun, originalTestRunId){
+
+      return $http.put('/update-product-release/' + originalTestRunId, testRun);
 
     }
     function getRecentTestruns(numberOfDays){

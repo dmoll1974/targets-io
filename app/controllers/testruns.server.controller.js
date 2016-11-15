@@ -42,6 +42,7 @@ exports.updateAllDashboardTestRuns = updateAllDashboardTestRuns;
 exports.updateAllProductTestRuns = updateAllProductTestRuns;
 exports.recentTestRuns = recentTestRuns;
 exports.update = update;
+exports.updateProductRelease = updateProductRelease;
 exports.addTestRun = addTestRun;
 exports.humanReadbleDuration = humanReadableDuration;
 exports.runningTestsForDashboard = runningTestsForDashboard;
@@ -95,6 +96,38 @@ function update (req, res) {
       testRun.rampUpPeriod = req.body.rampUpPeriod;
       testRun.annotations = req.body.annotations;
       testRun.humanReadableDuration = humanReadableDuration(new Date(req.body.end).getTime() - new Date(req.body.start).getTime());
+
+      testRun.save(function(err, savedTestRun){
+
+        if (err) {
+          return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        } else {
+
+          res.jsonp(savedTestRun);
+
+        }
+      });
+    }
+
+  })
+
+
+};
+
+function updateProductRelease (req, res) {
+
+  Testrun.findOne({$and: [
+    { testRunId: req.params.originalTestRunId },
+    { productName: req.body.productName },
+    { dashboardName: req.body.dashboardName }
+  ]}).exec(function(err, testRun){
+
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else{
+
+      testRun.productRelease = req.body.productRelease;
+      testRun.testRunId = req.body.testRunId;
 
       testRun.save(function(err, savedTestRun){
 
