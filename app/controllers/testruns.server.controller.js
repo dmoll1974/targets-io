@@ -270,6 +270,7 @@ function deleteTestRunById(req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
       if (testRun) {
+
         testRun.remove(function (err) {
           if (err) {
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
@@ -281,7 +282,45 @@ function deleteTestRunById(req, res) {
             winston.info('emitting message to room: ' + room);
             io.sockets.in(room).emit('testrun', {event: 'removed', testrun: testRun});
             io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: testRun});
-            res.jsonp({message: 'test run deleted'});
+
+            /* remove test run summaries for this test run */
+
+            TestrunSummary.findOne({
+              $and: [
+                {productName: testRun.productName},
+                {dashboardName: testRun.dashboardName},
+                {testRunId: testRun.testRunId.toUpperCase()}
+              ]},function (err, relatedTestRunSummary) {
+
+              if (err) {
+                winston.error(err);
+                res.jsonp({message: 'test run deleted!'});
+
+              } else {
+
+                if(relatedTestRunSummary){
+
+                  relatedTestRunSummary.remove(function(err){
+
+                    if (err) {
+                      winston.error(err);
+                      res.jsonp({message: 'test run deleted!'});
+
+                    }else{
+
+                      res.jsonp({message: 'test run and test run summary deleted!'});
+
+                    }
+                  })
+                }else{
+
+                  res.jsonp({message: 'test run deleted!'});
+
+                }
+
+              }
+
+            });
           }
         });
       }
