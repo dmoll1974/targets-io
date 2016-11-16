@@ -7,8 +7,15 @@
             <a data-ng-href="/#!/browse/{{testRun.productName}}/{{testRun.dashboardName}}/">{{testRun.dashboardName}}</a>
               /  {{testRun.testRunId}}
         </span>
-        <h3>Requirements</h3>
-    </div>
+        <div layout="row" layout-align="space-between">
+            <h3>Requirements</h3>
+            <md-button  class="md-icon-button" ng-click="goBack(testRun)">
+                <md-icon md-svg-src="images/assets/ic_arrow_back_black_24px.svg"></md-icon>
+                <md-tooltip>
+                    Back to test run overview
+                </md-tooltip>
+            </md-button></div>
+        </div>
 </div>
 <ul class="nav nav-tabs nav-justified">
     <li ng-class="{active: isSet(0)}">

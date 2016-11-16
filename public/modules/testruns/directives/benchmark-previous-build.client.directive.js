@@ -19,6 +19,7 @@
 
       $scope.setTab = setTab;
       $scope.isSet = isSet;
+      $scope.goBack = goBack;
 
         /* activate */
 
@@ -120,6 +121,11 @@
       function isSet(tabNumber) {
         return $scope.tabNumber === tabNumber;
       };
+
+      function goBack(testRun){
+
+        $state.go('viewDashboard',{productName: testRun.productName, dashboardName: testRun.dashboardName});
+      }
 
     }
   }

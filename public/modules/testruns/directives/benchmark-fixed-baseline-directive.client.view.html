@@ -7,8 +7,20 @@
             <a data-ng-href="/#!/browse/{{testRun.productName}}/{{testRun.dashboardName}}/">{{testRun.dashboardName}}</a>
               /  {{testRun.testRunId}}
         </span>
-        <h3>Benchmark to fixed baseline</h3>
-        <h5 ng-if="testRun.baseline">Baseline: {{testRun.baseline}}</h5>
+
+        <div layout="row" layout-align="space-between">
+            <div layout="column">
+                <h3>Benchmark to fixed baseline</h3>
+                <h5 ng-if="testRun.baseline">Baseline: {{testRun.baseline}}</h5>
+            </div>
+            <md-button  class="md-icon-button" ng-click="goBack(testRun)">
+                <md-icon md-svg-src="images/assets/ic_arrow_back_black_24px.svg"></md-icon>
+                <md-tooltip>
+                    Back to test run overview
+                </md-tooltip>
+            </md-button>
+        </div>
+    </div>
     </div>
 </div>
 <ul class="nav nav-tabs nav-justified">

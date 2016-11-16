@@ -208,7 +208,7 @@ function TestrunsDirective () {
       $scope.completedTestRunsOnly = true;
 
 
-      $scope.loadNumberOfTestRuns = 10;
+      $scope.loadNumberOfTestRuns = Utils.loadNumberOfTestRuns;
 
       $scope.numberOfRowOptions = [
         {value: 10},
@@ -277,7 +277,7 @@ function TestrunsDirective () {
     function getTestruns(){
 
       /* get test runs */
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, $scope.loadNumberOfTestRuns).success(function (testRuns) {
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Utils.loadNumberOfTestRuns).success(function (testRuns) {
 
 
         /* determine if there are only incomplete test runs*/
@@ -631,6 +631,8 @@ function TestrunsDirective () {
     function updateNumberOfTestRuns() {
 
       $scope.loading = true;
+
+      Utils.loadNumberOfTestRuns = $scope.loadNumberOfTestRuns;
 
       getTestruns();
 

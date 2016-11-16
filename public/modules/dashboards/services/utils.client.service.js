@@ -1,6 +1,6 @@
 'use strict';
 // service used for Utilty functions
-angular.module('graphs').factory('Utils', [
+angular.module('core').factory('Utils', [
     function () {
     var Utils = {
       dynamicSort: dynamicSort,
@@ -28,7 +28,8 @@ angular.module('graphs').factory('Utils', [
       selectedSeries: '',
       sortReverse: false,
       sortType: 'tags[0].text',
-      reset: reset
+      reset: reset,
+      loadNumberOfTestRuns: 10
 
     };
     return Utils;
@@ -54,6 +55,7 @@ angular.module('graphs').factory('Utils', [
         Utils.numberOfColumns = 2;
         Utils.sortReverse = false;
         Utils.sortType = 'tags[0].text';
+        Utils.loadNumberOfTestRuns = 10;
 
     }
     function dynamicSortTags(sortOrderParam) {
