@@ -158,6 +158,11 @@ function TargetsIoHeaderDirective () {
 
         function selectedProductChange(product){
 
+
+            /* reset tab */
+            Utils.productSelectedIndex = 0;
+
+            /* if product is selected */
             if(product) {
                 if (checkProductState($rootScope.currentState) && !$stateParams.dashboardName ) {
 

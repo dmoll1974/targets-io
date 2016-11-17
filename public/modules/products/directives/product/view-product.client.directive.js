@@ -13,7 +13,7 @@ function ViewProductDirective () {
   return directive;
 
   /* @ngInject */
-  function ViewProductDirectiveController ($scope, $state, $stateParams, Products) {
+  function ViewProductDirectiveController ($scope, $state, $stateParams, Products, Utils) {
 
 
     $scope.setTab = setTab;
@@ -24,6 +24,9 @@ function ViewProductDirective () {
     /* functions */
 
     function activate() {
+
+      $scope.selectedIndex = Utils.productSelectedIndex;
+
       Products.get($stateParams.productName).success(function (product) {
         Products.selected = product;
         $scope.product = Products.selected;
@@ -34,6 +37,7 @@ function ViewProductDirective () {
     function setTab(tabIndex){
 
       $scope.selectedIndex = tabIndex;
+      Utils.productSelectedIndex = tabIndex;
 
     }
 

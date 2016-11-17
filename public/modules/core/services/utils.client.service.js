@@ -29,7 +29,9 @@ angular.module('core').factory('Utils', [
       sortReverse: false,
       sortType: 'tags[0].text',
       reset: reset,
-      loadNumberOfTestRuns: 10
+      loadNumberOfTestRuns: 10,
+      productSelectedIndex: 0
+
 
     };
     return Utils;
