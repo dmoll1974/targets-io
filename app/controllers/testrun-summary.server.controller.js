@@ -71,15 +71,36 @@ function getTestrunSummary (req, res){
 
           if(!testRunSummary.lastUpdated || new Date(testRunSummary.lastUpdated).getTime() < new Date(dashboard.lastUpdated).getTime()) {
 
-            updateTestrunSummaryBasedOnMetrics(testRunSummary)
-                .then(updateRequirements)
-                .then(function (updatedTestRunSummary) {
 
-                  response.testRunSummary = updatedTestRunSummary;
-                  response.hasBeenUpdated = true;
+            Testrun.findOne({
+              $and: [
+                {productName: testRunSummary.productName},
+                {dashboardName: testRunSummary.dashboardName},
+                {testRunId: testRunSummary.testRunId}
+              ]
+            }).exec(function (err, testRun) {
 
-                  res.jsonp(response);
-                });
+              /* only update when test run still exists! */
+              if (testRun) {
+                updateTestrunSummaryBasedOnMetrics(testRunSummary)
+                    .then(updateRequirements)
+                    .then(function (updatedTestRunSummary) {
+
+                      response.testRunSummary = updatedTestRunSummary;
+                      response.hasBeenUpdated = true;
+
+                      res.jsonp(response);
+                    });
+              } else {
+
+                response.testRunSummary = testRunSummary;
+                response.hasBeenUpdated = false;
+
+                res.jsonp(response);
+
+              }
+            });
+
           }else{
 
             response.testRunSummary = testRunSummary;
@@ -212,6 +233,7 @@ function updateRequirements(testRunSummary){
           {testRunId: testRunSummary.testRunId}
         ]
       }).exec(function (err, testRun) {
+
 
           _.each(dashboardMetricsWithRequirements, function(dashboardMetric){
 

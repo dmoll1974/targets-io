@@ -246,10 +246,40 @@ function synchronizeTestRunsForProductRelease(storedRelease){
 
 
                 })
+
+                /* now check if test runs have been removed */
+                var finnalSynchronizedReleaseTestRuns = [];
+                var testRunStillExists = false;
+
+                _.each(synchronizedReleaseTestRuns, function(releaseTestRun, i){
+
+
+                    _.each(currentTestRuns, function(currentTestRun){
+
+                        if(currentTestRun.testRunId === releaseTestRun.testRunId) testRunStillExists = true;
+
+                    });
+
+                    if(testRunStillExists === true) finnalSynchronizedReleaseTestRuns.push(releaseTestRun)
+                    testRunStillExists = false;
+                });
+
+
+                storedRelease.releaseTestRuns = finnalSynchronizedReleaseTestRuns;
+                resolve(storedRelease);
+
+
+            }else{
+
+                storedRelease.releaseTestRuns = synchronizedReleaseTestRuns;
+                resolve(storedRelease);
+
+
             }
 
-            storedRelease.releaseTestRuns = synchronizedReleaseTestRuns;
-            resolve(storedRelease);
+
+
+
 
 
         });
