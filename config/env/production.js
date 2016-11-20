@@ -50,7 +50,7 @@ module.exports = {
                 'public/lib/angular-ui-router/release/angular-ui-router.min.js',
                 'public/lib/angular-ui-utils/ui-utils.min.js',
                 'public/lib/angular-messages/angular-messages.min.js',
-                'public/lib/showdown/dist/showdown.js',
+                'public/lib/showdown/dist/showdown.min.js',
                 'public/lib/showdown-target-blank/dist/showdown-target-blank.min.js',
                 'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
                 'public/lib/moment/moment.js',
@@ -65,9 +65,12 @@ module.exports = {
                 'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js',
                 'public/lib/angular-utils-pagination/dirPagination.js',
                 'public/lib/dygraphs/dygraph-combined-dev.js',
+                'public/lib/dygraphs/dygraph-extra.js',
                 'public/lib/ng-focus-if/focusIf.min.js',
                 'public/lib/socket.io-client/socket.io.js',
-                'public/lib/ng-sortable/dist/ng-sortable.js'
+                'public/lib/ng-sortable/dist/ng-sortable.js',
+                'public/lib/pdfmake/build/pdfmake.min.js',
+                'public/lib/pdfmake/build/vfs_fonts.js'
 
 
             ]

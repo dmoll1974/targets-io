@@ -9,6 +9,7 @@ module.exports = function (app) {
   app.route('/check-events/:productName/:dashboardName/:testRunId/:eventDescription').get(events.checkEvents);
   app.route('/events-dashboard/:productName/:dashboardName').get(events.eventsForDashboard);
   app.route('/events-testrun/:productName/:dashboardName/:from/:until').get(events.eventsForTestRun);
+  app.route('/events-testrun-id/:productName/:dashboardName/:testRunId').get(events.eventsForTestRunId);
   app.route('/events/:eventId').get(events.read).put(events.update).delete(events.delete);  //users.requiresLogin, events.hasAuthorization,
 
 

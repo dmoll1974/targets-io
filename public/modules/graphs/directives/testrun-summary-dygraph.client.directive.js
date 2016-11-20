@@ -9,6 +9,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     restrict: 'E',
     scope: {
+      index: '=',
       metric: '=',
       testrun: '='
      },
@@ -87,12 +88,14 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
             /* add colors to legend */
             var colors = scope.graph.getColors();
+            var colorIndex = 0;
 
             _.each(scope.metric.legendData, function(legendItem, i){
 
-              if(scope.metric.legendData[i].numberOfValidDatapoints > 0 ){
+              if(scope.metric.legendData[i].numberOfValidDatapoints > 0 && scope.metric.legendData[i].min ){
 
-                scope.metric.legendData[i].color = colors[i];
+                scope.metric.legendData[i].color = colors[colorIndex];
+                colorIndex ++;
 
               }
 
@@ -107,6 +110,17 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
             })
             scope.graph.setAnnotations(annotations);
+
+            var options = {
+              legendHeight: 0
+            }
+
+            /* create graph images for pdf report */
+            var imageGraphId = 'imageGraph' + scope.index;
+
+            Dygraph.Export.asPNG(scope.graph, eval(imageGraphId), options);
+
+            scope.metric.imageGraph =  document.getElementById(imageGraphId).src;
 
 
           });
@@ -294,6 +308,9 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       $scope.loading = false;
       $scope.showProgressBar = false;
 
+
+
+
       /* if selected series is provided, show this series only */
       if (Utils.selectedSeries && Utils.selectedSeries !== '' ) {
 
@@ -315,6 +332,8 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
 
       }
+
+
 
     }
 

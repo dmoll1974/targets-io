@@ -23,6 +23,7 @@
   exports.eventsForDashboard = eventsForDashboard;
   exports.checkEvents = checkEvents;
   exports.eventsForTestRun = eventsForTestRun;
+  exports.eventsForTestRunId = eventsForTestRunId;
   exports.eventByID = eventByID;
 
 
@@ -228,6 +229,25 @@ function create(req, res) {
         $gte: req.params.from
       }
     }).sort('-eventTimestamp').exec(function (err, events) {
+      if (err) {
+        return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+      } else {
+        res.jsonp(events);
+      }
+    });
+  };
+
+  /*
+   * List events for testrun id
+   */
+  function eventsForTestRunId(req, res) {
+    Event.find({
+      $and: [
+        { productName: req.params.productName },
+        { dashboardName: req.params.dashboardName },
+        { testRunId: req.params.testRunId }
+      ]
+    }).sort('eventTimestamp').exec(function (err, events) {
       if (err) {
         return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
       } else {

@@ -11,6 +11,7 @@ angular.module('events').factory('Events', [
       getDescriptions: getDescriptions,
       listEventsForDashboard: listEventsForDashboard,
       listEventsForTestRun: listEventsForTestRun,
+      listEventsForTestRunId: listEventsForTestRunId,
       list: [],
       update: update,
       create: create,
@@ -27,6 +28,9 @@ angular.module('events').factory('Events', [
     }
     function listEventsForTestRun(productName, dashboardName, from, until) {
       return $http.get('/events-testrun/' + productName + '/' + dashboardName + '/' + from + '/' + until);
+    }
+    function listEventsForTestRunId(productName, dashboardName, testRunId) {
+      return $http.get('/events-testrun-id/' + productName + '/' + dashboardName + '/' + testRunId);
     }
     function getTestRunId(testRuns) {
       var listOfTestRunIds = [];

@@ -5,6 +5,10 @@ html, body {
 
 }
 
+.circular-progress-button {
+    height: 36px;
+}
+
 /* fix zoom ranges and tabs*/
 .fix-to-top {
     position: fixed;
