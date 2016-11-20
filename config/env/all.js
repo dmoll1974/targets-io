@@ -62,7 +62,7 @@ module.exports = {
 				'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js',
 				'public/lib/angular-utils-pagination/dirPagination.js',
 				'public/lib/dygraphs/dygraph-combined-dev.js',
-				'public/lib/dygraphs/dygraph-extra.js',
+				'public/js/dygraph-extra.js',
 				'public/lib/ng-focus-if/focusIf.min.js',
 				'public/lib/socket.io-client/socket.io.js',
 				'public/lib/pdfmake/build/pdfmake.min.js',
