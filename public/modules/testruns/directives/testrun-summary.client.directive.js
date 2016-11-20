@@ -607,7 +607,7 @@ function TestRunSummaryDirective () {
 
         docDefinition['pageBreakBefore'] =
           function(currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
-            return currentNode.headlineLevel === 1 && followingNodesOnPage.length < 3;
+            return currentNode.headlineLevel === 1 && followingNodesOnPage.length < 3 + (parseInt(currentNode.id) + 1) * 3; //Hack to deal with dynamic size of legend
           }
 
 
@@ -828,7 +828,7 @@ function TestRunSummaryDirective () {
           docDefinition['content'].push(//{
           //  stack:[
 
-                  {text: metric.alias, style: 'metricheader', headlineLevel : 1},
+                  {text: metric.alias, style: 'metricheader', headlineLevel : 1, id: metric.legendData.length},
                   {text: metric.summaryText ? metric.summaryText:'', style: 'small'},
                   { image: metric.imageGraph,
                     width: 500,
