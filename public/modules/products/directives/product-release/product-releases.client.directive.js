@@ -37,7 +37,7 @@ function ProductReleasesDirective () {
 
         _.each(testRunSummaryReleases, function(release){
 
-          if(release !== "" && ($scope.productReleases.map(function(productRelease){return productRelease.id;}).indexOf(release) !== -1 || $scope.productReleases.length === 0) )
+          if(release !== "" && ($scope.productReleases.map(function(productRelease){return productRelease.id;}).indexOf(release) === -1 || $scope.productReleases.length === 0) )
             $scope.productReleases.push({id: release});
 
         });
