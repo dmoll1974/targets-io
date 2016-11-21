@@ -29,6 +29,8 @@ function EditDashboardDirective () {
 
             $scope.dashboard = Dashboards.selected;
             $scope.productName = $stateParams.productName;
+            $scope.triedToSubmit = false;
+
 
 
         }

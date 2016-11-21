@@ -27,6 +27,8 @@ function AddDashboardDirective () {
 
         function activate() {
 
+            $scope.triedToSubmit = false;
+
             $scope.dashboard = {};
             Dashboards.selected = {};
 
