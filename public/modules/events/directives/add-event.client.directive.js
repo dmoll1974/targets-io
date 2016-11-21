@@ -45,6 +45,8 @@ function AddEventDirective () {
 
       $scope.descriptions = Events.getDescriptions(Events.list);
       $scope.isOpen = false;
+      $scope.triedToSubmit = false;
+
 
       $scope.testRunIds = Events.getTestRunId(TestRuns.list);
 

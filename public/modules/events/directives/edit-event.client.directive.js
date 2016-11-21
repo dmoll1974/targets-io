@@ -42,6 +42,8 @@ function EditEventDirective () {
       $scope.testRunIds = Events.getTestRunId(TestRuns.list);
       $scope.descriptions = Events.getDescriptions(Events.list);
       $scope.isOpen = false;
+      $scope.triedToSubmit = false;
+
 
     }
 

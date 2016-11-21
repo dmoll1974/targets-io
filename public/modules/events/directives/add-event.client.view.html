@@ -8,7 +8,7 @@
             <div layout="column">
                 <div layout="row">
                     <md-input-container
-                            md-is-error="eventForm.eventTimestamp.$invalid && (eventForm.$submitted || eventForm.eventTimestamp.$dirty)"
+                            md-is-error="eventForm.eventTimestamp.$invalid && (eventForm.$submitted || eventForm.eventTimestamp.$dirty || triedToSubmit === true)"
                             flex>
                         <label>Timestamp</label>
                         <input name="eventTimestamp" type="text" ng-model="event.eventTimestamp" required/>
@@ -16,7 +16,7 @@
                                ng-model="event.eventTimestamp" is-open="isOpen"/>
 
                         <div ng-messages="eventForm.eventTimestamp.$error"
-                             ng-if="eventForm.$submitted || eventForm.productName.$touched">
+                             ng-if="eventForm.$submitted || eventForm.productName.$touched || triedToSubmit === true">
                             <div ng-message="required">Timestamp is required.</div>
                         </div>
                     </md-input-container>
@@ -24,41 +24,41 @@
                              data-ng-click="openCalendar($event)"></md-icon>
                 </div>
                 <md-input-container
-                        md-is-error="eventForm.eventProductName.$invalid && (eventForm.$submitted || eventForm.eventProductName.$dirty)"
+                        md-is-error="eventForm.eventProductName.$invalid && (eventForm.$submitted || eventForm.eventProductName.$dirty || triedToSubmit === true)"
                         flex>
                     <label>Product</label>
                     <input name="eventProductName" ng-model="event.productName" required>
 
                     <div ng-messages="eventForm.eventProductName.$error"
-                         ng-if="eventForm.$submitted || eventForm.eventProductName.$touched">
+                         ng-if="eventForm.$submitted || eventForm.eventProductName.$touched || triedToSubmit === true">
                         <div ng-message="required">Product name is required.</div>
                     </div>
                 </md-input-container>
                 <md-input-container
-                        md-is-error="eventForm.eventDashboardName.$invalid && (eventForm.$submitted || eventForm.eventDashboardName.$dirty)"
+                        md-is-error="eventForm.eventDashboardName.$invalid && (eventForm.$submitted || eventForm.eventDashboardName.$dirty || triedToSubmit === true)"
                         flex>
                     <label>Dashboard</label>
                     <input name="eventDashboardName" ng-model="event.dashboardName" required>
 
                     <div ng-messages="eventForm.eventDashboardName.$error"
-                         ng-if="eventForm.$submitted || eventForm.eventDashboardName.$touched">
+                         ng-if="eventForm.$submitted || eventForm.eventDashboardName.$touched || triedToSubmit === true">
                         <div ng-message="required">Dashboard name is required.</div>
                     </div>
                 </md-input-container>
                 <md-input-container
-                        md-is-error="eventForm.eventTestRunId.$invalid && (eventForm.$submitted || eventForm.eventTestRunId.$dirty)"
+                        md-is-error="eventForm.eventTestRunId.$invalid && (eventForm.$submitted || eventForm.eventTestRunId.$dirty || triedToSubmit === true)"
                         flex>
                     <label>Testrun ID</label>
                     <input autocomplete="off"  name="eventTestRunId" ng-model="event.testRunId"
                            typeahead="testRunId for testRunId in testRunIds | filter:$viewValue | limitTo:8" required>
 
                     <div ng-messages="eventForm.eventTestRunId.$error"
-                         ng-if="eventForm.$submitted || eventForm.eventTestRunId.$touched">
+                         ng-if="eventForm.$submitted || eventForm.eventTestRunId.$touched || triedToSubmit === true">
                         <div ng-message="required">Test run ID is required.</div>
                     </div>
                 </md-input-container>
                 <md-input-container
-                        md-is-error="eventForm.eventDescription.$invalid && (eventForm.$submitted || eventForm.eventDescription.$dirty)"
+                        md-is-error="eventForm.eventDescription.$invalid && (eventForm.$submitted || eventForm.eventDescription.$dirty || triedToSubmit === true)"
                         flex>
                     <label>Description</label>
                     <input name="eventDescription" ng-model="event.eventDescription"
@@ -66,7 +66,7 @@
                            required>
 
                     <div ng-messages="eventForm.eventDescription.$error"
-                         ng-if="eventForm.$submitted || eventForm.eventDescription.$touched">
+                         ng-if="eventForm.$submitted || eventForm.eventDescription.$touched || triedToSubmit === true">
                         <div ng-message="required">Description is required.</div>
                         <div ng-message="server">{{error}}</div>
                     </div>
@@ -76,7 +76,7 @@
                     <input ng-model="event.buildResultsUrl">
                 </md-input-container>
                 <div layout="row">
-                    <md-button md-no-ink class="md-primary" data-ng-click="create()">Submit</md-button>
+                    <md-button md-no-ink class="md-primary" data-ng-click="triedToSubmit=true; eventForm.$valid && create()">Submit</md-button>
                     <md-button data-ng-click="cancel()">Cancel</md-button>
                 </div>
             </div>
