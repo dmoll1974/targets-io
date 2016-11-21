@@ -13,7 +13,7 @@ function ProductReleasesDirective () {
   return directive;
 
   /* @ngInject */
-  function ProductReleasesDirectiveController ($scope, $state, $stateParams, Products, Dashboards, TestRuns, $filter, $rootScope) {
+  function ProductReleasesDirectiveController ($scope, $state, $stateParams, Products, Dashboards, TestRuns, TestRunSummary, $filter, $rootScope) {
 
     $scope.productReleases =[];
 
@@ -21,7 +21,7 @@ function ProductReleasesDirective () {
 
     TestRuns.listProductReleasesFromTestRuns($stateParams.productName).success(function(releases){
 
-      $scope.loadingReleases = false;
+
 
       _.each(releases, function(release){
 
@@ -30,6 +30,19 @@ function ProductReleasesDirective () {
 
       });
 
+      /* Add stored test run summaries*/
+      TestRunSummary.getTestRunSummaryReleasesForProduct($stateParams.productName).success(function(testRunSummaryReleases){
+
+        $scope.loadingReleases = false;
+
+        _.each(testRunSummaryReleases, function(release){
+
+          if(release !== "" && ($scope.productReleases.map(function(producRelease){return productRelease.id;}).indexOf(release) !== -1 || $scope.productReleases.length === 0) )
+            $scope.productReleases.push({id: release});
+
+        });
+
+      });
     });
 
 

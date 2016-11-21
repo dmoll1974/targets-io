@@ -29,6 +29,7 @@ module.exports = function (app) {
 
   app.route('/testrun-summary/:productName/:dashboardName/:testRunId').get(testrunSummary.get);
   app.route('/testrun-summary-release/:productName/:dashboardName/:testRunId').get(testrunSummary.getTestRunSummaryForRelease);
+  app.route('/testrun-summaries-releases-product/:productName').get(testrunSummary.getTestRunSummaryReleasesForProduct);
   app.route('/testrun-summary').post(testrunSummary.create);
   app.route('/testrun-summary').put(testrunSummary.update);
   app.route('/testrun-summary/:productName/:dashboardName/:testRunId').delete(testrunSummary.delete);

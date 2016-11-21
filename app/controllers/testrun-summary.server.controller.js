@@ -22,12 +22,26 @@ var mongoose = require('mongoose'),
 
 exports.get = getTestrunSummary;
 exports.getTestRunSummaryForRelease = getTestRunSummaryForRelease;
+exports.getTestRunSummaryReleasesForProduct = getTestRunSummaryReleasesForProduct;
 exports.create = createTestrunSummary;
 exports.update = updateTestrunSummary;
 exports.delete = deleteTestrunSummary;
 
 
 
+function getTestRunSummaryReleasesForProduct (req, res) {
+
+  var response = {};
+
+  TestrunSummary.find({productName: req.params.productName}).distinct('productRelease').exec(function (err, releases) {
+
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
+      res.jsonp(releases);
+    }
+  });
+}
 function getTestRunSummaryForRelease (req, res) {
 
   var response = {};
