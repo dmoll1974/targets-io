@@ -28,10 +28,10 @@
         </div>
 
 
-        <div ng-class="{'fix-to-top-summary': editMode, 'md-padding' : editMode}" layout="row" layout-align="end center">
+        <div ng-class="{'fix-to-top-summary': true}" layout="row" layout-align="end center">
 
             <md-button  class="md-primary" data-ng-click="saveAsPDF()">
-                <span ng-show="!showSpinner">Save as PDF</span>
+                <span ng-show="!showSpinner">Save PDF</span>
                 <div layout="row" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="20" ng-show="showSpinner"></md-progress-circular></div>
             </md-button>
 
