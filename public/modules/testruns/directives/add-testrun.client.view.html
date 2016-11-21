@@ -8,7 +8,7 @@
             <div layout="column">
                 <div layout="row">
                     <md-input-container
-                            md-is-error="testrunForm.start.$invalid && (testrunForm.$submitted || testrunForm.start.$dirty)"
+                            md-is-error="testrunForm.start.$invalid && (testrunForm.$submitted || testrunForm.start.$dirty || triedToSubmit === true)"
                             flex>
                         <label>start</label>
                         <input name="start" type="text" ng-model="testrun.start" required/>
@@ -16,7 +16,7 @@
                                ng-model="testrun.start" is-open="isOpenStart"/>
 
                         <div ng-messages="testrunForm.start.$error"
-                             ng-if="testrunForm.$submitted || testrunForm.start.$touched">
+                             ng-if="testrunForm.$submitted || testrunForm.start.$touched || triedToSubmit === true">
                             <div ng-message="required">Start is required.</div>
                         </div>
                     </md-input-container>
@@ -25,7 +25,7 @@
                 </div>
                 <div layout="row">
                     <md-input-container
-                            md-is-error="testrunForm.end.$invalid && (testrunForm.$submitted || testrunForm.end.$dirty)"
+                            md-is-error="testrunForm.end.$invalid && (testrunForm.$submitted || testrunForm.end.$dirty || triedToSubmit === true)"
                             flex>
                         <label>end</label>
                         <input name="end" type="text" ng-model="testrun.end" required/>
@@ -33,7 +33,7 @@
                                ng-model="testrun.end" is-open="isOpenEnd"/>
 
                         <div ng-messages="testrunForm.end.$error"
-                             ng-if="testrunForm.$submitted || testrunForm.end.$touched">
+                             ng-if="testrunForm.$submitted || testrunForm.end.$touched || triedToSubmit === true">
                             <div ng-message="required">End is required.</div>
                         </div>
                     </md-input-container>
@@ -45,40 +45,40 @@
                     <input ng-model="testrun.rampUpPeriod">
                 </md-input-container>
                 <md-input-container
-                        md-is-error="testrunForm.testrunProductName.$invalid && (testrunForm.$submitted || testrunForm.testrunProductName.$dirty)"
+                        md-is-error="testrunForm.testrunProductName.$invalid && (testrunForm.$submitted || testrunForm.testrunProductName.$dirty || triedToSubmit === true)"
                         flex>
                     <label>Product</label>
                     <input name="testrunProductName" ng-model="testrun.productName" required>
 
                     <div ng-messages="testrunForm.testrunProductName.$error"
-                         ng-if="testrunForm.$submitted || testrunForm.testrunProductName.$touched">
+                         ng-if="testrunForm.$submitted || testrunForm.testrunProductName.$touched || triedToSubmit === true">
                         <div ng-message="required">Product name is required.</div>
                     </div>
                 </md-input-container>
                 <md-input-container
-                        md-is-error="testrunForm.testrunProductRelease.$invalid && (testrunForm.$submitted || testrunForm.testrunProductRelease.$dirty)"
+                        md-is-error="testrunForm.testrunProductRelease.$invalid && (testrunForm.$submitted || testrunForm.testrunProductRelease.$dirty || triedToSubmit === true)"
                         flex>
                     <label>Product release</label>
                     <input name="testrunProductRelease" ng-model="testrun.productRelease">
 
                     <div ng-messages="testrunForm.testrunProductRelease.$error"
-                         ng-if="testrunForm.$submitted || testrunForm.testrunProductRelease.$touched">
+                         ng-if="testrunForm.$submitted || testrunForm.testrunProductRelease.$touched || triedToSubmit === true">
                         <div ng-message="required">Product release is required.</div>
                     </div>
                 </md-input-container>
                 <md-input-container
-                        md-is-error="testrunForm.testrunDashboardName.$invalid && (testrunForm.$submitted || testrunForm.testrunDashboardName.$dirty)"
+                        md-is-error="testrunForm.testrunDashboardName.$invalid && (testrunForm.$submitted || testrunForm.testrunDashboardName.$dirty  || triedToSubmit === true)"
                         flex>
                     <label>Dashboard</label>
                     <input name="testrunDashboardName" ng-model="testrun.dashboardName" required>
 
                     <div ng-messages="testrunForm.testrunDashboardName.$error"
-                         ng-if="testrunForm.$submitted || testrunForm.testrunDashboardName.$touched">
+                         ng-if="testrunForm.$submitted || testrunForm.testrunDashboardName.$touched || triedToSubmit === true">
                         <div ng-message="required">Dashboard name is required.</div>
                     </div>
                 </md-input-container>
                 <md-input-container
-                        md-is-error="testrunForm.testRunId.$invalid && (testrunForm.$submitted || testrunForm.testRunId.$dirty)"
+                        md-is-error="testrunForm.testRunId.$invalid && (testrunForm.$submitted || testrunForm.testRunId.$dirty || triedToSubmit === true)"
                         flex>
                     <label>Testrun ID</label>
                     <input autocomplete="off"  name="testRunId" ng-model="testrun.testRunId"
@@ -86,7 +86,7 @@
                            record-availability-validator="/testrun/{{testrun.productName}}/{{testrun.dashboardName}}" required>
 
                     <div ng-messages="testrunForm.testRunId.$error"
-                         ng-if="testrunForm.$submitted || testrunForm.testRunId.$touched">
+                         ng-if="testrunForm.$submitted || testrunForm.testRunId.$touched || triedToSubmit === true">
                         <div ng-message="required">Test run ID is required.</div>
                         <div ng-message="recordAvailable">Test Run ID already exists for this dashboard</div>
                         <div ng-message="server">{{error}}</div>
@@ -101,7 +101,7 @@
                     <textarea name="testrunAnnotations" ng-model="testrun.annotations" columns="1" md-maxlength="500" rows="10"></textarea>
                 </md-input-container>
                 <div layout="row">
-                    <md-button  md-no-ink class="md-primary" data-ng-click="testrunForm.$valid && create()">Submit</md-button>
+                    <md-button  md-no-ink class="md-primary" data-ng-click="triedToSubmit=true; testrunForm.$valid && create()">Submit</md-button>
                     <md-button data-ng-click="cancel()">Cancel</md-button>
                 </div>
             </div>

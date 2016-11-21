@@ -55,6 +55,7 @@ function AddTestrunDirective () {
 
       $scope.isOpenStart = false;
       $scope.isOpenEnd = false;
+      $scope.triedToSubmit = false;
 
     }
 
