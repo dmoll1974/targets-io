@@ -112,6 +112,7 @@ function AddMetricDirective () {
       vm.operatorOptions = Metrics.operatorOptions;
       vm.deviationOptions = Metrics.deviationOptions;
       vm.progress = undefined;
+      vm.triedToSubmit = false;
 
 
 

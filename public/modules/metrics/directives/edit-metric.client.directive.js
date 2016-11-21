@@ -89,6 +89,7 @@ function EditMetricDirective () {
       vm.operatorOptions = Metrics.operatorOptions;
       vm.deviationOptions = Metrics.deviationOptions;
       vm.progress = undefined;
+      vm.triedToSubmit = false;
 
       vm.dashboard = Dashboards.selected;
 

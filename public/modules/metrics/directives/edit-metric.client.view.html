@@ -6,17 +6,29 @@
     <form name="metricForm" novalidate>
         <div layout="column">
             <div  class="well">
-                <md-input-container layout-fill>
+                <md-input-container
+                        md-is-error="metricForm.metricAlias.$invalid && (metricForm.$submitted || metricForm.metricAlias.$dirty || triedToSubmit === true)"
+                        layout-fill>
                     <label>Alias</label>
-                    <input ng-model="vm.metric.alias">
+                    <input name="metricAlias" ng-model="vm.metric.alias" required>
+                    <div ng-messages="metricForm.metricAlias.$error"
+                         ng-if="metricForm.$submitted || metricForm.metricAlias.$touched || triedToSubmit === true">
+                        <div ng-message="required">Alias is required.</div>
+                    </div>
                 </md-input-container>
             </div>
             <div layout="column" class="well">
                 <div ng-repeat="target in vm.metric.targets track by $index">
                     <div layout="row" layout-align="end center">
-                        <md-input-container flex>
+                        <md-input-container
+                                md-is-error="metricForm.target.$invalid && (metricForm.$submitted || metricForm.target.$dirty || vm.triedToSubmit === true)"
+                                flex>
                             <label>Target</label>
-                            <input ng-model="vm.metric.targets[$index]">
+                            <input name="target" ng-model="vm.metric.targets[$index]"required>
+                            <div ng-messages="metricForm.target.$error"
+                                 ng-if="metricForm.$submitted || metricForm.metricAlias.$touched || vm.triedToSubmit === true">
+                                <div ng-message="required">Target cannot be empty</div>
+                            </div>
                         </md-input-container>
                         <create-graphite-query  metric="vm.metric" index="$index"></create-graphite-query>
                         <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg" data-ng-click="vm.duplicateTarget($index)"
@@ -136,7 +148,7 @@
 
             </div>
             <div layout="row" flex >
-                <md-button md-no-ink class="md-primary" data-ng-click="vm.update()">Submit</md-button>
+                <md-button md-no-ink class="md-primary" data-ng-click="vm.triedToSubmit=true; metricForm.$valid && vm.update()">Submit</md-button>
                 <md-button data-ng-click="vm.cancel()">Cancel</md-button>
                 <md-button class="md-primary" data-ng-click="vm.clone()">Clone</md-button>
                 <md-button class="md-warn" data-ng-click="vm.openDeleteConfirmation()">Delete metric</md-button>
