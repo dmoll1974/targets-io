@@ -27,6 +27,8 @@ function AddProductDirective () {
     function activate() {
 
       $scope.product = {};
+      $scope.triedToSubmit = false;
+
       setTimeout(function () {
         document.querySelector('#productName').focus();
       }, 1);

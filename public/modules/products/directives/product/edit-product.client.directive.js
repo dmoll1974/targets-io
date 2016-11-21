@@ -26,6 +26,8 @@ function EditProductDirective () {
 
     function activate() {
 
+      $scope.triedToSubmit = false;
+
       Products.get($stateParams.productName).success(function (product) {
         Products.selected = product;
         $scope.product = Products.selected;
