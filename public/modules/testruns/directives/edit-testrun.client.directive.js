@@ -53,6 +53,8 @@ function EditTestrunDirective () {
 
       $scope.isOpenStart = false;
       $scope.isOpenEnd = false;
+      $scope.triedToSubmit = false;
+
 
     }
 
