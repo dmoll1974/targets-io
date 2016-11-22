@@ -426,6 +426,16 @@ md-toast {
     fill: rgba(10, 10, 10, 0.09);
 }
 
+.passed svg{
+
+    fill: green;
+}
+
+.failed svg{
+
+    fill: red;
+}
+
 .running-test-annotations-icon{
 
     padding: 0px;

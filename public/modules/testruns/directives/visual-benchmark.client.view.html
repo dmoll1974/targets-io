@@ -34,8 +34,9 @@
                             <tr>
                                 <td>Benchmark</td>
                                 <td ng-if="$index === 0">{{selectedSeries}}: <b>{{benchmarkTestRun.value}}</b></a></td>
-                                <td ng-if="$index === 1">{{selectedSeries}}: <b>{{benchmarkTestRun.value}}</b> &nbsp  <span ng-class="benchmarkResult ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>
-                                    (allowed deviation: <b>{{allowedDeviation}}</b>)
+                                <td ng-if="$index === 1">{{selectedSeries}}: <b>{{benchmarkTestRun.value}}</b> &nbsp  <!--<span ng-class="benchmarkResult ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>-->
+                                    <md-icon class="pointer passed"  ng-if="benchmarkResult === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
+                                    <md-icon class="pointer failed" ng-if="benchmarkResult === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon> (allowed deviation: <b>{{allowedDeviation}}</b>)
                                 </td>
                             </tr>
                         </tbody>

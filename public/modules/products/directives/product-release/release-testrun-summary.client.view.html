@@ -114,10 +114,20 @@
             <tbody>
             <tr ng-repeat="requirement in testRunSummary.requirements">
                 <td>{{requirement.requirementText}}</td>
-                <td>
-                        <span  class="pointer" ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                               ui-sref="requirementsTestRun({productName: testRunSummary.productName, dashboardName: testRunSummary.dashboardName, testRunId: testRunSummary.testRunId, requirementsResult: requirement.meetsRequirement ? 'passed' : 'failed', selectedMetric: requirement.metricAlias })"  >
-                        </span>
+                <td ui-sref="requirementsTestRun({productName: testRunSummary.productName, dashboardName: testRunSummary.dashboardName, testRunId: testRunSummary.testRunId, requirementsResult: requirement.meetsRequirement ? 'passed' : 'failed', selectedMetric: requirement.metricAlias })">
+                        <!--<span  class="pointer" ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"-->
+                                 <!--&gt;-->
+                        <!--</span>-->
+                    <md-icon class="pointer passed center"  ng-if="requirement.meetsRequirement === true" md-svg-src="images/assets/check-circle-outline.svg">
+                        <md-tooltip>
+                            Drill down to details
+                        </md-tooltip>
+                    </md-icon>
+                    <md-icon class="pointer failed center" ng-if="requirement.meetsRequirement === false" md-svg-src="images/assets/alert-circle-outline.svg">
+                        <md-tooltip>
+                            Drill down to details
+                        </md-tooltip>
+                    </md-icon>
                 </td>
             </tr>
             </tbody>
@@ -142,11 +152,30 @@
                     <td>{{productRequirement.stakeholder}}</td>
                     <td>{{productRequirement.description}}</td>
                     <td class="center"  ng-model="productRequirement.result">
-                        <span ng-if="edit === true" class="pointer" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"
-                              data-ng-click="toggleRequirementResult($index)"  >
-                        </span>
-                        <span ng-if="edit === false" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'" title="Enter edit mode to toggle result">
-                        </span>
+                        <!--<span ng-if="edit === true" class="pointer" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"-->
+                              <!--data-ng-click="toggleRequirementResult($index)"  >-->
+                        <!--</span>-->
+                        <!---->
+                        <div ng-if="edit === true" data-ng-click="toggleRequirementResult($index)">
+                            <md-icon class="pointer passed center"  ng-if="productRequirement.result === true" md-svg-src="images/assets/check-circle-outline.svg">
+                                <md-tooltip>
+                                    Click to toggle result
+                                </md-tooltip>
+                            </md-icon>
+                            <md-icon class="pointer failed center" ng-if="productRequirement.result === false" md-svg-src="images/assets/alert-circle-outline.svg">
+                                <md-tooltip>
+                                    Click to toggle result
+                                </md-tooltip>
+                            </md-icon>
+                        </div>
+                        <div ng-if="edit === false">
+                            <md-icon class="pointer passed center"  ng-if="productRequirement.result === true" md-svg-src="images/assets/check-circle-outline.svg">
+                            </md-icon>
+                            <md-icon class="pointer failed center" ng-if="productRequirement.result === false" md-svg-src="images/assets/alert-circle-outline.svg">
+                            </md-icon>
+                        </div>
+                        <!--<span ng-if="edit === false" ng-class="productRequirement.result === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'" title="Enter edit mode to toggle result">-->
+                        <!--</span>-->
                     </td>
                 </tr>
                 </tbody>

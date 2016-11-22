@@ -158,17 +158,29 @@
                 <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.humanReadableDuration}}
                 </td>
                 <td  header-class="text-center" class="text-center pointer"
-                    data-ng-click="testRunRequirements(testRun)"><span
-                        ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>
+                    data-ng-click="(testRun.meetsRequirement === true || testRun.meetsRequirement === false ) && testRunRequirements(testRun)"><!--<span-->
+                        <!--ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>-->
+                    <md-icon class="passed" ng-if="testRun.meetsRequirement === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
+                    <md-icon class="failed" ng-if="testRun.meetsRequirement === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
+                    <md-icon ng-if="testRun.meetsRequirement === null" md-svg-src="images/assets/close-circle-outline.svg"></md-icon>
+                    <div layout="row" ng-if="testRun.meetsRequirement === 'pending'" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="35" ></md-progress-circular></div>
                 </td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.previousBuild}}"
-                    class="text-center pointer" data-ng-click="testRunPreviousBuildBenchmark(testRun)"><span
-                        ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
+                    class="text-center pointer" data-ng-click="(testRun.benchmarkResultPreviousOK === true || testRun.benchmarkResultPreviousOK === false) && testRunPreviousBuildBenchmark(testRun)"><!--<span-->
+                        <!--ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>-->
+                    <md-icon class="passed" ng-if="testRun.benchmarkResultPreviousOK === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
+                    <md-icon class="failed" ng-if="testRun.benchmarkResultPreviousOK === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
+                    <md-icon ng-if="testRun.benchmarkResultPreviousOK === null" md-svg-src="images/assets/close-circle-outline.svg"></md-icon>
+                    <div layout="row" ng-if="testRun.benchmarkResultPreviousOK === 'pending'" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="35" ></md-progress-circular></div>
                 </td>
                 <td ng-if="!showBenchmarks"></td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.baseline}}"
-                    class="text-center pointer" data-ng-click="testRunFixedBaselineBenchmark(testRun)"><span
-                        ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>
+                    class="text-center pointer" data-ng-click="(testRun.benchmarkResultFixedOK === true || testRun.benchmarkResultFixedOK === false) && testRunFixedBaselineBenchmark(testRun)"><!--<span-->
+                        <!--ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>-->
+                    <md-icon class="passed"  ng-if="testRun.benchmarkResultFixedOK === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
+                    <md-icon class="failed" ng-if="testRun.benchmarkResultFixedOK === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
+                    <md-icon ng-if="testRun.benchmarkResultFixedOK === null" md-svg-src="images/assets/close-circle-outline.svg"></md-icon>
+                    <div layout="row" ng-if="testRun.benchmarkResultFixedOK === 'pending'" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="35"></md-progress-circular></div>
                 </td>
                 <td ng-if="!showBenchmarks"></td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)">
