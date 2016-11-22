@@ -65,8 +65,8 @@ module.exports = {
 				'public/js/dygraph-extra.js',
 				'public/lib/ng-focus-if/focusIf.min.js',
 				'public/lib/socket.io-client/socket.io.js',
-				'public/lib/pdfmake/build/pdfmake.min.js',
-				'public/lib/pdfmake/build/vfs_fonts.js',
+				'public/lib/pdfmake-dist/build/pdfmake.min.js',
+				'public/lib/pdfmake-dist/build/vfs_fonts.js',
 				'public/lib/ng-sortable/dist/ng-sortable.js'
 
 			]
