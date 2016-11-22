@@ -32,6 +32,7 @@ function TestRunSummaryDirective () {
     $scope.setTestRunSummaryUrl = setTestRunSummaryUrl;
     $scope.openDeleteModal = openDeleteModal;
     $scope.saveAsPDF = saveAsPDF;
+    $scope.preventLink = preventLink;
 
     /* Watches */
 
@@ -99,6 +100,7 @@ function TestRunSummaryDirective () {
       $scope.updated = $rootScope.previousState.includes('editMetric') ? true : false;
       $scope.hideGraphs = false;
       $scope.showSpinner = false;
+      $scope.testRunStillExists = true;
 
 
       $scope.dragControlListeners = {
@@ -118,7 +120,15 @@ function TestRunSummaryDirective () {
 
           $scope.summarySaved = true;
 
-          if(response.hasBeenUpdated){
+          /* check if test run still exists! */
+
+          TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).error(function (err) {
+
+            if(err) $scope.testRunStillExists = false;
+
+          });
+
+          if(response.hasBeenUpdated) {
             $scope.updated = true;
             $scope.editMode = true;
 
@@ -129,7 +139,7 @@ function TestRunSummaryDirective () {
                 .parent(angular.element('#summary-buttons'))
                 .hideDelay(6000);
 
-            $mdToast.show(toast.content('Test run summary was updated based on new metric configuration, save to persist!')).then(function(response) {
+            $mdToast.show(toast.content('Test run summary was updated based on new metric configuration, save to persist!')).then(function (response) {
 
             });
 
@@ -588,6 +598,13 @@ function TestRunSummaryDirective () {
 
     };
 
+
+    function preventLink(testRunStillExists, event){
+
+      if(!testRunStillExists){
+        event.preventDefault();
+      }
+    }
 
 
     function saveAsPDF(){

@@ -28,6 +28,8 @@ function ReleaseTestRunSummaryDirective () {
     $scope.gatlingDetails = gatlingDetails;
     $scope.toggleRequirementResult = toggleRequirementResult;
     $scope.testRunDetails = testRunDetails;
+    $scope.preventLink = preventLink;
+
 
 
     /* Watches */
@@ -64,6 +66,7 @@ function ReleaseTestRunSummaryDirective () {
       $scope.productName = $scope.testrun.productName;
       $scope.dashboardName = $scope.testrun.dashboardName;
       $scope.testRunId = $scope.testrun.testRunId;
+      $scope.testRunStillExists = true;
 
       TestRunSummary.getTestRunSummaryForRelease($scope.productName, $scope.dashboardName, $scope.testRunId).success(function (testRunSummary) {
 
@@ -73,6 +76,14 @@ function ReleaseTestRunSummaryDirective () {
           $scope.summarySaved = true;
 
           console.log('got test run summary from db!')
+
+          /* check if test run still exists! */
+
+          TestRuns.getTestRunById($scope.productName, $scope.dashboardName, $scope.testRunId).error(function (err) {
+
+            if(err) $scope.testRunStillExists = false;
+
+          });
 
         } else {
 
@@ -214,6 +225,12 @@ function ReleaseTestRunSummaryDirective () {
 
     }
 
+    function preventLink(testRunStillExists, event){
+
+      if(!testRunStillExists){
+        event.preventDefault();
+      }
+    }
 
     function testRunDetails(testRun, requirement) {
       TestRuns.selected = testRun;

@@ -71,7 +71,10 @@
                 </tr>
                 <tr>
                     <td>Test run ID </td>
-                    <td><a ng-click="testRunDetails(testRunSummary, 'all')">{{testRunSummary.testRunId}}</a></td>
+                    <td>
+                        <a ng-if="testRunStillExists" ng-click="testRunDetails(testRunSummary, 'all')">{{testRunSummary.testRunId}}</a>
+                        <p ng-if="!testRunStillExists">{{testRunSummary.testRunId}}</p>
+                    </td>
                 <tr>
                     <td>Period</td>
                     <td>{{testRunSummary.start | date:'EEEE, dd-M-yyyy H:mm:ss'}} - {{testRunSummary.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}</td>
@@ -83,7 +86,8 @@
                 <tr ng-if="testRunSummary.buildResultsUrl">
                     <td>CI server build result page</td>
                     <td><a ng-href="{{testRunSummary.buildResultsUrl}}">{{testRunSummary.buildResultsUrlDisplay}}</a></td>
-                </tr><tr ng-if="testRunSummary.buildResultsUrl">
+                </tr>
+                <tr ng-if="testRunSummary.buildResultsUrl && testRunStillExists">
                     <td>Gatling details</td>
                     <td><a ng-click="gatlingDetails(testRunSummary.testRunId)">{{testRunSummary.testRunId}}</a></td>
                 </tr>
@@ -136,17 +140,17 @@
                 <tbody>
                     <tr ng-repeat="requirement in testRunSummary.requirements">
                         <td>{{requirement.requirementText}}</td>
-                        <td ui-sref="requirementsTestRun({productName: testRunSummary.productName, dashboardName: testRunSummary.dashboardName, testRunId: testRunSummary.testRunId, requirementsResult: requirement.meetsRequirement ? 'passed' : 'failed', selectedMetric: requirement.metricAlias })">
+                        <td ng-click="preventLink(testRunStillExists, $event)" ui-sref="requirementsTestRun({productName: testRunSummary.productName, dashboardName: testRunSummary.dashboardName, testRunId: testRunSummary.testRunId, requirementsResult: requirement.meetsRequirement ? 'passed' : 'failed', selectedMetric: requirement.metricAlias })">
                             <!--<span  class="pointer" ng-class="requirement.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' :  'fa-lg fa fa-exclamation-circle text-danger center'"-->
                                     <!--&gt;-->
                             <!--</span>-->
                             <md-icon class="pointer passed center"  ng-if="requirement.meetsRequirement === true" md-svg-src="images/assets/check-circle-outline.svg">
-                                <md-tooltip>
+                                <md-tooltip ng-if="testRunStillExists">
                                     Drill down to details
-                                </md-tooltip>
+                                </md-tooltip >
                             </md-icon>
                             <md-icon class="pointer failed center" ng-if="requirement.meetsRequirement === false" md-svg-src="images/assets/alert-circle-outline.svg">
-                                <md-tooltip>
+                                <md-tooltip ng-if="testRunStillExists">
                                     Drill down to details
                                 </md-tooltip>
                             </md-icon>
