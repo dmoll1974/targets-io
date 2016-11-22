@@ -615,8 +615,23 @@ function TestRunSummaryDirective () {
 
       ExportToPdf.testRunSummaryToPdf($scope.testRunSummary, function(docDefinition){
 
-        pdfMake.createPdf(docDefinition).download(pdfName);
-        $scope.showSpinner = false;
+        var toast = $mdToast.simple()
+            .action('OK')
+            .highlightAction(true)
+            .position('top center')
+            .hideDelay(6000);
+
+        $mdToast.show(toast.content('PDF report is being generated, this could take a while...')).then(function(response) {
+
+
+          pdfMake.createPdf(docDefinition).download(pdfName);
+
+          $scope.showSpinner = false;
+
+
+        });
+
+
 
       });
 
