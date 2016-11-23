@@ -30,6 +30,7 @@ angular.module('metrics').factory('Metrics', [
         'Percentage',
         'Responses',
         'Bytes/second',
+        'Transactions',
         'CPUsec',
         'Users',
         'Custom'
