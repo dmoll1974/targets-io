@@ -22,6 +22,7 @@ var mongoose = require('mongoose'),
 
 exports.get = getTestrunSummary;
 exports.getTestRunSummaryForRelease = getTestRunSummaryForRelease;
+exports.getTestRunSummariesForRelease = getTestRunSummariesForRelease;
 exports.getTestRunSummaryReleasesForProduct = getTestRunSummaryReleasesForProduct;
 exports.create = createTestrunSummary;
 exports.update = updateTestrunSummary;
@@ -39,6 +40,23 @@ function getTestRunSummaryReleasesForProduct (req, res) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
       res.jsonp(releases);
+    }
+  });
+}
+
+function getTestRunSummariesForRelease (req, res) {
+
+  var response = {};
+
+  TestrunSummary.find({$and:[
+                              {productName: req.params.productName},
+                              {testRunId: {$in: req.body.testRunIds}}
+  ]}).exec(function (err, testRunSummaries) {
+
+    if (err) {
+      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+    } else {
+      res.jsonp(testRunSummaries);
     }
   });
 }
