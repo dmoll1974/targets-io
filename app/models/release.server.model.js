@@ -26,6 +26,9 @@ var ReleaseSchema = new Schema({
       productName: String,
       dashboardName: String,
       testRunId: String,
+      goal: String,
+      description: String,
+      start: Date,
       end: Date, // hack  to sort the index in the release details page
       requirements: [
         {
