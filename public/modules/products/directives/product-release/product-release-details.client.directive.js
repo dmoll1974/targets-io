@@ -14,7 +14,7 @@ function ProductReleaseDetailsDirective () {
 
 
   /* @ngInject */
-  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, $mdToast, $location, $anchorScroll, $timeout) {
+  function ProductReleaseDetailsDirectiveController ($scope, $state, $stateParams,  Dashboards, $filter, $rootScope, Products, TestRuns, $modal, ConfirmModal, ExportToPdf, $mdToast, $location, $anchorScroll, $timeout) {
 
       $scope.openMenu = openMenu;
       $scope.reloadProductRelease = reloadProductRelease;
@@ -26,6 +26,8 @@ function ProductReleaseDetailsDirective () {
       $scope.hasFlash = hasFlash;
       $scope.clipClicked = clipClicked;
       $scope.setProductReleaseUrl = setProductReleaseUrl;
+      $scope.saveAsPDF = saveAsPDF;
+
       /* watches */
 
       var converter = new showdown.Converter({extensions: ['targetblank']});
@@ -75,6 +77,7 @@ function ProductReleaseDetailsDirective () {
 
 
       /* activate */
+
 
       activate();
 
@@ -168,13 +171,17 @@ function ProductReleaseDetailsDirective () {
         /* get test runs for release */
         TestRuns.listTestRunsForProductRelease($scope.product.name, $stateParams.productRelease).success(function (testRuns) {
 
-            $scope.product.releaseTestRuns = testRuns;
+
 
           _.each(testRuns, function (testRun) {
 
             Dashboards.get(testRun.productName, testRun.dashboardName).success(function (dashboard) {
 
               /* create index */
+
+                testRun.description = dashboard.description;
+                testRun.goal = dashboard.goal;
+
 
                 $scope.testRunIndexItems.push({testRunId: testRun.testRunId, description: dashboard.description, end: testRun.end });
 
@@ -199,6 +206,12 @@ function ProductReleaseDetailsDirective () {
             });
 
           });
+
+            $timeout(function(){
+
+                $scope.product.releaseTestRuns = testRuns;
+
+            })
         });
       });
 
@@ -359,6 +372,36 @@ function ProductReleaseDetailsDirective () {
 
       };
 
+
+      function saveAsPDF(){
+
+          $scope.showSpinner = true;
+          var pdfName = $scope.product.name + '-' + $scope.product.productRelease + '.pdf'
+
+
+          ExportToPdf.productReleaseToPdf($scope.product, true, function(docDefinition){
+
+              var toast = $mdToast.simple()
+                  .action('OK')
+                  .highlightAction(true)
+                  .position('top center')
+                  .hideDelay(6000);
+
+              $mdToast.show(toast.content('PDF report is being generated, this could take a while...')).then(function(response) {
+
+
+                  pdfMake.createPdf(docDefinition).download(pdfName);
+
+                  $scope.showSpinner = false;
+
+
+              });
+
+
+
+          });
+
+      }
 
 
 
