@@ -51,23 +51,30 @@
         <td data-title="'Allowed deviation'" header-class="text-left">{{target.benchmarkOperator}}
             {{target.benchmarkValue}}
         </td>
-        <td data-title="'Result'" header-class="text-left" ui-sref="visualBenchmark({productName: target.productName, dashboardName:target.dashboardName, baselineTestRunId: testRun.previousBuild, benchmarkTestRunId: testRun.testRunId, selectedSeries: target.target, metricId: target.metricId, benchmarkType: 'previousBuild' })">
+        <td data-title="'Result'" header-class="text-left" >
             <!--<span title="View graphs" class="pointer" -->
                   <!--ng-class="target.benchmarkResultPreviousOK ? 'fa-lg fa fa-check-circle-o text-success center' : 'fa-lg fa fa-exclamation-circle text-danger center'"></span>-->
-            <md-icon class="pointer passed text-center"  ng-if="target.benchmarkResultPreviousOK === true" md-svg-src="images/assets/check-circle-outline.svg">
-                <md-tooltip>
-                    View graphs
-                </md-tooltip>
-            </md-icon>
-            <md-icon class="pointer failed text-center" ng-if="target.benchmarkResultPreviousOK === false" md-svg-src="images/assets/alert-circle-outline.svg">
-                <md-tooltip>
-                    View graphs
-                </md-tooltip>
-            </md-icon>
-            <div ng-hide="$index > 0" style="margin:0px; padding:0px;" class="md-icon-button pull-right" ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})">
-                <md-icon md-svg-src="images/assets/ic_settings_black_24px.svg"
-                         md-menu-align-target></md-icon>
-                <md-tooltip>Metric configuration</md-tooltip>
+            <div layout="row" layout-align="space-between center">
+                <div ui-sref="visualBenchmark({productName: target.productName, dashboardName:target.dashboardName, baselineTestRunId: testRun.previousBuild, benchmarkTestRunId: testRun.testRunId, selectedSeries: target.target, metricId: target.metricId, benchmarkType: 'previousBuild' })">
+                    <md-icon class="pointer passed text-center"  ng-if="target.benchmarkResultPreviousOK === true" md-svg-src="images/assets/check-circle-outline.svg">
+                        <md-tooltip>
+                            View graphs
+                        </md-tooltip>
+                    </md-icon>
+                    <md-icon class="pointer failed text-center" ng-if="target.benchmarkResultPreviousOK === false" md-svg-src="images/assets/alert-circle-outline.svg">
+                        <md-tooltip>
+                            View graphs
+                        </md-tooltip>
+                    </md-icon>
+                </div>
+                <div ng-hide="$index > 0" style="margin:0px; padding:0px;" class="md-icon-button pull-right" ui-sref="editMetric({productName: target.productName, dashboardName:target.dashboardName, metricId: target.metricId})">
+                    <md-icon md-svg-src="images/assets/ic_settings_black_24px.svg"
+                         md-menu-align-target>
+                        <md-tooltip>
+                            Metric configuration
+                        </md-tooltip>
+                    </md-icon>
+                </div>
             </div>
 
 
