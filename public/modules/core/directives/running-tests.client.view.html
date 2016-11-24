@@ -34,31 +34,52 @@
         </tr>
         <tbody>
         <tr ng-repeat="runningTest in runningTests | orderBy: 'start':true" class="hover-row pointer" >
-            <td ui-sref="viewProduct({productName: runningTest.productName})" title="Open product">
+            <td ui-sref="viewProduct({productName: runningTest.productName})" >
                 {{runningTest.productName}}
+                <md-tooltip>
+                    Go to product
+                </md-tooltip>
             </td>
-            <td ui-sref="viewDashboard({productName: runningTest.productName, dashboardName: runningTest.dashboardName})" title="Open dashboard">
+            <td ui-sref="viewDashboard({productName: runningTest.productName, dashboardName: runningTest.dashboardName})" >
                 {{runningTest.dashboardName}}
+                <md-tooltip>
+                    Go to dashboard
+                </md-tooltip>
             </td>
-            <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})" title="Open live graphs">
+            <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})">
                 {{runningTest.testRunId}}
+                <md-tooltip>
+                    Show live graphs
+                </md-tooltip>
             </td>
 
-            <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})" title="Open live graphs">
+            <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})">
                 {{runningTest.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                <md-tooltip>
+                    Show live graphs
+                </md-tooltip>
             </td>
-            <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})" title="Open live graphs">
+            <td ui-sref="viewLiveGraphs({productName: runningTest.productName, dashboardName: runningTest.dashboardName, tag: 'Load'})">
                 {{runningTest.humanReadableDuration }}
+                <md-tooltip>
+                    Show live graphs
+                </md-tooltip>
             </td>
 
-            <td class="pointer">
+            <td>
                 <div layout="column" data-ng-if="runningTest.progress !== undefined" layout-align="center left">
                     <md-progress-linear  md-mode="determinate" value="{{runningTest.progress}}"></md-progress-linear>
-                    <div class="running-test">{{runningTest.timeLeft}}</div>
+                    <div class="running-test">
+                        {{runningTest.timeLeft}}
+
+                    </div>
                 </div>
                 <div layout="column" data-ng-if="runningTest.progress === undefined" layout-align="center left">
                     <md-progress-linear  flex md-mode="indeterminate"></md-progress-linear>
-                    <div class="running-test">No data available</div>
+                    <div class="running-test">
+                        No data available
+
+                    </div>
                 </div>
             </td>
         </tr>

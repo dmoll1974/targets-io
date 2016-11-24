@@ -54,23 +54,41 @@
         </tr>
         <tbody>
         <tr ng-repeat="recentTest in filteredRecentTestRuns | orderBy:'-end' | filter: {completed: completedTestRunsOnly ? true : ''}" class="pointer hover-row" >
-            <td ui-sref="viewProduct({productName: recentTest.productName})" title="Open product">
+            <td ui-sref="viewProduct({productName: recentTest.productName})">
                 {{recentTest.productName}}
+                <md-tooltip>
+                    Go to product
+                </md-tooltip>
             </td>
-            <td ui-sref="viewDashboard({productName: recentTest.productName, dashboardName: recentTest.dashboardName})" title="Open dashboard">
+            <td ui-sref="viewDashboard({productName: recentTest.productName, dashboardName: recentTest.dashboardName})" >
                 {{recentTest.dashboardName}}
+                <md-tooltip>
+                    Go to dashboard
+                </md-tooltip>
             </td>
-            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})" title="Open test run">
+            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})">
                 {{recentTest.testRunId}}
+                <md-tooltip>
+                    Show test run
+                </md-tooltip>
             </td>
-            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})" title="Open test run">
+            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})">
                 {{recentTest.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                <md-tooltip>
+                    Show test run
+                </md-tooltip>
             </td>
-            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})" title="Open test run">
+            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})">
                 {{recentTest.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                <md-tooltip>
+                    Show test run
+                </md-tooltip>
             </td>
-            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})" title="Open test run">
+            <td ui-sref="viewGraphs({productName: recentTest.productName, dashboardName: recentTest.dashboardName, testRunId: recentTest.testRunId, tag: 'Load'})">
                 {{recentTest.humanReadableDuration}}
+                <md-tooltip>
+                    Show test run
+                </md-tooltip>
             </td>
 
         </tr>
