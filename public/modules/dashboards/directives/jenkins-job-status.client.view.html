@@ -1,4 +1,4 @@
-<md-toolbar ng-class="{'jenkins-job-running': jenkinsJobStatus === 'Running','jenkins-job-stopped': jenkinsJobStatus === 'Stopped', 'jenkins-job-queued': jenkinsJobStatus === 'Queued' }">
+<md-toolbar ng-class="{'jenkins-job-running': jenkinsJobStatus === 'Running' && !inHeader,'jenkins-job-stopped': jenkinsJobStatus === 'Stopped'&& !inHeader, 'jenkins-job-queued': jenkinsJobStatus === 'Queued'&& !inHeader }">
     <div class="md-toolbar-tools" layout="row" layout-align="space-between">
 
         <div layout="row">
@@ -6,7 +6,7 @@
             <h4 style="margin-left: 20px;">{{dashboard.jenkinsJobName | uppercase}}</h4>
         </div>
 
-        <div layout="row" layout-align="start center">
+        <div ng-if="!inHeader" layout="row" layout-align="start center">
 
             <h5  ng-cloak ng-if="jenkinsJobStatus">Status: {{jenkinsJobStatus}} </h5>
             <h5 ng-if="jenkinsJobStatus === 'Queued'">, {{jenkinsJobQueueWhy}}</h5>

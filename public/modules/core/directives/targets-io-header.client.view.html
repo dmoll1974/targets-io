@@ -5,7 +5,7 @@
             <a class="pointer" ng-click="goHome()" >TARGETS-IO</a>
         </h1>
     </div>
-    <div flex="85" layout="row" layout-align="left center">
+    <div flex="60" layout="row" layout-align="left center">
         <div layout="row" layout-align="left center">
             <md-button ng-if="product" style="margin-left: 20px;"  class="md-icon-button" ng-click="goToProductHome(product)">
                 <md-icon md-svg-src="images/assets/ic_home_white_24px.svg"></md-icon>
@@ -40,7 +40,7 @@
 
         </div>
 
-        <div layout="row" layout-align="left center">
+        <div layout="row" layout-align="space-between center">
 
             <div>
                 <span class="targetsio-header-text" style="margin-left: 20px;" ng-if="product" ng-click="goToDashboardHome(product, dashboard)">DASHBOARD </span>
@@ -113,6 +113,10 @@
             <!--</div>-->
 
         <!--</div>-->
+
+    </div>
+    <div flex="25">
+        <jenkins-job-status  ng-if="dashboard.triggerTestRunsWithJenkins && graphsLive" dashboard="dashboard" targetsioheader="true"></jenkins-job-status>
     </div>
     <div flex="5" layout="row" layout-align="end center">
         <md-menu class="md-toolbar-tools">

@@ -89,7 +89,9 @@ function TargetsIoHeaderDirective () {
 
 
         $scope.$on('$stateChangeSuccess',function(){
+
             $scope.$state = $state;
+
         })
 
 
@@ -337,6 +339,8 @@ function TargetsIoHeaderDirective () {
 
 
             }, 0);
+
+            $scope.graphsLive = (window.location.href.indexOf("graphs-live") != -1) ? true : false;
 
         }
 

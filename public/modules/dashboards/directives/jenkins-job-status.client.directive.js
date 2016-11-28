@@ -8,6 +8,7 @@ function JenkinsJobStatusDirective () {
     var directive = {
         scope: {
             dashboard: '=',
+            targetsioheader: '=',
         },
         restrict: 'EA',
         templateUrl: 'modules/dashboards/directives/jenkins-job-status.client.view.html',
@@ -41,6 +42,15 @@ function JenkinsJobStatusDirective () {
         /* functions */
 
         function activate(){
+
+
+            $timeout(function(){
+
+                $scope.inHeader = $scope.targetsioheader ? true : false;
+
+            })
+
+
 
             if($http.defaults.headers.common['Authorization']) {
                 Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (loginResult) {
