@@ -90,7 +90,7 @@
                         <md-button class="md-icon-button testrun-annotations-button running-test-annotations-icon" data-ng-click="showAnnotations($event, runningTest, true)">
                             <md-icon md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
                             <md-tooltip>
-                                Test run annotations
+                                {{runningTest.annotations}}
                             </md-tooltip>
                         </md-button>
                     </div>
@@ -98,7 +98,7 @@
                         <md-button class="md-icon-button testrun-annotations-button running-test-annotations-icon" data-ng-click="showAnnotations($event, runningTest, true)">
                             <md-icon md-svg-src="images/assets/ic_mode_edit_black_24px.svg"></md-icon>
                             <md-tooltip>
-                                {{runningTest.annotations}}
+                                Annotate test run
                             </md-tooltip>
                         </md-button>
                     </div>
