@@ -92,6 +92,12 @@ function TargetsIoHeaderDirective () {
 
             $scope.$state = $state;
 
+            $timeout(function(){
+
+                $scope.graphsLive = (window.location.href.indexOf("graphs-live") != -1) ? true : false;
+            })
+
+
         })
 
 
@@ -340,7 +346,6 @@ function TargetsIoHeaderDirective () {
 
             }, 0);
 
-            $scope.graphsLive = (window.location.href.indexOf("graphs-live") != -1) ? true : false;
 
         }
 
