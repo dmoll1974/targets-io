@@ -441,17 +441,51 @@ md-toast {
     padding: 0px;
 }
 
+/*.md-button.md-icon-button.testrun-annotations-button{*/
+
+    /*padding: 0px !important;*/
+    /*margin: 0px !important;*/
+/*}*/
+
 .md-button.md-icon-button.testrun-annotations-button{
 
     padding: 0px !important;
     margin: 0px !important;
+    vertical-align: text-top !important;
+    min-height: 20px !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    width: 20px !important;
+    margin-left:10px !important;
 }
 
-.testrun-annotations-button{
+testrun-annotations-button md-icon{
 
     padding: 0px !important;
     margin: 0px !important;
+    vertical-align: text-top !important;
+    min-height: 20px !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    width: 20px !important;
+    margin-left:10px !important;
 }
+
+.testrun-annotations-button svg{
+
+    padding: 0px !important;
+    margin: 0px !important;
+    vertical-align: text-top !important;
+    min-height: 20px !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    width: 20px !important;
+    fill: rgba(0, 0, 0, 0.541176)
+;
+}
+
+
+
 .running-test-annotations-icon svg{
 
     fill: rgb(33, 150, 243);

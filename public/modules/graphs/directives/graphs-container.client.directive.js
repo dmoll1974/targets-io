@@ -14,7 +14,7 @@ function GraphsContainerDirective () {
   return directive;
 
   /* @ngInject */
-  function GraphsContainerDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, TestRuns, Metrics, Tags, $q, $timeout, Utils) {
+  function GraphsContainerDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, TestRuns, Metrics, Tags, $q, $timeout, Utils, $mdDialog) {
 
     var vm = this;
 
@@ -32,6 +32,7 @@ function GraphsContainerDirective () {
     vm.setMetricFilter = setMetricFilter;
     vm.clearMetricFilter = clearMetricFilter;
     vm.openMenu = openMenu;
+    vm.showAnnotations = showAnnotations;
 
 
 
@@ -533,5 +534,73 @@ function GraphsContainerDirective () {
 
       }
     };
+
+    function showAnnotations($event, testRun, runningTest) {
+
+      var parentEl = angular.element(document.body);
+      $mdDialog.show({
+        parent: parentEl,
+        targetEvent: $event,
+        templateUrl: 'modules/testruns/views/testrun.annotations.client.view.html',
+        locals: {
+          testRun: vm.testRun
+        },
+        controller: DialogController
+      });
+      function DialogController($scope, $mdDialog, testRun, TestRuns) {
+        $scope.testRun = testRun;
+
+        $scope.cancel = function(){
+
+          $mdDialog.hide();
+
+        }
+
+        $scope.closeDialog = function () {
+
+          if(runningTest){
+
+            TestRuns.updateRunningTestAnnotations($scope.testRun).success(function () {
+
+              $mdDialog.hide();
+
+            }, function(){
+
+              var toast = $mdToast.simple()
+                  .action('OK')
+                  .highlightAction(true)
+                  .hideDelay(3000)
+
+              $mdToast.show(toast.content('Something went wrong saving test run annotations!')).then(function (response) {
+              })
+
+              $mdDialog.hide();
+
+            });
+
+          }else{
+
+            TestRuns.update(testRun).success(function () {
+
+              $mdDialog.hide();
+            }, function(){
+
+              var toast = $mdToast.simple()
+                  .action('OK')
+                  .highlightAction(true)
+                  .hideDelay(3000)
+
+              $mdToast.show(toast.content('Something went wrong saving test run annotations!')).then(function (response) {
+              })
+
+              $mdDialog.hide();
+
+            });
+
+          }
+        }
+      }
+
+    }
   }
 }
