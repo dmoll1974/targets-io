@@ -24,7 +24,7 @@
             <div>Updating test runs ... {{progress}}%</div>
         </div>
 
-        <table class="table">
+        <table class="table testrun">
             <colgroup ng-if="!showBenchmarks">
                 <col span="1" style="width: 32%;">
                 <col span="1" style="width: 4%;">
@@ -128,18 +128,18 @@
                 <td></td>
                 <td></td>
             </tr>
-            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' } "
-                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true}" >
-                <td>
+            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' }"
+                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true}" valign="center" >
+                <td >
                         <div class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.testRunId}}</div>
 
                 </td>
-                <td class="testrun-annotations-button">
-                    <div class="pointer" >
+                <td class="testrun-annotations-button pointer testrun">
+                    <div >
                         <md-button  ng-show="testRun.annotations" class="md-icon-button testrun-annotations-button" data-ng-click="showAnnotations($event, testRun, false)">
                             <md-icon md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
                             <md-tooltip>
-                                Test run annotations
+                                {{testRun.annotations}}
                             </md-tooltip>
                         </md-button>
                     </div>
@@ -155,9 +155,13 @@
                     <md-progress-linear data-ng-if="runningTest && $index < numberOfRunningTests" flex md-mode="indeterminate"></md-progress-linear>
 
                 </td>
-                <td class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.humanReadableDuration}}
+                <td class="pointer" data-ng-click="testRunDetails(testRun)">
+                    <div layout="row">
+                        <md-icon ng-if="testRun.completed === false" class="incomplete" md-svg-src="images/assets/ic_broken_image_black_24px.svg"><md-tooltip>Not completed</md-tooltip></md-icon>
+                        <p style="margin-bottom: 0px;">{{testRun.humanReadableDuration}}</p>
+                    </div>
                 </td>
-                <td  header-class="text-center" class="text-center pointer"
+                <td  header-class="text-center" class="text-center pointer testrun"
                     data-ng-click="(testRun.meetsRequirement === true || testRun.meetsRequirement === false ) && testRunRequirements(testRun)"><!--<span-->
                         <!--ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>-->
                     <md-icon class="passed" ng-if="testRun.meetsRequirement === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
@@ -166,7 +170,7 @@
                     <div layout="row" ng-if="testRun.meetsRequirement === 'pending'" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="35" ></md-progress-circular></div>
                 </td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.previousBuild}}"
-                    class="text-center pointer" data-ng-click="(testRun.benchmarkResultPreviousOK === true || testRun.benchmarkResultPreviousOK === false) && testRunPreviousBuildBenchmark(testRun)"><!--<span-->
+                    class="text-center pointer testrun" data-ng-click="(testRun.benchmarkResultPreviousOK === true || testRun.benchmarkResultPreviousOK === false) && testRunPreviousBuildBenchmark(testRun)"><!--<span-->
                         <!--ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>-->
                     <md-icon class="passed" ng-if="testRun.benchmarkResultPreviousOK === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
                     <md-icon class="failed" ng-if="testRun.benchmarkResultPreviousOK === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
@@ -175,15 +179,15 @@
                 </td>
                 <td ng-if="!showBenchmarks"></td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.baseline}}"
-                    class="text-center pointer" data-ng-click="(testRun.benchmarkResultFixedOK === true || testRun.benchmarkResultFixedOK === false) && testRunFixedBaselineBenchmark(testRun)"><!--<span-->
+                    class="text-center pointer testrun" data-ng-click="(testRun.benchmarkResultFixedOK === true || testRun.benchmarkResultFixedOK === false) && testRunFixedBaselineBenchmark(testRun)"><!--<span-->
                         <!--ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>-->
                     <md-icon class="passed"  ng-if="testRun.benchmarkResultFixedOK === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
                     <md-icon class="failed" ng-if="testRun.benchmarkResultFixedOK === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
                     <md-icon ng-if="testRun.benchmarkResultFixedOK === null" md-svg-src="images/assets/close-circle-outline.svg"></md-icon>
                     <div layout="row" ng-if="testRun.benchmarkResultFixedOK === 'pending'" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="35"></md-progress-circular></div>
                 </td>
-                <td ng-if="!showBenchmarks"></td>
-                <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)">
+                <td  ng-if="!showBenchmarks"></td>
+                <td  data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)">
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="testRun.testRunId === dashboard.baseline"></md-icon>
                 </td>
                 <td ng-if="!showBenchmarks"></td>
@@ -256,7 +260,7 @@
                         </md-menu-content>
                     </md-menu>
                 </td>
-                <td >
+                <td  >
                     <md-checkbox md-no-ink aria-label="select test run" ng-model="testRun.selected"  ng-change="setTestRunsSelected(testRun.selected)" style="margin: 0px;">
                     </md-checkbox>
                 </td>

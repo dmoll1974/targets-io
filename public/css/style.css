@@ -458,6 +458,16 @@ md-toast {
 
 }
 
+/*code.incomplete {*/
+    /*height: 30px;*/
+    /*min-width: 50px;*/
+    /*background: rgba(255,110,64,0.87);*/
+    /*font-weight: bold;*/
+    /*color: white;*/
+    /*line-height: 25px;*/
+
+/*}*/
+
 .switch-label-enabled{
 
     color: black;
@@ -580,6 +590,27 @@ ul
 
     fill: rgba(10, 10, 10, 0.66);
 }
+
+.incomplete svg {
+
+    fill: rgba(255,110,64,0.87);
+}
+
+.incomplete  {
+
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 10px;
+
+}
+
+.testrun.table>tbody>tr>td{
+
+    vertical-align: middle !important;
+
+}
+
 
 .not-in-summary svg {
 
