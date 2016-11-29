@@ -11,19 +11,33 @@
                                 <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>
                                   /  {{vm.testRun.testRunIdBreadCrump}}
                             </span>
-                            <div ng-if="vm.testRun.annotations && vm.graphsType === 'testrun'"  >
-                                <md-button  class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, testRun, false)">
-                                    <md-icon class="testrun-annotations-button" md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
+                            <div ng-if="vm.graphsType === 'testrun'"  >
+                                <md-button  class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, vm.testRun, false)">
+                                    <md-icon ng-if="vm.testRun.annotations" class="testrun-annotations-button" md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
+                                    <md-icon ng-if="!vm.testRun.annotations" class="testrun-annotations-button" md-svg-src="images/assets/pencil-box-outline.svg"></md-icon>
                                     <md-tooltip>
-                                        {{vm.testRun.annotations}}
+                                        {{vm.testRun.annotations || 'Annotate test run'}}
+                                    </md-tooltip>
+                                </md-button>
+                            </div>
+
+                        </div>
+                        <div layout="row">
+                            <span ng-if="vm.graphsType === 'graphs-live'" style="white-space: nowrap;">
+                                <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
+                                <a data-ng-href="/#!/browse/{{vm.productName}}/{{vm.dashboardName}}/">{{vm.dashboardName}}</a>
+                                 / {{vm.runningTest.testRunId || ''}}
+                            </span>
+                            <div ng-if="vm.runningTest && vm.graphsType === 'graphs-live'"  >
+                                <md-button  class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, vm.runningTest, true)">
+                                    <md-icon ng-if="vm.runningTest.annotations" class="testrun-annotations-button" md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
+                                    <md-icon ng-if="!vm.runningTest.annotations" class="testrun-annotations-button" md-svg-src="images/assets/pencil-box-outline.svg"></md-icon>
+                                    <md-tooltip>
+                                        {{vm.runningTest.annotations || 'Annotate running test'}}
                                     </md-tooltip>
                                 </md-button>
                             </div>
                         </div>
-                        <span ng-if="vm.graphsType === 'graphs-live'">
-                            <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
-                            <a data-ng-href="/#!/browse/{{vm.productName}}/{{vm.dashboardName}}/">{{vm.dashboardName}}</a>
-                        </span>
                         <div  layout="row" layout-align="start center" ng-class="{'hidden-time-range': vm.graphsType !== 'graphs-live' }">
                             <span>Time range</span>
                             <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange" style="padding-left: 5px;">

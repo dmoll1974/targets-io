@@ -218,6 +218,7 @@ function GraphsContainerDirective () {
 
           if (runningTest.start && !$state.params.zoomRange) {
 
+            vm.runningTest = runningTest;
             var runningTestOption = {};
             runningTestOption.value = new Date(runningTest.start).getTime();
             runningTestOption.label = 'Since start test run';
@@ -543,7 +544,7 @@ function GraphsContainerDirective () {
         targetEvent: $event,
         templateUrl: 'modules/testruns/views/testrun.annotations.client.view.html',
         locals: {
-          testRun: vm.testRun
+          testRun: testRun
         },
         controller: DialogController
       });
