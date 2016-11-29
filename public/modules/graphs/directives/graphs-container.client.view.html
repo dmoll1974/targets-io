@@ -5,14 +5,14 @@
             <!--<div layout="column">-->
                 <div layout="row"  flex>
                     <div flex="40" layout="row" layout-align="space-between center">
-                        <div layout="row" layout-align="start center">
+                        <div layout="row" ng-if="vm.graphsType === 'testrun'" layout-align="start center">
                             <span ng-if="vm.graphsType === 'testrun'" style="white-space: nowrap;">
                                 <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /
                                 <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>
                                   /  {{vm.testRun.testRunIdBreadCrump}}
                             </span>
-                            <div >
-                                <md-button  ng-show="vm.testRun.annotations" class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, testRun, false)">
+                            <div ng-if="vm.testRun.annotations && vm.graphsType === 'testrun'"  >
+                                <md-button  class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, testRun, false)">
                                     <md-icon class="testrun-annotations-button" md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
                                     <md-tooltip>
                                         {{vm.testRun.annotations}}

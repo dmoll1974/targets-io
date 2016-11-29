@@ -458,6 +458,11 @@ md-toast {
     width: 20px !important;
     margin-left:10px !important;
 }
+.md-button.jenkins-fab-button{
+
+    min-width: 35px !important;
+    width: 35px !important;
+}
 
 testrun-annotations-button md-icon{
 
@@ -697,4 +702,38 @@ div.jenkins-logo {
     /*background:url('../images/assets/Jenkins_logo.svg');*/
     background:url('../images/assets/jenkins-icon.png');
     background-size: 35px 35px;
+}
+div.jenkins-logo.jenkins-header {
+    width: 32px;
+    height:32px;
+    /*background:url('../images/assets/Jenkins_logo.svg');*/
+    background:url('../images/assets/jenkins-icon.png');
+    background-size: 32px 32px;
+}
+
+.jenkins-header.md-button svg{
+
+    min-height: 24px;
+    min-width: 24px;
+    height: 24px;
+    width: 24px;
+}
+
+.jenkins-header.md-button {
+
+    padding: 0px !important;
+    min-height: 24px;
+    min-width: 24px;
+    height: auto;
+    width: auto;
+}
+
+.vertical-divider {
+    margin-left: 10px;
+    margin-right: 10px;
+    border-top-width: 0;
+    border-right-width: 15px;
+    border-right-style: solid;
+    height: 50px;
+    border-right-color: whitesmoke;
 }

@@ -90,15 +90,25 @@ function TargetsIoHeaderDirective () {
 
         $scope.$on('$stateChangeSuccess',function(){
 
-            $scope.$state = $state;
 
             $timeout(function(){
 
-                $scope.graphsLive = (window.location.href.indexOf("graphs-live") != -1) ? true : false;
+                $scope.$state = $state;
+
+                var dashboardViewUrlRegExp = new RegExp('browse/.*/.*/');
+
+                $scope.dashboardView = dashboardViewUrlRegExp.test(window.location.href) ? true : false;
+                $scope.graphsLiveView = (window.location.href.indexOf("graphs-live") != -1) ? true : false;
+                $scope.graphsView = (window.location.href.indexOf("graphs/") != -1) ? true : false;
+
+
             })
 
 
+
         })
+
+
 
 
         /* activate */
@@ -343,6 +353,11 @@ function TargetsIoHeaderDirective () {
                     $scope.dashboardSelected = true;
                 }
 
+                var dashboardViewUrlRegExp = new RegExp('browse/.*/.*/');
+
+                $scope.dashboardView = dashboardViewUrlRegExp.test(window.location.href) ? true : false;
+                $scope.graphsLiveView = (window.location.href.indexOf("graphs-live") != -1) ? true : false;
+                $scope.graphsView = (window.location.href.indexOf("graphs/") != -1) ? true : false;
 
             }, 0);
 

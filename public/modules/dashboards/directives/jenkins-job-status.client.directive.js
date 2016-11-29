@@ -43,6 +43,7 @@ function JenkinsJobStatusDirective () {
 
         function activate(){
 
+            $scope.isOpen = false;
 
             $timeout(function(){
 

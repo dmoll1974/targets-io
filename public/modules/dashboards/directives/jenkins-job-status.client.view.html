@@ -1,12 +1,14 @@
-<md-toolbar ng-class="{'jenkins-job-running': jenkinsJobStatus === 'Running' && !inHeader,'jenkins-job-stopped': jenkinsJobStatus === 'Stopped'&& !inHeader, 'jenkins-job-queued': jenkinsJobStatus === 'Queued'&& !inHeader }">
-    <div class="md-toolbar-tools" layout="row" layout-align="space-between">
+<md-toolbar ng-cloak ng-class="{'jenkins-job-running': jenkinsJobStatus === 'Running' && !inHeader,'jenkins-job-stopped': jenkinsJobStatus === 'Stopped'&& !inHeader, 'jenkins-job-queued': jenkinsJobStatus === 'Queued'&& !inHeader }">
+    <div ng-if="!inHeader"class="md-toolbar-tools" layout="row" layout-align="space-between">
 
         <div layout="row">
-            <div class="jenkins-logo md-padding"></div>
+            <div ng-if="!inHeader" class="jenkins-logo md-padding"></div>
             <h4 style="margin-left: 20px;">{{dashboard.jenkinsJobName | uppercase}}</h4>
         </div>
 
-        <div ng-if="!inHeader" layout="row" layout-align="start center">
+
+        <!--<div ng-if="!inHeader" layout="row" layout-align="start center">-->
+        <div layout="row" layout-align="start center">
 
             <h5  ng-cloak ng-if="jenkinsJobStatus">Status: {{jenkinsJobStatus}} </h5>
             <h5 ng-if="jenkinsJobStatus === 'Queued'">, {{jenkinsJobQueueWhy}}</h5>
@@ -15,19 +17,19 @@
 
         <div layout="row">
 
-            <md-button ng-if="jenkinsJobStatus === 'Stopped' || jenkinsJobStatus === 'Never built before'"  class="md-icon-button" data-ng-click="startJob()">
+            <md-button ng-if="!inHeader && (jenkinsJobStatus === 'Stopped' || jenkinsJobStatus === 'Never built before')"  class="md-icon-button" data-ng-click="startJob()">
                 <md-icon md-menu-origin md-svg-src="images/assets/ic_play_arrow_white_36px.svg"></md-icon>
                 <md-tooltip>
                     Start Jenkins job
                 </md-tooltip>
             </md-button>
-            <md-button ng-if="jenkinsJobStatus === 'Running' || jenkinsJobStatus === 'Queued'" class="md-icon-button" data-ng-click="stopJob()">
+            <md-button ng-if="!inHeader && (jenkinsJobStatus === 'Running' || jenkinsJobStatus === 'Queued')" class="md-icon-button" data-ng-click="stopJob()">
                 <md-icon md-menu-origin md-svg-src="images/assets/ic_stop_white_36px.svg"></md-icon>
                 <md-tooltip>
                     Stop Jenkins job
                 </md-tooltip>
             </md-button>
-            <md-button ng-if="!authenticationFailed && jenkinsJobStatus !== 'Queued'" aria-label="Configure Jenkins job" class="md-icon-button"
+            <md-button ng-if="!inHeader && !authenticationFailed && jenkinsJobStatus !== 'Queued'" aria-label="Configure Jenkins job" class="md-icon-button"
                        ng-click="jenkinsJobConsole()">
                 <md-icon md-menu-origin md-svg-src="images/assets/ic_live_tv_white_36px.svg"></md-icon>
                 <md-tooltip>
@@ -36,7 +38,7 @@
 
             </md-button>
 
-            <md-button ng-if="!authenticationFailed" aria-label="Configure Jenkins job" class="md-icon-button"
+            <md-button ng-if="!inHeader && !authenticationFailed" aria-label="Configure Jenkins job" class="md-icon-button"
                        ng-click="jenkinsJobConfig()">
                 <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_white_24px.svg"></md-icon>
                 <md-tooltip>
@@ -48,8 +50,64 @@
 
 
 
+        </div>
+    </div>
+
+    <div ng-cloak ng-if="inHeader" layout="row" layout-align="end center">
+
+        <md-divider class="vertical-divider"></md-divider>
+
+        <div class="jenkins-logo jenkins-header md-padding"></div>
+
+        <div layout="row" ng-cloak layout-align="start center">
+            <h4  style="margin-left: 20px;">{{dashboard.jenkinsJobName | uppercase}}</h4>
+
+            <h5 class="md-padding" ng-cloak ng-show="jenkinsJobStatus && !authenticationFailed">Status: {{jenkinsJobStatus}} </h5>
+            <h5 class="md-padding" ng-cloak ng-show="!jenkinsJobStatus && authenticationFailed">Status: Not logged in </h5>
+            <h5 class="md-padding" ng-cloak ng-show="jenkinsJobStatus === 'Queued' && !authenticationFailed">, {{jenkinsJobQueueWhy}}</h5>
 
         </div>
+
+        <md-button ng-if="inHeader && authenticationFailed"  class="md-primary jenkins-header" data-ng-click="signin()">
+            <md-icon md-menu-origin md-svg-src="images/assets/ic_input_white_36px.svg"></md-icon>
+            <md-tooltip>
+                Log in
+            </md-tooltip>
+        </md-button>
+        <md-button ng-if="inHeader && (jenkinsJobStatus === 'Stopped' || jenkinsJobStatus === 'Never built before')"  class="md-primary jenkins-header" data-ng-click="startJob()">
+            <md-icon md-menu-origin md-svg-src="images/assets/ic_play_arrow_white_36px.svg"></md-icon>
+            <md-tooltip>
+                Start Jenkins job
+            </md-tooltip>
+        </md-button>
+        <md-button ng-if="inHeader && (jenkinsJobStatus === 'Running' || jenkinsJobStatus === 'Queued')" class="md-primary jenkins-header" data-ng-click="stopJob()">
+            <md-icon md-menu-origin md-svg-src="images/assets/ic_stop_white_36px.svg"></md-icon>
+            <md-tooltip>
+                Stop Jenkins job
+            </md-tooltip>
+        </md-button>
+        <md-button ng-if="inHeader && !authenticationFailed && jenkinsJobStatus !== 'Queued'" aria-label="Configure Jenkins job" class="md-primary jenkins-header"
+                   ng-click="jenkinsJobConsole()">
+            <md-icon md-menu-origin md-svg-src="images/assets/ic_live_tv_white_36px.svg"></md-icon>
+            <md-tooltip>
+                Go to console output
+            </md-tooltip>
+
+        </md-button>
+
+        <md-button ng-if="inHeader && !authenticationFailed" aria-label="Configure Jenkins job" class="md-primary jenkins-header"
+                   ng-click="jenkinsJobConfig()">
+            <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_white_24px.svg"></md-icon>
+            <md-tooltip>
+                Configure Jenkins job
+            </md-tooltip>
+
+        </md-button>
+        <md-divider class="vertical-divider"></md-divider>
+
+        <!--<md-button ng-cloak ng-show="authenticationFailed" md-no-ink class="md-primary md-raised" data-ng-click="signin()">Sign in</md-button>-->
+
+
     </div>
 </md-toolbar>
 
