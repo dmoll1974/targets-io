@@ -46,8 +46,12 @@
                 </md-tooltip>
 
             </md-button>
-            <md-button ng-if="authenticationFailed" md-no-ink class="md-primary md-raised" data-ng-click="signin()">Sign in</md-button>
-
+            <md-button ng-if="!inHeader && authenticationFailed" data-ng-click="signin()">
+                <md-icon md-menu-origin md-svg-src="images/assets/ic_input_white_36px.svg"></md-icon>
+                <md-tooltip>
+                    Log in
+                </md-tooltip>
+            </md-button>
 
 
         </div>
