@@ -10,6 +10,9 @@
                                 <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /
                                 <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>
                                   /  {{vm.testRun.testRunIdBreadCrump}}
+                                <md-tooltip>
+                                    {{vm.testRun.testRunId}}
+                                </md-tooltip>
                             </span>
                             <div ng-if="vm.graphsType === 'testrun'"  >
                                 <md-button  class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, vm.testRun, false)">
@@ -26,7 +29,10 @@
                             <span ng-if="vm.graphsType === 'graphs-live'" style="white-space: nowrap;">
                                 <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
                                 <a data-ng-href="/#!/browse/{{vm.productName}}/{{vm.dashboardName}}/">{{vm.dashboardName}}</a>
-                                <p ng-if="vm.runningTest.testRunId"> / {{vm.runningTest.testRunId}}</p>
+                                 / {{vm.runningTest.testRunIdBreadCrump || ''}}
+                                <md-tooltip>
+                                    {{vm.runningTest.testRunId}}
+                                </md-tooltip>
                             </span>
                             <div ng-if="vm.runningTest && vm.graphsType === 'graphs-live'"  >
                                 <md-button  class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, vm.runningTest, true)">

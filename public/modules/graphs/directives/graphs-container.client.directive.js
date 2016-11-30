@@ -219,6 +219,12 @@ function GraphsContainerDirective () {
           if (runningTest.start && !$state.params.zoomRange) {
 
             vm.runningTest = runningTest;
+
+            var runningTestBreadCrumpLength = $stateParams.productName.length + $stateParams.dashboardName.length + runningTest.testRunId.length;
+
+            vm.runningTest.testRunIdBreadCrump = ( runningTestBreadCrumpLength < 35)? runningTest.testRunId : runningTest.testRunId.substring(0,(35-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
+
+
             var runningTestOption = {};
             runningTestOption.value = new Date(runningTest.start).getTime();
             runningTestOption.label = 'Since start test run';
