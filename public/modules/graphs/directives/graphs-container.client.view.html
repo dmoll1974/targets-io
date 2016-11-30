@@ -26,7 +26,7 @@
                             <span ng-if="vm.graphsType === 'graphs-live'" style="white-space: nowrap;">
                                 <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
                                 <a data-ng-href="/#!/browse/{{vm.productName}}/{{vm.dashboardName}}/">{{vm.dashboardName}}</a>
-                                 / {{vm.runningTest.testRunId || ''}}
+                                <p ng-if="vm.runningTest.testRunId"> / {{vm.runningTest.testRunId}}</p>
                             </span>
                             <div ng-if="vm.runningTest && vm.graphsType === 'graphs-live'"  >
                                 <md-button  class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, vm.runningTest, true)">
