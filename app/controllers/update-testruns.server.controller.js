@@ -31,28 +31,30 @@ function updateTestRuns (req, res) {
 
       Testrun.findOne({testRunId: testRunSummary.testRunId}, function(err, testRun){
 
-        if(testRun){
+        if(testRun) {
 
           testRunSummary.meetsRequirement = testRun.meetsRequirement;
           testRunSummary.benchmarkResultFixedOK = testRun.benchmarkResultFixedOK;
           testRunSummary.benchmarkResultPreviousOK = testRun.benchmarkResultPreviousOK;
 
-          testRunSummary.save(function(err, savedTestRunSummary){
-
-
-          })
-
-
           testRun.hasSummary = true;
 
           testRun.save(function(err, savedTestRun){
-
-
           })
 
 
-
         }
+
+        testRunSummary.annotations = (testRunSummary.annotations === 'None') ? undefined : testRunSummary.annotations;
+
+        testRunSummary.save(function(err, savedTestRunSummary){
+        })
+
+
+
+
+
+
 
       })
 
