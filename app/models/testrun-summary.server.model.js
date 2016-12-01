@@ -88,6 +88,9 @@ var TestrunSummarySchema = new Schema({
   'buildResultsUrl': String,
   'buildResultsUrlDisplay': String,
   'humanReadableDuration': String,
+  'meetsRequirement': Boolean,
+  'benchmarkResultFixedOK': Boolean,
+  'benchmarkResultPreviousOK': Boolean,
   'annotations': String,
   'metrics': [testRunSummaryMetricSchema],
    'markDown': {
@@ -104,6 +107,14 @@ var TestrunSummarySchema = new Schema({
     {
       read: 'primary'
     });
+
+TestrunSummarySchema.pre('save', function (next) {
+  this.model('Testrun').update({ testRunId: this.testRunId }, { $set: { 'hasSummary': true } } , next);
+});
+
+TestrunSummarySchema.pre('remove', function (next) {
+  this.model('Testrun').update({ testRunId: this.testRunId }, { $set: { 'hasSummary': false } }, next);
+});
 
 TestrunSummarySchema.index({
   testRunId: 1,

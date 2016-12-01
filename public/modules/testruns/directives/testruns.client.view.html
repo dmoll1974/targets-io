@@ -26,7 +26,7 @@
 
         <table class="table testrun">
             <colgroup ng-if="!showBenchmarks">
-                <col span="1" style="width: 32%;">
+                <col span="1" style="width: 30%;">
                 <col span="1" style="width: 4%;">
                 <col span="1" style="width: 4%;">
                 <col span="1" style="width: 18%;">
@@ -36,11 +36,12 @@
                 <col span="1" style="width: 8%;">
                 <col span="1" style="width: 8%;">
                 <col span="1" style="width: 8%;">
+                <col span="1" style="width: 2%;">
                 <col span="1" style="width: 2%;">
                 <col span="1" style="width: 2%;">
             </colgroup>
             <colgroup ng-if="showBenchmarks">
-                <col span="1" style="width: 25%;">
+                <col span="1" style="width: 23%;">
                 <col span="1" style="width: 4%;">
                 <col span="1" style="width: 4%;">
                 <col span="1" style="width: 18%;">
@@ -50,6 +51,7 @@
                 <col span="1" style="width: 8%;">
                 <col span="1" style="width: 8%;">
                 <col span="1" style="width: 8%;">
+                <col span="1" style="width: 2%;">
                 <col span="1" style="width: 2%;">
                 <col span="1" style="width: 2%;">
             </colgroup>
@@ -71,6 +73,7 @@
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg"></md-icon>
 
                 </th>
+                <th>Summary</th>
                 <th ng-if="!showBenchmarks"></th>
                 <th></th>
                 <th>
@@ -128,70 +131,104 @@
                 <td></td>
                 <td></td>
             </tr>
-            <tr ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' }"
-                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true}" valign="center" >
+            <tr  ng-repeat="testRun in testRuns | orderBy:'end':true | filter: {completed: completedTestRunsOnly ? true : '' }"
+                ng-class="{'warning': (testRun.testRunId === dashboard.baseline && dashboard.useInBenchmark === true), 'hover-row': true, 'archived-test-run-row': !testRun.graphiteDataExists}" valign="center" >
+
                 <td >
-                        <div class="pointer" data-ng-click="testRunDetails(testRun)">{{testRun.testRunId}}</div>
+                        <div class="pointer" data-ng-click="testRun.graphiteDataExists && testRunDetails(testRun)">{{testRun.testRunId}}</div>
+                        <md-tooltip ng-if="!testRun.graphiteDataExists">
+                            Data no longer available in Graphite, please open test run summary.
+                        </md-tooltip>
 
                 </td>
-                <td class="testrun-annotations-button pointer testrun">
+                <td  class="pointer testrun">
                     <div >
-                        <md-button  ng-show="testRun.annotations" class="md-icon-button testrun-annotations-button" data-ng-click="showAnnotations($event, testRun, false)">
-                            <md-icon md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
+                        <md-button  ng-show="testRun.annotations"  class="md-icon-button " data-ng-click="testRun.graphiteDataExists && showAnnotations($event, testRun, false)">
+                            <md-icon ng-class="(testRun.graphiteDataExists) ? 'testrun-annotations-button' : 'archived'" md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>
                             <md-tooltip>
                                 {{testRun.annotations}}
                             </md-tooltip>
                         </md-button>
                     </div>
+
                 </td>
-                <td class="pointer" data-ng-click="testRunDetails(testRun)">
+                <td class="pointer" data-ng-click="testRun.graphiteDataExists && testRunDetails(testRun)">
                     {{testRun.productRelease}}
+                    <md-tooltip ng-if="!testRun.graphiteDataExists">
+                        Data no longer available in Graphite, please open test run summary.
+                    </md-tooltip>
                 </td>
-                <td class="pointer" data-ng-click="testRunDetails(testRun)">
+                <td class="pointer" data-ng-click="testRun.graphiteDataExists && testRunDetails(testRun)">
                     {{testRun.start | date:'EEEE, dd-M-yyyy H:mm:ss'}}
+                    <md-tooltip ng-if="!testRun.graphiteDataExists">
+                        Data no longer available in Graphite, please open test run summary.
+                    </md-tooltip>
                 </td>
-                <td class="pointer" data-ng-click="testRunDetails(testRun)">
+                <td class="pointer" data-ng-click="testRun.graphiteDataExists && testRunDetails(testRun)">
                     {{testRun.end | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                     <md-progress-linear data-ng-if="runningTest && $index < numberOfRunningTests" flex md-mode="indeterminate"></md-progress-linear>
 
                 </td>
-                <td class="pointer" data-ng-click="testRunDetails(testRun)">
+                <td class="pointer" data-ng-click="testRun.graphiteDataExists && testRunDetails(testRun)">
                     <div layout="row">
                         <md-icon ng-if="testRun.completed === false" class="incomplete" md-svg-src="images/assets/ic_broken_image_black_24px.svg"><md-tooltip>Not completed</md-tooltip></md-icon>
                         <p style="margin-bottom: 0px;">{{testRun.humanReadableDuration}}</p>
                     </div>
+                    <md-tooltip ng-if="!testRun.graphiteDataExists">
+                        Data no longer available in Graphite, please open test run summary.
+                    </md-tooltip>
                 </td>
                 <td  header-class="text-center" class="text-center pointer testrun"
-                    data-ng-click="(testRun.meetsRequirement === true || testRun.meetsRequirement === false ) && testRunRequirements(testRun)"><!--<span-->
+                    data-ng-click="(testRun.meetsRequirement === true || testRun.meetsRequirement === false ) && testRunRequirements(testRun) && testRun.graphiteDataExists"><!--<span-->
                         <!--ng-class="testRun.meetsRequirement === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.meetsRequirement === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.meetsRequirement === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin text-alert center' ))"></span>-->
-                    <md-icon class="passed" ng-if="testRun.meetsRequirement === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
-                    <md-icon class="failed" ng-if="testRun.meetsRequirement === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
+                    <md-icon ng-class="(testRun.graphiteDataExists)? 'passed' : 'archived'" ng-if="testRun.meetsRequirement === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
+                    <md-icon ng-class="(testRun.graphiteDataExists)? 'failed' : 'archived'" ng-if="testRun.meetsRequirement === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
                     <md-icon ng-if="testRun.meetsRequirement === null" md-svg-src="images/assets/close-circle-outline.svg"></md-icon>
                     <div layout="row" ng-if="testRun.meetsRequirement === 'pending'" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="35" ></md-progress-circular></div>
+                    <md-tooltip ng-if="!testRun.graphiteDataExists">
+                        Data no longer available in Graphite, please open test run summary.
+                    </md-tooltip>
                 </td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.previousBuild}}"
-                    class="text-center pointer testrun" data-ng-click="(testRun.benchmarkResultPreviousOK === true || testRun.benchmarkResultPreviousOK === false) && testRunPreviousBuildBenchmark(testRun)"><!--<span-->
+                    class="text-center pointer testrun" data-ng-click="(testRun.benchmarkResultPreviousOK === true || testRun.benchmarkResultPreviousOK === false) && testRunPreviousBuildBenchmark(testRun)" && testRun.graphiteDataExists><!--<span-->
                         <!--ng-class="testRun.benchmarkResultPreviousOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultPreviousOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultPreviousOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>-->
-                    <md-icon class="passed" ng-if="testRun.benchmarkResultPreviousOK === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
-                    <md-icon class="failed" ng-if="testRun.benchmarkResultPreviousOK === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
+                    <md-icon ng-class="(testRun.graphiteDataExists)? 'passed' : 'archived'" ng-if="testRun.benchmarkResultPreviousOK === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
+                    <md-icon ng-class="(testRun.graphiteDataExists)? 'failed' : 'archived'" ng-if="testRun.benchmarkResultPreviousOK === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
                     <md-icon ng-if="testRun.benchmarkResultPreviousOK === null" md-svg-src="images/assets/close-circle-outline.svg"></md-icon>
                     <div layout="row" ng-if="testRun.benchmarkResultPreviousOK === 'pending'" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="35" ></md-progress-circular></div>
+                    <md-tooltip ng-if="!testRun.graphiteDataExists">
+                        Data no longer available in Graphite, please open test run summary.
+                    </md-tooltip>
                 </td>
                 <td ng-if="!showBenchmarks"></td>
                 <td data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)" header-class="text-center" title="{{testRun.baseline}}"
-                    class="text-center pointer testrun" data-ng-click="(testRun.benchmarkResultFixedOK === true || testRun.benchmarkResultFixedOK === false) && testRunFixedBaselineBenchmark(testRun)"><!--<span-->
+                    class="text-center pointer testrun" data-ng-click="(testRun.benchmarkResultFixedOK === true || testRun.benchmarkResultFixedOK === false) && testRunFixedBaselineBenchmark(testRun) && testRun.graphiteDataExists"><!--<span-->
                         <!--ng-class="testRun.benchmarkResultFixedOK === true ? 'fa-lg fa fa-check-circle-o text-success center' : (testRun.benchmarkResultFixedOK === false ? 'fa-lg fa fa-exclamation-circle text-danger center' : (testRun.benchmarkResultFixedOK === null ? 'fa-lg fa fa-times-circle text-alert center': 'fa-lg fa fa-refresh fa-spin  text-alert center' ))"></span>-->
-                    <md-icon class="passed"  ng-if="testRun.benchmarkResultFixedOK === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
-                    <md-icon class="failed" ng-if="testRun.benchmarkResultFixedOK === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
+                    <md-icon ng-class="(testRun.graphiteDataExists)? 'passed' : 'archived'"  ng-if="testRun.benchmarkResultFixedOK === true" md-svg-src="images/assets/check-circle-outline.svg"></md-icon>
+                    <md-icon ng-class="(testRun.graphiteDataExists)? 'failed' : 'archived'" ng-if="testRun.benchmarkResultFixedOK === false" md-svg-src="images/assets/alert-circle-outline.svg"></md-icon>
                     <md-icon ng-if="testRun.benchmarkResultFixedOK === null" md-svg-src="images/assets/close-circle-outline.svg"></md-icon>
                     <div layout="row" ng-if="testRun.benchmarkResultFixedOK === 'pending'" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="35"></md-progress-circular></div>
+                    <md-tooltip ng-if="!testRun.graphiteDataExists">
+                        Data no longer available in Graphite, please open test run summary.
+                    </md-tooltip>
                 </td>
                 <td  ng-if="!showBenchmarks"></td>
                 <td  data-ng-if="showBenchmarks && !(runningTest && $index < numberOfRunningTests)">
                     <md-icon md-svg-src="images/assets/ic_check_black_36px.svg" ng-if="testRun.testRunId === dashboard.baseline"></md-icon>
+                    <md-tooltip ng-if="!testRun.graphiteDataExists">
+                        Data no longer available in Graphite, please open test run summary.
+                    </md-tooltip>
+                </td>
+                <td class="text-center pointer testrun">
+                    <md-button  ng-show="testRun.hasSummary" class="testrun-summary-icon-button" data-ng-click="viewTestRunSummary(testRun)">
+                        <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
+                    </md-button>
+                    <md-tooltip>
+                        Open test run summary
+                    </md-tooltip>
                 </td>
                 <td ng-if="!showBenchmarks"></td>
-                <td >
+                <td ng-if="testRun.graphiteDataExists">
                     <md-menu style="padding-top: 0px; padding-bottom: 0px;" >
                         <div aria-label="Open test run menu" class="md-icon-button"
                                    ng-click="openMenu($mdOpenMenu, $event)">
@@ -201,10 +238,10 @@
                             </md-tooltip>
                         </div>
                         <md-menu-content width="4">
-                            <md-menu-item ng-show="progress === undefined">
+                            <md-menu-item ng-show="progress === undefined && !testRun.hasSummary">
                                 <md-button  class="targets-io-menu-button" data-ng-click="viewTestRunSummary(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
-                                    VIEW TEST RUN SUMMARY
+                                    CREATE TEST RUN SUMMARY
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item ng-show="progress === undefined">
@@ -260,7 +297,7 @@
                         </md-menu-content>
                     </md-menu>
                 </td>
-                <td  >
+                <td ng-if="testRun.graphiteDataExists"  >
                     <md-checkbox md-no-ink aria-label="select test run" ng-model="testRun.selected"  ng-change="setTestRunsSelected(testRun.selected)" style="margin: 0px;">
                     </md-checkbox>
                 </td>

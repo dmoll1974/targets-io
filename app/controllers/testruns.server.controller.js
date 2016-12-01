@@ -22,6 +22,7 @@ var mongoose = require('mongoose'),
     RunningTest = mongoose.model('RunningTest'),
     Release = mongoose.model('Release'),
     cache = require('./redis.server.controller'),
+    config = require('../../config/config'),
     ss = require('simple-statistics');
 
 
@@ -533,68 +534,118 @@ function humanReadableDuration(durationInMs){
  */
 function testRunsForDashboard(req, res) {
 
-  Testrun.find({
+
+
+  TestrunSummary.find({
     $and: [
       { productName: req.params.productName },
-      { dashboardName: req.params.dashboardName }
+      { dashboardName: req.params.dashboardName },
+      { start:  {$lt: new Date((new Date())- 1000 * 60 * 60 * 24 * config.graphiteRetentionPeriod.split('d')[0])}}
     ]
-  }).sort({end: -1 }).limit(req.params.limit).exec(function(err, testRuns) {
-    if (err) {
-      return res.status(400).send({message: errorHandler.getErrorMessage(err)});
-    } else {
+  }, function(err, archivedTestRunSummaries){
 
-      /* check if fixed baseline is in the results */
-     Product.findOne({name: req.params.productName}).exec(function(err, product){
+    var query =  (req.params.completedTestRunsOnly === "true") ?
+      [
+        { productName: req.params.productName },
+        { dashboardName: req.params.dashboardName },
+        { completed: req.params.completedTestRunsOnly }
+      ]
+    :
+      [
+        { productName: req.params.productName },
+        { dashboardName: req.params.dashboardName }
+      ];
 
 
-      Dashboard.findOne({
-        $and: [
-          { productId: product._id },
-          { name: req.params.dashboardName }
-        ]
-      }).exec(function(err, dashboard){
 
-        var index = testRuns.map(function(testRun){return testRun.testRunId;}).indexOf(dashboard.baseline);
+      Testrun.find({
+        $and: query
+      }).sort({end: -1 }).limit(req.params.limit).exec(function(err, testRuns) {
+        if (err) {
+          return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+        } else {
 
-        /* if baseline is present in testRuns, return testRuns*/
-        if (index !== -1){
+          /* check if fixed baseline is in the results */
+         Product.findOne({name: req.params.productName}).exec(function(err, product){
 
-          res.jsonp(testRuns);
 
-        }else{
-
-          /* else fetch the baseline and push to testRuns */
-
-          Testrun.findOne({
+          Dashboard.findOne({
             $and: [
-              { productName: product.name },
-              { dashboardName: dashboard.name },
-              { testRunId: dashboard.baseline }
+              { productId: product._id },
+              { name: req.params.dashboardName }
             ]
-          }).exec(function(err, baseline){
+          }).exec(function(err, dashboard){
 
-            if(baseline){
+            var index = testRuns.map(function(testRun){return testRun.testRunId;}).indexOf(dashboard.baseline);
 
-              testRuns.push(baseline);
+            /* if baseline is present in testRuns, return testRuns*/
+            if (index !== -1){
+
               res.jsonp(testRuns);
 
             }else{
 
-              res.jsonp(testRuns);
+              /* else fetch the baseline and push to testRuns */
+
+              Testrun.findOne({
+                $and: [
+                  { productName: product.name },
+                  { dashboardName: dashboard.name },
+                  { testRunId: dashboard.baseline }
+                ]
+              }).exec(function(err, baseline){
+
+                if(baseline){
+
+                  testRuns.push(baseline);
+
+                  if(archivedTestRunSummaries.length > 0 && testRuns.length < req.params.limit){
+
+                    _.each(archivedTestRunSummaries, function(testRunSummary){
+
+                      testRuns.push(createTestRunFromSummary(testRunSummary))
+                    })
+                  }
+
+                  res.jsonp(testRuns);
+
+                }else{
+
+                  if(archivedTestRunSummaries.length > 0 && testRuns.length < req.params.limit){
+
+                    _.each(archivedTestRunSummaries, function(testRunSummary){
+
+                      testRuns.push(createTestRunFromSummary(testRunSummary))
+                    })
+                  }
+
+                  res.jsonp(testRuns);
+
+                }
+
+              })
 
             }
 
           })
 
+         })
+
         }
-
-      })
-
-     })
-
-    }
+      });
   });
 
+}
+
+
+function createTestRunFromSummary(testRunSummary){
+
+  var testRun = new Testrun(testRunSummary);
+
+  testRun.hasSummary = true;
+  testRun.graphiteDataExists = false;
+
+  return testRun;
 }
 
 function runningTestsForDashboard(req, res) {

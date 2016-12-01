@@ -38,6 +38,7 @@ var testRunMetricSchema = new Schema({
     default: null
   },
   'annotation': String,
+
   'targets': [testRunTargetSchema]
 
 },
@@ -92,6 +93,15 @@ var TestrunSchema = new Schema({
       type: Number
   },
   'lastUpdated': Date,
+  'hasSummary': {
+    type: Boolean,
+    default: false
+  },
+  'graphiteDataExists': {
+    type: Boolean,
+    default: true
+  },
+
   'metrics': [testRunMetricSchema]
 }, { toObject: { getters: true } ,
       read: 'primary'

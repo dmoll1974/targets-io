@@ -30,7 +30,8 @@ angular.module('core').factory('Utils', [
       sortType: 'tags[0].text',
       reset: reset,
       loadNumberOfTestRuns: 10,
-      productSelectedIndex: 0
+      productSelectedIndex: 0,
+      completedTestRunsOnly: true
 
 
     };
@@ -58,6 +59,7 @@ angular.module('core').factory('Utils', [
         Utils.sortReverse = false;
         Utils.sortType = 'tags[0].text';
         Utils.loadNumberOfTestRuns = 10;
+        Utils.completedTestRunsOnly = true;
 
     }
     function dynamicSortTags(sortOrderParam) {

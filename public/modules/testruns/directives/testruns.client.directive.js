@@ -91,6 +91,15 @@ function TestrunsDirective () {
       }
     });
 
+    $scope.$watch('completedTestRunsOnly', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        Utils.completedTestRunsOnly = newVal;
+        $scope.testRuns = [];
+        $scope.loading = true;
+        getTestruns()
+      }
+    });
+
     $scope.$on('$destroy', function () {
       // Make sure that the interval is destroyed too
       $interval.cancel(spinner);
@@ -203,9 +212,7 @@ function TestrunsDirective () {
       $scope.dashboardName = $stateParams.dashboardName;
 
 
-
-      /* By default, show completed test runs only */
-      $scope.completedTestRunsOnly = true;
+      $scope.completedTestRunsOnly = Utils.completedTestRunsOnly;
 
 
       $scope.loadNumberOfTestRuns = Utils.loadNumberOfTestRuns;
@@ -277,7 +284,7 @@ function TestrunsDirective () {
     function getTestruns(){
 
       /* get test runs */
-      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Utils.loadNumberOfTestRuns).success(function (testRuns) {
+      TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Utils.loadNumberOfTestRuns, $scope.completedTestRunsOnly).success(function (testRuns) {
 
 
         /* determine if there are only incomplete test runs*/
@@ -485,7 +492,7 @@ function TestrunsDirective () {
         $q.all(arrayOfPromises).then(function (results) {
           /* refresh test runs*/
           setTimeout(function () {
-            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName).success(function (testRuns) {
+            TestRuns.listTestRunsForDashboard($scope.productName, $scope.dashboardName, Utils.loadNumberOfTestRuns, $scope.completedTestRunsOnly).success(function (testRuns) {
               $scope.testRuns = testRuns;
             }, function (errorResponse) {
               $scope.error = errorResponse.data.message;

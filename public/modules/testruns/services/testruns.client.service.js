@@ -70,8 +70,8 @@ angular.module('events').factory('TestRuns', [
       return $http.get('/recent-testruns/' + numberOfDays);
 
     }
-    function listTestRunsForDashboard(productName, dashboardName, limit) {
-      return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + limit );
+    function listTestRunsForDashboard(productName, dashboardName, limit, completedTestRunsOnly) {
+      return $http.get('/testruns-dashboard/' + productName + '/' + dashboardName + '/' + limit + '/' + completedTestRunsOnly );
     }
 
     function listRunningTestsForDashboard(productName, dashboardName, limit) {

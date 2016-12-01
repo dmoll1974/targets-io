@@ -207,7 +207,10 @@ function TestRunSummaryDirective () {
         $scope.testRunSummary.start = testRun.start;
         $scope.testRunSummary.end = testRun.end;
         $scope.testRunSummary.humanReadableDuration = testRun.humanReadableDuration;
-        $scope.testRunSummary.annotations = (testRun.annotations)? testRun.annotations : 'None';
+        $scope.testRunSummary.meetsRequirement = testRun.meetsRequirement;
+        $scope.testRunSummary.benchmarkResultFixedOK = testRun.benchmarkResultFixedOK;
+        $scope.testRunSummary.benchmarkResultPreviousOK = testRun.benchmarkResultPreviousOK;
+        $scope.testRunSummary.annotations = testRun.annotations;
         if (testRun.buildResultsUrl){
           $scope.testRunSummary.buildResultsUrl = testRun.buildResultsUrl;
           /* in case of Jenkins CI server, get last two url parameters to display */
@@ -659,9 +662,8 @@ function TestRunSummaryDirective () {
           $mdToast.show(toast.content('Test run summary deleted from db')).then(function(response) {
 
           });
-          /* reload*/
-          $state.go($state.current, {}, { reload: true });
-        });
+          /* go to test run overview */
+          $state.go('viewDashboard', {productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});        });
       }, function () {
       });
     };

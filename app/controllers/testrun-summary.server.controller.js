@@ -315,7 +315,7 @@ function createTestrunSummary(req, res){
         if (!GatlingDetailsResponse) {
 
 
-          Jenkins.getJenkinsData(savedTestRunSummary.buildResultsUrl, false, savedTestRunSummary.start, savedTestRunSummary.end, function (response) {
+          Jenkins.getJenkinsData(savedTestRunSummary.buildResultsUrl, false, savedTestRunSummary.start, savedTestRunSummary.end, savedTestRunSummary.productName, savedTestRunSummary.dashboardName, function (response) {
 
             if(response.status === 'fail') {
 
@@ -368,7 +368,7 @@ function updateTestrunSummary(req, res){
 
 function deleteTestrunSummary (req, res){
 
-  TestrunSummary.remove({
+  TestrunSummary.findOne({
     $and: [
       { productName: req.params.productName },
       { dashboardName: req.params.dashboardName },
@@ -379,7 +379,13 @@ function deleteTestrunSummary (req, res){
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
-      res.jsonp(testRunSummary);
+
+       testRunSummary.remove(function(err, removedTestRunSummary ){
+
+         res.jsonp(removedTestRunSummary);
+
+       })
+
     }
   })
 
