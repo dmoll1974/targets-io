@@ -327,14 +327,14 @@ function TargetsIoHeaderDirective () {
         function createFilterForProducts(query) {
             var upperCaseQuery = angular.uppercase(query);
             return function filterFn(product) {
-                return (product.name.indexOf(upperCaseQuery) === 0);
+                return (product.name.indexOf(upperCaseQuery) !== -1);
             };
         }
 
         function createFilterForDashboards(query) {
             var upperCaseQuery = angular.uppercase(query);
             return function filterFn(dashboard) {
-                return (dashboard.name.indexOf(upperCaseQuery) === 0);
+                return (dashboard.name.indexOf(upperCaseQuery) !== -1);
             };
         }
 
