@@ -751,6 +751,29 @@ div.jenkins-logo.jenkins-header {
 
 
 }
+.testrun-summary-icon-button-grey svg{
+
+    /*padding: 0px !important;*/
+    /*margin: 0px !important;*/
+    /*vertical-align: text-top !important;*/
+    /*min-height: 24px !important;*/
+    /*min-width: 24px !important;*/
+    /*height: 24px !important;*/
+    /*width: 24px !important;*/
+    fill: #e8e8e8;
+
+}
+.testrun-summary-icon-button-grey.md-button{
+
+    padding: 0px !important;
+    margin: 0px !important;
+    /*min-height: 24px !important;*/
+    /*min-width: 24px !important;*/
+    /*height: 24px !important;*/
+    /*width: 24px !important;*/
+
+
+}
 
 .archived-test-run-row{
 

@@ -220,10 +220,13 @@
                     </md-tooltip>
                 </td>
                 <td class="text-center pointer testrun">
-                    <md-button  ng-show="testRun.hasSummary" class="testrun-summary-icon-button" data-ng-click="viewTestRunSummary(testRun)">
+                    <md-button   ng-class="(testRun.hasSummary) ? 'testrun-summary-icon-button' : 'testrun-summary-icon-button-grey'" data-ng-click="viewTestRunSummary(testRun)">
                         <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
                     </md-button>
-                    <md-tooltip>
+                    <md-tooltip ng-if="!testRun.hasSummary">
+                        Create test run summary
+                    </md-tooltip>
+                    <md-tooltip ng-if="testRun.hasSummary">
                         Open test run summary
                     </md-tooltip>
                 </td>
@@ -238,12 +241,12 @@
                             </md-tooltip>
                         </div>
                         <md-menu-content width="4">
-                            <md-menu-item ng-show="progress === undefined && !testRun.hasSummary">
-                                <md-button  class="targets-io-menu-button" data-ng-click="viewTestRunSummary(testRun)">
-                                    <md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>
-                                    CREATE TEST RUN SUMMARY
-                                </md-button>
-                            </md-menu-item>
+                            <!--<md-menu-item ng-show="progress === undefined && !testRun.hasSummary">-->
+                                <!--<md-button  class="targets-io-menu-button" data-ng-click="viewTestRunSummary(testRun)">-->
+                                    <!--<md-icon md-svg-src="images/assets/ic_assignment_black_24px.svg"></md-icon>-->
+                                    <!--CREATE TEST RUN SUMMARY-->
+                                <!--</md-button>-->
+                            <!--</md-menu-item>-->
                             <md-menu-item ng-show="progress === undefined">
                                 <md-button class="targets-io-menu-button" data-ng-click="refreshTestrun(testRun)">
                                     <md-icon md-svg-src="images/assets/ic_refresh_black_36px.svg"
