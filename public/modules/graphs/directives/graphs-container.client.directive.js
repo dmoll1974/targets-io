@@ -222,7 +222,7 @@ function GraphsContainerDirective () {
 
             var runningTestBreadCrumpLength = $stateParams.productName.length + $stateParams.dashboardName.length + runningTest.testRunId.length;
 
-            vm.runningTest.testRunIdBreadCrump = ( runningTestBreadCrumpLength < 35)? runningTest.testRunId : runningTest.testRunId.substring(0,(35-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
+            vm.runningTest.testRunIdBreadCrump = ( runningTestBreadCrumpLength < 30)? runningTest.testRunId : runningTest.testRunId.substring(0,(30-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
 
 
             var runningTestOption = {};
