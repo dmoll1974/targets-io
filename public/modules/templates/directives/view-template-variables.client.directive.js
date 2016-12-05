@@ -89,7 +89,7 @@ function TemplateVariablesDirective () {
 
       ConfirmModal.itemType = 'Delete ';
       ConfirmModal.selectedItemId = '';
-      ConfirmModal.selectedItemDescription = 'selected variables';
+      ConfirmModal.selectedItemDescription = 'selected variable(s)';
       var modalInstance = $modal.open({
         templateUrl: 'ConfirmDelete.html',
         controller: 'ModalInstanceController',
