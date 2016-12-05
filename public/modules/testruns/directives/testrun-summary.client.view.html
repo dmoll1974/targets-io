@@ -166,23 +166,35 @@
 
             <h4>Metrics</h4>
             <div layout="row" ng-show="editMode">
-                <md-menu >
-                    <md-button id="addMetric" class="md-padding targets-io-menu-button"  aria-label="Add metric to test run summary"
-                               ng-click="openMenu($mdOpenMenu, $event)">
+                <!--<md-menu >-->
+                    <md-button ng-if="!showMetricToAddAutocomplete" id="addMetric" class="md-padding targets-io-menu-button"  aria-label="Add metric to test run summary"
+                               ng-click="toggleShowMetricToAddAutocomplete()">
                         <md-icon style="margin-right:16px;" md-svg-src="images/assets/ic_add_black_24px.svg"></md-icon>
                         Add metric
                         <md-tooltip>
                             Add metric to test run summary
                         </md-tooltip>
                     </md-button>
-                    <md-menu-content width="4">
-                        <md-menu-item ng-repeat="metricToAdd in metricsToAdd">
-                            <md-button class="targets-io-menu-button" data-ng-click="addMetricToTestRunSummary(metricToAdd)">
-                                {{metricToAdd.alias}}
-                            </md-button>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
+                    <md-autocomplete tabindex="1" ng-if="showMetricToAddAutocomplete === true" class="target-autocomplete"
+                                     md-input-id="metricToAddAutoComplete"
+                                     md-selected-item="metricToAdd"
+                                     md-search-text="metricToAddSearchText"
+                                     md-items="metricToAdd in filterMetricsToAdd(metricToAddSearchText)"
+                                     md-selected-item-change="addMetricToTestRunSummary(metricToAdd)"
+                                     md-item-text="metricToAdd.alias"
+                                     md-min-length="0"
+                                     md-no-cache="true"
+                                     md-autoselect="true"
+                                     placeholder="Click or type to select">
+                        <md-item-template>
+                            <span>{{metricToAdd.alias}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            No metric matching "{{metricToAddSearchText}}" was found.
+                        </md-not-found>
+                    </md-autocomplete>
+
+
                 <md-switch class="md-padding md-primary"  md-no-ink aria-label="Hide graphs" ng-model="hideGraphs" ng-class="{'switch-label-disabled': hideGraphs === false }">
                     CHANGE METRIC ORDER
                 </md-switch>

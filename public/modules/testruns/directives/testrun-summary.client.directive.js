@@ -33,6 +33,8 @@ function TestRunSummaryDirective () {
     $scope.openDeleteModal = openDeleteModal;
     $scope.saveAsPDF = saveAsPDF;
     $scope.preventLink = preventLink;
+    $scope.filterMetricsToAdd = filterMetricsToAdd;
+    $scope.toggleShowMetricToAddAutocomplete = toggleShowMetricToAddAutocomplete;
 
     /* Watches */
 
@@ -101,7 +103,7 @@ function TestRunSummaryDirective () {
       $scope.hideGraphs = false;
       $scope.showSpinner = false;
       $scope.testRunStillExists = true;
-
+      $scope.showMetricToAddAutocomplete = false;
 
       $scope.dragControlListeners = {
         accept: $scope.editMode && $scope.hideGraphs,
@@ -173,6 +175,32 @@ function TestRunSummaryDirective () {
 
         })
       })
+    }
+
+
+    function toggleShowMetricToAddAutocomplete(){
+
+      $scope.showMetricToAddAutocomplete = true;
+
+      setTimeout(function () {
+        document.querySelector('#metricToAddAutoComplete').focus();
+      }, 1);
+
+    }
+
+    function filterMetricsToAdd(query) {
+
+      var results = query ? $scope.metricsToAdd.filter( createFilterForMetricToAdd(query) ) : $scope.metricsToAdd;
+
+      return results;
+
+    }
+
+    function createFilterForMetricToAdd(query) {
+      var upperCaseQuery = angular.uppercase(query);
+      return function filterFn(metricToAdd) {
+        return (metricToAdd.alias.toUpperCase().indexOf(upperCaseQuery) !== -1  );
+      };
     }
 
 
@@ -471,7 +499,14 @@ function TestRunSummaryDirective () {
 
     function addMetricToTestRunSummary(addMetric){
 
-        $scope.testRunSummary.metrics.push(addMetric);
+      $scope.showMetricToAddAutocomplete = false;
+
+      //Patch for autocomplete which doesn't remove (https://github.com/angular/material/issues/32870)
+      if(angular.element('.md-scroll-mask')[0])
+        angular.element('.md-scroll-mask')[0].remove();
+
+
+      $scope.testRunSummary.metrics.push(addMetric);
 
         var toast = $mdToast.simple()
             .action('OK')
@@ -488,7 +523,6 @@ function TestRunSummaryDirective () {
         /* remove metric from menu items */
           var index= $scope.metricsToAdd.map(function(metricToAdd){return metricToAdd._id.toString()}).indexOf(addMetric._id.toString());
         $scope.metricsToAdd.splice(index, 1);
-
         $scope.updated = true;
     }
 
