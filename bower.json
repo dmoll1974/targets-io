@@ -28,7 +28,6 @@
     "underscore": "1.8.2",
     "angular-ui-router": "~0.2.11",
     "bootstrap-sass-official": "~3.3.3",
-    "angular-ui-bootstrap-datetimepicker": "~0.11.2",
     "components-font-awesome": "~4.3.0",
     "ng-tags-input": "~3.1.1",
     "zeroclipboard": "~2.2.0",
