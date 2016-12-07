@@ -13,7 +13,7 @@ function ViewEventsDirective () {
   return directive;
 
   /* @ngInject */
-  function ViewEventsDirectiveController ($scope, $state, $stateParams, Events, $filter, $rootScope, Dashboards, ConfirmModal, $modal) {
+  function ViewEventsDirectiveController ($scope, $state, $stateParams, Events, $filter, $rootScope, Dashboards, ConfirmModal, $modal, $q) {
 
 
     $scope.editEvent = editEvent;
