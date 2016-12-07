@@ -5,23 +5,19 @@
     <!--<div class="col-md-12">-->
     <form name="eventForm" autocomplete="off" >
         <div layout="column">
-            <div layout="column">
-                <div layout="row">
+            <div layout="column" id="time-picker-parent-div">
+                <div layout="row" layout-align="space-between center">
                     <md-input-container
                             md-is-error="eventForm.eventTimestamp.$invalid && (eventForm.$submitted || eventForm.eventTimestamp.$dirty || triedToSubmit === true)"
                             flex>
                         <label>Timestamp</label>
-                        <input name="eventTimestamp" type="text" ng-model="event.eventTimestamp" required/>
-                        <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss"
-                               ng-model="event.eventTimestamp" is-open="isOpen"/>
-
+                        <input name="eventTimestamp" type="text" ng-model="event.eventTimestamp | date:'EEEE, dd-M-yyyy H:mm:ss'" required/>
                         <div ng-messages="eventForm.eventTimestamp.$error"
                              ng-if="eventForm.$submitted || eventForm.productName.$touched || triedToSubmit === true">
                             <div ng-message="required">Timestamp is required.</div>
                         </div>
                     </md-input-container>
-                    <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
-                             data-ng-click="openCalendar($event)"></md-icon>
+                    <date-time-picker timestamp="event.eventTimestamp"></date-time-picker>
                 </div>
                 <md-input-container
                         md-is-error="eventForm.eventProductName.$invalid && (eventForm.$submitted || eventForm.eventProductName.$dirty || triedToSubmit === true)"
