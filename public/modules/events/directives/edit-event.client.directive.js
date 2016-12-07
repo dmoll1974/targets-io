@@ -13,7 +13,7 @@ function EditEventDirective () {
   return directive;
 
   /* @ngInject */
-  function EditEventDirectiveController ($scope, $state, Events, $filter, $rootScope, TestRuns) {
+  function EditEventDirectiveController ($scope, $state, Events, $filter, $rootScope, TestRuns, $timeout, Utils) {
 
 
     $scope.openCalendar = openCalendar;
@@ -30,6 +30,14 @@ function EditEventDirective () {
       $scope.event.dashboardName = $filter('uppercase')(val);
     }, true);
 
+
+    //$scope.$watch('event.eventTimestamp', function (newVal, oldVal) {
+    //   $timeout(function(){
+    //     $scope.event.eventTimestamp = $filter('date')(newVal, 'EEEE, dd-MM-yyyy HH:mm:ss', '+0100');
+    //   });
+    //}, true);
+
+
     /* activate */
 
     activate();
@@ -43,6 +51,7 @@ function EditEventDirective () {
       $scope.descriptions = Events.getDescriptions(Events.list);
       $scope.isOpen = false;
       $scope.triedToSubmit = false;
+
 
 
     }

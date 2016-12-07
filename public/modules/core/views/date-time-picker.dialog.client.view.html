@@ -1,0 +1,11 @@
+<md-dialog draggable class="pointer" aria-label="Date time picker">
+    <md-dialog-content>
+        <time-date-picker
+                      ng-model="dialogTimestamp"
+                      data-display-mode="full"
+                      on-save="saveTimestamp($value)"
+                      on-cancel="cancelTimestamp()"
+                      display-twentyfour="true">
+        </time-date-picker>
+    </md-dialog-content>
+</md-dialog>

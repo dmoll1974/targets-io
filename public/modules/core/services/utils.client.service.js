@@ -31,7 +31,8 @@ angular.module('core').factory('Utils', [
       reset: reset,
       loadNumberOfTestRuns: 10,
       productSelectedIndex: 0,
-      completedTestRunsOnly: true
+      completedTestRunsOnly: true,
+      dateTimePickerTimestamp: undefined
 
 
     };

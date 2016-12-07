@@ -30,7 +30,7 @@ module.exports = {
 				'public/lib/angular-busy/dist/angular-busy.css',
 				'public/lib/ng-table/dist/ng-table.css',
 				'public/lib/ng-tags-input/ng-tags-input.min.css',
-				'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css'
+				'public/lib/sc-date-time/dist/sc-date-time.css'
 
 
 			],
@@ -56,10 +56,8 @@ module.exports = {
 				'public/lib/ng-table/dist/ng-table.js',
 				'public/lib/ng-tags-input/ng-tags-input.min.js',
 				'public/lib/underscore/underscore-min.js',
-				'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
 				'public/lib/ng-clip/dest/ng-clip.min.js',
 				'public/lib/zeroclipboard/dist/ZeroClipboard.min.js',
-				'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js',
 				'public/lib/angular-utils-pagination/dirPagination.js',
 				'public/lib/dygraphs/dygraph-combined-dev.js',
 				'public/js/dygraph-extra.js',
@@ -67,7 +65,9 @@ module.exports = {
 				'public/lib/socket.io-client/dist/socket.io.min.js',
 				'public/lib/pdfmake-dist/build/pdfmake.min.js',
 				'public/lib/pdfmake-dist/build/vfs_fonts.js',
-				'public/lib/ng-sortable/dist/ng-sortable.js'
+				'public/lib/ng-sortable/dist/ng-sortable.js',
+				'public/lib/sc-date-time/dist/sc-date-time.js'
+
 
 			]
 		},

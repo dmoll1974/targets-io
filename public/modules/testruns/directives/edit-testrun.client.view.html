@@ -6,39 +6,33 @@
     <form name="testrunForm" autocomplete="off" >
         <div layout="column">
             <div layout="column">
-                <div layout="row">
+                <div layout="row" layout-align="space-between center">
                     <md-input-container
                             md-is-error="testrunForm.start.$invalid && (testrunForm.$submitted || testrunForm.start.$dirty || triedToSubmit === true)"
                             flex>
                         <label>start</label>
-                        <input name="start" type="text" ng-model="testrun.start" required/>
-                        <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss"
-                               ng-model="testrun.start" is-open="isOpenStart">
+                        <input name="start" type="text" ng-model="testrun.start | date:'EEEE, dd-M-yyyy H:mm:ss'" required/>
 
                         <div ng-messages="testrunForm.start.$error"
                              ng-if="testrunForm.$submitted || testrunForm.start.$touched || triedToSubmit === true">
                             <div ng-message="required">Start is required.</div>
                         </div>
                     </md-input-container>
-                    <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
-                             data-ng-click="openCalendar($event, 'start')"></md-icon>
+                    <date-time-picker timestamp="testrun.start"></date-time-picker>
                 </div>
-                <div layout="row">
+                <div layout="row" layout-align="space-between center">
                     <md-input-container
                             md-is-error="testrunForm.end.$invalid && (testrunForm.$submitted || testrunForm.end.$dirty || triedToSubmit === true)"
                             flex>
                         <label>end</label>
-                        <input name="end" type="text" ng-model="testrun.end" required/>
-                        <input ng-hide="true" type="text" class="form-control" datetime-picker="EEEE, dd-M-yyyy H:mm:ss"
-                               ng-model="testrun.end" is-open="isOpenEnd"/>
-
+                        <input name="end" type="text" ng-model="testrun.end | date:'EEEE, dd-M-yyyy H:mm:ss'" required/>
                         <div ng-messages="testrunForm.end.$error"
                              ng-if="testrunForm.$submitted || testrunForm.end.$touched || triedToSubmit === true">
-                            <div ng-message="required">Start is required.</div>
+                            <div ng-message="required">End is required.</div>
                         </div>
                     </md-input-container>
-                    <md-icon md-svg-src="images/assets/ic_schedule_black_36px.svg"
-                             data-ng-click="openCalendar($event, 'end')"></md-icon>
+                    <date-time-picker timestamp="testrun.end"></date-time-picker>
+
                 </div>
                 <md-input-container flex>
                     <label>Ramp up period in seconds</label>

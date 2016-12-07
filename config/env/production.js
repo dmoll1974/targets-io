@@ -7,22 +7,23 @@ module.exports = {
     isProduction: true,
     isDevelopment: false,
     logLevel: 'warning',
-    graphiteRetentionPeriod: '90d', /*90 days*/
-    graphiteHost: process.env.GRAPHITE_HOST,
-    jenkinsHost: process.env.JENKINS_HOST,
-    db: process.env.MONGO_URL,
-    dbUsername: process.env.MONGO_USER,
-    dbPassword: process.env.MONGO_PASSWORD,
-    graylog : {
+    graphiteRetentionPeriod: '90d', /*90 days*/    // Test runs will be deleted if older than graphiteRetentionPeriod
+    graphiteHost: process.env.GRAPHITE_HOST,       // Graphite Render URL API, e.g. "http://graphite.mycompany.com:8090"
+    db: process.env.MONGO_URL,                     // MongoDb url, e.g. "dbServer.mycompany.com:27017/targets-io"
+    dbUsername: process.env.MONGO_USER,            // MongoDb user
+    dbPassword: process.env.MONGO_PASSWORD,        // MongoDb password
+    graylog : {                                    // Graylog server and port, omit when not needed
         host: process.env.GRAYLOG_HOST,
         port: process.env.GRAYLOG_PORT
     },
-    redisHost: process.env.REDIS_SERVICE_HOST,
-    redisPort: process.env.REDIS_SERVICE_PORT,
-    jenkinsUser: process.env.JENKINS_USER,
-    jenkinsPassword: process.env.JENKINS_PASSWORD,
-    jenkinsCaFile: path.resolve('./config/ssl-ca', 'Jenkins_root_CA.cer'),
-    jenkinsSSL: true,
+    redisHost: process.env.REDIS_SERVICE_HOST,     // Redis server, e.g. "redis.mycompany.com"
+    redisPort: process.env.REDIS_SERVICE_PORT,     // Redis port, e.g. "6379"
+    jenkinsHost: process.env.JENKINS_HOST,         // Jenkins URL, e.g. "https://jenkins.mycompany.com:443"
+    jenkinsUser: process.env.JENKINS_USER,         // Jenkins admin user
+    jenkinsPassword: process.env.JENKINS_PASSWORD, // Jenkins admin password
+    jenkinsSSL: true,                              // Jenkins running on https
+    jenkinsCaFile: path.resolve('./config/ssl-ca', 'Jenkins_root_CA.cer'), // If you are using self-signed certificate for Jenkins, provide CA sertificate
+
 
     assets: {
         lib: {
@@ -35,7 +36,8 @@ module.exports = {
                 'public/lib/angular-busy/dist/angular-busy.css',
                 'public/lib/ng-table/dist/ng-table.css',
                 'public/lib/ng-tags-input/ng-tags-input.min.css',
-                'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.css'
+                'public/lib/sc-date-time/dist/sc-date-time.css'
+
             ],
             js: [
                 'public/lib/jquery/dist/jquery.min.js',
@@ -62,7 +64,6 @@ module.exports = {
                 'public/lib/angular-ui-bootstrap-datetimepicker/datetimepicker.js',
                 'public/lib/ng-clip/dest/ng-clip.min.js',
                 'public/lib/zeroclipboard/dist/ZeroClipboard.min.js',
-                'public/lib/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js',
                 'public/lib/angular-utils-pagination/dirPagination.js',
                 'public/lib/dygraphs/dygraph-combined-dev.js',
                 'public/js/dygraph-extra.js',
@@ -70,7 +71,8 @@ module.exports = {
                 'public/lib/socket.io-client/dist/socket.io.min.js',
                 'public/lib/ng-sortable/dist/ng-sortable.js',
                 'public/lib/pdfmake-dist/build/pdfmake.min.js',
-                'public/lib/pdfmake-dist/build/vfs_fonts.js'
+                'public/lib/pdfmake-dist/build/vfs_fonts.js',
+                'public/lib/sc-date-time/dist/sc-date-time.js'
 
 
             ]

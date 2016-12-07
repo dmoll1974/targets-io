@@ -794,3 +794,55 @@ div.jenkins-logo.jenkins-header {
     fill: lightgrey !important;
 
 }
+
+#time-picker-parent-div{
+
+    z-index: 1;
+}
+
+.targets-io-date-time-picker{
+
+    /*z-index: 500;*/
+    /*opacity: 1 !important;*/
+    position: fixed;
+    /*position: element(#time-picker-parent-div);*/
+    left: 65%;
+    top: 10%;
+    /*transform: translate(-75%,-10%);*/
+}
+
+.targets-io-date-time-picker-background{
+
+    z-index: 1;
+    opacity: 1 !important;
+    background-color: white;
+
+}
+
+.time-date {
+
+    color:rgba(255,110,64,0.87) !important;
+}
+
+.time-date.full-mode > .buttons {
+    background-color: rgb(33,150,243) !important;
+}
+.time-date > .control > .full-title {
+    background-color: rgb(33,150,243) !important;
+}
+
+.time-date button, .time-date .button{
+    color: rgb(33,150,243) !important;
+}
+
+/*.time-date > .control > .slider > .date-control > .days .day-cell:hover, .time-date > .control > .slider > .date-control > .days .day-cell:active {*/
+    /*background-color: rgb(33,150,243) !important;*/
+    /*color: #e6e6e6;*/
+
+
+/*}*/
+
+.time-date > .control > .slider > .date-control > .days .day-cell.selected {
+    color: #fff !important;
+    background-color: rgb(33,150,243) !important;
+}
