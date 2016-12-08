@@ -38,7 +38,7 @@
 
 
 
-            <md-button  class="md-primary" data-ng-click="saveAsPDF()">
+            <md-button  ng-if="graphsLoaded" class="md-primary" data-ng-click="saveAsPDF()">
                 <span ng-show="!showSpinner">Save PDF</span>
                 <div layout="row" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="20" ng-show="showSpinner"></md-progress-circular></div>
             </md-button>
