@@ -138,6 +138,8 @@ function TestRunSummaryDirective () {
 
           $scope.testRunSummary = response.testRunSummary;
 
+          $scope.graphsLoaded = ($scope.testRunSummary.metrics.length === 0)? true : false;
+
           $scope.summarySaved = true;
 
           /* check if test run still exists! */
@@ -290,6 +292,7 @@ function TestRunSummaryDirective () {
 
             })
 
+            $scope.graphsLoaded = ($scope.testRunSummary.metrics.length === 0)? true : false;
 
             $scope.updated = true;
 
@@ -307,7 +310,7 @@ function TestRunSummaryDirective () {
 
             })
 
-
+            $scope.graphsLoaded = ($scope.testRunSummary.metrics.length === 0)? true : false;
 
           }
 
