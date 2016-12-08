@@ -105,7 +105,7 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
             callback([]);
           } else {
             callback(body);
-            /* add to memcached if it is a valid response */
+            /* add to redis if it is a valid response */
             if (body != '[]' && body.length > 0 && response.statusCode == 200) {
               cache.setCache(cacheKey, body, 3600 * 24 * 7, function (err, result) {
                 if (err)
