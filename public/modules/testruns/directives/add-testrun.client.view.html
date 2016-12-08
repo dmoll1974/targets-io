@@ -11,7 +11,7 @@
                             md-is-error="testrunForm.start.$invalid && (testrunForm.$submitted || testrunForm.start.$dirty || triedToSubmit === true)"
                             flex>
                         <label>start</label>
-                        <input name="start" type="text" ng-model="testrun.start | date:'EEEE, dd-M-yyyy H:mm:ss'" required/>
+                        <input name="start" ng-model="testrun.start" formatted-date required/>
 
                         <div ng-messages="testrunForm.start.$error"
                              ng-if="testrunForm.$submitted || testrunForm.start.$touched || triedToSubmit === true">
@@ -25,7 +25,7 @@
                             md-is-error="testrunForm.end.$invalid && (testrunForm.$submitted || testrunForm.end.$dirty || triedToSubmit === true)"
                             flex>
                         <label>end</label>
-                        <input name="end" type="text" ng-model="testrun.end | date:'EEEE, dd-M-yyyy H:mm:ss'" required/>
+                        <input name="end" ng-model="testrun.end" formatted-date required/>
                         <div ng-messages="testrunForm.end.$error"
                              ng-if="testrunForm.$submitted || testrunForm.end.$touched || triedToSubmit === true">
                             <div ng-message="required">End is required.</div>

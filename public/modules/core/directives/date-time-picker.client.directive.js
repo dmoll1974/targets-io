@@ -75,14 +75,12 @@ function DateTimePickerDirective () {
 
                 function saveTimestamp (timestamp){
 
-                    $timeout(function(){
+                    //$timeout(function(){
 
                         $scope.timestamp = timestamp;
-                        //$scope.$$childHead.$parent.$parent.timestamp = timestamp;
-                        //Events.selected.eventTimestamp = timestamp;
                         $mdDialog.hide();
 
-                    })
+                    //})
 
                 }
 

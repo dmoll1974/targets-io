@@ -11,7 +11,7 @@
                             md-is-error="eventForm.eventTimestamp.$invalid && (eventForm.$submitted || eventForm.eventTimestamp.$dirty || triedToSubmit === true)"
                             flex>
                         <label>Timestamp</label>
-                        <input name="eventTimestamp" type="text" ng-model="event.eventTimestamp | date:'EEEE, dd-M-yyyy H:mm:ss'" required/>
+                        <input name="eventTimestamp" ng-model="event.eventTimestamp" formatted-date required/>
                         <div ng-messages="eventForm.eventTimestamp.$error"
                              ng-if="eventForm.$submitted || eventForm.productName.$touched || triedToSubmit === true">
                             <div ng-message="required">Timestamp is required.</div>
