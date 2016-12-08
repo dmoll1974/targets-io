@@ -33,6 +33,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
             }else {
               scope.metric.data = 'X\n';
               scope.opts.title = 'Error, check your Graphite query';
+              Utils.testRunSummaryGraphsWithErrorsCounter++;
             }
           }
 

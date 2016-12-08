@@ -77,9 +77,11 @@ function TestRunSummaryDirective () {
 
     $scope.$on('$destroy', function () {
 
-      /* Reset testRunSummaryGraphsCounter */
+      /* Reset testRunSummaryGraphsCounter and testRunSummaryGraphsWithErrorsCounter */
 
       Utils.testRunSummaryGraphsCounter = 0;
+      Utils.testRunSummaryGraphsWithErrorsCounter = 0;
+
 
       /* if updates have been made and not saved, prompt the user */
       if($scope.updated === true  && !$rootScope.currentState.includes('testRunSummary')){
@@ -549,7 +551,24 @@ function TestRunSummaryDirective () {
 
     function submitTestRunSummary() {
 
-      submitTestRunSummaryImpl();
+      if(Utils.testRunSummaryGraphsWithErrorsCounter > 0){
+        ConfirmModal.itemType = 'Test run summary contain graphs with errors, are you sure you want to save it';
+        //ConfirmModal.selectedItemDescription =  $scope.testRunSummary.testRunId;
+        var modalInstance = $modal.open({
+          templateUrl: 'ConfirmDelete.html',
+          controller: 'ModalInstanceController',
+          size: ''  //,
+        });
+        modalInstance.result.then(function () {
+          submitTestRunSummaryImpl()
+        }, function () {
+
+
+        });
+      }else{
+        submitTestRunSummaryImpl()
+
+      }
     }
 
 

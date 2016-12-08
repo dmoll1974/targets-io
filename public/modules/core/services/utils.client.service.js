@@ -33,7 +33,8 @@ angular.module('core').factory('Utils', [
       productSelectedIndex: 0,
       completedTestRunsOnly: true,
       dateTimePickerTimestamp: undefined,
-      testRunSummaryGraphsCounter: 0
+      testRunSummaryGraphsCounter: 0,
+      testRunSummaryGraphsWithErrorsCounter: 0
 
 
     };
@@ -63,6 +64,7 @@ angular.module('core').factory('Utils', [
         Utils.loadNumberOfTestRuns = 10;
         Utils.completedTestRunsOnly = true;
         Utils.testRunSummaryGraphsCounter = 0;
+        Utils.testRunSummaryGraphsWithErrorsCounter = 0;
 
     }
     function dynamicSortTags(sortOrderParam) {
