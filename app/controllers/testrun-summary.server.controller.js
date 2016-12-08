@@ -348,6 +348,7 @@ function updateTestrunSummary(req, res){
         testRunSummary.metrics = req.body.metrics;
         testRunSummary.markDown = req.body.markDown;
         testRunSummary.requirements = req.body.requirements;
+        testRunSummary.productRelease = req.body.productRelease;
         testRunSummary.lastUpdated = new Date().getTime();
 
         testRunSummary.save(function(err, savedTestRunSummary){
