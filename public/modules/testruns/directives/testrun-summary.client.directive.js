@@ -696,6 +696,9 @@ function TestRunSummaryDirective () {
           $mdToast.show(toast.content('Test run summary deleted from db')).then(function(response) {
 
           });
+
+          $scope.updated = false;
+
           /* go to test run overview */
           $state.go('viewDashboard', {productName: $stateParams.productName, dashboardName: $stateParams.dashboardName});        });
       }, function () {
