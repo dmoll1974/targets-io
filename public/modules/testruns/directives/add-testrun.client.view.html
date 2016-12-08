@@ -55,10 +55,6 @@
                     <label>Product release</label>
                     <input name="testrunProductRelease" ng-model="testrun.productRelease">
 
-                    <div ng-messages="testrunForm.testrunProductRelease.$error"
-                         ng-if="testrunForm.$submitted || testrunForm.testrunProductRelease.$touched || triedToSubmit === true">
-                        <div ng-message="required">Product release is required.</div>
-                    </div>
                 </md-input-container>
                 <md-input-container
                         md-is-error="testrunForm.testrunDashboardName.$invalid && (testrunForm.$submitted || testrunForm.testrunDashboardName.$dirty  || triedToSubmit === true)"

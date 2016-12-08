@@ -383,6 +383,16 @@ function TestrunsDirective () {
             $mdToast.show(toast.content(content)).then(function (response) {
             })
 
+            TestRunSummary.getTestRunSummary($scope.testRun.productName, $scope.testRun.dashboardName, originalTestRunId).success(function(response){
+
+              if(response){
+                response.testRunSummary.productRelease = testRun.productRelease;
+
+                TestRunSummary.updateTestRunSummary(response.testRunSummary).success(function(updatedTestRunSummary){
+
+                })
+              }
+            })
 
           });
 

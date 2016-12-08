@@ -53,12 +53,9 @@
                         md-is-error="testrunForm.testrunProductRelease.$invalid && (testrunForm.$submitted || testrunForm.testrunProductRelease.$dirty || triedToSubmit === true)"
                         flex>
                     <label>Product release</label>
-                    <input name="testrunProductRelease" ng-model="testrun.productRelease">
+                    <input ng-readonly="true" name="testrunProductRelease" ng-model="testrun.productRelease">
+                    <md-tooltip>Use test run menu to modify product release</md-tooltip>
 
-                    <div ng-messages="testrunForm.testrunProductRelease.$error"
-                         ng-if="testrunForm.$submitted || testrunForm.testrunProductRelease.$touched || triedToSubmit === true">
-                        <div ng-message="required">Product release is required.</div>
-                    </div>
                 </md-input-container>
                 <md-input-container
                         md-is-error="testrunForm.testrunDashboardName.$invalid && (testrunForm.$submitted || testrunForm.testrunDashboardName.$dirty || triedToSubmit === true)"
@@ -90,9 +87,10 @@
                     <label>CI Build result URL</label>
                     <input ng-model="testrun.buildResultsUrl">
                 </md-input-container>
-                <md-input-container class="md-block" flex>
+                <md-input-container  class="md-block" flex>
                     <label>Annotations</label>
-                    <textarea name="testrunAnnotations" ng-model="testrun.annotations" columns="1" md-maxlength="500" rows="10"></textarea>
+                    <textarea ng-readonly="true" name="testrunAnnotations" ng-model="testrun.annotations" columns="1" md-maxlength="500" rows="10"></textarea>
+                    <md-tooltip>Use test run menu to modify annotations</md-tooltip>
                 </md-input-container>
                 <div layout="row">
                     <md-button md-no-ink class="md-primary" data-ng-click="triedToSubmit=true; testrunForm.$valid &&update()">Submit</md-button>
