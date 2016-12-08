@@ -54,6 +54,19 @@ function TestRunSummaryDirective () {
       }
     });
 
+
+    $scope.$watch(function (scope) {
+      return Utils.testRunSummaryGraphsCounter;
+    }, function (newVal, oldVal) {
+
+        if(newVal !== oldVal && newVal !== undefined){
+
+          $scope.graphsLoaded = (Utils.testRunSummaryGraphsCounter === $scope.testRunSummary.metrics.length) ? true : false;
+        }
+    });
+
+
+
     $scope.$watch('editMode', function (newVal, oldVal) {
 
       if (newVal === false) {
@@ -63,6 +76,11 @@ function TestRunSummaryDirective () {
     });
 
     $scope.$on('$destroy', function () {
+
+      /* Reset testRunSummaryGraphsCounter */
+
+      Utils.testRunSummaryGraphsCounter = 0;
+
       /* if updates have been made and not saved, prompt the user */
       if($scope.updated === true  && !$rootScope.currentState.includes('testRunSummary')){
 

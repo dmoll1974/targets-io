@@ -123,6 +123,10 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
             scope.metric.imageGraph =  document.getElementById(imageGraphId).src;
 
 
+            /* Increment test run summary graphs counter */
+
+            Utils.testRunSummaryGraphsCounter++;
+
           });
 
          

@@ -30,12 +30,26 @@
 
         <div ng-class="{'fix-to-top-summary': true}" layout="row" layout-align="end center">
 
+            <div layout="column" flex ng-if="!graphsLoaded">
+                <md-progress-circular class="md-padding" md-mode="indeterminate" md-diameter="30" ></md-progress-circular>
+                <span>Loading ...</span>
+            </div>
+
+
+
+
             <md-button  class="md-primary" data-ng-click="saveAsPDF()">
                 <span ng-show="!showSpinner">Save PDF</span>
                 <div layout="row" layout-align="center center"><md-progress-circular md-mode="indeterminate" md-diameter="20" ng-show="showSpinner"></md-progress-circular></div>
             </md-button>
 
-            <md-button  ng-if="editMode === true && (summarySaved === false || updated === true)" md-no-ink class="md-primary" data-ng-click="submitTestRunSummary()">Save</md-button>
+            <md-button  ng-if="editMode === true && (summarySaved === false || updated === true)" md-no-ink class="md-primary" data-ng-click="graphsLoaded && submitTestRunSummary()">
+                Save
+                <md-tooltip ng-if="!graphsLoaded">
+                    Please wait until graphs have loaded
+                </md-tooltip>
+            </md-button>
+
             <!--<md-button  ng-if="editMode === true && summarySaved === true && updated === true" md-no-ink class="md-primary" data-ng-click="submitTestRunSummary()">Update</md-button>-->
             <md-button ng-if="summarySaved === true" class="md-warn" data-ng-click="openDeleteModal('', testRunSummary)">Discard</md-button>
             <md-switch class="md-primary" md-no-ink aria-label="Edit mode" ng-model="editMode"  ng-class="{'switch-label-disabled': editMode === false }">
