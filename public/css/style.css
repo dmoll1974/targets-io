@@ -69,15 +69,30 @@ html, body {
 .graph-accordion-group {
 
     margin-top: 5px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    border-top-left-radius: 0px  !important;
+    border-top-right-radius: 0px  !important;
+    border-radius: 0px !important;
+    border-color: #c9c9c9 !important;
 
+    /*box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2)!important;*/
 
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(207,196,207,1)!important;
+    -moz-box-shadow: 2px 2px 5px 0px rgba(207,196,207,1)!important;
+    box-shadow: 2px 2px 5px 0px rgba(207,196,207,1)!important;
 }
 .graph-accordion-group .panel-title {
 
     font-size: 14px;
+    background-color: #fff !important;
+    border-color: #c9c9c9 !important;
 
+}
+.graph-accordion-group .panel-heading {
+
+    font-size: 14px;
+    background-color: #fff !important;
+    border-color: #fff !important;
+    background-image: none !important;
 }
 
 .tags .graph-input-tags {
@@ -853,3 +868,5 @@ div.jenkins-logo.jenkins-header {
     color: #fff !important;
     background-color: rgb(33,150,243) !important;
 }
+
+

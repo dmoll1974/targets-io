@@ -1,6 +1,10 @@
 <accordion-group is-open="metric.isOpen" class="graph-accordion-group">
     <accordion-heading>
-        <div>{{metric.alias | uppercase}}</div>
+        <div layout="row" layout-align="space-between center" flex>
+            <div>{{metric.alias | uppercase}}</div>
+            <md-icon style="margin:0px;" ng-if="metric.isOpen" md-svg-src="images/assets/ic_expand_less_black_24px.svg"></md-icon>
+            <md-icon style="margin:0px;" ng-if="!metric.isOpen" md-svg-src="images/assets/ic_expand_more_black_24px.svg"></md-icon>
+        </div>
     </accordion-heading>
     <div  ng-if="metric.isOpen">
         <div layout="row">
