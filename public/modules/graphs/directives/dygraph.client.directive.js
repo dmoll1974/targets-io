@@ -36,7 +36,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
           }
 
 
-
+          if(scope.graph)scope.graph.destroy();
 
           scope.graph = new Dygraph(elem.children()[0], scope.data, scope.opts);
 
