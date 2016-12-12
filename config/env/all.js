@@ -6,13 +6,12 @@ module.exports = {
 		description: 'Performance test dashboard',
 		keywords: 'MongoDB, Express, AngularJS, Node.js'
 	},
-	isProduction: false,
-	isDemo: true,
-	logLevel: 'error',
+	logLevel: 'info',
 	graphiteRetentionPeriod: '90d', /*90 days*/
 	graphiteHost: process.env.GRAPHITE_HOST,
-	jenkinsHost: process.env.JENKINS_HOST,
+	jenkinsUrl: process.env.JENKINS_URL,
 	db: process.env.MONGO_URL,
+	dbConnectionPooling: false,
 	redisHost: process.env.REDIS_SERVICE_HOST,
 	redisPort: process.env.REDIS_SERVICE_PORT,
 	port: process.env.PORT || 3000,

@@ -9,7 +9,7 @@ angular.module('jenkins').factory('Jenkins', [
       startJob: startJob,
       stopJob: stopJob,
       getJobs: getJobs,
-      getJenkinsHost: getJenkinsHost
+      getjenkinsUrl: getjenkinsUrl
     };
     return Jenkins;
 
@@ -39,7 +39,7 @@ angular.module('jenkins').factory('Jenkins', [
       return $http.get('/jenkins-start-job/' + productName + '/' + jenkinsJobName);
     }
 
-    function getJenkinsHost() {
+    function getjenkinsUrl() {
 
       return $http.get('/get-jenkins-host');
     }

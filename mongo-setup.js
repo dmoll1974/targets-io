@@ -9,28 +9,6 @@ var mongoSetup = module.exports;
 // Connect to mongodb with mongoose
 mongoSetup.connect = function() {
 
-    if(!config.isDemo) {
-
-        var options = {
-            //user: config.dbUsername,
-            //pass: config.dbPassword,
-            server: {
-                poolSize: 10,
-                auto_reconnect: true, // already default, but explicit
-                reconnectTries: 30, // already default, explicit
-                socketOptions: {
-                    keepAlive: 100000, // less then 120s configured on mongo side
-                    connectTimeoutMS: 10000
-                }
-            }
-        };
-
-    }else{
-
-        var options = {};
-
-    }
-
 
     if(config.dbUsername && config.dbPassword ){
 
@@ -64,6 +42,18 @@ mongoSetup.connect = function() {
         });
     });
 
+    var options = (config.dbConnectionPooling === true) ?
+    {
+        server: {
+            poolSize: 10,
+            auto_reconnect: true,
+            reconnectTries: 30,
+            socketOptions: {
+                keepAlive: 100000,
+                connectTimeoutMS: 10000
+            }
+        }
+    }: {};
 
     return mongoose.connect(mongoUrl, options);
 

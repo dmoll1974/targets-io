@@ -318,9 +318,9 @@ function JenkinsJobStatusDirective () {
         }
         function jenkinsJobConfig(url) {
 
-            Jenkins.getJenkinsHost().success(function (response) {
+            Jenkins.getjenkinsUrl().success(function (response) {
 
-                var url = response.jenkinsHost + '/job/' + $scope.dashboard.jenkinsJobName + '/configure';
+                var url = response.jenkinsUrl + '/job/' + $scope.dashboard.jenkinsJobName + '/configure';
                 $window.open(url, '_blank');
             });
 
@@ -351,9 +351,9 @@ function JenkinsJobStatusDirective () {
                 } else {
                     Jenkins.getJobStatus($stateParams.productName, $scope.dashboard.jenkinsJobName).success(function (status) {
 
-                        Jenkins.getJenkinsHost().success(function (response) {
+                        Jenkins.getjenkinsUrl().success(function (response) {
 
-                            var url = response.jenkinsHost + '/job/' + $scope.dashboard.jenkinsJobName + '/' + status.body.builds[0].number + '/console';
+                            var url = response.jenkinsUrl + '/job/' + $scope.dashboard.jenkinsJobName + '/' + status.body.builds[0].number + '/console';
                             $window.open(url, '_blank');
 
                         });

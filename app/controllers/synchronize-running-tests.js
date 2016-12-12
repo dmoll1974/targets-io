@@ -172,7 +172,6 @@ if (process.env.isDevelopment) {
   // only log to console in development environment
   winston.add(winston.transports.Console, {
     timestamp: true,
-    colorize: !process.env.isProduction,
     level: process.env.logLevel
   });
 }
@@ -200,35 +199,17 @@ var db = connect();
 
 function connect() {
 
-  if(!process.env.isDemo) {
 
-    // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-    var options = {
-      //user: process.env.dbUsername,
-      //pass: process.env.dbPassword,
-      server: {
-        //poolSize: 20,
-        auto_reconnect: true, // already default, but explicit
-        reconnectTries: 30, // already default, explicit
-        socketOptions: {
-          keepAlive: 100000, // less then 120s configured on mongo side
-          connectTimeoutMS: 10000
-        }
-      }
-    };
-  }else {
-
-      if (process.env.dbUsername && process.env.dbPassword) {
+  if (process.env.dbUsername && process.env.dbPassword) {
 
 
-        winston.info("Connect (with credentials) synchronize-running-tests to: " + process.env.db);
-        var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
+    winston.info("Connect (with credentials) synchronize-running-tests to: " + process.env.db);
+    var mongoUrl = 'mongodb://' + process.env.dbUsername + ':' + process.env.dbPassword + '@' + process.env.db;
 
-      } else {
+  } else {
 
-        winston.info("Connect synchronize-running-tests to: " + process.env.db);
-        var mongoUrl = 'mongodb://' + process.env.db;
-      }
+    winston.info("Connect synchronize-running-tests to: " + process.env.db);
+    var mongoUrl = 'mongodb://' + process.env.db;
   }
 
 
@@ -253,6 +234,18 @@ function connect() {
     });
   });
 
+  var options = (process.env.dbConnectionPooling == 'true') ?
+  {
+    server: {
+      poolSize: 10,
+      auto_reconnect: true,
+      reconnectTries: 30,
+      socketOptions: {
+        keepAlive: 100000,
+        connectTimeoutMS: 10000
+      }
+    }
+  }: {};
 
   return mongoose.connect(mongoUrl, options);
 

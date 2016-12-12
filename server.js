@@ -18,7 +18,6 @@ if (config.isDevelopment) {
 	// only log to console in development environment
 	winston.add(winston.transports.Console, {
 		timestamp: true,
-		colorize: !config.isProduction,
 		level: config.logLevel
 	});
 }
@@ -144,11 +143,11 @@ if(cluster.isMaster) {
 
 		var env = 	{
 			io: io,
-			isDemo: config.isDemo,
-			isProduction: config.isProduction,
 			isDevelopment: config.isDevelopment,
-			db: config.db
+			db: config.db,
+			dbConnectionPooling: config.dbConnectionPooling
 		};
+
 
 		if(config.dbUsername && config.dbPassword) {
 			env['dbUsername'] = config.dbUsername;
@@ -160,6 +159,7 @@ if(cluster.isMaster) {
 			env['graylogPort'] = config.graylog.port;
 			env['loglevel'] = config.logLevel;
 		}
+
 
 		var synchronizeRunningTestsDaemonFork = child_process.fork('./app/controllers/synchronize-running-tests.js', [], { env: env });
 

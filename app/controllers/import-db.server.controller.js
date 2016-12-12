@@ -337,7 +337,6 @@ function uploadProduct(req, res) {
                 newProduct.dashboards = importProductDashboardIds;
                 newProduct.requirements = importProduct.requirements;
                 newProduct.markDown = importProduct.markDown;
-                newProduct.jenkinsHost = importProduct.jenkinsHost;
                 newProduct.triggerTestRunsWithJenkins = importProduct.triggerTestRunsWithJenkins;
                 newProduct.jenkinsJobName = importProduct.jenkinsJobName;
 
@@ -735,7 +734,6 @@ function upload(req, res) {
               newProduct.dashboards = importProductDashboardIds;
               newProduct.requirements = importProduct.requirements;
               newProduct.markDown = importProduct.markDown;
-              newProduct.jenkinsHost = importProduct.jenkinsHost;
               newProduct.triggerTestRunsWithJenkins = importProduct.triggerTestRunsWithJenkins;
               newProduct.jenkinsJobName = importProduct.jenkinsJobName;
 

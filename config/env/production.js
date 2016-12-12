@@ -4,12 +4,12 @@ var path = require('path');
 
 
 module.exports = {
-    isProduction: true,
     isDevelopment: false,
     logLevel: 'warning',
     graphiteRetentionPeriod: '90d', /*90 days*/    // Test runs will be deleted if older than graphiteRetentionPeriod
     graphiteHost: process.env.GRAPHITE_HOST,       // Graphite Render URL API, e.g. "http://graphite.mycompany.com:8090"
     db: process.env.MONGO_URL,                     // MongoDb url, e.g. "dbServer.mycompany.com:27017/targets-io"
+    dbConnectionPooling: true,
     dbUsername: process.env.MONGO_USER,            // MongoDb user
     dbPassword: process.env.MONGO_PASSWORD,        // MongoDb password
     graylog : {                                    // Graylog server and port, omit when not needed
@@ -18,7 +18,7 @@ module.exports = {
     },
     redisHost: process.env.REDIS_SERVICE_HOST,     // Redis server, e.g. "redis.mycompany.com"
     redisPort: process.env.REDIS_SERVICE_PORT,     // Redis port, e.g. "6379"
-    jenkinsHost: process.env.JENKINS_HOST,         // Jenkins URL, e.g. "https://jenkins.mycompany.com:443"
+    jenkinsUrl: process.env.JENKINS_URL,         // Jenkins URL, e.g. "https://jenkins.mycompany.com:443"
     jenkinsUser: process.env.JENKINS_USER,         // Jenkins admin user
     jenkinsPassword: process.env.JENKINS_PASSWORD, // Jenkins admin password
     jenkinsSSL: true,                              // Jenkins running on https

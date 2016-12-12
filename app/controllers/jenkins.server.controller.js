@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
     config = require('../../config/config'),
     GatlingDetails = mongoose.model('GatlingDetails');
 
-exports.getJenkinsHost = getJenkinsHost;
+exports.getjenkinsUrl = getjenkinsUrl;
 exports.getJenkinsData = getJenkinsData;
 exports.getJenkinsJobs = getJenkinsJobs;
 exports.getConsoleData = getConsoleData;
@@ -21,12 +21,12 @@ exports.stopJob = stopJob;
 exports.login = login;
 
 
-function getJenkinsHost(req, res){
+function getjenkinsUrl(req, res){
 
-  var jenkinsHost = {
-    jenkinsHost: config.jenkinsHost
+  var jenkinsUrl = {
+    jenkinsUrl: config.jenkinsUrl
   }
-  res.jsonp(jenkinsHost);
+  res.jsonp(jenkinsUrl);
 }
 
 
@@ -55,8 +55,8 @@ function stopJob(req, res){
 
 
 
-  var jenkinsJobsUrl = config.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
-  var jenkinsCrumbsUrl = config.jenkinsHost + '/crumbIssuer/api/json';
+  var jenkinsJobsUrl = config.jenkinsUrl + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
+  var jenkinsCrumbsUrl = config.jenkinsUrl + '/crumbIssuer/api/json';
 
   request.get(jenkinsJobsUrl, options, function (err, response, body) {
     if (err) {
@@ -65,11 +65,11 @@ function stopJob(req, res){
 
       if(JSON.parse(body).inQueue === false){
 
-        var jenkinsStopUrl = config.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/' + JSON.parse(body).builds[0].number + '/stop' ;
+        var jenkinsStopUrl = config.jenkinsUrl + '/job/' + req.params.jenkinsJobName + '/' + JSON.parse(body).builds[0].number + '/stop' ;
 
       }else{
 
-        var jenkinsStopUrl = config.jenkinsHost + '/queue/cancelItem?id=' + JSON.parse(body).queueItem.id ;
+        var jenkinsStopUrl = config.jenkinsUrl + '/queue/cancelItem?id=' + JSON.parse(body).queueItem.id ;
 
       }
 
@@ -128,8 +128,8 @@ function startJob(req, res){
   }
 
 
-  var jenkinsCrumbsUrl = config.jenkinsHost + '/crumbIssuer/api/json';
-  var jenkinsJobsUrl = config.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/build' ;
+  var jenkinsCrumbsUrl = config.jenkinsUrl + '/crumbIssuer/api/json';
+  var jenkinsJobsUrl = config.jenkinsUrl + '/job/' + req.params.jenkinsJobName + '/build' ;
 
   request.get(jenkinsCrumbsUrl, options, function (err, response, body) {
 
@@ -183,7 +183,7 @@ function getJenkinsJobStatus (req, res) {
 
   }
 
-  var jenkinsJobsUrl = config.jenkinsHost + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
+  var jenkinsJobsUrl = config.jenkinsUrl + '/job/' + req.params.jenkinsJobName + '/api/json?pretty=true&depth=1';
 
   request.get(jenkinsJobsUrl, options, function (err, response, body) {
     if (err) {
@@ -220,7 +220,7 @@ function login (req, res) {
 
   }
 
-  var jenkinsLoginsUrl = config.jenkinsHost + '/j_acegi_security_check';
+  var jenkinsLoginsUrl = config.jenkinsUrl + '/j_acegi_security_check';
 
   request.get(jenkinsLoginsUrl, options, function (err, response, body) {
     if (err) {
@@ -278,7 +278,7 @@ function login (req, res) {
 
     }
 
-  var jenkinsJobsUrl = config.jenkinsHost + '/api/json';
+  var jenkinsJobsUrl = config.jenkinsUrl + '/api/json';
 
 
   request.get(jenkinsJobsUrl, options, function (err, response, body) {

@@ -19,10 +19,6 @@ var ProductSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    'jenkinsHost':{
-        type: String,
-        default: config.jenkinsHost
-    },
     'triggerTestRunsWithJenkins': {
             type: Boolean,
             default: false
