@@ -46,7 +46,7 @@ if (config.graylog.host !== undefined) {
  * Please note that the order of loading is important.
  */
 winston.info ("mongoDb connect to: " + config.db);
-winston.info ("graphite host: " + config.graphiteHost);
+winston.info ("graphite url: " + config.graphiteUrl);
 winston.info ("redis host: " + config.redisHost + ':' + config.redisPort );
 
 

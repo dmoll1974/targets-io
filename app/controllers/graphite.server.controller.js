@@ -34,7 +34,7 @@ function findMetrics(req, res) {
 
 // Configure the request
   var options = {
-    url: config.graphiteHost + '/metrics/find',
+    url: config.graphiteUrl + '/metrics/find',
     method: 'POST',
     headers: headers,
     form: { query: req.params.query }
@@ -75,7 +75,7 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
   var cacheKey = cache.createKey(graphiteTargetUrl);
 
 
-  var client = requestjson.createClient(config.graphiteHost);
+  var client = requestjson.createClient(config.graphiteUrl);
   /* Don't cache live data! */
   if (until === 'now') {
     client.get(graphiteTargetUrl, function (err, response, body) {

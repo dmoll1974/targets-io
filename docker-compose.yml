@@ -45,13 +45,12 @@ services:
       - my-net
     environment:
        MONGO_URL: "db:27017/targets-io"
-       REDIS_SERVICE_HOST: "redis"
-       REDIS_SERVICE_PORT: "6379"
-       GRAPHITE_SERVICE_HOST: "graphite"
-       GRAPHITE_SERVICE_PORT: "80"
+       GRAPHITE_URL: "http://graphite"
+       JENKINS_URL: "http://jenkins:8080"
        JENKINS_USER: "admin"
        JENKINS_PASSWORD: "targets-io"
-       JENKINS_URL: "http://jenkins:8080"
+       REDIS_HOST: "redis"
+       REDIS_PORT: "6379"
     restart: always
     depends_on:
       - db

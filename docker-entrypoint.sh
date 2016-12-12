@@ -22,26 +22,21 @@ if [ -z "$JENKINS_URL" ]; then
 
 			exit 1
 fi
-if [ -z "$REDIS_SERVICE_HOST" ]; then
-			echo >&2 'error: Need to set REDIS_SERVICE_HOST'
+if [ -z "$REDIS_HOST" ]; then
+			echo >&2 'error: Need to set REDIS_HOST'
 
 			exit 1
 fi
-if [ -z "$REDIS_SERVICE_PORT" ]; then
-			echo >&2 'error: Need to set REDIS_SERVICE_PORT'
+if [ -z "$REDIS_PORT" ]; then
+			echo >&2 'error: Need to set REDIS_PORT'
 
 			exit 1
 fi
-if [ -z "$GRAPHITE_SERVICE_HOST" ]; then
-			echo >&2 'error: Need to set GRAPHITE_SERVICE_HOST'
-
-			exit 1
-fi
-if [ -z "$GRAPHITE_SERVICE_PORT" ]; then
-			echo >&2 'error: Need to set GRAPHITE_SERVICE_PORT'
+if [ -z "$GRAPHITE_URL" ]; then
+			echo >&2 'error: Need to set GRAPHITE_URL'
 
 			exit 1
 fi
 
-GRAPHITE_HOST=http://$GRAPHITE_SERVICE_HOST:$GRAPHITE_SERVICE_PORT  bash -c "forever -c 'node --harmony' server.js"
+bash -c "forever -c 'node --harmony' server.js"
 

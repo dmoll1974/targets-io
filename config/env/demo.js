@@ -7,7 +7,7 @@ module.exports = {
     isDevelopment: false,
     logLevel: 'warning',
     graphiteRetentionPeriod: '90d', /*90 days*/    // Test runs will be deleted if older than graphiteRetentionPeriod
-    graphiteHost: process.env.GRAPHITE_HOST,       // Graphite Render URL API, e.g. "http://graphite.mycompany.com:8090"
+    graphiteUrl: process.env.GRAPHITE_HOST,       // Graphite Render URL API, e.g. "http://graphite.mycompany.com:8090"
     db: process.env.MONGO_URL,                     // MongoDb url, e.g. "dbServer.mycompany.com:27017/targets-io"
     dbConnectionPooling: true,
     dbUsername: process.env.MONGO_USER,            // MongoDb user
@@ -16,8 +16,8 @@ module.exports = {
         host: process.env.GRAYLOG_HOST,
         port: process.env.GRAYLOG_PORT
     },
-    redisHost: process.env.REDIS_SERVICE_HOST,     // Redis server, e.g. "redis.mycompany.com"
-    redisPort: process.env.REDIS_SERVICE_PORT,     // Redis port, e.g. "6379"
+    redisHost: process.env.REDIS_HOST,     // Redis server, e.g. "redis.mycompany.com"
+    redisPort: process.env.REDIS_PORT,     // Redis port, e.g. "6379"
     jenkinsUrl: process.env.JENKINS_URL,         // Jenkins URL, e.g. "https://jenkins.mycompany.com:443"
     jenkinsUser: process.env.JENKINS_USER,         // Jenkins admin user
     jenkinsPassword: process.env.JENKINS_PASSWORD, // Jenkins admin password
