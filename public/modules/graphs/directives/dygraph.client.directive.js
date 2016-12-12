@@ -230,8 +230,12 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     });
     /* stop data polling when element is destroyed by ng-if */
+
     $scope.$on('$destroy', function () {
       Interval.clearIntervalForMetric($scope.metric._id);
+    /* Explicitly destroy the graph */
+      $scope.graph.destroy();
+
     });
 
 
@@ -341,6 +345,13 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
             return (dd < 10 ? '0' : '') + dd + '-' + (mm < 10 ? '0' : '') + mm +  '-' + yyyy + ' ' + (hh < 10 ? '0' : '') + hh +  ':' + (MM < 10 ? '0' : '') + MM +  ':' + (ss < 10 ? '0' : '') + ss  ;
           }
+
+          /* reset data first */
+
+
+          $scope.data = null;
+          $scope.metric.legendData = null;
+
 
           $scope.data = dygraphData.data;
           $scope.metric.legendData = dygraphData.legendData;
