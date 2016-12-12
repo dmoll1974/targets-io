@@ -8,7 +8,7 @@ module.exports = {
 	},
 	logLevel: 'info',
 	graphiteRetentionPeriod: '90d', /*90 days*/
-	graphiteUrl: process.env.GRAPHITE_HOST,
+	graphiteUrl: process.env.GRAPHITE_URL,
 	jenkinsUrl: process.env.JENKINS_URL,
 	db: process.env.MONGO_URL,
 	dbConnectionPooling: false,

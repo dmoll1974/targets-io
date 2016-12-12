@@ -6,7 +6,7 @@ module.exports = {
 	isDevelopment: true,
 	debugMode: true,
 	logLevel: 'info',
-	graphiteUrl: process.env.GRAPHITE_HOST,
+	graphiteUrl: process.env.GRAPHITE_URL,
 	jenkinsUrl: process.env.JENKINS_URL,
 	db: process.env.MONGO_URL,
 	redisHost: process.env.REDIS_HOST,
