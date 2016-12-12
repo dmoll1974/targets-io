@@ -197,6 +197,13 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       }
     });
 
+    $scope.$on('$destroy', function () {
+      /* Explicitly destroy the graph */
+      $scope.graph.destroy();
+
+    });
+
+
     /* activate */
 
     activate();

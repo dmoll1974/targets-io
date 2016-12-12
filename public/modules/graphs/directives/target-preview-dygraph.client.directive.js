@@ -36,6 +36,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
           }
 
 
+          if(scope.graph)scope.graph.destroy();
 
 
           scope.graph = new Dygraph(elem.children()[0], scope.data, scope.opts);
@@ -229,6 +230,9 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
     /* stop data polling when element is destroyed by ng-if */
     $scope.$on('$destroy', function () {
       Interval.clearIntervalForMetric($scope.metric._id);
+      /* Explicitly destroy the graph */
+      $scope.graph.destroy();
+
     });
 
     /* functions */
