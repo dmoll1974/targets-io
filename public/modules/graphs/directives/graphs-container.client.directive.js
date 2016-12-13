@@ -14,7 +14,7 @@ function GraphsContainerDirective () {
   return directive;
 
   /* @ngInject */
-  function GraphsContainerDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, TestRuns, Metrics, Tags, $q, $timeout, Utils, $mdDialog) {
+  function GraphsContainerDirectiveController ($scope, $state, $stateParams, Products, Dashboards, $filter, $rootScope, TestRuns, Metrics, Tags, $q, $timeout, Utils, $mdDialog, $window) {
 
     var vm = this;
 
@@ -45,6 +45,13 @@ function GraphsContainerDirective () {
 
         Utils.zoomRange = vm.zoomRange;
 
+    });
+
+    /* watch zoomLock */
+    $scope.$watch('vm.zoomLock', function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        Utils.zoomLock = newVal;
+      }
     });
 
     /* watch zoomLock */
@@ -148,6 +155,8 @@ function GraphsContainerDirective () {
 
       vm.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
 
+      vm.graphsLiveBreadcrumpSize = ($window.innerWidth > 1680) ? 60 : 40;
+
 
       //vm.value = $stateParams.tag;
       vm.numberOfColumns = ($stateParams.tag === 'All') ? 3 : Utils.numberOfColumns;
@@ -222,7 +231,7 @@ function GraphsContainerDirective () {
 
             var runningTestBreadCrumpLength = $stateParams.productName.length + $stateParams.dashboardName.length + runningTest.testRunId.length;
 
-            vm.runningTest.testRunIdBreadCrump = ( runningTestBreadCrumpLength < 50)? runningTest.testRunId : runningTest.testRunId.substring(0,(50-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
+            vm.runningTest.testRunIdBreadCrump = ( runningTestBreadCrumpLength < vm.graphsLiveBreadcrumpSize)? runningTest.testRunId : runningTest.testRunId.substring(0,(vm.graphsLiveBreadcrumpSize-($stateParams.productName.length + $stateParams.dashboardName.length))) + '...';
 
 
             var runningTestOption = {};
