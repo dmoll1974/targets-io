@@ -68,7 +68,7 @@ html, body {
 
 .graph-accordion-group {
 
-    margin-top: 5px;
+    margin-top: 0px;
     border-top-left-radius: 0px  !important;
     border-top-right-radius: 0px  !important;
     border-radius: 0px !important;
@@ -366,6 +366,7 @@ div#column-0-2.graph-column {
 
     overflow-x: hidden;
     overflow-y: scroll;
+    padding-top: 0px !important;
 
 }
 
@@ -378,6 +379,7 @@ div#column-1-2.graph-column {
 
     overflow-x: hidden;
     overflow-y: scroll;
+    padding-top: 0px !important;
 
 }
 md-content#benchmark-0-2.graph-column {
@@ -408,10 +410,10 @@ md-content#benchmark-1-2.graph-column {
     overflow-y: auto;
 
 }
-.graph-column{
-    padding-top: 0px !important;
+/*.graph-column{*/
+    /*padding-top: 0px !important;*/
 
-}
+/*}*/
 
 md-toast {
     height: auto;
