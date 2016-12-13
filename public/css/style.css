@@ -408,6 +408,10 @@ md-content#benchmark-1-2.graph-column {
     overflow-y: auto;
 
 }
+.graph-column{
+    padding-top: 0px !important;
+
+}
 
 md-toast {
     height: auto;
