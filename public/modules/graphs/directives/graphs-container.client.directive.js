@@ -159,7 +159,7 @@ function GraphsContainerDirective () {
 
 
       //vm.value = $stateParams.tag;
-      vm.numberOfColumns = ($stateParams.tag === 'All') ? 3 : Utils.numberOfColumns;
+      vm.numberOfColumns = Utils.numberOfColumns;
       vm.flex = 100 / vm.numberOfColumns;
       vm.showLegend = Utils.showLegend;
       vm.showTooltip = Utils.showTooltip;

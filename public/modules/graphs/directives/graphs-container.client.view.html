@@ -158,7 +158,7 @@
         <div layout="row"  data-ng-hide="vm.gatlingDetails">
             <div class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column" ng-repeat="column in vm.columnsArray" flex="vm.flex">
                 <accordion close-others="false">
-                    <div  focus-if data-ng-repeat="metric in vm.filteredMetrics | slice:column.start:column.end" >
+                    <div class="graph-container" focus-if data-ng-repeat="metric in vm.filteredMetrics | slice:column.start:column.end" >
                         <graphs-content metric="metric" index="$parent.$index-$index"></graphs-content>
                     </div>
                 </accordion>
