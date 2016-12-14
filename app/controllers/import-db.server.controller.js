@@ -219,6 +219,9 @@ function uploadProduct(req, res) {
 
                   })
                   testrunSummaryDoc.save(function (err) {
+
+                    if (err)
+                      winston.error(err);
                   });
 
                 });
@@ -240,6 +243,7 @@ function uploadProduct(req, res) {
                   testrun.baseline = importTestrun.baseline;
                   testrun.previousBuild = importTestrun.previousBuild;
                   testrun.completed = importTestrun.completed;
+                  testrun.hasSummary = importTestrun.hasSummary;
                   testrun.productRelease = importTestrun.productRelease;
                   testrun.rampUpPeriod = importTestrun.rampUpPeriod;
                   testrun.annotations = importTestrun.annotations;
@@ -692,6 +696,7 @@ function upload(req, res) {
           testrun.completed = importTestrun.completed;
           testrun.productRelease = importTestrun.productRelease;
           testrun.rampUpPeriod = importTestrun.rampUpPeriod;
+          testrun.hasSummary = importTestrun.hasSummary;
           testrun.annotations = importTestrun.annotations;
           testrun.meetsRequirement = importTestrun.meetsRequirement;
           testrun.benchmarkResultFixedOK = importTestrun.benchmarkResultFixedOK;
