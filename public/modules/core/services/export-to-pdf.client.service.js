@@ -66,6 +66,7 @@ angular.module('core').factory('ExportToPdf', [
         }
       }
 
+
     };
     return ExportToPdf;
 
@@ -88,6 +89,27 @@ angular.module('core').factory('ExportToPdf', [
 
       docDefinition['content'] = [];
       docDefinition['styles'] = ExportToPdf.styles;
+      docDefinition['footer'] = function(page, pages) {
+          return {
+            columns: [
+              {
+                alignment: 'left',
+                text: product.name + ' ' + product.productRelease,
+                style: 'smallNoMargin'
+              },
+              {
+                alignment: 'right',
+                text: [
+                  { text: page.toString() },
+                  ' of ',
+                  { text: pages.toString() }
+                ],
+                style: 'smallNoMargin'
+              }
+            ],
+            margin: [20, 20]
+          };
+        }
 
 
         docDefinition['pageBreakBefore'] =
@@ -326,6 +348,28 @@ angular.module('core').factory('ExportToPdf', [
               return currentNode.headlineLevel === 1 && followingNodesOnPage.length < 4; //for normal headlines
             }
           }
+
+      docDefinition['footer'] = function(page, pages) {
+        return {
+          columns: [
+            {
+              alignment: 'left',
+              text: testRunSummary.productName + ' ' + testRunSummary.productRelease + ' ' + testRunSummary.description + ' ' + testRunSummary.testRunId,
+              style: 'smallNoMargin'
+            },
+            {
+              alignment: 'right',
+              text: [
+                { text: page.toString() },
+                ' of ',
+                { text: pages.toString() }
+              ],
+              style: 'smallNoMargin'
+            }
+          ],
+          margin: [20, 20]
+        };
+      }
 
 
       generateTestRunSummaryPdf(testRunSummary, function(testRunSummaryContent){
