@@ -169,12 +169,22 @@
                     <md-progress-linear data-ng-if="runningTest && $index < numberOfRunningTests" flex md-mode="indeterminate"></md-progress-linear>
 
                 </td>
-                <td class="pointer" data-ng-click="testRun.graphiteDataExists && testRunDetails(testRun)">
-                    <div layout="row">
-                        <md-icon ng-if="testRun.completed === false" class="incomplete" md-svg-src="images/assets/ic_broken_image_black_24px.svg"><md-tooltip>Not completed</md-tooltip></md-icon>
+                <td class="pointer"  ng-if="testRun.completed === false">
+                    <div layout="row" layout-align="start center">
+                        <md-button ng-if="testRun.completed === false" class="incomplete" data-ng-click="markAsComplete(testRun)">
+                            <md-icon  class="incomplete" md-svg-src="images/assets/timelapse.svg">
+                                <md-tooltip>Not completed, click to mark test run as complete</md-tooltip>
+                        </md-button>
+                        <!--<md-icon ng-if="testRun.completed === false" class="incomplete" md-svg-src="images/assets/timelapse.svg"><md-tooltip>Not completed</md-tooltip></md-icon>-->
                         <p style="margin-bottom: 0px;">{{testRun.humanReadableDuration}}</p>
                     </div>
                     <md-tooltip ng-if="!testRun.graphiteDataExists">
+                        Data no longer available in Graphite, please open test run summary.
+                    </md-tooltip>
+                </td>
+                <td class="pointer" ng-if="testRun.completed === true" data-ng-click="testRun.graphiteDataExists && testRunDetails(testRun)">
+                     <p style="margin-bottom: 0px;">{{testRun.humanReadableDuration}}</p>
+                     <md-tooltip ng-if="!testRun.graphiteDataExists">
                         Data no longer available in Graphite, please open test run summary.
                     </md-tooltip>
                 </td>
@@ -264,12 +274,6 @@
                                 <md-button class="targets-io-menu-button" data-ng-click="go(testRun.buildResultsUrl)">
                                     <md-icon md-svg-src="images/assets/ic_link_black_36px.svg"></md-icon>
                                     VIEW IN CI SERVER
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item ng-show="progress === undefined" data-ng-if="testRun.completed === false">
-                                <md-button class="targets-io-menu-button" data-ng-click="markAsComplete(testRun)">
-                                    <md-icon md-svg-src="images/assets/ic_check_circle_black_24px.svg"></md-icon>
-                                    MARK TEST RUN AS COMPLETE
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item ng-show="progress === undefined">

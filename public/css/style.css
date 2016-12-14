@@ -652,12 +652,26 @@ ul
     fill: rgba(255,110,64,0.87);
 }
 
-.incomplete  {
+.incomplete.md-button {
+
+    vertical-align: text-top !important;
+    min-height: 40px !important;
+    min-width: 35px !important;
+    height: 40px !important;
+    width: 35px !important;
+}
+
+.incomplete.md-icon  {
+
+    min-height: 20px !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    width: 20px !important;
 
     margin-top: 0px;
     margin-bottom: 0px;
     margin-left: 0px;
-    margin-right: 10px;
+    margin-right: 0px;
 
 }
 
