@@ -1,8 +1,8 @@
 'use strict';
 //Dashboards service used to communicate Dashboards REST endpoints
 angular.module('core').factory('ExportToPdf', [
-  '$http', 'Events','TestRunSummary','RequirementResultIcons',
-  function ($http, Events, TestRunSummary, RequirementResultIcons) {
+  '$http', 'Events','TestRunSummary','RequirementResultIcons','$filter',
+  function ($http, Events, TestRunSummary, RequirementResultIcons, $filter) {
     var ExportToPdf = {
       //            items : [],
       'testRunSummaryToPdf': testRunSummaryToPdf,
@@ -531,7 +531,7 @@ angular.module('core').factory('ExportToPdf', [
               text: (i + 1).toString(),
               style: 'smallNoMargin'
             }, {
-              text: new Date(event.eventTimestamp).toISOString().split('.')[0].replace('T', ' '),
+              text: $filter('date')(new Date(event.eventTimestamp),'EEEE, dd-M-yyyy H:mm:ss'),
               style: 'smallNoMargin'
             }, {text: event.eventDescription, style: 'smallNoMargin'}]);
 
