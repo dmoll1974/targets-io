@@ -65,7 +65,7 @@ angular.module('graphs').factory('Tags', [
 
       var bambooRegexp = new RegExp("bamboo"); /* hack to exclude bamboo url's for now, since this is not supported yet */
 
-      if (TestRuns.selected && !bambooRegexp.test(TestRuns.selected.buildResultsUrl)) {
+      if (TestRuns.selected.buildResultsUrl && !bambooRegexp.test(TestRuns.selected.buildResultsUrl)) {
         tags.unshift({
           text: 'Gatling',
           route: {
