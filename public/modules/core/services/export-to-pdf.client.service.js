@@ -343,7 +343,7 @@ angular.module('core').factory('ExportToPdf', [
       docDefinition['styles'] = ExportToPdf.styles;
       docDefinition['pageBreakBefore'] = function (currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
             if (currentNode.headlineLevel === 1 && currentNode.id) {
-              return currentNode.headlineLevel === 1 && followingNodesOnPage.length < 3 + (parseInt(currentNode.id) + 1) * 3; //Hack to deal with dynamic size of legend
+              return currentNode.headlineLevel === 1 && followingNodesOnPage.length < 3 + (parseInt(currentNode.id) + 2) * 3; //Hack to deal with dynamic size of legend
             } else {
               return currentNode.headlineLevel === 1 && followingNodesOnPage.length < 4; //for normal headlines
             }
