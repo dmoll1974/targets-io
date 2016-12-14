@@ -354,7 +354,7 @@ angular.module('core').factory('ExportToPdf', [
           columns: [
             {
               alignment: 'left',
-              text: testRunSummary.productName + ' ' + testRunSummary.productRelease + ' ' + testRunSummary.description + ' ' + testRunSummary.testRunId,
+              text: testRunSummary.productName + ' ' + testRunSummary.productRelease + ' ' + testRunSummary.dashboardName + ' ' + testRunSummary.testRunId,
               style: 'smallNoMargin'
             },
             {
