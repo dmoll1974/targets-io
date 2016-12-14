@@ -155,7 +155,7 @@ function GraphsContainerDirective () {
 
       vm.gatlingDetails = $stateParams.tag === 'Gatling' ? true : false;
 
-      vm.graphsLiveBreadcrumpSize = ($window.innerWidth > 1680) ? 60 : 40;
+      vm.graphsLiveBreadcrumpSize = $window.innerWidth * 0.025;
 
 
       //vm.value = $stateParams.tag;
