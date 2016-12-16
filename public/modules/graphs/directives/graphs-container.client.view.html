@@ -4,7 +4,7 @@
         <!--<div class="graphs-header">-->
             <!--<div layout="column">-->
                 <div layout="row"  flex>
-                    <div flex="45" layout="row" layout-align="space-between center">
+                    <div flex="40" layout="row" layout-align="space-between center">
                         <div layout="row" ng-if="vm.graphsType === 'testrun'" layout-align="start center">
                             <span ng-if="vm.graphsType === 'testrun'" style="white-space: nowrap;">
                                 <a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /
@@ -45,17 +45,19 @@
                             </div>
                         </div>
                         <div  layout="row" layout-align="start center" ng-class="{'hidden-time-range': vm.graphsType !== 'graphs-live' }">
-                            <span>Time range</span>
-                            <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange" style="padding-left: 5px;">
-                                <md-option ng-repeat="zoomOption in vm.zoomOptions" ng-value="zoomOption" ng-selected="$index === vm.selectedZoomOptionIndex">
-                                    {{zoomOption.label}}
-                                </md-option>
-                            </md-select>
+                            <!--<md-input-container class="targetsio-header-text">-->
+                                <!--<label>Time range</label>-->
+                                <md-select class="md-padding time-range-selector" ng-model="vm.zoomRange" style="padding-left: 5px;">
+                                    <md-option ng-repeat="zoomOption in vm.zoomOptions" ng-value="zoomOption" ng-selected="$index === vm.selectedZoomOptionIndex">
+                                        {{zoomOption.label}}
+                                    </md-option>
+                                </md-select>
+                            <!--</md-input-container>-->
                         </div>
 
 
                     </div>
-                    <div layout="row" flex="15" layout-align="start center">
+                    <div layout="row" flex="20" layout-align="center center">
 
                         <!--<md-button md-no-ink class="md-primary" data-ng-click="openTagsFilterModal('')">Tag filter</md-button>-->
                         <div layout="row" layout-align="end center">
