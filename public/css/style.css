@@ -586,7 +586,8 @@ md-menu.md-open-menu-container.dashboard-menu{
 
 div.boxedGraph{
 
-    border: dotted;
+    border: 1px dotted rgba(255,110,64,0.87) !important;
+    border-radius: 5px;
 }
 
 md-toast.md-error-toast-theme .md-toast-content {
@@ -854,6 +855,15 @@ div.jenkins-logo.jenkins-header {
     background-color: white;
 
 }
+.as-sortable-placeholder {
+    width: 124px;
+    margin: 2px;
+    border: 1px dotted rgb(33,150,243) !important;
+    border-radius: 5px;    border-radius: 5px;
+    background-color: #E3F2FD;
+
+}
+
 
 .targets-io-date-time-picker-background{
 
