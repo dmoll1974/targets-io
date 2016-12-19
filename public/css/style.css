@@ -841,15 +841,18 @@ div.jenkins-logo.jenkins-header {
     z-index: 1;
 }
 
-.targets-io-date-time-picker{
+.reorder{
 
-    /*z-index: 500;*/
-    /*opacity: 1 !important;*/
+    z-index: 500;
+    opacity: 1 !important;
     position: fixed;
-    /*position: element(#time-picker-parent-div);*/
-    left: 65%;
-    top: 10%;
-    /*transform: translate(-75%,-10%);*/
+    left: 50%;
+    top: 80%;
+    transform: translate(-50%,-80%);
+    border: solid;
+    border-width: thin;
+    background-color: white;
+
 }
 
 .targets-io-date-time-picker-background{

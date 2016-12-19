@@ -107,7 +107,7 @@
                                        ng-click="vm.openMenu($mdOpenMenu, $event)">
                                 <md-icon md-menu-origin class="md-primary" md-svg-src="images/assets/ic_view_week_black_24px.svg"></md-icon>
                                 <md-tooltip>
-                                    Number of columns
+                                    View
                                 </md-tooltip>
                             </md-button>
                             <md-menu-content width="4">
@@ -124,6 +124,11 @@
                                 <md-menu-item>
                                     <md-button data-ng-click="vm.toggleNumberOfColums(3)">
                                         Three columns view
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button data-ng-click="vm.toggleReOrderGraphs()">
+                                        Reorder graphs
                                     </md-button>
                                 </md-menu-item>
                             </md-menu-content>
@@ -158,13 +163,25 @@
         <div gatling-details data-ng-if="vm.gatlingDetails"></div>
 
         <div layout="row"  data-ng-hide="vm.gatlingDetails">
-            <div class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column" ng-repeat="column in vm.columnsArray" flex="vm.flex">
-                <accordion close-others="false">
-                    <div class="graph-container" focus-if data-ng-repeat="metric in vm.filteredMetrics | slice:column.start:column.end" >
-                        <graphs-content metric="metric" index="$parent.$index-$index"></graphs-content>
+
+            <div class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column"  ng-repeat="column in vm.columnsArray" flex="vm.flex">
+                <accordion  as-sortable="vm.dragControlListeners" is-disabled="!vm.reOrderGraphs" data-ng-model="column.filteredMetrics" close-others="false">
+                    <div class="graph-container" focus-if data-as-sortable-item data-ng-repeat="metric in column.filteredMetrics" >
+                        <div data-as-sortable-item-handle>
+                            <graphs-content  metric="metric" index="$parent.$index-$index"></graphs-content>
+                        </div>
                     </div>
                 </accordion>
             </div>
         </div>
     </div>
 </md-content>
+
+<div ng-if="vm.reOrderGraphs" class="reorder" draggable>
+    <md-toolbar  class="md-padding" layout-align="center center"><h4>REORDER GRAPHS</h4></md-toolbar>
+        <div layout="column">
+            <md-button ng-click="vm.toggleReOrderGraphs()" class="md-primary">
+                Done
+            </md-button>
+        </div>
+</div>

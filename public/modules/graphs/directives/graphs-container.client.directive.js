@@ -33,6 +33,7 @@ function GraphsContainerDirective () {
     vm.clearMetricFilter = clearMetricFilter;
     vm.openMenu = openMenu;
     vm.showAnnotations = showAnnotations;
+    vm.toggleReOrderGraphs = toggleReOrderGraphs;
 
 
 
@@ -169,6 +170,15 @@ function GraphsContainerDirective () {
       vm.graphsType =  $state.includes('viewGraphs') ? 'testrun' : 'graphs-live';
       Utils.graphsType = vm.graphsType;
 
+      vm.dragControlListeners = {
+        //accept: vm.enableReOrder,
+        itemMoved: updateMetricOrder,
+        orderChanged: updateMetricOrder,
+
+      };
+
+      vm.reOrderGraphs = false;
+
       refresh();
 
     }
@@ -264,18 +274,63 @@ function GraphsContainerDirective () {
 
     }
 
+    function updateMetricOrder(event){
+
+      var concattedColumns = [];
+      var columnOffset = 0;
+
+      _.each(vm.columnsArray, function(column){
+
+        _.each(column.filteredMetrics, function(metric, i){
+
+          var updateTagIndex = metric.tags.map(function(tag){return tag.text;}).indexOf($state.params.tag);
+
+          metric.tags[updateTagIndex].index = i + columnOffset;
+
+          Metrics.update(metric).success(function(){
+
+          })
+
+        })
+
+        columnOffset = column.filteredMetrics.length;
+        concattedColumns = concattedColumns.concat(column.filteredMetrics);
+
+      })
+
+      vm.filteredMetrics = concattedColumns;
+
+      populateColumns();
+    }
+
+
+
     function populateColumns(){
 
 
-        vm.columnsArray = [];
+      vm.columnsArray = [];
 
-        var itemsPerColumn = Math.ceil(vm.filteredMetrics.length / vm.numberOfColumns);
+      var numberOfItemsPerColumn = Math.ceil(vm.filteredMetrics.length / vm.numberOfColumns);
 
-        //Populates the column array
-        for (var i = 0; i < vm.filteredMetrics.length; i += itemsPerColumn) {
-          var col = {start: i, end: Math.min(i + itemsPerColumn, vm.filteredMetrics.length)};
-          vm.columnsArray.push(col);
+      var itemsPerColumn = [];
+
+
+      for (var i = 0; i < vm.filteredMetrics.length; i++) {
+
+        if(i !== 0 && i % numberOfItemsPerColumn === 0  ){
+
+          vm.columnsArray.push({filteredMetrics: itemsPerColumn });
+          itemsPerColumn = [];
+
         }
+
+
+        itemsPerColumn.push(vm.filteredMetrics[i]);
+
+      }
+
+      vm.columnsArray.push({filteredMetrics: itemsPerColumn });
+
 
 
     }
@@ -421,8 +476,46 @@ function GraphsContainerDirective () {
 
             if (tag.text === vm.value) {
 
-                metric.isOpen = true;
+              metric.isOpen = true;
+
+
+
+              if (filteredMetrics.length === 0){
                 filteredMetrics.push(metric);
+              }else{
+
+                var insertedItem = false;
+
+                var tagIndex = metric.tags.map(function(tag){return tag.text;}).indexOf($state.params.tag);
+
+                _.each(filteredMetrics, function(filteredMetric, i){
+
+                  if(tag.index < filteredMetrics[i].tags[tagIndex].index && !insertedItem ){
+
+                    filteredMetrics.splice(i, 0, metric);
+                    insertedItem = true;
+
+
+                  }
+
+
+                })
+
+                if(!insertedItem)  filteredMetrics.push(metric);
+                //var tagIndex = metric.tags.map(function(tag){return tag.text;}).indexOf($state.params.tag);
+                //
+                //if(tag.index > filteredMetrics[filteredMetrics.length - 1].tags[tagIndex].index){
+                //
+                //  filteredMetrics.push(metric);
+                //
+                //}else{
+                //
+                //  filteredMetrics.splice(index, 0, item)
+                //    filteredMetrics.unshift(metric);
+                //}
+
+                //filteredMetrics.splice(tag.index, 0, metric);
+              }
 
             }
 
@@ -550,6 +643,28 @@ function GraphsContainerDirective () {
 
       }
     };
+
+    function toggleReOrderGraphs(){
+
+      if(vm.reOrderGraphs === false){
+        _.each(vm.filteredMetrics, function(metric){
+
+          metric.isOpen = false;
+        })
+
+        vm.reOrderGraphs = true;
+
+      }else{
+
+        _.each(vm.filteredMetrics, function(metric){
+
+          metric.isOpen = true;
+
+        })
+
+        vm.reOrderGraphs = false;
+      }
+    }
 
     function showAnnotations($event, testRun, runningTest) {
 

@@ -43,7 +43,14 @@ var metricSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  'tags': [{ text: String }],
+  'tags': [{
+    text: String,
+    index: {
+      type: Number,
+      default: null
+    }
+
+  }],
   'type': {
     type: String,
     default: 'Average'
