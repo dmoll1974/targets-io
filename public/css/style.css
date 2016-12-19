@@ -850,7 +850,7 @@ div.jenkins-logo.jenkins-header {
     left: 50%;
     top: 80%;
     transform: translate(-50%,-80%);
-    border: solid;
+    border: 1px solid rgb(33,150,243) !important;
     border-width: thin;
     background-color: white;
 
