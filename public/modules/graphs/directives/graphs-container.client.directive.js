@@ -221,6 +221,10 @@ function GraphsContainerDirective () {
         if ($stateParams.testRunId) {
           TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
             TestRuns.selected = testRun;
+
+            /* Get tags used in metrics */
+            vm.tags = Tags.setTags(Dashboards.selected.metrics, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId, Dashboards.selected.tags);
+
             /* if breadcrump is too long, crop it ...*/
 
             var breadCrumpLength = $stateParams.productName.length + $stateParams.dashboardName.length + testRun.testRunId.length;

@@ -2,7 +2,9 @@
 angular.module('graphs').factory('Tags', [
   'Utils',
   'TestRuns',
-  function (Utils, TestRuns) {
+  '$rootScope',
+  '$timeout',
+  function (Utils, TestRuns, $rootScope, $timeout) {
     var Tags = {
       setTags: setTags,
       getTagIndex: getTagIndex  //createHighstockSeries: createHighstockSeries
@@ -65,7 +67,8 @@ angular.module('graphs').factory('Tags', [
 
       var bambooRegexp = new RegExp("bamboo"); /* hack to exclude bamboo url's for now, since this is not supported yet */
 
-      if (TestRuns.selected.buildResultsUrl && !bambooRegexp.test(TestRuns.selected.buildResultsUrl)) {
+
+      if ($rootScope.currentState === 'viewGraphs' && TestRuns.selected.buildResultsUrl && !bambooRegexp.test(TestRuns.selected.buildResultsUrl)) {
         tags.unshift({
           text: 'Gatling',
           route: {
@@ -75,6 +78,7 @@ angular.module('graphs').factory('Tags', [
           }
         });
       }
+
       return tags;
     }
     function tagExists(existingTags, newTag) {
