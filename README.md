@@ -92,10 +92,11 @@ The [targets-io image on Docker hub](https://hub.docker.com/r/dmoll1974/targets-
 + [Twitter Bootstrap] (http://twitter.github.com/bootstrap/)
 + [ngTagsInput] (https://github.com/mbenford/ngTagsInput)
 + [ng-clip] (https://github.com/asafdav/ng-clip)
-+ [bootstrap-ui-datetime-picker] (https://github.com/Gillardo/bootstrap-ui-datetime-picker)
++ [sc-date-time] (https://github.com/SimeonC/sc-date-time)
 + [Socket.io](http://socket.io/)
 + [Showdown](https://github.com/showdownjs/showdown)
-
++ [ng-sortable](https://github.com/a5hik/ng-sortable)
++ [pdfMake](http://pdfmake.org/#/)
 
 
 ##License
