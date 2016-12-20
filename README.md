@@ -1,8 +1,8 @@
 #targets-io #
 ##Performance test dashboard
 
-Dashboard app for organising, analysing, and benchmarking of test results of performance tests executed with Gatling Tool, JMeter or LoadRunner (see [LR2Graphite](https://github.com/ogarling/LR2Graphite) and [LRLauncher](https://github.com/ogarling/LR2Graphite/wiki)).
-The load related metrics are stored in Graphite along with for instance resource usage metrics of the application under test.
+Dashboard app for organizing, analyzing, benchmarking and reporting of test results of performance tests executed with Gatling Tool, JMeter or LoadRunner (see [LR2Graphite](https://github.com/ogarling/LR2Graphite) and [LRLauncher](https://github.com/ogarling/LR2Graphite/wiki)).
+The load related metrics are stored in Graphite together with for instance resource usage metrics of the application under test.
 Any metric stored in Graphite can be benchmarked between test runs, to provide automated assertions on the performance of an application when running tests from a continuous integration pipeline. 
 
 **Benchmarking**
@@ -14,6 +14,7 @@ The targets-io dashboard can automatically benchmark test results to prevent you
 - Benchmark to fixed baseline: check if metric deviations, compared to fixed baseline (for instance your current live version), stay within configured allowed deviation.
  
 The requirements / benchmark thresholds can be set on any of the metrics you have configured in your dashboard. 
+The consolidated test run results are exposed via a REST API and can be used to pass or fail your build in your CI server.
 
 **Demo**
 
