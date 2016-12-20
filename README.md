@@ -28,12 +28,14 @@ To set up a local demo environment take the following instruction steps for Linu
 
 or
 
-Another approach is to use [Vagrant](http://www.vagrantup,com) to create a virtual machine. This way the setting up of the environment is completely automated. You can use the following steps:
-- Required is the Vagrant plugin [vagrant-docker-compose](https://github.com/leighmcculloch/vagrant-docker-compose) to be installed first using the command line: `vagrant plugin install vagrant-docker-compose`  
-- Then you can use this [Vagrantfile](https://raw.githubusercontent.com/dmoll1974/targets-io/master/Vagrantfile) to generate a box. Place file in a directory of your choosing and use command line in that directory: `vagrant up`.  
-Please note: you can also clone this repository instead of downloading the file or use wget: `wget https://raw.githubusercontent.com/dmoll1974/targets-io/master/Vagrantfile && vagrant up`
+Another approach is to use [Vagrant](http://www.vagrantup,com) and [VirtualBox](https://www.virtualbox.org/) to create a virtual machine. This way the setting up of the environment is completely automated. You can use the following steps:
+- Install [Vagrant](http://www.vagrantup,com) and [VirtualBox](https://www.virtualbox.org/)
+- Install the [vagrant-docker-compose](https://github.com/leighmcculloch/vagrant-docker-compose) plugin using the command line: `vagrant plugin install vagrant-docker-compose`  
+- Use this [Vagrantfile](https://raw.githubusercontent.com/dmoll1974/targets-io/master/Vagrantfile) to generate a box. Place file in a directory of your choosing and use command line in that directory: `vagrant up`.  
 
-The end result will be 6 fired up docker containers:
+> shortcut using curl: `curl -O https://raw.githubusercontent.com/dmoll1974/targets-io/master/Vagrantfile && vagrant up`
+
+The end result will be 6 started docker containers:
 
 | Container  	| Description                                            	| port  	|
 |------------	|--------------------------------------------------------	|-------	|
