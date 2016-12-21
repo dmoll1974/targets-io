@@ -853,6 +853,9 @@ div.jenkins-logo.jenkins-header {
     border: 1px solid rgb(33,150,243) !important;
     border-width: thin;
     background-color: white;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(207,196,207,1)!important;
+    -moz-box-shadow: 2px 2px 5px 0px rgba(207,196,207,1)!important;
+    box-shadow: 2px 2px 5px 0px rgba(207,196,207,1)!important;
 
 }
 .as-sortable-placeholder {
