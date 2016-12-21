@@ -513,12 +513,14 @@ function TestrunsDirective () {
     };
 
     function openDeleteSelectedTestRunsModal(size) {
+
+      /* get number of selected test runs*/
+
       var numberOfSelected = $scope.testRuns.filter(function(testRun){
         if(testRun.selected === true)
         return testRun.selected === true;
       });
 
-     /* get number of selected test runs*/
 
       ConfirmModal.itemType = 'Delete ';
       ConfirmModal.selectedItemDescription = ' selected ' + numberOfSelected.length + ' test runs';
@@ -538,7 +540,7 @@ function TestrunsDirective () {
             $scope.testRunSelected = false;
             $scope.testRuns[i].selected = false;
             $scope.testRuns.splice(i, 1);
-            if (TestRuns.list[i]) TestRuns.list.splice(i, 1);
+            //if (TestRuns.list[i]) TestRuns.list.splice(i, 1);
           }
 
         }
@@ -548,7 +550,9 @@ function TestrunsDirective () {
             .then(function () {
 
               /* refresh view */
-
+              //setTimeout(function(){
+              //    $state.go($state.current, {}, {reload: true});
+              //},1);
 
 
             });
