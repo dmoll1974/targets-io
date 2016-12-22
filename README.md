@@ -5,7 +5,7 @@ Dashboard app for organizing, analyzing, benchmarking and reporting of test resu
 The load related metrics are stored in Graphite together with for instance resource usage metrics of the application under test.
 Any metric stored in Graphite can be benchmarked between test runs, to provide automated assertions on the performance of an application when running tests from a continuous integration pipeline. 
 
-**Benchmarking**
+**Automated test result analysis and benchmarking**
 
 The targets-io dashboard can automatically benchmark test results to prevent you from spending a lot of time analysing your continuous performance test runs. The dashboard does the following benchmarks:
 
