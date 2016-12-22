@@ -23,7 +23,7 @@
             <md-button  class="md-icon-button" data-ng-click="vm.toggleTestRunSummary(metric, $event)">
                 <md-icon ng-class="{'graph-button': metric.includeInSummary === true, 'not-in-summary': metric.includeInSummary === false}" md-svg-src="images/assets/ic_assignment_black_18px.svg"></md-icon>
                 <md-tooltip ng-if="metric.includeInSummary === false">Click to add metric to test run summary</md-tooltip>
-                <md-tooltip ng-if="metric.includeInSummary === true">Click to remove metric from test run summary</md-tooltip>
+                <md-tooltip ng-if="metric.includeInSummary === true">{{metric.defaultSummaryText || 'Click to remove metric from test run summary' }}</md-tooltip>
             </md-button>
         </div>
 
