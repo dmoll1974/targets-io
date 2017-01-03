@@ -90,14 +90,14 @@
 
     <div ng-if="product.releaseTestRuns.length === 0">No test runs found linked to one of the product requirements, click <a ui-sref="productRequirements({productName: product.name})">here</a> to configure.</div>
 
-    <div  style="margin-bottom: 5px;" ng-repeat="testRunIndexItem in testRunIndexItems | orderBy:'-end':true">
+    <div  style="margin-bottom: 5px;" ng-repeat="testRunIndexItem in testRunIndexItems | orderBy:'description'">
         <a class="md-padding" href="" ng-click="scrollTo(testRunIndexItem.testRunId)">{{testRunIndexItem.description}}</a><br/>
     </div>
 
 
 
 
-<md-content ng-repeat="testRun in product.releaseTestRuns track by $index">
+<md-content ng-repeat="testRun in product.releaseTestRuns  | orderBy:'dashboardName'">
 
     <md-divider  ></md-divider>
 
