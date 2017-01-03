@@ -133,6 +133,8 @@ function getData(req, res){
 
                   });
 
+
+
                   /* add legend data */
 
                   var seriesTotal = {};
