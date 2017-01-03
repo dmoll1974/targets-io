@@ -81,6 +81,14 @@
                     </md-tooltip>
                 </md-button>
             </div>
+            <div ng-if="dashboardView && dashboard.useInBenchmark === true">
+                <md-button  class="md-icon-button" data-ng-click="viewTrends()">
+                    <md-icon md-svg-src="images/assets/ic_timeline_white_24px.svg"></md-icon>
+                    <md-tooltip>
+                        Trends
+                    </md-tooltip>
+                </md-button>
+            </div>
             <div ng-if="graphsView">
                 <md-button  class="md-icon-button" data-ng-click="goToTestRunSummary()">
                     <md-icon md-svg-src="images/assets/ic_assignment_white_24px.svg"></md-icon>

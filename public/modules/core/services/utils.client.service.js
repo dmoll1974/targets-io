@@ -14,6 +14,10 @@ angular.module('core').factory('Utils', [
           value: '',
           label: 'Since start test run'
       },
+      trendsZoomRange: {
+          value: '14',
+          label: 'Last 2 weeks'
+      },
       zoomRangeTargetPreview: {
           value: '-10min',
           label: 'Last 10 minutes'
@@ -54,6 +58,10 @@ angular.module('core').factory('Utils', [
         Utils.zoomRangeTargetPreview = {
             value: '-10min',
             label: 'Last 10 minutes'
+        };
+        Utils.trendsZoomRange = {
+            value: '14',
+            label: 'Last 2 weeks'
         };
         Utils.zoomFrom = undefined;
         Utils.zoomUntil = undefined;

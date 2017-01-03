@@ -28,6 +28,7 @@ function TargetsIoHeaderDirective () {
         $scope.filterTestRuns = filterTestRuns;
         $scope.goHome = goHome;
         $scope.viewLiveGraphs = viewLiveGraphs;
+        $scope.viewTrends = viewTrends;
         $scope.showTemplates = showTemplates;
         $scope.gettingStarted = gettingStarted;
         $scope.goToTestRunSummary = goToTestRunSummary;
@@ -229,7 +230,8 @@ function TargetsIoHeaderDirective () {
                 'addProductReleaseLink',
                 'addDashboard',
                 'editDashboard',
-                'importDbProduct'
+                'importDbProduct',
+                'viewTrends'
 
 
             ]
@@ -288,7 +290,8 @@ function TargetsIoHeaderDirective () {
                 'addTestRun',
                 'editTestRun',
                 'testRunSummary',
-                'visualBenchmark'
+                'visualBenchmark',
+                'viewTrends'
             ]
 
             var stateCheck = true;
@@ -391,6 +394,15 @@ function TargetsIoHeaderDirective () {
                 'productName': $stateParams.productName,
                 'dashboardName': $stateParams.dashboardName,
                 tag: Dashboards.getDefaultTag(Dashboards.selected.tags)
+            });
+        }
+
+        function viewTrends(){
+
+            $state.go('viewTrends', {
+                'productName': $stateParams.productName,
+                'dashboardName': $stateParams.dashboardName,
+                tag: 'All'
             });
         }
 

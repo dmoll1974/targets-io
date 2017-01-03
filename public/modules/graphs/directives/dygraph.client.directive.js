@@ -309,7 +309,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
             labels: dygraphData.labels,
             axisLabelFontSize: 12,
             legend: Utils.showTooltip ? 'onmouseover' : 'never',
-            labelsDiv: document.getElementById("legend-" + $scope.index),
+            labelsDiv: document.getElementById('legend-' + $scope.index),
             includeZero: true,
             valueRange: $scope.yRange,
             highlightCircleSize: 0,

@@ -1,0 +1,68 @@
+<accordion-group is-open="metric.isOpen" class="graph-accordion-group">
+    <accordion-heading>
+        <div layout="row" layout-align="space-between center" flex>
+            <div>{{metric.alias | uppercase}}</div>
+            <md-icon style="margin:0px;" ng-if="metric.isOpen" md-svg-src="images/assets/ic_expand_less_black_24px.svg"></md-icon>
+            <md-icon style="margin:0px;" ng-if="!metric.isOpen" md-svg-src="images/assets/ic_expand_more_black_24px.svg"></md-icon>
+        </div>
+    </accordion-heading>
+    <!--<div  ng-if="metric.isOpen">-->
+        <!--<div layout="row">-->
+            <!--<md-button  class=" md-icon-button" data-ng-click="vm.editMetric(metric._id)">-->
+                <!--<md-icon class="graph-button" md-svg-src="images/assets/ic_settings_black_18px.svg"></md-icon>-->
+                <!--<md-tooltip>Metric configuration</md-tooltip>-->
+            <!--</md-button>-->
+            <!--<md-button  class=" md-icon-button" data-ng-click="vm.setTags()">-->
+                <!--<md-icon class="graph-button" md-svg-src="images/assets/ic_label_black_18px.svg"></md-icon>-->
+                <!--<md-tooltip>Set tags</md-tooltip>-->
+            <!--</md-button>-->
+            <md-button  class=" md-icon-button" data-ng-click="vm.setMetricShareUrl(metric)">
+                <md-icon class="graph-button" md-svg-src="images/assets/ic_link_black_18px.svg"></md-icon>
+                <md-tooltip>Share URL</md-tooltip>
+            </md-button>
+            <!--<md-button  class="md-icon-button" data-ng-click="vm.toggleTestRunSummary(metric, $event)">-->
+                <!--<md-icon ng-class="{'graph-button': metric.includeInSummary === true, 'not-in-summary': metric.includeInSummary === false}" md-svg-src="images/assets/ic_assignment_black_18px.svg"></md-icon>-->
+                <!--<md-tooltip ng-if="metric.includeInSummary === false">Click to add metric to test run summary</md-tooltip>-->
+                <!--<md-tooltip ng-if="metric.includeInSummary === true">{{metric.defaultSummaryText || 'Click to remove metric from test run summary' }}</md-tooltip>-->
+            <!--</md-button>-->
+        </div>
+
+        <!--<span>-->
+            <!--<div class="btn-group">-->
+                <!--<label title="Edit metric" class="btn default" ng-click="vm.editMetric(metric._id)"><span-->
+                        <!--class="btn btn-xs glyphicon glyphicon-wrench"></span></label>-->
+                <!--<label title="Edit tags" class="btn default" ng-click="vm.setTags()"><span-->
+                        <!--class="btn btn-xs glyphicon glyphicon-tag"></span></label>-->
+                <!--<label title="Share URL" class="btn default"-->
+                       <!--ng-click="vm.setMetricShareUrl(metric)"><span-->
+                        <!--class="btn btn-xs glyphicon glyphicon-share"></span></label>-->
+            <!--</div>-->
+        <!--</span>-->
+        <span><input ng-readonly="true" ng-model="vm.metricShareUrl" ng-if="vm.showUrl" style="width:50%;"
+                     share-graph-url/></span><span><button ng-if="vm.showUrl && vm.hasFlash()"
+                                                           tooltip-size="medium" title="Copy graph URL"
+                                                           tooltip-side="top" clip-copy="vm.metricShareUrl"
+                                                           clip-click="vm.clipClicked()">Copy
+             </button></span>
+        <span>
+              <div class="input-group" ng-if="vm.showTags" class="graph-input-tags">
+
+                  <tags-input data-ng-model="metric.tags" on-tag-removed="vm.tagRemoved($tag)">
+                      <auto-complete source="vm.loadTags($query)" loadOnDownArrow="true"></auto-complete>
+                  </tags-input>
+                    <span class="input-group-btn">
+                        <button ng-click="vm.updateTags(metric, metric.tags[metric.tags.length - 1].text)" class="btn btn-default" type="button"><span
+                                class="btn btn-xs glyphicon glyphicon-ok"></span></button>
+                    </span>
+              </div>
+        </span>
+        <span>
+            <label ng-if= "vm.numberOfColumns > 1" title="Expand" class="btn default pull-right"
+                   ng-click="vm.drilldownToMetric(metric)"><span
+                    class="btn btn-sm glyphicon  glyphicon-resize-full"></span></label>
+        </span>
+
+        <trends-dygraph ng-if="metric.isOpen" metric="metric" index="index"></trends-dygraph>
+
+        </div>
+</accordion-group>

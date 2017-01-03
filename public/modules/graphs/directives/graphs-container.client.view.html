@@ -168,7 +168,7 @@
                 <accordion  as-sortable="vm.dragControlListeners" is-disabled="!vm.reOrderGraphs" data-ng-model="column.filteredMetrics" close-others="false">
                     <div class="graph-container" focus-if data-as-sortable-item data-ng-repeat="metric in column.filteredMetrics" >
                         <div data-as-sortable-item-handle>
-                            <graphs-content  metric="metric" index="$parent.$index-$index"></graphs-content>
+                            <graphs-content  metric="metric" index="$parent.$index +'-'+$index"></graphs-content>
                         </div>
                     </div>
                 </accordion>

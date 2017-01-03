@@ -17,7 +17,7 @@ angular.module('graphs').config([
           return 'testrun'
         }
       }*/
-      //templateUrl: 'modules/graphs/views/graphs-content.client.view.html'
+      //templateUrl: 'modules/graphs/views/trends-content.client.view.html'
     }).state('viewLiveGraphs', {
       url: '/graphs-live/:productName/:dashboardName/:tag/?zoomRange&zoomFrom&zoomUntil&metricFilter',
       template: '<graphs-container></graphs-container>'/*,
