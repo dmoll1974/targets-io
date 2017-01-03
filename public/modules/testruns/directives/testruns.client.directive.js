@@ -362,10 +362,11 @@ function TestrunsDirective () {
           var originalProductRelease = testRun.productRelease;
           var originalTestRunId = testRun.testRunId;
 
+          testRun.productRelease = $scope.productRelease === '' ? '' : $scope.productRelease;
+
           var productReleaseRegExp = new RegExp(testRun.productRelease, 'gi');
           var updatedTestRunId = testRun.testRunId.replace(productReleaseRegExp, $scope.productRelease);
 
-          testRun.productRelease = $scope.productRelease === '' ? '' : $scope.productRelease;
 
           if($scope.productRelease !== '' && originalProductRelease !== '') testRun.testRunId = updatedTestRunId;
 
@@ -385,7 +386,7 @@ function TestrunsDirective () {
 
             TestRunSummary.getTestRunSummary($scope.testRun.productName, $scope.testRun.dashboardName, originalTestRunId).success(function(response){
 
-              if(response){
+              if(response.testRunSummary){
                 response.testRunSummary.productRelease = testRun.productRelease;
 
                 TestRunSummary.updateTestRunSummary(response.testRunSummary).success(function(updatedTestRunSummary){
@@ -492,7 +493,7 @@ function TestrunsDirective () {
           /* Only update test runs more recent than baseline */
           if (testRun.testRunId === baseline)
             baselineSet = true;
-          if (testRun.testRunId !== baseline && baselineSet == false) {
+          if (testRun.testRunId !== baseline && baselineSet === false && testRun.graphiteDataExists === true) {
             $scope.testRuns[index].benchmarkResultFixedOK = 'pending';
             testRun.baseline = baseline;
             arrayOfPromises.push(TestRuns.updateFixedBaseline(testRun).then(function (testRun) {
