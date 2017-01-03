@@ -362,10 +362,11 @@ function TestrunsDirective () {
           var originalProductRelease = testRun.productRelease;
           var originalTestRunId = testRun.testRunId;
 
+          testRun.productRelease = $scope.productRelease === '' ? '' : $scope.productRelease;
+
           var productReleaseRegExp = new RegExp(testRun.productRelease, 'gi');
           var updatedTestRunId = testRun.testRunId.replace(productReleaseRegExp, $scope.productRelease);
 
-          testRun.productRelease = $scope.productRelease === '' ? '' : $scope.productRelease;
 
           if($scope.productRelease !== '' && originalProductRelease !== '') testRun.testRunId = updatedTestRunId;
 
@@ -385,7 +386,7 @@ function TestrunsDirective () {
 
             TestRunSummary.getTestRunSummary($scope.testRun.productName, $scope.testRun.dashboardName, originalTestRunId).success(function(response){
 
-              if(response){
+              if(response.testRunSummary){
                 response.testRunSummary.productRelease = testRun.productRelease;
 
                 TestRunSummary.updateTestRunSummary(response.testRunSummary).success(function(updatedTestRunSummary){
