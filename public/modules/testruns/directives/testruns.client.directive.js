@@ -493,7 +493,7 @@ function TestrunsDirective () {
           /* Only update test runs more recent than baseline */
           if (testRun.testRunId === baseline)
             baselineSet = true;
-          if (testRun.testRunId !== baseline && baselineSet == false) {
+          if (testRun.testRunId !== baseline && baselineSet === false && testRun.graphiteDataExists === true) {
             $scope.testRuns[index].benchmarkResultFixedOK = 'pending';
             testRun.baseline = baseline;
             arrayOfPromises.push(TestRuns.updateFixedBaseline(testRun).then(function (testRun) {

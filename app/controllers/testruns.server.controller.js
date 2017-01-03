@@ -583,6 +583,14 @@ function testRunsForDashboard(req, res) {
             /* if baseline is present in testRuns, return testRuns*/
             if (index !== -1){
 
+              if(archivedTestRunSummaries.length > 0 && testRuns.length < req.params.limit){
+
+                _.each(archivedTestRunSummaries, function(testRunSummary){
+
+                  testRuns.push(createTestRunFromSummary(testRunSummary))
+                })
+              }
+
               res.jsonp(testRuns);
 
             }else{
@@ -799,7 +807,8 @@ function getTestRunById(productName, dashboardName, testRunId, callback) {
     $and: [
       { productName: productName },
       { dashboardName: dashboardName },
-      { testRunId: testRunId }
+      { testRunId: testRunId },
+      { graphiteDataExists: true }
     ]
   }).exec(function (err, testRun) {
     if (err) {
