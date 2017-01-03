@@ -56,6 +56,48 @@ function getData(req, res){
                   return res.status(400).send({message: errorHandler.getErrorMessage(err)});
                 } else {
 
+                  /* first get al targets from all test runs */
+
+                  var allMetricLabels = {};
+                  allMetricLabels.metrics = [];
+
+                  _.each(testRuns, function (testRun, i) {
+
+                    _.each(testRun.metrics, function (metric) {
+
+                      var existingMetricIndex = allMetricLabels.metrics.map(function (storedMetric) {
+                        return storedMetric.alias;
+                      }).indexOf(metric.alias);
+
+                      var metricIndex = (existingMetricIndex === -1) ? allMetricLabels.metrics.length : existingMetricIndex;
+
+
+                      if (existingMetricIndex === -1) {
+
+                        allMetricLabels.metrics[allMetricLabels.metrics.length] = {};
+                        allMetricLabels.metrics[metricIndex].alias = metric.alias;
+                        allMetricLabels.metrics[metricIndex].labels = [];
+
+                      }
+
+                      _.each(metric.targets, function (target, index) {
+
+
+                        if (allMetricLabels.metrics[metricIndex].labels.indexOf(target.target) === -1)allMetricLabels.metrics[metricIndex].labels.push(target.target);
+
+
+                      });
+
+
+                      /* sort labels */
+
+                      allMetricLabels.metrics[metricIndex].labels.sort();
+
+                    });
+                  });
+
+
+
                   _.each(testRuns, function (testRun, i) {
 
                     _.each(testRun.metrics, function (metric) {
@@ -100,31 +142,32 @@ function getData(req, res){
                       });
 
 
-                      _.each(metric.targets, function (target, index) {
-
-                        /* add label*/
-
-                        if (trends.metrics[metricIndex].dygraphData.labels.indexOf(target.target) === -1)trends.metrics[metricIndex].dygraphData.labels.push(target.target);
-
-                        if (targetsArray && targetsArray[0] !== testRun.end) {
-
-                          if (index !== 0) {
-                            trends.metrics[metricIndex].dygraphData.data.push(targetsArray);
-                            targetsArray = [];
-                          }
-
-                          targetsArray.push(testRun.end);
-                          targetsArray.push(target.value);
-                          trends.metrics[metricIndex].dygraphData.graphNumberOfValidDatapoints += 1;
-
-                        } else {
-
-                          targetsArray.push(target.value);
-                          trends.metrics[metricIndex].dygraphData.graphNumberOfValidDatapoints += 1;
-                        }
+                      targetsArray.push(testRun.end);
 
 
-                      });
+                      var metricLabelsIndex = allMetricLabels.metrics.map(function (metric) {
+                          return metric.alias;
+                        }).indexOf(metric.alias);
+
+
+                      _.each(allMetricLabels.metrics[metricLabelsIndex].labels, function(label, index){
+
+                         if(trends.metrics[metricIndex].dygraphData.labels.indexOf(label) === -1) trends.metrics[metricIndex].dygraphData.labels.push(label);
+
+                            var targetIndex = metric.targets.map(function(target){return target.target;}).indexOf(label);
+
+                            if(targetIndex === -1){
+
+                              targetsArray.push(null);
+
+                            }else{
+
+                              targetsArray.push(metric.targets[targetIndex].value);
+                              trends.metrics[metricIndex].dygraphData.graphNumberOfValidDatapoints += 1;
+                            }
+
+                        })
+
 
                       trends.metrics[metricIndex].dygraphData.data.push(targetsArray)
                       targetsArray = [];
