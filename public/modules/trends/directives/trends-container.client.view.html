@@ -29,7 +29,7 @@
                             <span  style="white-space: nowrap;">
                                 <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
                                 <a data-ng-href="/#!/browse/{{vm.productName}}/{{vm.dashboardName}}/">{{vm.dashboardName}}</a>
-                                 / trends
+                                 / TRENDS
 
                             </span>
                             <!--<div ng-if="vm.runningTest && vm.graphsType === 'graphs-live'"  >-->
@@ -158,9 +158,9 @@
                 </md-tab>
             </md-tabs>
         </div>
-        <div gatling-details data-ng-if="vm.gatlingDetails"></div>
-
-        <div layout="row"  data-ng-hide="vm.gatlingDetails">
+        <div class="md-padding" layout="row"  ng-if="vm.filteredMetrics.length === 0">
+            <p>No test runs available in selected period, or no metrics are benchmarked for this dashboard. </p>
+        </div>
 
             <div class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column" flex="vm.flex">
                 <accordion  data-ng-model="vm.filteredMetrics" close-others="false">

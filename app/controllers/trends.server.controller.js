@@ -56,46 +56,29 @@ function getData(req, res){
                   return res.status(400).send({message: errorHandler.getErrorMessage(err)});
                 } else {
 
-                  /* first get al targets from all test runs */
+                  if(testRuns.length > 0) {
 
-                  var allMetricLabels = {};
-                  allMetricLabels.metrics = [];
+                    if(testRuns.length > 1) {
 
-                  _.each(testRuns, function (testRun, i) {
+                      /* Calculate additional data points add to the edges of the graphs */
 
-                    _.each(testRun.metrics, function (metric) {
+                      var dateRangeInMs = new Date(testRuns[testRuns.length - 1].end).getTime() - new Date(testRuns[0].end).getTime();
+                      var startDate = new Date(new Date(testRuns[0].end).getTime() - (dateRangeInMs / 50));
+                      var endDate = new Date(new Date(testRuns[testRuns.length - 1].end).getTime() + (dateRangeInMs / 50));
 
-                      var existingMetricIndex = allMetricLabels.metrics.map(function (storedMetric) {
-                        return storedMetric.alias;
-                      }).indexOf(metric.alias);
+                    }else{
 
-                      var metricIndex = (existingMetricIndex === -1) ? allMetricLabels.metrics.length : existingMetricIndex;
+                      /* Calculate additional data points add to the one data point, one hour before and after */
 
+                      var startDate = new Date(new Date(testRuns[0].end).getTime() - (60 * 60 * 1000));
+                      var endDate = new Date(new Date(testRuns[0].end).getTime() + (60 * 60 * 1000));
 
-                      if (existingMetricIndex === -1) {
+                    }
+                  }
 
-                        allMetricLabels.metrics[allMetricLabels.metrics.length] = {};
-                        allMetricLabels.metrics[metricIndex].alias = metric.alias;
-                        allMetricLabels.metrics[metricIndex].labels = [];
+                  /* Get all targets/labels from all test runs */
 
-                      }
-
-                      _.each(metric.targets, function (target, index) {
-
-
-                        if (allMetricLabels.metrics[metricIndex].labels.indexOf(target.target) === -1)allMetricLabels.metrics[metricIndex].labels.push(target.target);
-
-
-                      });
-
-
-                      /* sort labels */
-
-                      allMetricLabels.metrics[metricIndex].labels.sort();
-
-                    });
-                  });
-
+                  var allMetricLabels = getAllLabelsFromTestRuns(testRuns);
 
 
                   _.each(testRuns, function (testRun, i) {
@@ -114,12 +97,29 @@ function getData(req, res){
                         trends.metrics[metricIndex].alias = metric.alias;
                         trends.metrics[metricIndex].dygraphData = {};
                         trends.metrics[metricIndex].dygraphData.annotations = [];
-                        trends.metrics[metricIndex].dygraphData.data = [];
                         trends.metrics[metricIndex].dygraphData.labels = [];
                         trends.metrics[metricIndex].dygraphData.labels.push("DateTime");
                         trends.metrics[metricIndex].dygraphData.legendData = [];
                         trends.metrics[metricIndex].dygraphData.maxValue = 0;
                         trends.metrics[metricIndex].dygraphData.graphNumberOfValidDatapoints = 0;
+                        trends.metrics[metricIndex].dygraphData.data = [];
+
+                        /* add dummy data at start of graph */
+
+                        targetsArray.push(startDate);
+
+                        var metricLabelsIndex = allMetricLabels.metrics.map(function (metric) {
+                          return metric.alias;
+                        }).indexOf(metric.alias);
+
+                        _.each(allMetricLabels.metrics[metricLabelsIndex].labels, function(label, index){
+
+                          targetsArray.push(null);
+                        })
+
+                        trends.metrics[metricIndex].dygraphData.data.push(targetsArray);
+                        targetsArray = [];
+
                       }
 
                       /* add tags */
@@ -166,13 +166,32 @@ function getData(req, res){
                               trends.metrics[metricIndex].dygraphData.graphNumberOfValidDatapoints += 1;
                             }
 
-                        })
+                      })
 
 
                       trends.metrics[metricIndex].dygraphData.data.push(targetsArray)
                       targetsArray = [];
 
+                      /* add dummy data at end of graph */
+
+                      targetsArray.push(endDate);
+
+                      var metricLabelsIndex = allMetricLabels.metrics.map(function (metric) {
+                        return metric.alias;
+                      }).indexOf(metric.alias);
+
+                      _.each(allMetricLabels.metrics[metricLabelsIndex].labels, function(label, index){
+
+                        targetsArray.push(null);
+                      })
+
+                      trends.metrics[metricIndex].dygraphData.data.push(targetsArray);
+                      targetsArray = [];
+
+
                     });
+
+
 
                   });
 
@@ -234,6 +253,50 @@ function getData(req, res){
 
   });
 
+
+  function getAllLabelsFromTestRuns(testRuns){
+
+
+    var allMetricLabels = {};
+    allMetricLabels.metrics = [];
+
+    _.each(testRuns, function (testRun, i) {
+
+      _.each(testRun.metrics, function (metric) {
+
+        var existingMetricIndex = allMetricLabels.metrics.map(function (storedMetric) {
+          return storedMetric.alias;
+        }).indexOf(metric.alias);
+
+        var metricIndex = (existingMetricIndex === -1) ? allMetricLabels.metrics.length : existingMetricIndex;
+
+
+        if (existingMetricIndex === -1) {
+
+          allMetricLabels.metrics[allMetricLabels.metrics.length] = {};
+          allMetricLabels.metrics[metricIndex].alias = metric.alias;
+          allMetricLabels.metrics[metricIndex].labels = [];
+
+        }
+
+        _.each(metric.targets, function (target, index) {
+
+
+          if (allMetricLabels.metrics[metricIndex].labels.indexOf(target.target) === -1)allMetricLabels.metrics[metricIndex].labels.push(target.target);
+
+
+        });
+
+
+        /* sort labels */
+
+        allMetricLabels.metrics[metricIndex].labels.sort();
+
+      });
+    });
+
+    return allMetricLabels;
+  }
 
   function  addToTotals(seriesTotal, datapoint){
     var updatedTotal = {};
