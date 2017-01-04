@@ -190,7 +190,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
         $scope.showTooltip = newVal;
         $scope.graph.updateOptions({legend: Utils.showTooltip ? 'onmouseover' : 'never'});
-        $scope.graph.updateOptions({labelsDiv: document.getElementById('legend-' + $scope.index)});
+        //$scope.graph.updateOptions({labelsDiv: document.getElementById('legend-' + $scope.index)});
 
       }
     });
@@ -242,9 +242,9 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       /* if dygraphData is already available form db, and we are not zooming, use the data from db */
 
 
-
-     processGraphData(convertTimeStamps($scope.metric.dygraphData));
-
+      setTimeout(function() {
+        processGraphData(convertTimeStamps($scope.metric.dygraphData));
+      });
     }
 
 
