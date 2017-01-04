@@ -164,11 +164,11 @@
 
         <div layout="row"  data-ng-hide="vm.gatlingDetails">
 
-            <div class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column"  ng-repeat="column in vm.columnsArray" flex="vm.flex">
+            <div class="md-padding graph-column" ng-attr-id="{{'column-' + $index + '-' + vm.columnsArray.length}}" layout="column"  ng-repeat="column in vm.columnsArray track by $index" flex="vm.flex">
                 <accordion  as-sortable="vm.dragControlListeners" is-disabled="!vm.reOrderGraphs" data-ng-model="column.filteredMetrics" close-others="false">
                     <div class="graph-container" focus-if data-as-sortable-item data-ng-repeat="metric in column.filteredMetrics" >
                         <div data-as-sortable-item-handle>
-                            <graphs-content  metric="metric" index="$parent.$index +'-'+$index"></graphs-content>
+                            <graphs-content  metric="metric" index="$parent.$parent.$index +'-'+$index"></graphs-content>
                         </div>
                     </div>
                 </accordion>
