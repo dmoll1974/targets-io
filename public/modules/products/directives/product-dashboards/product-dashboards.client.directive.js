@@ -13,7 +13,7 @@ function ProductDashboardsDirective () {
   return directive;
 
   /* @ngInject */
-  function ProductDashboardsDirectiveController ($scope, $state, $stateParams, $window, Templates, Dashboards, $filter, $rootScope, $interval, Products) {
+  function ProductDashboardsDirectiveController ($scope, $state, $stateParams, $window, Templates, Dashboards, $filter, $rootScope, $interval, Products, ConfirmModal, $modal) {
 
 
     $scope.updateDashboard = updateDashboard;
@@ -21,6 +21,13 @@ function ProductDashboardsDirective () {
     $scope.editDashboard = editDashboard;
     $scope.viewTrends = viewTrends;
     $scope.toggleJenkinsIntegration = toggleJenkinsIntegration;
+    $scope.openMenu = openMenu;
+    $scope.addTestRun = addTestRun;
+    $scope.manageTags = manageTags;
+    $scope.addTemplate = addTemplate;
+    $scope.clone = clone;
+    $scope.openDeleteDashboardModal = openDeleteDashboardModal;
+
 
 
     /* activate */
@@ -115,6 +122,76 @@ function ProductDashboardsDirective () {
         });
 
 
+    };
+
+    var originatorEv;
+    function openMenu  ($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
+
+    function addTestRun (dashboard){
+
+      $state.go('addTestRun',{productName: $scope.product.name, dashboardName: dashboard.name});
+
+    }
+
+    function manageTags(dashboard){
+
+      $state.go('manageDashboardTags',{productName: $scope.product.name, dashboardName: dashboard.name});
+
+    }
+
+
+    function addTemplate(dashboard){
+
+      Dashboards.get($scope.product.name, dashboard.name).success(function(dashboard){
+
+        Templates.selected = dashboard;
+        $state.go('addTemplate');
+
+
+      });
+
+    }
+
+    function clone (dashboard) {
+
+      Dashboards.selected = dashboard;
+      Dashboards.clone().success(function (dashboard) {
+
+        $state.go('editDashboard', {
+          'productName': $scope.product.name,
+          'dashboardName': dashboard.name
+        });
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
+
+
+    function openDeleteDashboardModal (size, dashboard) {
+
+      Dashboards.selected = dashboard;
+      ConfirmModal.itemType = 'Delete dashboard ';
+      ConfirmModal.selectedItemId = Dashboards.selected._id;
+      ConfirmModal.selectedItemDescription = Dashboards.selected.name;
+      var modalInstance = $modal.open({
+        templateUrl: 'ConfirmDelete.html',
+        controller: 'ModalInstanceController',
+        size: size  //,
+      });
+      modalInstance.result.then(function () {
+        Dashboards.delete(Dashboards.selected._id).success(function (dashboard) {
+          /* Refresh sidebar */
+          Products.get($scope.product.name).success(function (product) {
+            $scope.product = product;
+
+          });
+
+        });
+      }, function () {
+      });
     };
 
 

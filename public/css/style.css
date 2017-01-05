@@ -918,3 +918,9 @@ div.jenkins-logo.jenkins-header {
     margin: 0px !important;
     padding: 0px !important;
 }
+
+.dashboard-row > td > * .md-button{
+
+    margin: 0px !important;
+    padding: 0px !important;
+}

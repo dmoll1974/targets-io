@@ -12,7 +12,6 @@
                     <th>Jenkins integration</th>
                     <th>Jenkins job</th>
                     <th>Trends</th>
-                    <th>Settings</th>
                     <th></th>
                 </tr>
             </thead>
@@ -49,10 +48,59 @@
                         <!--</md-button>-->
                     </td>
                     <td>
-                        <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_black_24px.svg" data-ng-click="editDashboard(dashboard)"></md-icon>
-                        <md-tooltip>
-                            Dashboard settings
-                        </md-tooltip>
+                        <md-menu style="padding-top: 0px; padding-bottom: 0px;">
+                            <div aria-label="Open dashboard menu" class="md-icon-button"
+                                 ng-click="openMenu($mdOpenMenu, $event)">
+                                <md-icon md-menu-origin md-svg-src="images/assets/ic_menu_black_24px.svg" ng-click="openMenu($mdOpenMenu, $event)"></md-icon>
+                                <md-tooltip>
+                                    Dashboard menu
+                                </md-tooltip>
+                            </div>
+                            <md-menu-content width="4" height="10">
+                                
+                                <md-menu-item >
+                                    <md-button class="targets-io-menu-button" data-ng-click="editDashboard(dashboard)">
+                                        <md-icon md-svg-src="images/assets/ic_settings_black_24px.svg"
+                                                 md-menu-align-target></md-icon>
+                                        Settings
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item >
+                                    <md-button class="targets-io-menu-button" data-ng-click="clone(dashboard)">
+                                        <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg"></md-icon>
+                                        Clone dashboard
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item >
+                                    <md-button class="targets-io-menu-button" data-ng-click="manageTags(dashboard)">
+                                        <md-icon md-svg-src="images/assets/ic_local_offer_black_36px.svg"></md-icon>
+                                        Manage tags
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-divider ></md-menu-divider>
+                                <md-menu-item >
+                                    <md-button class="targets-io-menu-button"  data-ng-click="openDeleteDashboardModal('', dashboard)">
+                                        <md-icon md-svg-src="images/assets/ic_delete_black_36px.svg"></md-icon>
+                                        Delete dashboard
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-divider ></md-menu-divider>
+                                <md-menu-item >
+                                    <md-button class="targets-io-menu-button" data-ng-click="addTemplate(dashboard)">
+                                        <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg"></md-icon>
+                                        Create template
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-divider ></md-menu-divider>
+                                <md-menu-item >
+                                    <md-button class="targets-io-menu-button"  data-ng-click="addTestRun(dashboard)">
+                                        <md-icon md-svg-src="images/assets/testrun.svg"></md-icon>
+                                        Add Test Run
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+
                     </td>
                 </tr>
             </tbody>
