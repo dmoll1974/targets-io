@@ -17,6 +17,9 @@
                 </tr>
             </thead>
             <tbody>
+                <tr ng-if="product.dashboards.length === 0">
+                    <td>No dashboards found for this product, click <a ui-sref="addDashboard({productName: product.name})">here</a> to add one</td>
+                </tr>
                 <tr ng-repeat="dashboard in product.dashboards" class="hover-row dashboard-row"  >
                     <td class="pointer" data-ng-click="viewDashboard(dashboard)" >
                         {{dashboard.name}}
