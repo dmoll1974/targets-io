@@ -48,9 +48,13 @@
                     Trigger test runs from Jenkins
                 </md-switch>
                 <div ng-if="dashboard.triggerTestRunsWithJenkins"  layout="row" layout-align="start center">
-                    <md-input-container flex  >
+                    <md-input-container flex md-is-error="dashboardForm.jenkinsJobName.$invalid && (dashboardForm.$submitted || dashboardForm.jenkinsJobName.$dirty || triedToSubmit === true)" >
                         <label>Jenkins job</label>
-                        <input name="jenkinsJobName" ng-model="dashboard.jenkinsJobName">
+                        <input name="jenkinsJobName" ng-model="dashboard.jenkinsJobName" ng-required='dashboard.triggerTestRunsWithJenkins'>
+                        <div ng-messages="dashboardForm.jenkinsJobName.$error"
+                             ng-if="dashboardForm.$submitted || dashboardForm.jenkinsJobName.$touched || triedToSubmit === true">
+                            <div ng-message="required">Jenkins job name is required.</div>
+                        </div>
                     </md-input-container>
                     <select-jenkins-job job="dashboard.jenkinsJobName"></select-jenkins-job>
                 </div>
