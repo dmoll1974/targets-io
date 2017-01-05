@@ -38,7 +38,7 @@ function SelectJenkinsJobDirective () {
                 onComplete: function () {
                     setTimeout(function () {
                         document.querySelector('#jenkinsJobAutoComplete').focus();
-                    }, 1);
+                    }, 500);
                 },
                 controller: DialogController
             });
