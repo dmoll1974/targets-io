@@ -913,3 +913,8 @@ div.jenkins-logo.jenkins-header {
 }
 
 
+.dashboard-row > td > *{
+
+    margin: 0px !important;
+    padding: 0px !important;
+}

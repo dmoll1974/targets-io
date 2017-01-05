@@ -1,0 +1,58 @@
+<!--<div data-ng-controller="TestrunsController" data-ng-init="listTestRunsForDashboard()">-->
+<div>
+    <div data-ng-include="'modules/core/views/confirm-delete-modal.client.view.html'"></div>
+    <div layout="column">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Dashboard</th>
+                    <th>Description</th>
+                    <th>Benchmark test runs</th>
+                    <th>Include ramp up in benchmarks</th>
+                    <th>Jenkins integration</th>
+                    <th>Jenkins job</th>
+                    <th>Trends</th>
+                    <th>Settings</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="dashboard in product.dashboards" class="hover-row dashboard-row"  >
+                    <td class="pointer" data-ng-click="viewDashboard(dashboard)" >
+                        {{dashboard.name}}
+                    </td>
+                    <td class="pointer" data-ng-click="viewDashboard(dashboard)">
+                        {{dashboard.description}}
+                    </td>
+
+                    <td class="pointer">
+                        <md-switch class="md-primary" md-no-ink aria-label="Enable benchmarking" ng-model="dashboard.useInBenchmark" ng-change="updateDashboard(dashboard)"></md-switch>
+                    </td>
+                    <td class="pointer">
+                        <md-switch class="md-primary" md-no-ink aria-label="Include ramp up in benchmarks" ng-model="dashboard.includeRampUp" ng-change="updateDashboard(dashboard)"></md-switch>
+                    </td>
+                    <td class="pointer">
+                        <md-switch class="md-primary" md-no-ink aria-label="Jenkins integrations enabled" ng-model="dashboard.triggerTestRunsWithJenkins" ng-change="toggleJenkinsIntegration(dashboard)"></md-switch>
+                    </td>
+                    <td class="pointer">
+                        {{dashboard.jenkinsJobName}}
+                    </td>
+                    <td>
+                        <!--<md-button  class="md-icon-button" data-ng-click="viewTrends(dashboard)">-->
+                            <md-icon md-svg-src="images/assets/ic_timeline_black_24px.svg" data-ng-click="viewTrends(dashboard)"></md-icon>
+                            <md-tooltip>
+                                View trends
+                            </md-tooltip>
+                        <!--</md-button>-->
+                    </td>
+                    <td>
+                        <md-icon md-menu-origin md-svg-src="images/assets/ic_settings_black_24px.svg" data-ng-click="editDashboard(dashboard)"></md-icon>
+                        <md-tooltip>
+                            Dashboard settings
+                        </md-tooltip>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

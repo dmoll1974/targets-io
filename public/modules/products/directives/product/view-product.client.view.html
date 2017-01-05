@@ -10,20 +10,22 @@
             </div>
             <jenkins-job-status  ng-if="product.triggerTestRunsWithJenkins" dashboard="product"></jenkins-job-status>
 
-            <h5 ng-show="selectedIndex === 1">Number of test runs: {{numberOfTestRuns}}</h5>
-            <h5 ng-show="selectedIndex === 1">Total test duration: {{totalDuration}}</h5>
 
         </div>
         <div>
             <md-tabs md-dynamic-height md-selected="selectedIndex">
-                <md-tab label="Releases" ng-click="setTab(0)">
+                <md-tab label="Dashboards" ng-click="setTab(0)">
                     <md-content class="md-padding">
-                        <product-releases></product-releases>
+                        <product-dashboards></product-dashboards>
+                    </md-content>
+                </md-tab><md-tab label="Test runs" ng-click="setTab(1)">
+                    <md-content class="md-padding">
+                        <product-testruns ng-if="selectedIndex === 1"></product-testruns>
                     </md-content>
                 </md-tab>
-                <md-tab label="Test runs" ng-click="setTab(1)">
+                <md-tab label="Releases" ng-click="setTab(2)">
                     <md-content class="md-padding">
-                        <product-testruns></product-testruns>
+                        <product-releases ng-if="selectedIndex === 2"></product-releases>
                     </md-content>
                 </md-tab>
             </md-tabs>
