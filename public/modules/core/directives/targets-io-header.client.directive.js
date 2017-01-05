@@ -50,6 +50,9 @@ function TargetsIoHeaderDirective () {
         }, true);
 
 
+
+
+
         $rootScope.$watch('currentStateParams', function (newVal, oldVal) {
             //if (newVal !== oldVal) {
 
@@ -200,9 +203,9 @@ function TargetsIoHeaderDirective () {
 
                         $state.go('viewProduct', {productName: $scope.product.name});
 
-                        setTimeout(function(){
-                            document.querySelector('#dashboardAutoComplete').focus();
-                        },0);
+                        //setTimeout(function(){
+                        //    document.querySelector('#dashboardAutoComplete').focus();
+                        //},0);
 
                     });
                 }
