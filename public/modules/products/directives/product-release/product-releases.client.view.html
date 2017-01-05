@@ -8,6 +8,9 @@
                 </tr>
             </thead>
             <tbody>
+                <tr ng-if="productReleases.length === 0">
+                    <td>No releases found for this product</td>
+                </tr>
                 <tr ng-repeat="release in productReleases | orderBy:'id':true" class="hover-row" data-ng-click="releaseDetails(release)">
                     <td class="pointer" >{{release.id}}</td>
                 </tr>
