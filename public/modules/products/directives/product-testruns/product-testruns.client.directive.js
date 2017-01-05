@@ -13,7 +13,7 @@ function ProductTestRunsDirective () {
   return directive;
 
   /* @ngInject */
-  function ProductTestRunsDirectiveController ($scope, $state, $stateParams, $window, Templates, Dashboards, $filter, $rootScope, $interval, TestRuns) {
+  function ProductTestRunsDirectiveController ($scope, $state, $stateParams, $window, Templates, Dashboards, $filter, $rootScope, $interval, TestRuns, $mdToast) {
 
 
     $scope.updateNumberOfTestRuns = updateNumberOfTestRuns;
@@ -84,6 +84,19 @@ function ProductTestRunsDirective () {
         $scope.testRuns= testRuns;
         $scope.numberOfTestRuns = testRuns.length;
         $scope.totalDuration = TestRuns.calculateTotalDuration(testRuns);
+
+
+        var toast = $mdToast.simple()
+            .action('OK')
+            .highlightAction(true)
+            .position('bottom center')
+            .hideDelay(6000)
+
+
+
+        $mdToast.show(toast.content('Number of displayed test runs: ' + $scope.numberOfTestRuns + '  Total duration: ' + $scope.totalDuration )).then(function (response) {
+
+        });
 
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
