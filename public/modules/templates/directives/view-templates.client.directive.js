@@ -122,10 +122,13 @@ function ViewTemplatesDirective () {
 
 
         $q.all(deleteTemplateArrayOfPromises)
-            .then( Templates.getAll())
-            .success(function (templates) {
-              $scope.templates = templates;
-            });
+            .then(function(){
+
+              Templates.getAll().success(function(templates){
+
+                $scope.templates = templates;
+              })
+            })
 
       }, function () {
         $log.info('Modal dismissed at: ' + new Date());

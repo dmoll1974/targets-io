@@ -3,18 +3,23 @@
     <div layout="column">
         <h1 class="md-display-1">Templates</h1>
     </div>
-    <div layout="row">
-        <div flex="90"></div>
-        <div flex="10">
-            <md-button ng-if="templateSelected" md-no-ink class="md-accent" ng-click="openDeleteSelectedTemplatesModal('')" style="margin: 0px;" >Delete selected</md-button>
+    <div layout="row"  layout-align="end center">
+        <div >
+            <md-button style="margin-left: 5px;" ng-class="{'disabled': templateSelected === false }" class="md-accent md-icon-button" ng-click="templateSelected && openDeleteSelectedTemplatesModal('')" style="margin: 0px;" >
+                <md-tooltip>
+                    Delete selected variable(s)
+                </md-tooltip>
+                <md-icon md-menu-origin md-svg-src="images/assets/ic_delete_forever_black_24px.svg"></md-icon>
+            </md-button>
         </div>
     </div>
+
     <table class="table">
         <colgroup>
             <col span="1" style="width: 20%;">
-            <col span="1" style="width: 70%;">
-            <col span="1" style="width: 5%;">
-            <col span="1" style="width: 5%;">
+            <col span="1" style="width: 76%;">
+            <col span="1" style="width: 2%;">
+            <col span="1" style="width: 2%;">
         </colgroup>
         <thead>
         <tr>
