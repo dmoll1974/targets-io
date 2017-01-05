@@ -55,11 +55,10 @@ function EditDashboardDirective () {
                             Products.items = products;
                             $scope.products = products;
 
-                            $state.go('viewDashboard', {
-                                'productName': $stateParams.productName,
-                                'dashboardName': $scope.dashboard.name
-                            });
-
+                            if ($rootScope.previousStateParams)
+                                $state.go($rootScope.previousState, $rootScope.previousStateParams);
+                            else
+                                $state.go($rootScope.previousState);
                         });
 
                     });
