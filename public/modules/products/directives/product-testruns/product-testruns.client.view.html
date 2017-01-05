@@ -21,6 +21,9 @@
                 </tr>
             </thead>
             <tbody>
+                <tr ng-if="testRuns.length === 0">
+                    <td>No test runs found for this product</td>
+                </tr>
                 <tr ng-repeat="testRun in testRuns | orderBy:'end':true" class="hover-row" data-ng-click="testRunDetails(testRun)">
                     <td class="pointer" >{{testRun.dashboardName}}</td>
                     <td class="pointer">{{testRun.testRunId}}</td>
