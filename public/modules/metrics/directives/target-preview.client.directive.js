@@ -50,7 +50,12 @@ function TargetPreviewDirective () {
                     {value: '-10min' , label: 'Last 10 minutes'},
                     {value: '-30min' , label: 'Last 30 minutes'},
                     {value: '-1h', label: 'Last hour'},
-                    {value: '-3h', label: 'Last 3 hours'}
+                    {value: '-3h', label: 'Last 3 hours'},
+                    {value: '-6h', label: 'Last 6 hours'},
+                    {value: '-12h', label: 'Last 12 hours'},
+                    {value: '-1d', label: 'Last day'},
+                    {value: '-2d', label: 'Last 2 days'},
+                    {value: '-3d', label: 'Last 3 days'}
                 ];
 
                 $scope.zoomRange = Utils.zoomRangeTargetPreview;
