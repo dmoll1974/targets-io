@@ -13,7 +13,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
       index: '='
     },
     //template: '<div flex class="dygraph-div"  style="width:100%;"><legend legend="legend" style="margin-top: 20px; margin-left: 30px;"></legend>',
-    templateUrl: 'modules/graphs/directives/target-preview-trends-dygraph.client.view.html',
+    templateUrl: 'modules/graphs/directives/target-preview-dygraph.client.view.html',
     controller: DygraphController,
     //
     link: function(scope, elem, attrs) {
