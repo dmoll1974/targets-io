@@ -53,6 +53,8 @@
                                 <label>Target</label>
                                 <input ng-model="metrics[$parent.$index].targets[$index]">
                             </md-input-container>
+                            <target-preview  metric="metric" index="$index" ></target-preview>
+
                             <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="removeTarget($parent.$index, $index)"
                                      data-ng-show="metric.targets.length>1"></md-icon>
                         </div>
