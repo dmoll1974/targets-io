@@ -520,13 +520,8 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     function updateGraph(from, until, targets, callback) {
       Graphite.getData(from, until, targets, 900).then(function (series) {
-        if (series.data.length > 0) {
-          Graphite.addEvents(series, from, until, $stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).then(function (seriesEvents) {
-            callback(seriesEvents);
-          });
-        } else {
           callback(series);
-        }
+
       });
     }
 
