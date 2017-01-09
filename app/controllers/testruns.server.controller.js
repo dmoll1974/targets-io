@@ -807,8 +807,7 @@ function getTestRunById(productName, dashboardName, testRunId, callback) {
     $and: [
       { productName: productName },
       { dashboardName: dashboardName },
-      { testRunId: testRunId },
-      { graphiteDataExists: true }
+      { testRunId: testRunId }
     ]
   }).exec(function (err, testRun) {
     if (err) {
