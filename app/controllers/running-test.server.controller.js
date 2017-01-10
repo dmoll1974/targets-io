@@ -210,7 +210,7 @@ function updateRunningTestAnnotations(req, res) {
         storedRunningTest.keepAliveTimestamp = dateNow;
         storedRunningTest.end = dateNow + 30 * 1000;
         storedRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date().getTime() - storedRunningTest.start.getTime());
-        storedRunningTest.rampUpPeriod = runningTest.rampUpPeriod;
+        if(runningTest.rampUpPeriod) storedRunningTest.rampUpPeriod = runningTest.rampUpPeriod;
         storedRunningTest.annotations = runningTest.annotations;
 
         storedRunningTest.save(function(err, runnigTestSaved){
