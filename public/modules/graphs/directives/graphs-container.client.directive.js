@@ -494,7 +494,10 @@ function GraphsContainerDirective () {
 
                 _.each(filteredMetrics, function(filteredMetric, i){
 
-                  if(tag.index < filteredMetrics[i].tags[tagIndex].index && !insertedItem ){
+                  var filteredMetricTagIndex = filteredMetric.tags.map(function(tag){return tag.text;}).indexOf($state.params.tag);
+
+
+                  if(tag.index < filteredMetric.tags[filteredMetricTagIndex].index && !insertedItem ){
 
                     filteredMetrics.splice(i, 0, metric);
                     insertedItem = true;
