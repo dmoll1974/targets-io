@@ -28,6 +28,7 @@ function DashboardMetricsDirective () {
     vm.mergeTemplate = mergeTemplate;
     vm.copyMetricsToDashboard = copyMetricsToDashboard;
     vm.clearMetricFilter = clearMetricFilter;
+    vm.setMetricFilter = setMetricFilter;
     vm.cancel = cancel;
     vm.openMenu = openMenu;
     vm.metricsInTestRunSummary = metricsInTestRunSummary;
@@ -39,9 +40,9 @@ function DashboardMetricsDirective () {
 
     /* watches*/
 
-      $scope.$watch(function () {
-        vm.filteredMetrics = $scope.$eval("vm.dashboard.metrics | filter:vm.metricFilter");
-      });
+      //$scope.$watch(function () {
+      //  vm.filteredMetrics = $scope.$eval("vm.dashboard.metrics | filter:vm.metricFilter");
+      //});
 
 
     $scope.$watch('vm.metricFilter', function (newVal, oldVal) {
@@ -160,6 +161,7 @@ function DashboardMetricsDirective () {
 
       Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
         vm.dashboard = dashboard;
+        vm.filteredMetrics = filterOnMetricFilter(vm.dashboard.metrics);
       });
 
       /* Get templates */
@@ -305,9 +307,18 @@ function DashboardMetricsDirective () {
       function clearMetricFilter() {
 
         vm.metricFilter = '';
+        vm.metricFilterInput = '';
+        vm.filteredMetrics = vm.dashboard.metrics;
 
       };
 
+    function setMetricFilter(){
+
+      vm.metricFilter = vm.metricFilterInput;
+      vm.filteredMetrics = filterOnMetricFilter(vm.dashboard.metrics);
+
+
+    }
 
       function mergeTemplate(template) {
 
@@ -320,6 +331,43 @@ function DashboardMetricsDirective () {
 
       };
 
+    function filterOnMetricFilter(metrics){
+
+      if (vm.metricFilter === ''){
+
+        return metrics;
+
+      }else {
+        var filteredMetrics = [];
+        var metricFilterRegExp = new RegExp(vm.metricFilter, 'i');
+
+
+        _.each(metrics, function (metric) {
+
+          /* see if alias matches metricFilter */
+          if (metricFilterRegExp.test(metric.alias)) {
+
+            metric.isOpen = true;
+            filteredMetrics.push(metric);
+
+          } else {
+            /* if not, check if tags match*/
+            for (var i = 0; i < metric.tags.length; i++) {
+
+              if (metricFilterRegExp.test(metric.tags[i].text)) {
+                metric.isOpen = true;
+                filteredMetrics.push(metric);
+                break;
+              }
+
+            }
+          }
+
+        });
+
+        return filteredMetrics;
+      }
+    }
 
       function copyMetricsToDashboard(dashboard) {
 

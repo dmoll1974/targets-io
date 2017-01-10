@@ -4,12 +4,32 @@
 
         <div flex layout="row">
             <div layout="row" flex="33">
-                <md-input-container style="margin: 0px;" flex>
-                    <label>Filter metrics</label>
-                    <input ng-model="vm.metricFilter">
-                </md-input-container>
-                <md-icon ng-if="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
-                         data-ng-click="vm.clearMetricFilter()"></md-icon>
+                <!--<md-input-container style="margin: 0px;" flex>-->
+                    <!--<label>Filter metrics</label>-->
+                    <!--<input ng-model="vm.metricFilter">-->
+                <!--</md-input-container>-->
+                <!--<md-icon ng-if="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"-->
+                         <!--data-ng-click="vm.clearMetricFilter()"></md-icon>-->
+
+                <div layout="row" layout-align="end center">
+                    <div>
+                        <md-input-container class="targetsio-header-text">
+                            <label>Filter metrics</label>
+                            <input ng-model="vm.metricFilterInput" ng-change="vm.setMetricFilter()">
+                        </md-input-container>
+                    </div>
+
+                    <!--<div>-->
+                        <!--<md-icon  ng-show="vm.metricFilterInput.length > 0" md-svg-src="images/assets/ic_check_black_36px.svg"-->
+                                  <!--data-ng-click="vm.setMetricFilter()">-->
+                        <!--</md-icon>-->
+                    <!--</div>-->
+                    <div>
+                        <md-icon ng-show="vm.metricFilter && vm.metricFilter !==''" md-svg-src="images/assets/ic_clear_black_36px.svg"
+                                 data-ng-click="vm.clearMetricFilter()">
+                        </md-icon>
+                    </div>
+                </div>
             </div>
             <div flex="66"  layout="row"  layout-align="end center">
 
