@@ -45,6 +45,15 @@ function RecentTestsDirective () {
             }
         });
 
+        $scope.$watchCollection('recentTests', function (newVal, oldVal) {
+
+            if(newVal !== oldVal){
+
+                $scope.filteredRecentTestRuns = filterRecentTestRuns($scope.recentTests);
+
+            }
+        });
+
         $scope.$on('$destroy', function () {
             //  leave the room
             mySocket.emit('exit-room', room);
