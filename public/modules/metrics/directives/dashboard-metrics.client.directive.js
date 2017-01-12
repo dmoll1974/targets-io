@@ -145,6 +145,7 @@ function DashboardMetricsDirective () {
       vm.sortType     = Utils.sortType; // set the default sort type
       vm.sortReverse  = Utils.sortReverse;  // set the default sort order
       vm.metricFilter = Metrics.metricFilter;
+      vm.metricFilterInput = Metrics.metricFilter;
       vm.metricSelected = false;
       vm.progress = undefined;
       vm.showTemplates = false;
