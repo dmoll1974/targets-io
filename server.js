@@ -31,7 +31,7 @@
 			name: 'Graylog',
 			graylog: {
 				servers: [{host: config.graylog.host, port: config.graylog.port}],
-				facility: 'targets-io'
+				facility: config.graylog.facility
 			},
 			level: config.logLevel
 			/*,
