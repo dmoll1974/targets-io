@@ -4,7 +4,7 @@ var path = require('path');
 
 
 module.exports = {
-    isDevelopment: false,
+    isDevelopment: true,
     logLevel: 'warning',
     nodeCluster: false,
     graphiteRetentionPeriod: '90d', /*90 days*/    // Test runs will be deleted if older than graphiteRetentionPeriod
