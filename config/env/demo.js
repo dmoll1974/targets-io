@@ -13,10 +13,10 @@ module.exports = {
     dbConnectionPooling: true,
     dbUsername: process.env.MONGO_USER,            // MongoDb user
     dbPassword: process.env.MONGO_PASSWORD,        // MongoDb password
-    //graylog : {                                    // Graylog server and port, omit when not needed
-    //    host: process.env.GRAYLOG_HOST,
-    //    port: process.env.GRAYLOG_PORT
-    //},
+    graylog : {                                    // Graylog server and port, omit when not needed
+        //host: process.env.GRAYLOG_HOST,
+        //port: process.env.GRAYLOG_PORT
+    },
     redisHost: process.env.REDIS_HOST,     // Redis server, e.g. "redis.mycompany.com"
     redisPort: process.env.REDIS_PORT,     // Redis port, e.g. "6379"
     jenkinsUrl: process.env.JENKINS_URL,         // Jenkins URL, e.g. "https://jenkins.mycompany.com:443"
