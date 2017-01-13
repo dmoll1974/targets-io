@@ -14,7 +14,7 @@
 	 global.cluster = {};
 
 	  //Better logging
-	//winston.remove(winston.transports.Console);
+	winston.remove(winston.transports.Console);
 	if (config.isDevelopment) {
 		// only log to console in development environment
 		winston.add(winston.transports.Console, {
