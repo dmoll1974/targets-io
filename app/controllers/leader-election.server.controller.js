@@ -42,6 +42,8 @@ function electLeader(id, callback){
             }else{
 
               winston.info('New leader elected, clusterId: ' + id);
+              console.log('New leader elected, clusterId: ' + id);
+
 
               callback(true);
               unlock();
@@ -65,6 +67,7 @@ function electLeader(id, callback){
               } else {
 
                 winston.info('Leadership prolonged, clusterId: ' + id);
+                console.log('Leadership prolonged, clusterId: ' + id);
 
                 callback(true);
                 unlock();

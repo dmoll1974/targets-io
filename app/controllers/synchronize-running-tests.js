@@ -31,6 +31,7 @@ function synchronizeRunningTestRuns (clusterId) {
     }else {
 
       winston.info('checking running tests, clusterId:' + clusterId);
+      console.log('checking running tests, clusterId:' + clusterId);
 
       _.each(runningTests, function (runningTest) {
 
