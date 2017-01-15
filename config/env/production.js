@@ -6,6 +6,7 @@ var path = require('path');
 module.exports = {
     isDevelopment: false,
     logLevel: 'warning',                           // Winston log level
+    nodeCluster: false,                            // run in node cluster mode
     graphiteRetentionPeriod: '90d', /*90 days*/    // Should match your Graphite retention settings. Test runs will be deleted if older than graphiteRetentionPeriod
     graphiteUrl: process.env.GRAPHITE_URL,       // Graphite Render URL API, e.g. "http://graphite.mycompany.com:8090"
     db: process.env.MONGO_URL,                     // MongoDb url, e.g. "dbServer.mycompany.com:27017/targets-io"
