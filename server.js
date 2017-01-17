@@ -100,8 +100,9 @@
 
 			io.adapter(redis_io({host: config.redisHost, port: config.redisPort }));
 
-			io.on('connection', function(socket) {
+			io.on('connection', function(err, socket) {
 
+				if(err) winston.error('Socketsio connection failed, error:' + err);
 
 				winston.info('Socket Client connected');
 
@@ -152,7 +153,7 @@
 			winston.info('node is listening to all incoming requests');
 		});
 
-		var io = require('socket.io').listen(server);
+		var io = require('socket.io').listen(server, {'transports': ['polling']});
 
 		var redis_io = require('socket.io-redis');
 		var redis = require("redis");
@@ -163,7 +164,7 @@
 
 		io.on('connection', function (socket) {
 
-			winston.info('Socketsio Client connected');
+			winston.info('Sockets Client connected');
 
 			// once a client has connected, we expect to get a ping from them saying what room they want to join
 			socket.on('room', function (room) {
