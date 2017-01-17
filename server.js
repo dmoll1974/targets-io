@@ -91,7 +91,7 @@
 				winston.info('worker:' + cluster.worker.id + ', process ' + process.pid + ' is listening to all incoming requests');
 			});
 
-			var io = require('socket.io').listen(server, {'transports': ['xhr-polling']});
+			var io = require('socket.io').listen(server);
 
 			var redis_io = require('socket.io-redis');
 			var redis = require("redis");
@@ -102,7 +102,8 @@
 
 			io.on('connection', function(socket) {
 
-				winston.info('Redis Client connected');
+
+				winston.info('Socket Client connected');
 
 				// once a client has connected, we expect to get a ping from them saying what room they want to join
 				socket.on('room', function(room) {
@@ -151,7 +152,7 @@
 			winston.info('node is listening to all incoming requests');
 		});
 
-		var io = require('socket.io').listen(server, {'transports': ['websocket']});
+		var io = require('socket.io').listen(server);
 
 		var redis_io = require('socket.io-redis');
 		var redis = require("redis");
@@ -162,7 +163,7 @@
 
 		io.on('connection', function (socket) {
 
-			winston.info('Redis Client connected');
+			winston.info('Socketsio Client connected');
 
 			// once a client has connected, we expect to get a ping from them saying what room they want to join
 			socket.on('room', function (room) {
