@@ -22,21 +22,21 @@ mongoSetup.connect = function() {
 
 
     mongoose.connection.once('open', function() {
-        console.log('Connected to MongoDB server with mongoose.');
+        winston.info('Connected to MongoDB server with mongoose.');
     });
 
-    mongoose.connection.on('error', function (err) { console.log("Connect error: " + err) });
+    mongoose.connection.on('error', function (err) { winston.error("MongoDb connect error: " + err) });
 
     mongoose.connection.on('disconnected', () => {
         // http://mongoosejs.com/docs/connections.html
-        console.log('Disconnected MongoDB with mongoose, will autoreconnect a number of times');
+        winston.info('Disconnected MongoDB with mongoose, will autoreconnect a number of times');
     });
 
     // If the Node process ends, gracefully close the Mongoose connection
     ['SIGINT', 'SIGTERM'].forEach(signal => {
         process.on(signal, function cleanup() {
             mongoose.connection.close(() => {
-                console.log('Mongoose default connection disconnected through app termination');
+                winston.info('Mongoose default connection disconnected through app termination');
                 process.exit(0);
             });
         });
