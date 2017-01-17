@@ -21,10 +21,10 @@ function electLeader(id, callback){
 
 
 
-  mutex.lock( 'leaderElection', function( err, unlock ) {
-    if ( err ) {
-      winston.error('Unable to aquire lock, error: ' + err.stack);
-    }
+  //mutex.lock( 'leaderElection', function( err, unlock ) {
+  //  if ( err ) {
+  //    winston.error('Unable to aquire lock, error: ' + err.stack);
+  //  }
 
       clusterLeader.find().exec(function(err, storedLeader){
 
@@ -37,7 +37,7 @@ function electLeader(id, callback){
             if(err){
 
               winston.error('Failed to save leader, error: ' + err.stack);
-              unlock();
+              //unlock();
               callback(false);
 
 
@@ -46,7 +46,7 @@ function electLeader(id, callback){
               winston.info('New leader elected, clusterId: ' + id);
               console.log('New leader elected, clusterId: ' + id);
 
-              unlock();
+              //unlock();
               callback(true);
 
             }
@@ -63,7 +63,7 @@ function electLeader(id, callback){
               if (err) {
 
                 winston.error('Failed to save leader, error: ' + err.stack);
-                unlock();
+                //unlock();
                 callback(true);
 
 
@@ -72,7 +72,7 @@ function electLeader(id, callback){
                 winston.info('Leadership prolonged, clusterId: ' + id);
                 console.log('Leadership prolonged, clusterId: ' + id);
 
-                unlock();
+                //unlock();
                 callback(true);
 
               }
@@ -80,7 +80,7 @@ function electLeader(id, callback){
 
           } else {
 
-            unlock();
+            //unlock();
             callback(false);
 
           }
@@ -89,7 +89,7 @@ function electLeader(id, callback){
 
 
 
-  });
+  //});
 
 
 }
