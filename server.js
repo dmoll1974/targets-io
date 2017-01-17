@@ -85,13 +85,13 @@
 
 			app.disable('etag');
 
-			app.all('/*', function(req, res) {res.send('worker:' + cluster.worker.id + ', process ' + process.pid + ' says hello!').end();})
+			//app.all('/*', function(req, res) {res.send('worker:' + cluster.worker.id + ', process ' + process.pid + ' says hello!').end();})
 
 			var server = app.listen(config.port, function() {
 				winston.info('worker:' + cluster.worker.id + ', process ' + process.pid + ' is listening to all incoming requests');
 			});
 
-			var io = require('socket.io').listen(server, {'transports': ['websocket']});
+			var io = require('socket.io').listen(server/*, {'transports': ['websocket']}*/);
 
 			var redis_io = require('socket.io-redis');
 			var redis = require("redis");
@@ -102,7 +102,7 @@
 
 			io.on('connection', function(socket) {
 
-				winston.info('Client connected');
+				winston.info('Redis Client connected');
 
 				// once a client has connected, we expect to get a ping from them saying what room they want to join
 				socket.on('room', function(room) {
@@ -143,9 +143,9 @@
 
 		app.disable('etag');
 
-		app.all('/*', function (req, res) {
-			res.send('worker:' + cluster.worker.id + ', process ' + process.pid + ' says hello!').end();
-		})
+		//app.all('/*', function (req, res) {
+		//	res.send('worker:' + cluster.worker.id + ', process ' + process.pid + ' says hello!').end();
+		//})
 
 		var server = app.listen(config.port, function () {
 			winston.info('node is listening to all incoming requests');
@@ -162,7 +162,7 @@
 
 		io.on('connection', function (socket) {
 
-			winston.info('Client connected');
+			winston.info('Redis Client connected');
 
 			// once a client has connected, we expect to get a ping from them saying what room they want to join
 			socket.on('room', function (room) {
