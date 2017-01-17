@@ -91,7 +91,7 @@
 				winston.info('worker:' + cluster.worker.id + ', process ' + process.pid + ' is listening to all incoming requests');
 			});
 
-			var io = require('socket.io').listen(server/*, {'transports': ['websocket']}*/);
+			var io = require('socket.io').listen(server, {'transports': ['xhr-polling']});
 
 			var redis_io = require('socket.io-redis');
 			var redis = require("redis");
