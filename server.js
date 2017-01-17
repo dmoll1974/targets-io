@@ -189,7 +189,7 @@
 
 		/* the cluster leader should spawn the running tests child process */
 
-		//electLeader(process.env.HOSTNAME);
+		electLeader(process.env.HOSTNAME);
 
 	}
 
