@@ -160,7 +160,7 @@
 
 		global.io = io;
 
-		//io.adapter(redis_io({host: config.redisHost, port: config.redisPort}));
+		io.adapter(redis_io({host: config.redisHost, port: config.redisPort}));
 
 		io.on('connection', function (socket) {
 
