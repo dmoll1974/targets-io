@@ -12,7 +12,7 @@ angular.module('testruns').
 //
 //});
 factory('mySocket', function ($rootScope) {
-  var socket = io.connect({transports:['websocket']});
+  var socket = io.connect({transports:['xhr-polling']});
   return {
     on: function (eventName, callback) {
       socket.on(eventName, function () {
