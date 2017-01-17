@@ -38,15 +38,16 @@ function electLeader(id, callback){
 
               winston.error('Failed to save leader, error: ' + err.stack);
               unlock();
+              callback(false);
+
 
             }else{
 
               winston.info('New leader elected, clusterId: ' + id);
               console.log('New leader elected, clusterId: ' + id);
 
-
-              callback(true);
               unlock();
+              callback(true);
 
             }
           })
@@ -63,22 +64,24 @@ function electLeader(id, callback){
 
                 winston.error('Failed to save leader, error: ' + err.stack);
                 unlock();
+                callback(true);
+
 
               } else {
 
                 winston.info('Leadership prolonged, clusterId: ' + id);
                 console.log('Leadership prolonged, clusterId: ' + id);
 
-                callback(true);
                 unlock();
+                callback(true);
 
               }
             });
 
           } else {
 
-            callback(false);
             unlock();
+            callback(false);
 
           }
         }
