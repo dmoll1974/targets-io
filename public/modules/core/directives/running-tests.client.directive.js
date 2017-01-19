@@ -40,9 +40,9 @@ function RunningTestsDirective () {
 
                     var testRun = message.testrun;
 
-                    testRun.progress = (message.testrun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(message.testrun.start).getTime()) / message.testrun.lastKnownDuration * 100) : undefined;
+                    testRun.progress = (testRun.duration) ? Math.round((new Date().getTime() - new Date(message.testrun.start).getTime()) / testRun.duration * 100) : undefined;
                     //testRun.humanReadablelastKnownDuration = (message.testrun.lastKnownDuration) ? TestRuns.humanReadbleDuration(message.testrun.lastKnownDuration): undefined;
-                    testRun.timeLeft = (testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime()))) + ' left (' + testRun.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(testRun.start).getTime())) - testRun.lastKnownDuration) + ' longer than last completed test run (' + testRun.progress + '%)';
+                    testRun.timeLeft = (testRun.duration - ((new Date().getTime() - new Date(testRun.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(testRun.duration - ((new Date().getTime() - new Date(testRun.start).getTime()))) + ' left (' + testRun.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(testRun.start).getTime())) - testRun.duration) + ' longer than last completed test run (' + testRun.progress + '%)';
 
 
                     var index = $scope.runningTests.map(function(runningTest){ return runningTest.testRunId; }).indexOf(message.testrun.testRunId);
@@ -82,9 +82,9 @@ function RunningTestsDirective () {
 
                 _.each(runningTests, function(testRun, i){
 
-                    testRun.progress = (testRun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(testRun.start).getTime()) / testRun.lastKnownDuration * 100) : undefined;
+                    testRun.progress = (testRun.duration) ? Math.round((new Date().getTime() - new Date(testRun.start).getTime()) / testRun.duration * 100) : undefined;
                     //testRun.humanReadablelastKnownDuration = (testRun.lastKnownDuration) ? TestRuns.humanReadbleDuration(testRun.lastKnownDuration): undefined;
-                    testRun.timeLeft = (testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime()))) + ' left (' + testRun.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(testRun.start).getTime())) - testRun.lastKnownDuration) + ' longer than last completed test run (' + testRun.progress + '%)';
+                    testRun.timeLeft = (testRun.duration - ((new Date().getTime() - new Date(testRun.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(testRun.duration - ((new Date().getTime() - new Date(testRun.start).getTime()))) + ' left (' + testRun.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(testRun.start).getTime())) - testRun.duration) + ' longer than last completed test run (' + testRun.progress + '%)';
                 })
 
                 $scope.runningTests = runningTests;

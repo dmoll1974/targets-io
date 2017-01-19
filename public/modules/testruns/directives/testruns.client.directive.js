@@ -166,8 +166,8 @@ function TestrunsDirective () {
 
           var testRun = message.testrun;
 
-          testRun.progress = (message.testrun.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(message.testrun.start).getTime()) / message.testrun.lastKnownDuration * 100) : undefined;
-          testRun.timeLeft = (testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(testRun.lastKnownDuration - ((new Date().getTime() - new Date(testRun.start).getTime()))) + ' left (' + testRun.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(testRun.start).getTime())) - testRun.lastKnownDuration) + ' longer than last completed test run (' + testRun.progress + '%)';
+          testRun.progress = (testRun.duration) ? Math.round((new Date().getTime() - new Date(message.testrun.start).getTime()) / testRun.duration * 100) : undefined;
+          testRun.timeLeft = (testRun.duration - ((new Date().getTime() - new Date(testRun.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(testRun.duration - ((new Date().getTime() - new Date(testRun.start).getTime()))) + ' left (' + testRun.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(testRun.start).getTime())) - testRun.duration) + ' longer than last completed test run (' + testRun.progress + '%)';
 
           /* double check if message is intended for this room to prevent showing running tests for other dashboards */
           if(testRun.productName === $stateParams.productName && testRun.dashboardName === $stateParams.dashboardName) {
@@ -263,9 +263,9 @@ function TestrunsDirective () {
 
         _.each(runningTests, function(runningTest){
 
-          runningTest.progress = (runningTest.lastKnownDuration) ? Math.round((new Date().getTime() - new Date(runningTest.start).getTime()) / runningTest.lastKnownDuration * 100) : undefined;
-          //runningTest.humanReadablelastKnownDuration = (runningTest.lastKnownDuration) ? TestRuns.humanReadbleDuration(runningTest.lastKnownDuration): undefined;
-          runningTest.timeLeft = (runningTest.lastKnownDuration - ((new Date().getTime() - new Date(runningTest.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(runningTest.lastKnownDuration - ((new Date().getTime() - new Date(runningTest.start).getTime()))) + ' left (' + runningTest.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(runningTest.start).getTime())) - runningTest.lastKnownDuration) + ' longer than last completed test run (' + runningTest.progress + '%)';
+          runningTest.progress = (runningTest.duration) ? Math.round((new Date().getTime() - new Date(runningTest.start).getTime()) / runningTest.duration * 100) : undefined;
+          //runningTest.humanReadableduration = (runningTest.duration) ? TestRuns.humanReadbleDuration(runningTest.duration): undefined;
+          runningTest.timeLeft = (runningTest.duration - ((new Date().getTime() - new Date(runningTest.start).getTime())) > 0) ? TestRuns.humanReadbleDuration(runningTest.duration - ((new Date().getTime() - new Date(runningTest.start).getTime()))) + ' left (' + runningTest.progress + '%)': TestRuns.humanReadbleDuration(((new Date().getTime() - new Date(runningTest.start).getTime())) - runningTest.duration) + ' longer than last completed test run (' + runningTest.progress + '%)';
 
           //runningTest.progress = runningTest.progress < 100 ? runningTest.progress : undefined;
         });

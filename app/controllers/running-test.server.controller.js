@@ -211,7 +211,9 @@ function updateRunningTestAnnotations(req, res) {
         storedRunningTest.end = dateNow + 30 * 1000;
         storedRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date().getTime() - storedRunningTest.start.getTime());
         if(runningTest.rampUpPeriod) storedRunningTest.rampUpPeriod = runningTest.rampUpPeriod;
+        if(runningTest.duration) storedRunningTest.duration = runningTest.duration * 1000;
         storedRunningTest.annotations = runningTest.annotations;
+
 
         storedRunningTest.save(function(err, runnigTestSaved){
 
@@ -241,15 +243,14 @@ function updateRunningTestAnnotations(req, res) {
         }).sort({end: -1}).exec(function (err, testRun) {
 
 
-          var lastKnownDuration = testRun ? new Date(testRun.end).getTime() - new Date(testRun.start).getTime() : undefined;
-
           newRunningTest = new RunningTest(runningTest);
 
           /* set timestamps */
           /* if start request, give some additional time to start up */
 
           newRunningTest.keepAliveTimestamp = dateNow + 30 * 1000;
-          newRunningTest.lastKnownDuration = lastKnownDuration;
+          /* if duration is not set in running test request body (legacy) use the last completed test duration*/
+          newRunningTest.duration = (runningTest.duration) ? runningTest.duration * 1000 : (testRun ? new Date(testRun.end).getTime() - new Date(testRun.start).getTime() : undefined);
           newRunningTest.end = dateNow + 30 * 1000;
           newRunningTest.humanReadableDuration = testRunsModule.humanReadbleDuration(new Date().getTime() - newRunningTest.start.getTime())
           newRunningTest.save(function(err, newRunningTest){

@@ -44,7 +44,7 @@ var RunningTestSchema = new mongoose.Schema({
     },
     'buildResultsUrl': String,
     'humanReadableDuration': String,
-    'lastKnownDuration': Number,
+    'duration': Number,
     'rampUpPeriod': Number
 
 

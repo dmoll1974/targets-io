@@ -684,7 +684,8 @@ function runningTestsForDashboard(req, res) {
         _.each(runningTests, function(runningTest){
 
           runningTest.humanReadableDuration = humanReadableDuration(new Date().getTime() - new Date(runningTest.start).getTime() );
-          runningTest.lastKnownDuration = testRun ? new Date(testRun.end).getTime() - new Date(testRun.start).getTime() : undefined;
+
+          runningTest.duration = (runningTest.duration) ? runningTest.duration : (testRun ? new Date(testRun.end).getTime() - new Date(testRun.start).getTime() : undefined);
         })
 
         res.jsonp(runningTests);
