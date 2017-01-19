@@ -118,8 +118,8 @@ function TestRunSummaryDirective () {
       $scope.testRunSummary = {};
       $scope.testRunSummary.requirements = [];
       /* if coming from edit metric screen, set edit mode and updated to true */
-      $scope.editMode = $rootScope.previousState.includes('editMetric') ? true : false;
-      $scope.updated = $rootScope.previousState.includes('editMetric') ? true : false;
+      $scope.editMode = $rootScope.previousState.indexOf('editMetric') >= 0 ? true : false;
+      $scope.updated = $rootScope.previousState.indexOf('editMetric') >= 0 ? true : false;
       $scope.hideGraphs = false;
       $scope.showSpinner = false;
       $scope.testRunStillExists = true;

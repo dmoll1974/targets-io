@@ -134,7 +134,7 @@ function GraphsContainerDirective () {
 
       /* reset Utils if not navigating the tabs */
 
-      if ($rootScope.currentState !== $rootScope.previousState && $rootScope.previousState && !$rootScope.previousState.includes('requirementsTestRun') ){
+      if ($rootScope.currentState !== $rootScope.previousState && $rootScope.previousState && !$rootScope.previousState.indexOf('requirementsTestRun') >= 0 ){
 
         Utils.reset();
       }
