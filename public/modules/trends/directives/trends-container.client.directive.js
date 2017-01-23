@@ -138,10 +138,10 @@ function TrendsContainerDirective () {
 
       /* reset Utils if not navigating the tabs */
 
-      if ($rootScope.currentState !== $rootScope.previousState && $rootScope.previousState && !$rootScope.previousState.includes('requirementsTestRun') ){
-
-        Utils.reset();
-      }
+      //if ($rootScope.currentState !== $rootScope.previousState && $rootScope.previousState && !$rootScope.previousState.includes('requirementsTestRun') ){
+      //
+      //  Utils.reset();
+      //}
 
       /* Get selected series params from query string */
 

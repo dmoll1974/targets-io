@@ -1,30 +1,10 @@
 <md-content>
     <div data-ng-include="'modules/graphs/views/tag-filter-modal.client.view.html'"></div>
     <div layout="column">
-        <div class="graphs-header">
-            <div layout="column">
-                <div layout="row"  flex>
+        <!--<div class="graphs-header">-->
+            <!--<div layout="column">-->
+                <div layout="row"  style="min-height:75px;"  flex>
                     <div flex="40" layout="row" layout-align="space-between center">
-                        <!--<div layout="row" ng-if="vm.graphsType === 'testrun'" layout-align="start center">-->
-                            <!--<span ng-if="vm.graphsType === 'testrun'" style="white-space: nowrap;">-->
-                                <!--<a data-ng-href="/#!/browse/{{vm.testRun.productName}}/">{{vm.testRun.productName}}</a>  /-->
-                                <!--<a data-ng-href="/#!/browse/{{vm.testRun.productName}}/{{vm.testRun.dashboardName}}/">{{vm.testRun.dashboardName}}</a>-->
-                                  <!--/  {{vm.testRun.testRunIdBreadCrump}}-->
-                                <!--<md-tooltip>-->
-                                    <!--{{vm.testRun.testRunId}}-->
-                                <!--</md-tooltip>-->
-                            <!--</span>-->
-                            <!--<div ng-if="vm.graphsType === 'testrun'"  >-->
-                                <!--<md-button  class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, vm.testRun, false)">-->
-                                    <!--<md-icon ng-if="vm.testRun.annotations" class="testrun-annotations-button" md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>-->
-                                    <!--<md-icon ng-if="!vm.testRun.annotations" class="testrun-annotations-button" md-svg-src="images/assets/pencil-box-outline.svg"></md-icon>-->
-                                    <!--<md-tooltip>-->
-                                        <!--{{vm.testRun.annotations || 'Annotate test run'}}-->
-                                    <!--</md-tooltip>-->
-                                <!--</md-button>-->
-                            <!--</div>-->
-
-                        <!--</div>-->
                         <div layout="row">
                             <span  style="white-space: nowrap;">
                                 <a data-ng-href="/#!/browse/{{vm.productName}}/">{{vm.productName}}</a>  /
@@ -32,25 +12,15 @@
                                  / TRENDS
 
                             </span>
-                            <!--<div ng-if="vm.runningTest && vm.graphsType === 'graphs-live'"  >-->
-                                <!--<md-button  class="md-icon-button testrun-annotations-button" data-ng-click="vm.showAnnotations($event, vm.runningTest, true)">-->
-                                    <!--<md-icon ng-if="vm.runningTest.annotations" class="testrun-annotations-button" md-svg-src="images/assets/ic_info_outline_black_18px.svg"></md-icon>-->
-                                    <!--<md-icon ng-if="!vm.runningTest.annotations" class="testrun-annotations-button" md-svg-src="images/assets/pencil-box-outline.svg"></md-icon>-->
-                                    <!--<md-tooltip>-->
-                                        <!--{{vm.runningTest.annotations || 'Annotate running test'}}-->
-                                    <!--</md-tooltip>-->
-                                <!--</md-button>-->
-                            <!--</div>-->
+
                         </div>
                         <div  layout="row" layout-align="start center">
-                            <!--<md-input-container class="targetsio-header-text">-->
-                                <!--<label>Time range</label>-->
                                 <md-select class="md-padding time-range-selector" ng-model="vm.trendsZoomRange" style="padding-left: 5px;">
                                     <md-option ng-repeat="zoomOption in vm.zoomOptions" ng-value="zoomOption" ng-selected="$index === vm.selectedZoomOptionIndex">
                                         {{zoomOption.label}}
                                     </md-option>
                                 </md-select>
-                            <!--</md-input-container>-->
+
                         </div>
 
 
@@ -94,62 +64,19 @@
                                 <md-tooltip>Share view URL</md-tooltip>
                             </md-button>
 
-                            <!--<label title="Share view URL" class="btn default"-->
-                                   <!--ng-click="vm.setViewShareUrl()"><span-->
-                                    <!--class="btn  glyphicon glyphicon-share"></span>-->
-                            <!--</label>-->
 
                         </div>
-                        <!--<md-menu >-->
-                            <!--<md-button aria-label="number of columns" class="md-icon-button"-->
-                                       <!--ng-click="vm.openMenu($mdOpenMenu, $event)">-->
-                                <!--<md-icon md-menu-origin class="md-primary" md-svg-src="images/assets/ic_view_week_black_24px.svg"></md-icon>-->
-                                <!--<md-tooltip>-->
-                                    <!--View-->
-                                <!--</md-tooltip>-->
-                            <!--</md-button>-->
-                            <!--<md-menu-content width="4">-->
-                                <!--<md-menu-item>-->
-                                    <!--<md-button data-ng-click="vm.toggleNumberOfColums(1)">-->
-                                        <!--One column view-->
-                                    <!--</md-button>-->
-                                <!--</md-menu-item>-->
-                                <!--<md-menu-item>-->
-                                    <!--<md-button data-ng-click="vm.toggleNumberOfColums(2)">-->
-                                        <!--Two columns view-->
-                                    <!--</md-button>-->
-                                <!--</md-menu-item>-->
-                                <!--<md-menu-item>-->
-                                    <!--<md-button data-ng-click="vm.toggleNumberOfColums(3)">-->
-                                        <!--Three columns view-->
-                                    <!--</md-button>-->
-                                <!--</md-menu-item>-->
-                                <!--<md-menu-item>-->
-                                    <!--<md-button data-ng-click="vm.toggleReOrderGraphs()">-->
-                                        <!--Reorder graphs-->
-                                    <!--</md-button>-->
-                                <!--</md-menu-item>-->
-                            <!--</md-menu-content>-->
-                        <!--</md-menu>-->
+
                         <md-switch class="md-primary" md-no-ink aria-label="Show legend" ng-model="vm.showLegend" ng-change="vm.toggleLegend()">
                             LEGEND
                         </md-switch>
                         <md-switch class="md-primary" md-no-ink aria-label="Show tooltip" ng-model="vm.showTooltip" ng-change="vm.toggleTooltip()">
                             POINTER DATA
                         </md-switch>
-                        <!--<md-switch class="md-primary" md-no-ink aria-label="Apply zoom to all graphs" ng-model="vm.zoomLock" >-->
-                            <!--ZOOM ALL GRAPHS-->
-                        <!--</md-switch>-->
-                        <!--<md-button class="md-icon-button"  data-ng-click="vm.resetZoom()">-->
-                            <!--<md-tooltip>-->
-                                <!--Reset zoom-->
-                            <!--</md-tooltip>-->
-                            <!--<md-icon md-svg-src="images/assets/ic_cached_black_24px.svg"></md-icon>-->
-                        <!--</md-button>-->
 
                     </div>
                 </div>
-            </div>
+            <!--</div>-->
         </div>
         <div>
             <md-tabs md-selected="vm.selectedIndex" style="padding-bottom: 0px;">
