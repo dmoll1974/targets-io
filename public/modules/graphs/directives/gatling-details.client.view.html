@@ -29,7 +29,10 @@
         <table ng-table="tableParams" show-filter="true" class="table">
         <tbody>
         <tr ng-repeat="transaction in $data">
-            <td data-title="'Errors'" filter="{ 'error': 'text' }" sortable="'error'">
+            <td ng-if="graylogUrl" data-title="'Errors'" filter="{ 'error': 'text' }" sortable="'error'">
+                <a  ng-click="deepLinkToGraylog(transaction.error)">{{transaction.error}}</a>
+            </td>
+            <td ng-if="!graylogUrl" data-title="'Errors'" filter="{ 'error': 'text' }" sortable="'error'">
                 {{transaction.error}}
             </td>
             <td data-title="'Number'" sortable="'numberOfErrors'">

@@ -1,11 +1,13 @@
 'use strict';
 // service used for Utilty functions
 angular.module('core').factory('Utils', [
-    function () {
+    '$http',
+    function ($http) {
     var Utils = {
       dynamicSort: dynamicSort,
       dynamicSortMultiple: dynamicSortMultiple,
       dynamicSortTags: dynamicSortTags,
+      getGraylogGuiUrl:getGraylogGuiUrl,
       selectedIndex: '',
       metricFilter: '',
       zoomLock: true,
@@ -43,6 +45,13 @@ angular.module('core').factory('Utils', [
 
     };
     return Utils;
+
+
+    function getGraylogGuiUrl(){
+
+        return $http.get('/get-graylog-gui-url');
+
+    }
 
     function reset(){
 

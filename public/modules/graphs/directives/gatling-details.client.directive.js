@@ -15,10 +15,11 @@
     };
     return directive;
     /* @ngInject */
-    function GatlingDetailsController($scope, $timeout, $filter, $stateParams, Jenkins, TestRuns, ngTableParams) {
+    function GatlingDetailsController($scope, $timeout, $filter, $stateParams, Jenkins, TestRuns, ngTableParams, $window, Utils, Dashboards) {
 
       $scope.setTab = setTab;
       $scope.isSet = isSet;
+      $scope.deepLinkToGraylog = deepLinkToGraylog;
 
 
       /* activate */
@@ -38,9 +39,24 @@
         return $scope.tabNumber === tabNumber;
       };
 
+      function deepLinkToGraylog(error){
+
+        var query = Dashboards.selected.jenkinsJobName ? '&q=gatling_error%3A%22' + encodeURI(error) + '%22+AND+jenkins_job%3A' + encodeURI(Dashboards.selected.jenkinsJobName): '&q=gatling_error%3A%22' + encodeURI(error) + '%22';
+
+        var url = $scope.graylogUrl + '/search?rangetype=absolute&fields=message%2Csource&width=1680&from=' + encodeURI(new Date(TestRuns.selected.start).toISOString())  + '&to=' + encodeURI(new Date(TestRuns.selected.end).toISOString()) + query;
+
+        $window.open(url, '_blank');
+      }
+
       function activate() {
 
         $scope.tabNumber = 0;
+
+        Utils.getGraylogGuiUrl().success(function (graylog){
+
+          $scope.graylogUrl = graylog ? graylog.guiUrl : undefined;
+
+        });
 
         TestRuns.getTestRunById($stateParams.productName, $stateParams.dashboardName, $stateParams.testRunId).success(function (testRun) {
           TestRuns.selected = testRun;

@@ -17,7 +17,8 @@ module.exports = {
 	jenkinsSSL: true,
 	graylog : {
 		host: process.env.GRAYLOG_HOST,
-		port: process.env.GRAYLOG_PORT
+		port: process.env.GRAYLOG_PORT,
+		guiUrl: process.env.GRAYLOG_GUI_URL,
 	},
 
 

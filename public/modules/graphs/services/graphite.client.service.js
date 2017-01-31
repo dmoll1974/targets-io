@@ -11,10 +11,11 @@ angular.module('graphs').factory('Graphite', [
       getData: getData,
       addEvents: addEvents,
       findMetrics: findMetrics,
-      flushCache: flushCache
-
+      flushCache: flushCache,
     };
     return Graphite;
+
+
 
     function findMetrics(query) {
 
