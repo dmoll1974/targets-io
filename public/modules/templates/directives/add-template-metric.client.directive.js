@@ -56,8 +56,8 @@ function AddTemplateMetricDirective () {
 
 
           if (Templates.metricClone.alias) {
-              $scope.metric = Templates.metricClone;
-              Templates.metricClone = {};
+              $scope.metric = _.cloneDeep(Templates.metricClone);
+              Templates.metricClone = undefined;
               /* set benchmark and requirement toggles */
               if ($scope.metric.requirementValue)
                   $scope.enableRequirement = true;

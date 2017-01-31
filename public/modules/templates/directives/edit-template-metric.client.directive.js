@@ -149,9 +149,9 @@ function EditTemplateMetricDirective () {
       function clone() {
           //$scope.metric._id = undefined;
           //var cloneIndex = Templates.selected.metrics.map(function(metric) { return metric._id.toString(); }).indexOf('$scope.metric._id.toString()');
-          Templates.metricClone = _.clone($scope.metric);
-          Templates.metricClone._id = null;
-          Templates.metricClone.name += '-CLONE';
+          Templates.metricClone = _.cloneDeep($scope.metric);
+          delete  Templates.metricClone['_id'];
+
           $state.go('addTemplateMetric');
       };
 
