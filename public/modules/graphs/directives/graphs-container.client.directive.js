@@ -223,7 +223,7 @@ function GraphsContainerDirective () {
 
           vm.selectedIndex = Tags.getTagIndex(vm.value, vm.tags);
 
-        },250)
+        },500)
 
 
         if ($stateParams.testRunId) {
