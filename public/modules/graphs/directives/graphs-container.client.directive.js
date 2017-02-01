@@ -116,18 +116,26 @@ function GraphsContainerDirective () {
 
       /* get metricFilter */
       if ($state.params.metricFilter) {
-        vm.metricFilter = $state.params.metricFilter;
-        vm.metricFilterInput = $state.params.metricFilter;
-        Utils.metricFilter = $state.params.metricFilter;
+
+        $timeout(function(){
+          vm.metricFilterInput = $state.params.metricFilter;
+          Utils.metricFilter = $state.params.metricFilter;
+          vm.metricFilter = $state.params.metricFilter;
+        })
+
       }else{
-        vm.metricFilter = Utils.metricFilter;
+
         vm.metricFilterInput = Utils.metricFilter;
+        vm.metricFilter = Utils.metricFilter;
+
       }
 
       /* get selectedSeries */
       if ($state.params.selectedSeries) {
-        vm.selectedSeries = $state.params.selectedSeries;
-        Utils.selectedSeries = $state.params.selectedSeries;
+        $timeout(function() {
+          vm.selectedSeries = $state.params.selectedSeries;
+          Utils.selectedSeries = $state.params.selectedSeries;
+        });
       }else{
         vm.selectedSeries = Utils.selectedSeries;
       }
