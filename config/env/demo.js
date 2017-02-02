@@ -14,7 +14,9 @@ module.exports = {
     dbPassword: process.env.MONGO_PASSWORD,        // MongoDb password
     graylog : {                                    // Graylog server and port, omit when not needed
         host: process.env.GRAYLOG_HOST,
-        port: process.env.GRAYLOG_PORT
+        port: process.env.GRAYLOG_PORT,
+        guiUrl: process.env.GRAYLOG_GUI_URL
+
     },
     redisHost: process.env.REDIS_HOST,     // Redis server, e.g. "redis.mycompany.com"
     redisPort: process.env.REDIS_PORT,     // Redis port, e.g. "6379"
