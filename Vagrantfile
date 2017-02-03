@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
     sudo git clone https://github.com/dmoll1974/targets-io.git
     cd targets-io/
     sudo ./init-graphite-container-volumes.sh
-    sudo docker-compose up -d
+    sudo ./set-ip-docker-compose-up.sh localhost
     SHELL
   config.vm.provider :virtualbox do |v|
     v.customize ["modifyvm", :id, "--memory", 3072]
