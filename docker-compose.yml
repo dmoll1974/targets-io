@@ -1,7 +1,7 @@
 version: "2"
 
 services:
-  db:
+  mongo:
     image: mongo:3.0
     ports:
      - "27017:27017"
@@ -10,12 +10,33 @@ services:
     volumes:
      - /var/lib/targets-io/mongo:/data/db
     restart: always
+  elasticsearch:
+    image: "elasticsearch:2"
+    command: "elasticsearch -Des.cluster.name='graylog'"
+    networks:
+      - my-net
+    restart: always
+  graylog:
+    image: graylog2/server
+    environment:
+      GRAYLOG_PASSWORD_SECRET: targets-io-admin-secret
+      GRAYLOG_ROOT_PASSWORD_SHA2: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+      GRAYLOG_WEB_ENDPOINT_URI: http://${EXTERNAL_IP}:8090/api
+    networks:
+      - my-net
+    ports:
+      - "8090:9000"
+      - "12201/udp:12201/udp"
+    restart: always
+    depends_on:
+      - mongo
+      - elasticsearch
   graphite:
     image: dmoll1974/targets-io-graphite
     networks:
       - my-net
     ports:
-     - "8090:80"
+     - "8070:80"
      - "2003:2003"
      - "8125:8125"
     volumes:
@@ -30,6 +51,16 @@ services:
      - "8080:8080"
      - "50000:50000"
     restart: always
+  logstash:
+    image: dmoll1974/gatling-logstash
+    networks:
+      - my-net
+    ports:
+     - "5514/udp:5514/udp"
+    depends_on:
+      - graylog
+      - graphite    
+    restart: always
   redis:
     image: redis
     networks:
@@ -40,34 +71,38 @@ services:
   targetsio:
     image: dmoll1974/targets-io
     ports:
-     - "3000:3000"
+     - "80:3000"
+    command: dockerize -wait tcp://mongo:27017
     networks:
       - my-net
     environment:
-       MONGO_URL: "db:27017/targets-io"
+       MONGO_URL: "mongo:27017/targets-io"
        GRAPHITE_URL: "http://graphite"
        JENKINS_URL: "http://jenkins:8080"
        JENKINS_USER: "admin"
        JENKINS_PASSWORD: "targets-io"
        REDIS_HOST: "redis"
        REDIS_PORT: "6379"
+       GRAYLOG_HOST: "graylog"
+       GRAYLOG_PORT: "12201"
+       GRAYLOG_GUI_URL: "http://${EXTERNAL_IP}:8090"
     restart: always
     depends_on:
-      - db
+      - mongo
       - redis
       - graphite
   mean:
     image: dmoll1974/targets-io-demo-meanjs
     ports:
      - "3001:3000"
+    command: dockerize -wait tcp://mongo:27017
     environment:
-       DB_1_PORT_27017_TCP_ADDR: "db:27017"
+       DB_1_PORT_27017_TCP_ADDR: "mongo:27017"
     networks:
       - my-net
     restart: always
     depends_on:
-      - db
-      - redis
+      - mongo
       - graphite
 
 networks:
