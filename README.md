@@ -24,7 +24,7 @@ To set up a local demo environment take the following instruction steps for Linu
 - Clone this repository: `git clone https://github.com/dmoll1974/targets-io.git`
 - Change directory into targets-io: `cd targets-io`
 - Run init script to prepare Graphite volumes on host:   `sudo ./init-graphite-container-volumes.sh`
-- Run docker compose: `sudo docker-compose up -d`
+- Run start up script: `sudo ./set-ip-docker-compose-up.sh localhost # set host ip here if running on server`
 
 or
 
@@ -37,14 +37,17 @@ Another approach is to use [Vagrant](http://www.vagrantup,com) and [VirtualBox](
 
 The end result will be 6 started docker containers:
 
-| Container  	| Description                                            	| port  	|
+| Container  	| Description                                            	| Exposed port|
 |------------	|--------------------------------------------------------	|-------	|
-| targets-io 	| Performance dashboard application                      	| 3000  	|
+| targets-io 	| Performance dashboard application                      	| 80    	|
 | mongodb    	| Database to store dashboard configurations           		 | 27017 	|
-| graphite   	| Time based series database                             	| 8090  	|
+| graphite   	| Time based series database                             	| 8070  	|
 | jenkins    	| CI server to start demo scripts     	                   | 8080  	|
 | mean       	| Demo application to run performance tests against 	     | 3001  	|
-| redis      	| Used for caching calls to Graphite                     	| 6379   |
+| redis      	| Used for caching calls to Graphite                     	| -      |
+| logstash    | Used for parsing Gatling logs                          	| -      |
+| graylog    	| Used browsing Targets-io, demo app and Gatling logs    	| 8090   |
+| elasticsearch| Used by Graylog                     	                   | -   |
 
 
 Open the targets-io performance dashboard via
