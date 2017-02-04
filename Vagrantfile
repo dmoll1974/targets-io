@@ -19,6 +19,6 @@ Vagrant.configure(2) do |config|
     sudo ./set-ip-docker-compose-up.sh localhost
     SHELL
   config.vm.provider :virtualbox do |v|
-    v.customize ["modifyvm", :id, "--memory", 3072]
+    v.customize ["modifyvm", :id, "--memory", 4096]
   end  
 end
