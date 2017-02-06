@@ -35,7 +35,7 @@ Another approach is to use [Vagrant](http://www.vagrantup,com) and [VirtualBox](
 
 > shortcut using curl: `curl -O https://raw.githubusercontent.com/dmoll1974/targets-io/master/Vagrantfile && vagrant up`
 
-The end result will be 6 started docker containers:
+The end result will be 9 started docker containers:
 
 | Container  	| Description                                            	| Exposed port|
 |------------	|--------------------------------------------------------	|-------	|
@@ -71,6 +71,21 @@ To see a demo of the automated assertion of benchmark results of a test run, sta
 - After the first run has finished, go to `http://localhost:3000/#!/browse/MEAN/GATLING-NIGHTLY/`to check the results.
 - Rerun the the TARGETS-IO-GATLING-DEMO job.
 - When this build passes it means all your configured requirements / benchmark thresholds (see explanation above) have passed for this run. If the job fails, check the job logs to find out why and examine  `http://localhost:3000/#!/browse/MEAN/GATLING-NIGHTLY/` to investigate. You can drill down the consolidated results by clicking on the passed/failed icons. 
+
+***Graylog integration demo***
+
+In the demo environment the Gatling logs are parsed by Logstash and send to Graylog (and Graphite). The demo application also sends logs to Graylog, so you can correlate errors in Gatling to errors logged in the application. In order to do this you have to manually enbale a listener in Graylog:
+
+* Log into Graylog with credentials admin/admin 
+* Select System - Inputs from the menu
+* Select GELF UDP from the dropdown list and click "Launch new input"
+* Provide a name, select the node and launch the input.
+
+To correlate Gatling and application errors use the following search query:
+
+`type:gatling_log AND facility:MEAN`
+
+You can also drilldown from Targets-io to Graylog from the Gatling - errors tab in the graphs view for a test run.
 
 ***JMeter integration demo*** 
 
