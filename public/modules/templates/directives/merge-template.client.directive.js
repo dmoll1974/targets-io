@@ -191,7 +191,7 @@ function MergeTemplateDirective () {
 
           _.each(replaceArray, function(replaceItem){
 
-              target = target.replace(replaceItem.placeholder, replaceItem.replace);
+                  target = target.replace(replaceItem.placeholder, replaceItem.replace);
 
           });
 
@@ -201,7 +201,9 @@ function MergeTemplateDirective () {
       function preview(){
 
           $scope.metrics = [];
-          var targets = [];
+          var decoratedTargets = [];
+          var decoratedTags = [];
+
           var regExp;
 
           var variableArray = [];
@@ -333,32 +335,49 @@ function MergeTemplateDirective () {
 
           _.each($scope.template.metrics, function(metric){
 
+
+              _.each(replaceArray, function(replaceItem){
+
+                  metric.alias = replacePlaceholders(metric.alias, replaceItem);
+
+              })
+
               _.each(metric.targets, function(target){
 
                   _.each(replaceArray, function(replaceItem){
 
-                          targets.push(replacePlaceholders(target, replaceItem));
+                      decoratedTargets.push(replacePlaceholders(target, replaceItem));
+
+                  })
+              })
+
+              _.each(metric.tags, function(tag){
+
+                  _.each(replaceArray, function(replaceItem){
+
+                      decoratedTags.push( {_id: tag._id, text: replacePlaceholders(tag.text, replaceItem)});
 
                   })
 
-                  $scope.metrics.push(
-                      {
-                          productName: Dashboards.selected.productName,
-                          dashboardId: Dashboards.selected._id,
-                          dashboardName: Dashboards.selected.name,
-                          alias: metric.alias,
-                          targets: targets,
-                          tags: metric.tags,
-                          benchmarkValue: metric.benchmarkValue,
-                          benchmarkOperator: metric.benchmarkOperator,
-                          requirementValue: metric.requirementValue,
-                          requirementOperator: metric.requirementOperator,
-                          unit: metric.unit
-                      });
-
-                  targets = [];
-
               })
+
+              $scope.metrics.push(
+                  {
+                      productName: Dashboards.selected.productName,
+                      dashboardId: Dashboards.selected._id,
+                      dashboardName: Dashboards.selected.name,
+                      alias: metric.alias,
+                      targets: decoratedTargets,
+                      tags: decoratedTags,
+                      benchmarkValue: metric.benchmarkValue,
+                      benchmarkOperator: metric.benchmarkOperator,
+                      requirementValue: metric.requirementValue,
+                      requirementOperator: metric.requirementOperator,
+                      unit: metric.unit
+                  });
+
+              decoratedTargets = [];
+              decoratedTags = [];
 
           })
 
