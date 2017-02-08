@@ -362,7 +362,7 @@ function MergeTemplateDirective () {
 
                       }else{
 
-                          decoratedTags[index] = {_id: tag._id, text: replacePlaceholders(tag.text, replaceItem)};
+                          decoratedTags[tagIndex] = {_id: tag._id, text: replacePlaceholders(tag.text, replaceItem)};
                       }
 
 
