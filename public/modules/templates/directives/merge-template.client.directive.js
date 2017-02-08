@@ -355,7 +355,17 @@ function MergeTemplateDirective () {
 
                   _.each(replaceArray, function(replaceItem){
 
-                      decoratedTags.push( {_id: tag._id, text: replacePlaceholders(tag.text, replaceItem)});
+                      var tagIndex = decoratedTags.map(function(decoratedTag){return decoratedTag._id.toString()}).indexOf(tag._id.toString());
+                      if(tagIndex === -1){
+
+                          decoratedTags.push( {_id: tag._id, text: replacePlaceholders(tag.text, replaceItem)});
+
+                      }else{
+
+                          decoratedTags[index] = {_id: tag._id, text: replacePlaceholders(tag.text, replaceItem)};
+                      }
+
+
 
                   })
 
