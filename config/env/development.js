@@ -20,6 +20,8 @@ module.exports = {
 		host: process.env.GRAYLOG_HOST,
 		port: process.env.GRAYLOG_PORT,
 		guiUrl: process.env.GRAYLOG_GUI_URL,
+		facility: "targets-io"
+
 	},
 
 

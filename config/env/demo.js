@@ -16,8 +16,8 @@ module.exports = {
     graylog : {                                    // Graylog server and port, omit when not needed
         host: process.env.GRAYLOG_HOST,
         port: process.env.GRAYLOG_PORT,
-        guiUrl: process.env.GRAYLOG_GUI_URL
-
+        guiUrl: process.env.GRAYLOG_GUI_URL,
+        facility: "targets-io"
     },
     redisHost: process.env.REDIS_HOST,     // Redis server, e.g. "redis.mycompany.com"
     redisPort: process.env.REDIS_PORT,     // Redis port, e.g. "6379"
