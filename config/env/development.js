@@ -4,8 +4,9 @@ var path = require('path');
 
 module.exports = {
 	isDevelopment: true,
-	debugMode: true,
+	debugMode: false,
 	logLevel: 'info',
+	nodeCluster: false,
 	graphiteUrl: process.env.GRAPHITE_URL,
 	jenkinsUrl: process.env.JENKINS_URL,
 	db: process.env.MONGO_URL,

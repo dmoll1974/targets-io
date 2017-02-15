@@ -45,6 +45,8 @@ module.exports = function(db) {
 		next();
 	});
 
+	app.use('/healthcheck', require('express-healthcheck')());
+
 	// Should be placed before express.static
 	app.use(compress({
 		filter: function(req, res) {

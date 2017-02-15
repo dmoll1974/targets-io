@@ -18,6 +18,7 @@ exports.updateRunningTest = updateRunningTest;
 exports.updateRunningTestAnnotations = updateRunningTestAnnotations;
 exports.getRunningTests = getRunningTests;
 exports.runningTestForDashboard = runningTestForDashboard;
+exports.saveTestRun = saveTestRun;
 
 function runningTestForDashboard(req, res){
 
@@ -275,7 +276,7 @@ function updateRunningTestAnnotations(req, res) {
 
 
 
-let saveTestRun = function (runningTest){
+function saveTestRun (runningTest){
 
   return new Promise((resolve, reject) => {
 
