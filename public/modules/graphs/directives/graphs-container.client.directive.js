@@ -118,10 +118,10 @@ function GraphsContainerDirective () {
       if ($state.params.metricFilter) {
 
         $timeout(function(){
-          vm.metricFilterInput = $state.params.metricFilter;
-          Utils.metricFilter = $state.params.metricFilter;
-          vm.metricFilter = $state.params.metricFilter;
-        })
+          vm.metricFilterInput = $state.params.metricFilter.replace('(','\\(').replace(')', '\\)').replace('.', '\\.').replace('-', '\\-');
+          Utils.metricFilter = $state.params.metricFilter.replace('(','\\(').replace(')', '\\)').replace('.', '\\.').replace('-', '\\-');
+          vm.metricFilter = $state.params.metricFilter.replace('(','\\(').replace(')', '\\)').replace('.', '\\.').replace('-', '\\-');
+        },100)
 
       }else{
 
