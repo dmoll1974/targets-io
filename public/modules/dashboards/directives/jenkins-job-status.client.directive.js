@@ -381,7 +381,7 @@ function JenkinsJobStatusDirective () {
                     //},
                     onComplete: function () {
                         setTimeout(function () {
-                            //document.querySelector('#jenkinsJobAutoComplete').focus();
+                            document.querySelector('#jenkinsUser').focus();
                         }, 1);
                     },
                     controller: DialogController
