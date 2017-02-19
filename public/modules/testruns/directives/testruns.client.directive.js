@@ -340,8 +340,8 @@ function TestrunsDirective () {
         },
         onComplete: function () {
           setTimeout(function(){
-            document.querySelector('#productReleaseInput').focus().selectAll();
-          },1);
+            document.querySelector('#productReleaseInput').focus();
+          },1 );
         },
         controller: DialogController
       });
@@ -364,7 +364,7 @@ function TestrunsDirective () {
 
           testRun.productRelease = $scope.productRelease === '' ? '' : $scope.productRelease;
 
-          var productReleaseRegExp = new RegExp(testRun.productRelease, 'gi');
+          var productReleaseRegExp = new RegExp(originalProductRelease, 'gi');
           var updatedTestRunId = testRun.testRunId.replace(productReleaseRegExp, $scope.productRelease);
 
 
@@ -388,6 +388,7 @@ function TestrunsDirective () {
 
               if(response.testRunSummary){
                 response.testRunSummary.productRelease = testRun.productRelease;
+                response.testRunSummary.testRunId = testRun.testRunId;
 
                 TestRunSummary.updateTestRunSummary(response.testRunSummary).success(function(updatedTestRunSummary){
 
