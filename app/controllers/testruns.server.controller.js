@@ -1074,13 +1074,13 @@ function getLastDatapoint(datapoints){
 
   for(var d=datapoints.length-1;d>=0;--d){
 
-    if(datapoints[d][0]!= null)
+    if(datapoints[d][0]!= null) {
 
-    /* if no valid number is calculated, return null*/
+      /* if no valid number is calculated, return null*/
 
-      var result = !isNaN(Math.round((datapoints[d][0])*100)/100) ? Math.round((datapoints[d][0])*100)/100 : null;
+      var result = !isNaN(Math.round((datapoints[d][0]) * 100) / 100) ? Math.round((datapoints[d][0]) * 100) / 100 : null;
       return result;
-
+    }
   }
 }
 function calculateLinearFit(datapoints){
