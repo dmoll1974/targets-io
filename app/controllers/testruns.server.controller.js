@@ -562,7 +562,7 @@ function testRunsForDashboard(req, res) {
 
       Testrun.find({
         $and: query
-      }).sort({end: -1 }).limit(req.params.limit).exec(function(err, testRuns) {
+      }).sort({end: -1 }).limit(parseInt(req.params.limit)).exec(function(err, testRuns) {
         if (err) {
           return res.status(400).send({message: 'Something went wrong getting test runs, error: ' + err});
         } else {
