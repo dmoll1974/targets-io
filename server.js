@@ -13,6 +13,8 @@
 
 	 global.cluster = {};
 
+
+
 	  //Better logging
 	winston.remove(winston.transports.Console);
 	if (config.isDevelopment) {
@@ -46,6 +48,7 @@
 	 * Main application entry file.
 	 * Please note that the order of loading is important.
 	 */
+	winston.info ("Nodejs version: " + process.version);
 	winston.info ("mongoDb connect to: " + config.db);
 	winston.info ("graphite url: " + config.graphiteUrl);
 	winston.info ("redis host: " + config.redisHost + ':' + config.redisPort );
@@ -98,7 +101,21 @@
 
 			global.io = io;
 
-			io.adapter(redis_io({host: config.redisHost, port: config.redisPort }));
+			var pub = redis.createClient(config.redisPort, config.redisHost, { returnBuffers: true});
+			var sub = redis.createClient(config.redisPort, config.redisHost, {returnBuffers: true});
+
+			pub.on('error', (err) => {
+				console.log('error from pub');
+				console.log(err);
+			});
+			sub.on('error', (err) => {
+				console.log('error from sub');
+				console.log(err);
+			});
+
+			io.adapter(redis_io({pubClient: pub, subClient: sub}));
+
+			//io.adapter(redis_io({host: config.redisHost, port: config.redisPort }));
 
 			io.on('connection', function(err, socket) {
 
@@ -160,7 +177,22 @@
 
 		global.io = io;
 
-		io.adapter(redis_io({host: config.redisHost, port: config.redisPort}));
+		var pub = redis.createClient(config.redisPort, config.redisHost, { returnBuffers: true});
+		var sub = redis.createClient(config.redisPort, config.redisHost, {returnBuffers: true});
+
+		pub.on('error', (err) => {
+			console.log('error from pub');
+			console.log(err);
+		});
+		sub.on('error', (err) => {
+			console.log('error from sub');
+			console.log(err);
+		});
+
+		io.adapter(redis_io({pubClient: pub, subClient: sub}));
+
+
+		//io.adapter(redis_io({host: config.redisHost, port: config.redisPort}));
 
 		io.on('connection', function (socket) {
 
