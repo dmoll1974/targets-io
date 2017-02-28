@@ -13,6 +13,7 @@ var Product = mongoose.model('Product');
 var testRunsModule = require('./testruns.server.controller');
 var md5 = require('MD5');
 var redis = require("redis");
+var config = require('../../config/config');
 var pub = redis.createClient(config.redisPort, config.redisHost, { returnBuffers: true});
 var sub = redis.createClient(config.redisPort, config.redisHost, {returnBuffers: true});
 var mutex = require('node-mutex')({pub: pub, sub: sub});
