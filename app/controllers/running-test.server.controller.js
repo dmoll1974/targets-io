@@ -11,6 +11,21 @@ var Testrun = mongoose.model('Testrun');
 var Dashboard = mongoose.model('Dashboard');
 var Product = mongoose.model('Product');
 var testRunsModule = require('./testruns.server.controller');
+var md5 = require('MD5');
+var redis = require("redis");
+var pub = redis.createClient(config.redisPort, config.redisHost, { returnBuffers: true});
+var sub = redis.createClient(config.redisPort, config.redisHost, {returnBuffers: true});
+var mutex = require('node-mutex')({pub: pub, sub: sub});
+
+pub.on('error', (err) => {
+  console.log('error from pub');
+  console.log(err);
+});
+sub.on('error', (err) => {
+  console.log('error from sub');
+  console.log(err);
+});
+
 
 
 exports.runningTest = runningTest;
@@ -59,85 +74,106 @@ let runningTestHandler = function(err){
   winston.error('Error in running test  chain: ' + err.stack);
 }
 
+function createHash(testRunString) {
+  var hashedKey;
+  hashedKey = md5(testRunString);
+  return hashedKey;
+}
 
 function runningTest(req, res){
 
-  let runningTestKeepAlive = req.body;
-  let productName = runningTestKeepAlive.productName;
-  let dashboardName = runningTestKeepAlive.dashboardName;
-  let testRunId = runningTestKeepAlive.testRunId.toUpperCase();
+  let lockId = createHash(req.body.productName + req.body.dashboardName + req.body.testRunId );
 
-  if(req.params.command === 'end'){
+  mutex.lock( lockId, function( err, unlock ) {
 
-    RunningTest.findOne({$and:[
-      {productName: productName},
-      {dashboardName: dashboardName},
-      {testRunId: testRunId}
-    ]}).exec(function(err, runningTest){
+    let runningTestKeepAlive = req.body;
+    let productName = runningTestKeepAlive.productName;
+    let dashboardName = runningTestKeepAlive.dashboardName;
+    let testRunId = runningTestKeepAlive.testRunId.toUpperCase();
 
-      if(runningTest){
-        /* mark test run as completed */
-        runningTest.completed = true;
-        /* set test run end time*/
-        runningTest.end = new Date().getTime();
-        /* Save test run*/
+    if (req.params.command === 'end') {
 
-        saveTestRun(runningTest)
-          .then(testRunsModule.benchmarkAndPersistTestRunById)
-          .then(function(testRun){
-            res.jsonp(testRun);
-          })
-          .catch(runningTestHandler);
+      RunningTest.findOne({
+        $and: [
+          {productName: productName},
+          {dashboardName: dashboardName},
+          {testRunId: testRunId}
+        ]
+      }).exec(function (err, runningTest) {
 
-      }else{
+        if (runningTest) {
+          /* mark test run as completed */
+          runningTest.completed = true;
+          /* set test run end time*/
+          runningTest.end = new Date().getTime();
+          /* Save test run*/
 
-        return res.status(400).send({ message: 'No running test found for this test run ID!' });
+          saveTestRun(runningTest)
+              .then(testRunsModule.benchmarkAndPersistTestRunById)
+              .then(function (testRun) {
+                res.jsonp(testRun);
+              })
+              .catch(runningTestHandler);
 
-      }
-    })
-  }else {
+        } else {
 
-    /* first check if test run exists for dashboard */
+          return res.status(400).send({message: 'No running test found for this test run ID!'});
 
-    Testrun.findOne({
-      $and: [
-        {productName: productName},
-        {dashboardName: dashboardName},
-        {testRunId: testRunId}
-      ]
-    }).exec(function (err, testRun) {
+        }
+      })
+    } else {
 
-      /* if completed test run is found return error */
-      if (testRun && testRun.completed === true) {
+      /* first check if test run exists for dashboard */
 
-        return res.status(400).send({message: 'testRunId already exists for dashboard!'});
+      Testrun.findOne({
+        $and: [
+          {productName: productName},
+          {dashboardName: dashboardName},
+          {testRunId: testRunId}
+        ]
+      }).exec(function (err, testRun) {
 
-      } else {
+        /* if completed test run is found return error */
+        if (testRun && testRun.completed === true) {
 
-        /* if incomplete test run is found, assume the test run was ended due to hiccup in keepalive calls.  */
+          return res.status(400).send({message: 'testRunId already exists for dashboard!'});
 
-        if(testRun && testRun.completed === false) {
+        } else {
 
-          /* add original start time */
-          runningTestKeepAlive.start = testRun.start;
+          /* if incomplete test run is found, assume the test run was ended due to hiccup in keepalive calls.  */
 
-          /* remove test run from collection */
-          Testrun.remove({
-            $and: [
-              {productName: productName},
-              {dashboardName: dashboardName},
-              {testRunId: testRunId}
-            ]
-          }).exec(function (err, testRunDeleted) {
+          if (testRun && testRun.completed === false) {
 
-            var io = global.io;
-            var room = testRun.productName + '-' + testRun.dashboardName;
+            /* add original start time */
+            runningTestKeepAlive.start = testRun.start;
+
+            /* remove test run from collection */
+            Testrun.remove({
+              $and: [
+                {productName: productName},
+                {dashboardName: dashboardName},
+                {testRunId: testRunId}
+              ]
+            }).exec(function (err, testRunDeleted) {
+
+              var io = global.io;
+              var room = testRun.productName + '-' + testRun.dashboardName;
 
 
-            winston.info('emitting message to room: ' + room);
-            io.sockets.in(room).emit('testrun', {event: 'removed', testrun: testRun});
-            winston.info('emitting message to room: running-test');
-            io.sockets.in('recent-test').emit('testrun', {event: 'removed', testrun: testRun});
+              winston.info('emitting message to room: ' + room);
+              io.sockets.in(room).emit('testrun', {event: 'removed', testrun: testRun});
+              winston.info('emitting message to room: running-test');
+              io.sockets.in('recent-test').emit('testrun', {event: 'removed', testrun: testRun});
+
+              updateRunningTest(runningTestKeepAlive)
+                  .then(function (message) {
+
+                    res.jsonp(message);
+
+                  });
+            });
+
+          } else {
 
             updateRunningTest(runningTestKeepAlive)
                 .then(function (message) {
@@ -145,24 +181,13 @@ function runningTest(req, res){
                   res.jsonp(message);
 
                 });
-          });
-
-        }else {
-
-          updateRunningTest(runningTestKeepAlive)
-              .then(function (message) {
-
-                res.jsonp(message);
-
-              });
+          }
         }
-      }
 
 
-
-    });
-  }
-
+      });
+    }
+  });
 }
 
 function updateRunningTestAnnotations(req, res) {
