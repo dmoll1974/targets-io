@@ -334,7 +334,7 @@ function deleteTestRunById(req, res) {
  * select test runs for product
  */
 function testRunsForProduct(req, res) {
-  Testrun.find({productName: req.params.productName, completed: true}).sort({end: -1}).limit(req.params.limit).exec(function (err, testRuns) {
+  Testrun.find({productName: req.params.productName, completed: true}).sort({end: -1}).limit(parseInt(req.params.limit)).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
