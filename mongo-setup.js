@@ -23,9 +23,13 @@ mongoSetup.connect = function() {
 
     mongoose.connection.once('open', function() {
         winston.info('Connected to MongoDB server with mongoose.');
+        console.log('Connected to MongoDB server with mongoose.');
     });
 
-    mongoose.connection.on('error', function (err) { winston.error("MongoDb connect error: " + err) });
+    mongoose.connection.on('error', function (err) {
+        winston.error("MongoDb connect error: " + err);
+        console.error("MongoDb connect error: " + err);
+    });
 
     mongoose.connection.on('disconnected', () => {
         // http://mongoosejs.com/docs/connections.html
