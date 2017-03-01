@@ -15,7 +15,9 @@ var fs = require('fs'),
 	cookieParser = require('cookie-parser'),
 	helmet = require('helmet'),
 	passport = require('passport'),
-	//mongoStore = require('connect-mongo')({
+	os = require("os"),
+
+//mongoStore = require('connect-mongo')({
 	//	session: session
 	//}),
 	flash = require('connect-flash'),
@@ -45,7 +47,11 @@ module.exports = function(db) {
 		next();
 	});
 
-	app.use('/healthcheck', require('express-healthcheck')());
+	app.use('/healthcheck', require('express-healthcheck')({
+		healthy: function () {
+			return { host: os.hostname() };
+		}
+	}));
 
 	// Should be placed before express.static
 	app.use(compress({
