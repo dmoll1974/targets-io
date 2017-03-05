@@ -112,12 +112,14 @@ function runningTest(req, res){
           saveTestRun(runningTest)
               .then(testRunsModule.benchmarkAndPersistTestRunById)
               .then(function (testRun) {
-                res.jsonp(testRun);
+                  unlock();
+                  res.jsonp(testRun);
               })
               .catch(runningTestHandler);
 
         } else {
 
+          unlock();
           return res.status(400).send({message: 'No running test found for this test run ID!'});
 
         }
@@ -137,6 +139,7 @@ function runningTest(req, res){
         /* if completed test run is found return error */
         if (testRun && testRun.completed === true) {
 
+          unlock();
           return res.status(400).send({message: 'testRunId already exists for dashboard!'});
 
         } else {
@@ -169,6 +172,7 @@ function runningTest(req, res){
               updateRunningTest(runningTestKeepAlive)
                   .then(function (message) {
 
+                    unlock();
                     res.jsonp(message);
 
                   });
@@ -178,7 +182,7 @@ function runningTest(req, res){
 
             updateRunningTest(runningTestKeepAlive)
                 .then(function (message) {
-
+                  unlock();
                   res.jsonp(message);
 
                 });
