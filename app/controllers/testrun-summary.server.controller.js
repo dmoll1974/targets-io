@@ -103,7 +103,7 @@ function getTestrunSummary (req, res){
 
           if(!testRunSummary.lastUpdated || new Date(testRunSummary.lastUpdated).getTime() < new Date(dashboard.lastUpdated).getTime()) {
 
-
+            winston.info('Dashboard last update date ' + new Date(dashboard.lastUpdated) + ' > test run summary last update date ' + new Date(testRunSummary.lastUpdated) );
             Testrun.findOne({
               $and: [
                 {productName: testRunSummary.productName},
