@@ -61,7 +61,11 @@ function TestRunSummaryDirective () {
 
         if(newVal !== oldVal && newVal !== undefined){
 
-          $scope.graphsLoaded = (Utils.testRunSummaryGraphsCounter === $scope.testRunSummary.metrics.length) ? true : false;
+          $timeout(function(){
+
+            $scope.graphsLoaded = (Utils.testRunSummaryGraphsCounter === $scope.testRunSummary.metrics.length) ? true : false;
+
+          })
         }
     });
 
@@ -522,6 +526,9 @@ function TestRunSummaryDirective () {
 
     function addMetricToTestRunSummary(addMetric){
 
+
+
+
       $scope.showMetricToAddAutocomplete = false;
 
       //Patch for autocomplete which doesn't remove (https://github.com/angular/material/issues/32870)
@@ -530,6 +537,7 @@ function TestRunSummaryDirective () {
 
 
       $scope.testRunSummary.metrics.push(addMetric);
+
 
         var toast = $mdToast.simple()
             .action('OK')
@@ -547,6 +555,7 @@ function TestRunSummaryDirective () {
           var index= $scope.metricsToAdd.map(function(metricToAdd){return metricToAdd._id.toString()}).indexOf(addMetric._id.toString());
         $scope.metricsToAdd.splice(index, 1);
         $scope.updated = true;
+
     }
 
     function submitTestRunSummary() {
