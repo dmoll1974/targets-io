@@ -310,25 +310,45 @@ function saveTestRun (runningTest){
 
   return new Promise((resolve, reject) => {
 
-    let testRun = new Testrun(runningTest);
+    let testRun = new Testrun();
+
+
+    testRun.productName = runningTest.productName;
+    testRun.productRelease = runningTest.productRelease;
+    testRun.dashboardName = runningTest.dashboardName;
+    testRun.testRunId = runningTest.testRunId;
+    testRun.completed  = runningTest.completed;
+    testRun.buildResultsUrl  = runningTest.buildResultsUrl;
+    testRun.humanReadableDuration  = runningTest.humanReadableDuration;
+    testRun.rampUpPeriod  = runningTest.rampUpPeriod;
+    testRun.annotations  = runningTest.annotations;
+    testRun.start  = runningTest.start;
+    testRun.end  = runningTest.end;
+
+
 
     testRun.save(function (err, savedTestRun) {
 
       if (err) {
 
         /* In case of error still remove running test! */
-        runningTest.remove(function (err) {
+        runningTest.remove(function (removeErr) {
 
-          var io = global.io;
-          var room = runningTest.productName + '-' + runningTest.dashboardName;
+          if(removeErr) {
+            var io = global.io;
+            var room = runningTest.productName + '-' + runningTest.dashboardName;
 
 
-          winston.info('emitting message to room: ' + room);
-          io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
-          winston.info('emitting message to room: running-test');
-          io.sockets.in('running-test').emit('runningTest', {event: 'removed', testrun: runningTest});
+            winston.info('emitting message to room: ' + room);
+            io.sockets.in(room).emit('runningTest', {event: 'removed', testrun: runningTest});
+            winston.info('emitting message to room: running-test');
+            io.sockets.in('running-test').emit('runningTest', {event: 'removed', testrun: runningTest});
 
-          reject(err);
+            reject(err);
+          }else{
+
+            reject(removeErr);
+          }
 
         });
 
