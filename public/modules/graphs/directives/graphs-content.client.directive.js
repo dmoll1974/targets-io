@@ -288,12 +288,26 @@ function GraphsContentDirective () {
             });
           }
         });
-        $state.go('viewGraphs', {
-          'productName': $stateParams.productName,
-          'dashboardName': $stateParams.dashboardName,
-          'testRunId': $stateParams.testRunId,
-          tag: tag //metric.tags[metric.tags.length - 1].text
-        });
+
+        if(vm.graphsType === 'graphs-live'){
+
+            $state.go('viewLiveGraphs', {
+                'productName': $stateParams.productName,
+                'dashboardName': $stateParams.dashboardName,
+                tag: tag
+            });
+
+        }else{
+
+            $state.go('viewGraphs', {
+                'productName': $stateParams.productName,
+                'dashboardName': $stateParams.dashboardName,
+                'testRunId': $stateParams.testRunId,
+                tag: tag
+            });
+
+        }
+
       });
     };
 
