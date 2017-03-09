@@ -57,7 +57,8 @@
     "socket.io-redis": "^1.0.0",
     "swig": "~1.4.1",
     "winston": "^2.2.0",
-    "winston-graylog2": "^0.5.0"
+    "winston-graylog2": "^0.5.0",
+    "q": "^1.1.2"
   },
   "devDependencies": {
     "supertest": "~0.14.0",
