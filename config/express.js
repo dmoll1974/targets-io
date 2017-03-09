@@ -3,8 +3,8 @@
 /**
  * Module dependencies.
  */
-var fs = require('fs'),
-	http = require('http'),
+//var fs = require('fs'),
+var	http = require('http'),
 	https = require('https'),
 	express = require('express'),
 	morgan = require('morgan'),
@@ -25,7 +25,7 @@ var fs = require('fs'),
 	consolidate = require('consolidate'),
 	path = require('path');
 
-module.exports = function(db) {
+module.exports = function() {
 	// Initialize express app
 	var app = express();
 
@@ -100,13 +100,11 @@ module.exports = function(db) {
 	app.use(allowCrossDomain);
 
 	// allow big file to be imported
-	app.use(bodyParser({limit: '50mb'}));
+	app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-	// Request body parsing middleware should be above methodOverride
-	app.use(bodyParser.urlencoded({
-		extended: true
-	}));
+
 	app.use(bodyParser.json());
+
 	app.use(methodOverride());
 
 	// CookieParser should be above session
@@ -170,23 +168,23 @@ module.exports = function(db) {
 		});
 	});
 
-	if (process.env.NODE_ENV === 'secure') {
-		// Log SSL usage
-		console.log('Securely using https protocol');
-
-		// Load SSL key and certificate
-		var privateKey = fs.readFileSync('./config/sslcerts/key.pem', 'utf8');
-		var certificate = fs.readFileSync('./config/sslcerts/cert.pem', 'utf8');
-
-		// Create HTTPS Server
-		var httpsServer = https.createServer({
-			key: privateKey,
-			cert: certificate
-		}, app);
-
-		// Return HTTPS server instance
-		return httpsServer;
-	}
+	// if (process.env.NODE_ENV === 'secure') {
+	// 	// Log SSL usage
+	// 	console.log('Securely using https protocol');
+    //
+	// 	// Load SSL key and certificate
+	// 	var privateKey = fs.readFileSync('./config/sslcerts/key.pem', 'utf8');
+	// 	var certificate = fs.readFileSync('./config/sslcerts/cert.pem', 'utf8');
+    //
+	// 	// Create HTTPS Server
+	// 	var httpsServer = https.createServer({
+	// 		key: privateKey,
+	// 		cert: certificate
+	// 	}, app);
+    //
+	// 	// Return HTTPS server instance
+	// 	return httpsServer;
+	// }
 
 	// Return Express server instance
 	return app;

@@ -53,9 +53,14 @@
 	winston.info ("graphite url: " + config.graphiteUrl);
 	winston.info ("redis host: " + config.redisHost + ':' + config.redisPort );
 
+	process.on('uncaughtException', function(err) {
+		winston.error('Uncaught exception found: %s!\n%s', err.message, err.stack);
+		process.exit(1);
+	});
+
 	if(config.nodeCluster === true){
 
-	var	cluster = require('cluster');
+		var	cluster = require('cluster');
 
 		if(cluster.isMaster) {
 			var numWorkers = (require('os').cpus().length - 1 === 0 || config.debugMode) ? 1 : require('os').cpus().length - 1; /* save one core for daemon, unless there is only one core */
@@ -153,12 +158,12 @@
 		}
 
 
-		}else {
+	}else {
 
 
-		var db = mongoSetup.connect();
+		mongoSetup.connect();
 
-		var app = require('./config/express')(db);
+		var app = require('./config/express')();
 
 		app.disable('etag');
 

@@ -23,6 +23,9 @@ mongoSetup.connect = function() {
         var mongoUrl = 'mongodb://' + config.db;
     }
 
+    winston.info('MongoDB: connecting to ' + config.db );
+
+
     var options = (config.dbConnectionPooling === true) ?
         {
             server: {
