@@ -170,7 +170,7 @@
 			winston.info('node is listening to all incoming requests');
 		});
 
-		var io = require('socket.io').listen(server, {'transports': ['polling']});
+		var io = require('socket.io').listen(server, {'transports': ['polling']}); //TODO set fallback mechanism for websocket
 
 		var redis_io = require('socket.io-redis');
 		var redis = require("redis");
