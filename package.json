@@ -35,7 +35,7 @@
     "jsonfile": "^2.3.1",
     "lodash": "~2.4.1",
     "method-override": "~2.3.0",
-    "mongoose": "~4.8.4",
+    "mongoose": "4.8.4",
     "mongoose-q": "0.0.17",
     "morgan": "~1.4.1",
     "newrelic": "^1.25.3",
@@ -58,7 +58,7 @@
     "swig": "~1.4.1",
     "winston": "^2.2.0",
     "winston-graylog2": "^0.5.0",
-    "q": "^1.1.2"
+    "q": "1.4.1"
   },
   "devDependencies": {
     "supertest": "~0.14.0",
