@@ -53,6 +53,7 @@ module.exports = function() {
 		}
 	}));
 
+
 	// Should be placed before express.static
 	app.use(compress({
 		filter: function(req, res) {
@@ -109,6 +110,14 @@ module.exports = function() {
 
 	// CookieParser should be above session
 	app.use(cookieParser());
+
+	//set cookie based on host name for sockets.io sticky session
+    app.use(function (req, res, next) {
+
+        res.cookie('TARGETS-IO-HOST',os.hostname(), { maxAge: 9000000, path: '/' })
+
+		next();
+    });
 
 	// Express MongoDB session storage
 	//app.use(session({

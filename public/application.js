@@ -15,7 +15,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
             'request': function(config) {
                 // remove io cookie from headers when sending requests to graphite to prevent stickyness
                 if (config.url.indexOf('/graphite') !== -1) {
-                    $cookies.remove('sticky-key');
+                    $cookies.remove('TARGETS-IO-HOST');
                 }
                 return config;
             }
