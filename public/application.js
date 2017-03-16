@@ -8,7 +8,23 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 	function($locationProvider) {
 		$locationProvider.hashPrefix('!');
 	}
-]).run(['$rootScope', 'Interval', 'Products', 'TargetsIoHeader', '$stateParams', '$cookies', function($rootScope, Interval, Products, TargetsIoHeader, $stateParams, $cookies){
+]).config(['$httpProvider', function ($httpProvider) {
+
+    var interceptor = [function() {
+        return {
+            'request': function(config) {
+                // remove io cookie from headers when sending requests to graphite to prevent stickyness
+                if (config.url.indexOf('/graphite') !== -1) {
+                    config.headers['Cookie'] = undefined;
+                }
+                return config;
+            }
+        };
+    }];
+
+    $httpProvider.interceptors.push(interceptor);
+}])
+    .run(['$rootScope', 'Interval', 'Products', 'TargetsIoHeader', '$stateParams', '$cookies', function($rootScope, Interval, Products, TargetsIoHeader, $stateParams, $cookies){
 
         $rootScope.previousState;
         $rootScope.currentState;
