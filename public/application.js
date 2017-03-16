@@ -8,14 +8,14 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 	function($locationProvider) {
 		$locationProvider.hashPrefix('!');
 	}
-]).config(['$httpProvider', function ($httpProvider) {
+]).config(['$httpProvider', '$cookies', function ($httpProvider, $cookies) {
 
     var interceptor = [function() {
         return {
             'request': function(config) {
                 // remove io cookie from headers when sending requests to graphite to prevent stickyness
                 if (config.url.indexOf('/graphite') !== -1) {
-                    config.headers['Cookie'] = undefined;
+                    $cookies.remove('io');
                 }
                 return config;
             }
