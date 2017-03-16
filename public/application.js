@@ -8,9 +8,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 	function($locationProvider) {
 		$locationProvider.hashPrefix('!');
 	}
-]).config(['$httpProvider', '$cookies', function ($httpProvider, $cookies) {
+]).config(['$httpProvider',  function ($httpProvider) {
 
-    var interceptor = [function() {
+    var interceptor = ['$cookies', function($cookies) {
         return {
             'request': function(config) {
                 // remove io cookie from headers when sending requests to graphite to prevent stickyness
