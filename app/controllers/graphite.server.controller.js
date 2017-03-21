@@ -161,15 +161,15 @@ function flushCache(req, res) {
 
 exports.flushGraphiteCacheForTestRun = flushGraphiteCacheForTestRun;
 
-function flushGraphiteCacheForTestRun(testRunParam, isBenchmark, callback){
+function flushGraphiteCacheForTestRun(testRun, isBenchmark, callback){
 
-  Testrun.findOne({
-    $and: [
-      { productName: testRunParam.productName },
-      { dashboardName: testRunParam.dashboardName },
-      { testRunId: testRunParam.testRunId }
-    ]
-  }).exec(function (err, testRun) {
+  // Testrun.findOne({
+  //   $and: [
+  //     { productName: testRunParam.productName },
+  //     { dashboardName: testRunParam.dashboardName },
+  //     { testRunId: testRunParam.testRunId }
+  //   ]
+  // }).exec(function (err, testRun) {
 
     Product.findOne({ name: testRun.productName}).exec(function(err, product){
 
@@ -233,6 +233,6 @@ function flushGraphiteCacheForTestRun(testRunParam, isBenchmark, callback){
 
       }
     })
-  })
+  // })
 
 }

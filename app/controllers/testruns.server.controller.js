@@ -828,36 +828,50 @@ let upsertTestRun = function(testRun){
 
   return new Promise((resolve, reject) => {
 
-    Testrun.findOneAndUpdate({$and:[
+    Testrun.findOne({$and:[
       {productName: testRun.productName},
       {dashboardName: testRun.dashboardName},
       {testRunId: testRun.testRunId}
-    ]}, {metrics: testRun.metrics,
-        meetsRequirement: testRun.meetsRequirement,
-        benchmarkResultFixedOK: testRun.benchmarkResultFixedOK,
-        benchmarkResultPreviousOK: testRun.benchmarkResultPreviousOK,
-        baseline: testRun.baseline,
-        previousBuild: testRun.previousBuild,
-        humanReadableDuration: humanReadableDuration(testRun.end.getTime() - testRun.start.getTime()),
-        lastUpdated: new Date().getTime()
+    ]}).exec(function(err, storedTestRun){
+
+        if (err) {
+            reject(err);
+        } else {
+
+            storedTestRun.metrics = testRun.metrics;
+            storedTestRun.meetsRequirement = testRun.meetsRequirement;
+            storedTestRun.benchmarkResultFixedOK = testRun.benchmarkResultFixedOK;
+            storedTestRun.benchmarkResultPreviousOK = testRun.benchmarkResultPreviousOK;
+            storedTestRun.baseline = testRun.baseline;
+            storedTestRun.previousBuild = testRun.previousBuild;
+            storedTestRun.humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
+            storedTestRun.lastUpdated = new Date().getTime();
+
+            storedTestRun.save(function(err, savedTestRun){
+
+                if (err) {
+                    reject(err);
+                } else {
+
+                    var io = global.io;
+                    var room = savedTestRun.productName + '-' + savedTestRun.dashboardName;
+
+                    winston.info('emitting message to room: ' + room);
+                    io.sockets.in(room).emit('testrun', {event: 'saved', testrun: savedTestRun});
+                    winston.info('emitting message to room: recent-test');
+                    io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: savedTestRun});
+
+                    resolve(savedTestRun);
+                }
+
+
+            })
         }
-        , {upsert:true}, function(err, savedTestRun){
-      if (err) {
-        reject(err);
-      } else {
-        var io = global.io;
-        var room = savedTestRun.productName + '-' + savedTestRun.dashboardName;
 
-        winston.info('emitting message to room: ' + room);
-        io.sockets.in(room).emit('testrun', {event: 'saved', testrun: savedTestRun});
-        winston.info('emitting message to room: recent-test');
-        io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: savedTestRun});
-
-        resolve(savedTestRun);
-      }
+       })
 
     });
- });
+
 }
 
 function benchmarkAndPersistTestRunById(testRun) {
