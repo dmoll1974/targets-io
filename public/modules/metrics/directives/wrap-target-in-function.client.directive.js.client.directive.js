@@ -95,6 +95,13 @@ function WrapTargetInFunctionDirective () {
                         argument: '',
                         template: 'asPercent($TARGET,$ARGUMENT)'
                     },
+                    {
+                        name: 'nonNegativeDerivative',
+                        description: 'This is useful for taking a running total metric and calculating the (positive) delta between subsequent data points. Same as the derivative function above, but ignores datapoints that trend down. Useful for counters that increase for a long time, then wrap or reset.',
+                        example: 'nonNegativederivative(company.server.application01.ifconfig.TXPackets)',
+                        argument: '',
+                        template: 'nonNegativeDerivative($TARGET)'
+                    }
 
                 ]
                 $scope.preview = preview;
@@ -140,7 +147,12 @@ function WrapTargetInFunctionDirective () {
                     {value: '-10min' , label: 'Last 10 minutes'},
                     {value: '-30min' , label: 'Last 30 minutes'},
                     {value: '-1h', label: 'Last hour'},
-                    {value: '-3h', label: 'Last 3 hours'}
+                    {value: '-3h', label: 'Last 3 hours'},
+                    {value: '-6h', label: 'Last 6 hours'},
+                    {value: '-12h', label: 'Last 12 hours'},
+                    {value: '-1d', label: 'Last day'},
+                    {value: '-2d', label: 'Last 2 days'},
+                    {value: '-3d', label: 'Last 3 days'}
                 ];
 
                 $scope.zoomRange = Utils.zoomRangeTargetPreview;
