@@ -216,7 +216,7 @@
         </div>
         <p ng-if="testRunSummary.metrics.length === 0">No metrics configured to be included in test run summary. Enable edit mode and choose "add metric" or use the metric configuration screen to add metrics.</p>
         <md-content class="md-padding" layout="column" flex="75" >
-            <ul as-sortable="dragControlListeners"  is-disabled="!hideGraphs" data-ng-model="testRunSummary.metrics">
+            <ul class="draggable-metrics" as-sortable="dragControlListeners"  is-disabled="!hideGraphs" data-ng-model="testRunSummary.metrics">
                 <li  data-ng-repeat="metric in testRunSummary.metrics" data-as-sortable-item>
                 <div ng-class="{boxedGraph: hideGraphs && editMode}"  data-as-sortable-item-handle>
                     <div layout="row" layout-align="space-between center">
