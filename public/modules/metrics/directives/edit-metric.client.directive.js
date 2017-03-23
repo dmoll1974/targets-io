@@ -34,16 +34,20 @@ function EditMetricDirective () {
     $scope.$watch('vm.enableRequirement', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         if (vm.enableRequirement === false) {
-          vm.metric.requirementOperator = null;
-          vm.metric.requirementValue = null;
+          vm.metric.requirementOperator = undefined;
+          vm.metric.requirementValue = undefined;
+          $scope.metricForm.requirementOperator.$setPristine();
+          $scope.metricForm.requirementValue.$setPristine();
         }
       }
     });
     $scope.$watch('vm.enableBenchmarking', function (newVal, oldVal) {
       if (newVal !== oldVal) {
         if (vm.enableBenchmarking === false) {
-          vm.metric.benchmarkOperator = null;
-          vm.metric.benchmarkValue = null;
+          vm.metric.benchmarkOperator = undefined;
+          vm.metric.benchmarkValue = undefined;
+          $scope.metricForm.benchmarkOperator.$setPristine();
+          $scope.metricForm.benchmarkValue.$setPristine();
         }
       }
     });
