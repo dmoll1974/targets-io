@@ -101,7 +101,7 @@
                     <md-input-container md-is-error="!vm.metric.requirementOperator && vm.enableRequirement === true && (metricForm.$submitted || metricForm.requirementOperator.$dirty || vm.triedToSubmit === true)"
                                         >
                         <label>Requirement</label>
-                        <md-select   name="requirementOperator" ng-disabled="vm.enableRequirement === false" ng-model="vm.metric.requirementOperator" required>
+                        <md-select   name="requirementOperator" ng-disabled="vm.enableRequirement === false" ng-model="vm.metric.requirementOperator" ng-required="vm.enableRequirement === true">
                             <md-option value="<">
                                 should be lower than
                             </md-option>
@@ -118,7 +118,7 @@
                         md-is-error="metricForm.requirementValue.$invalid && vm.enableRequirement === true && (metricForm.$submitted || metricForm.enableRequirement.$dirty || vm.triedToSubmit === true)"
                         flex>
                         <label>Value</label>
-                        <input name="requirementValue" ng-model="vm.metric.requirementValue"  ng-disabled="vm.enableRequirement === false" required>
+                        <input name="requirementValue" ng-model="vm.metric.requirementValue"  ng-disabled="vm.enableRequirement === false" ng-required="vm.enableRequirement === true">
                         <div ng-messages="metricForm.requirementValue.$error"
                              ng-if="metricForm.$submitted || vm.enableRequirement === true || triedToSubmit === true">
                             <div ng-message="required">Value is required.</div>
@@ -134,7 +134,7 @@
                 <div layout="row">
                     <md-input-container md-is-error="!vm.metric.benchmarkOperator && vm.enableBenchmarking === true && (metricForm.$submitted || vm.triedToSubmit === true)">
                         <label>Benchmark</label>
-                        <md-select name="benchmarkOperator" ng-disabled="vm.enableBenchmarking === false" ng-model="vm.metric.benchmarkOperator" required>
+                        <md-select name="benchmarkOperator" ng-disabled="vm.enableBenchmarking === false" ng-model="vm.metric.benchmarkOperator" ng-required="vm.enableBenchmarking === true">
                             <md-option value=">">
                                 allow a positive deviation of
                             </md-option>
@@ -149,7 +149,7 @@
                     </md-input-container>
                     <md-input-container md-is-error="metricForm.benchmarkValue.$invalid && vm.enableBenchmarking === true && (metricForm.$submitted || metricForm.benchmarkValue.$dirty || vm.triedToSubmit === true)">
                         <label>Value</label>
-                        <input name="benchmarkValue" ng-model="vm.metric.benchmarkValue" ng-disabled="vm.enableBenchmarking === false" required>
+                        <input name="benchmarkValue" ng-model="vm.metric.benchmarkValue" ng-disabled="vm.enableBenchmarking === false" ng-required="vm.enableBenchmarking === true">
                         <div ng-messages="metricForm.benchmarkValue.$error"
                          ng-if="metricForm.$submitted || vm.enableBenchmarking === true || triedToSubmit === true">
                         <div ng-message="required">Value is required.</div>
