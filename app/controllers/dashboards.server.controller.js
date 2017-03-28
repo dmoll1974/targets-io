@@ -64,10 +64,15 @@ function clone (req, res) {
     metricClone.dashboardId = dashboardClone._id;
     metricClone.alias = metric.alias;
     metricClone.targets = metric.targets;
+    metricClone.type = metric.type;
+    metricClone.unit = metric.unit;
     metricClone.benchmarkOperator = metric.benchmarkOperator;
     metricClone.benchmarkValue = metric.benchmarkValue;
     metricClone.requirementValue = metric.requirementValue;
     metricClone.requirementOperator = metric.requirementOperator;
+    metricClone.includeInSummary = metric.includeInSummary;
+    metricClone.defaultSummaryText = metric.defaultSummaryText;
+    metricClone.summaryIndex = metric.summaryIndex;
     metricClone.tags = metric.tags;
     metricCloneArray.push(metricClone._id);
     metricClone.save(function (err) {
