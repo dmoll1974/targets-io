@@ -273,7 +273,7 @@
 
 					if(global.cluster[id].intervalId){
 
-						global.cluster[id].intervalId.cancel();
+						clearInterval(global.cluster[id].intervalId);
 						delete global.cluster[id].intervalId;
 					}
 				}
