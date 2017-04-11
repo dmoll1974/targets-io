@@ -114,7 +114,7 @@ module.exports = function() {
 	//set cookie based on host name for sockets.io sticky session
     app.use(function (req, res, next) {
 
-        res.cookie('TARGETS-IO-HOST',os.hostname(), { maxAge: 9000000, path: '/' })
+        res.cookie('TARGETS-IO-HOST',os.hostname() + process.pid , { maxAge: 9000000, path: '/' })
 
 		next();
     });
