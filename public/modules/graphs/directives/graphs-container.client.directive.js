@@ -268,12 +268,9 @@ function GraphsContainerDirective () {
 
           }else{
 
-            if(!$state.params.zoomRange){ /* if zoomRange is not provided via query string, set it to 'Last 10 minutes'*/
+            if(!$state.params.zoomRange){ /* if zoomRange is not provided via query string, set it to vm.zoomRange*/
 
-              Utils.zoomRange = {
-                value: '-10min',
-                label: 'Last 10 minutes'
-              };
+              Utils.zoomRange = (vm.zoomRange.label !== 'Since start test run') ? vm.zoomRange : { value: '-10min', label: 'Last 10 minutes' };
             }
 
 
