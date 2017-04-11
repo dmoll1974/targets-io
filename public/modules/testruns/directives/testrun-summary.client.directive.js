@@ -280,6 +280,7 @@ function TestRunSummaryDirective () {
 
           $scope.testRunSummary.description = dashboard.description;
           $scope.testRunSummary.goal = dashboard.goal;
+          $scope.testRunSummary.markDown = dashboard.markDown;
 
           /* add requirements */
           addRequirements(testRun.metrics, dashboard.metrics);

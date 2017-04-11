@@ -14,10 +14,29 @@ function EditDashboardDirective () {
     return directive;
 
     /* @ngInject */
-    function EditDashboardDirectiveController ($scope, $rootScope, $state , $stateParams, Dashboards, Products, TestRuns, Events) {
+    function EditDashboardDirectiveController ($scope, $rootScope, $state , $stateParams, Dashboards, Products, TestRuns, Events, $timeout) {
+
 
         $scope.update = update;
         $scope.cancel = cancel;
+
+        /* Watches */
+
+        var converter = new showdown.Converter({extensions: ['targetblank']});
+
+        $scope.$watch('dashboard.markDown', function (newVal, oldVal) {
+
+            if (newVal !== undefined) {
+
+                var markDownToHTML = converter.makeHtml(newVal);
+
+                $timeout(function () {
+
+                    document.getElementById('markdown').innerHTML = markDownToHTML;
+
+                }, 100)
+            }
+        });
 
         /* activate */
 

@@ -123,6 +123,7 @@ function update(req, res) {
   dashboard.startSteadyState = req.body.startSteadyState;
   dashboard.triggerTestRunsWithJenkins = req.body.triggerTestRunsWithJenkins;
   dashboard.jenkinsJobName = req.body.jenkinsJobName;
+  dashboard.markDown = req.body.markDown;
   dashboard.save(function (err) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });

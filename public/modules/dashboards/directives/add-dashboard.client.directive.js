@@ -14,7 +14,26 @@ function AddDashboardDirective () {
     return directive;
 
     /* @ngInject */
-    function AddDashboardDirectiveController ($scope, $rootScope, $state , $stateParams, Dashboards, Products, TestRuns) {
+    function AddDashboardDirectiveController ($scope, $rootScope, $state , $stateParams, Dashboards, Products, TestRuns, $timeout) {
+
+
+        /* Watches */
+
+        var converter = new showdown.Converter({extensions: ['targetblank']});
+
+        $scope.$watch('dashboard.markDown', function (newVal, oldVal) {
+
+            if (newVal !== undefined) {
+
+                var markDownToHTML = converter.makeHtml(newVal);
+
+                $timeout(function () {
+
+                    document.getElementById('markdown').innerHTML = markDownToHTML;
+
+                }, 100)
+            }
+        });
 
         $scope.create = create;
         $scope.cancel = cancel;

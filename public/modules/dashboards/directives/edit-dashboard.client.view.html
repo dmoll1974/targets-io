@@ -58,6 +58,14 @@
                     </md-input-container>
                     <select-jenkins-job job="dashboard.jenkinsJobName"></select-jenkins-job>
                 </div>
+                <md-input-container flex>
+                    <label>Default dashboard markdown</label>
+                    <textarea  ng-model="dashboard.markDown" placeholder="Enter Markdown text here"  class="markdown-textarea"></textarea>
+                </md-input-container>
+                <div>
+                    <h5>Markdown preview</h5>
+                    <div id="markdown" ng-class="{preview: true}"></div>
+                </div>
             </div>
             <div layout="row">
                 <md-button md-no-ink class="md-primary" data-ng-click="triedToSubmit=true; dashboardForm.$valid && update()">Submit
