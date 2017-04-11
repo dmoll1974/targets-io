@@ -924,3 +924,25 @@ div.jenkins-logo.jenkins-header {
     margin: 0px !important;
     padding: 0px !important;
 }
+
+md-autocomplete input::-webkit-input-placeholder {
+    color:lightgrey;
+    font-size: 10.5px;
+}
+md-autocomplete input:-moz-placeholder { /* Firefox 18- */
+    color:lightgrey;
+    font-size: 10.5px;
+
+}
+
+md-autocomplete input::-moz-placeholder {  /* Firefox 19+ */
+    color:lightgrey;
+    font-size: 10.5px;
+
+}
+
+md-autocomplete input:-ms-input-placeholder {
+    color:lightgrey;
+    font-size: 10.5px;
+
+}
