@@ -52,7 +52,7 @@ The end result will be 9 started docker containers:
 
 Open the targets-io performance dashboard via
 
-`http://localhost:80`
+`http://localhost`
 
 First restore the pre-configured demo dashboard configurations via the menu in the right top of the screen
 
@@ -68,9 +68,9 @@ Log in using the credentials admin/targets-io
 
 To see a demo of the automated assertion of benchmark results of a test run, start the TARGETS-IO-GATLING-DEMO job (click "Build now"). This will trigger the [Gatling demo script](https://github.com/dmoll1974/targets-io-demo-script-gatling)
 
-- After the first run has finished, go to `http://localhost:3000/#!/browse/MEAN/GATLING-NIGHTLY/`to check the results.
+- After the first run has finished, go to `http://localhost/#!/browse/MEAN/GATLING-NIGHTLY/`to check the results.
 - Rerun the the TARGETS-IO-GATLING-DEMO job.
-- When this build passes it means all your configured requirements / benchmark thresholds (see explanation above) have passed for this run. If the job fails, check the job logs to find out why and examine  `http://localhost:3000/#!/browse/MEAN/GATLING-NIGHTLY/` to investigate. You can drill down the consolidated results by clicking on the passed/failed icons. 
+- When this build passes it means all your configured requirements / benchmark thresholds (see explanation above) have passed for this run. If the job fails, check the job logs to find out why and examine  `http://localhost/#!/browse/MEAN/GATLING-NIGHTLY/` to investigate. You can drill down the consolidated results by clicking on the passed/failed icons. 
 
 ***Graylog integration demo***
 
