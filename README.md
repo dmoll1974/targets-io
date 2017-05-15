@@ -52,7 +52,7 @@ The end result will be 9 started docker containers:
 
 Open the targets-io performance dashboard via
 
-`http://localhost:3000`
+`http://localhost:80`
 
 First restore the pre-configured demo dashboard configurations via the menu in the right top of the screen
 
