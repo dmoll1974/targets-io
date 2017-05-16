@@ -941,6 +941,8 @@ function getDataForTestrun(testRun) {
 
                     /* save value based on metric type */
 
+                    //TODO check if all datapoints have null values and don't persist
+
                     switch (metric.type) {
 
                       case 'Average':
@@ -1059,15 +1061,17 @@ function calculateAverage(datapoints) {
 
 function calculateMaximum(datapoints){
 
-  var maximum = 0;
+  var maximum = null;
 
   for(var d=0;d<datapoints.length;d++){
 
-    if (datapoints[d][0] > maximum)
+    if (datapoints[d][0] !== null && datapoints[d][0] > maximum)
       maximum = datapoints[d][0];
   }
 
-  return Math.round(maximum * 100)/100;
+  var result = (maximum === null)? null : Math.round(maximum * 100)/100;
+
+  return result;
 }
 
 function calculateMinimum(datapoints){
