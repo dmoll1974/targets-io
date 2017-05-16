@@ -941,7 +941,6 @@ function getDataForTestrun(testRun) {
 
                     /* save value based on metric type */
 
-                    //TODO check if all datapoints have null values and don't persist
 
                     switch (metric.type) {
 
