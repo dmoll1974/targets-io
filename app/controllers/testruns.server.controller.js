@@ -729,11 +729,11 @@ function getTestRunBenchmarks(req, res) {
       { testRunId: req.params.testRunId.toUpperCase() }
     ]
 
-  }).sort('-end').exec(function (err, testRun) {
+  }).exec(function (err, testRun) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
     } else {
-      if (testRun) {
+      if (testRun && testRun.lastUpdated) {
 
         var response = {};
 
@@ -743,7 +743,7 @@ function getTestRunBenchmarks(req, res) {
 
         res.jsonp(response);
       } else {
-        return res.status(404).send({ message: 'No test run with id ' + req.params.testRunId + 'has been found for this dashboard' });
+        return res.status(404).send({ message: 'No benchmarks found for testRun id ' + req.params.testRunId  });
       }
     }
   });
