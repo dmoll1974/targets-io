@@ -3,15 +3,17 @@
 set -e
 set -x
 
-LOG_DIR=/var/lib/targets-io/graphite/log
-DATA_DIR=/var/lib/targets-io/graphite/storage
+LIB_DIR=/var/lib/targets-io
+
+LOG_DIR=$LIB_DIR/graphite/log
+DATA_DIR=$LIB_DIR/graphite/storage
 
 VOLUMES_INIT_CONTAINER_NAME=graphite-volumes-init
 
 
 # this will fail if one of the volume directories already exists, this prevents you from accidentally deleting your existing data
-mkdir /var/lib/targets-io
-mkdir /var/lib/targets-io/graphite
+mkdir $LIB_DIR
+mkdir $LIB_DIR/graphite
 mkdir $LOG_DIR
 mkdir $DATA_DIR
 

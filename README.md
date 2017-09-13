@@ -45,9 +45,9 @@ The end result will be 9 started docker containers:
 | jenkins    	| CI server to start demo scripts     	                   | 8080  	|
 | mean       	| Demo application to run performance tests against 	     | 3001  	|
 | redis      	| Used for caching calls to Graphite                     	| -      |
-| logstash    | Used for parsing Gatling logs                          	| -      |
-| graylog    	| Used browsing Targets-io, demo app and Gatling logs    	| 8090   |
-| elasticsearch| Used by Graylog                     	                   | -   |
+| logstash      | Used for parsing Gatling logs                          	| -      |
+| graylog    	| Used for browsing Targets-io, demo app and Gatling logs    	| 8090   |
+| elasticsearch | Used by Graylog                     	                   | -   |
 
 
 Open the targets-io performance dashboard via
@@ -74,7 +74,7 @@ To see a demo of the automated assertion of benchmark results of a test run, sta
 
 ***Graylog integration demo***
 
-In the demo environment the Gatling logs are parsed by Logstash and send to Graylog (and Graphite). The demo application also sends logs to Graylog, so you can correlate errors in Gatling to errors logged in the application. In order to do this you have to manually enbale a listener in Graylog:
+In the demo environment the Gatling logs are parsed by Logstash and send to Graylog (and Graphite). The demo application also sends logs to Graylog, so you can correlate errors in Gatling to errors logged in the application. In order to do this you have to manually enable a listener in Graylog:
 
 * Log into Graylog with credentials admin/admin 
 * Select System - Inputs from the menu
