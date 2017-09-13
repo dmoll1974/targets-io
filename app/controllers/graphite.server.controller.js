@@ -106,7 +106,21 @@ function getGraphiteData(from, until, targets, maxDataPoints, callback) {
           } else {
             callback(body);
             /* add to redis if it is a valid response */
-            if (body != '[]' && body.length > 0 && response.statusCode == 200) {
+             var containsNoData = false;
+            //Check if all datapoints are NULL, in that case do not add to cache
+            _.each(body, function(bodyItem){
+
+                containsNoData = _.every(bodyItem.datapoints, function(datapoint){
+
+                    return datapoint[0] === null;
+
+                })
+
+              if(containsNoData === false)
+                return containsNoData;
+            })
+
+            if (body != '[]' && body.length > 0 && response.statusCode == 200 && containsNoData === false) {
               cache.setCache(cacheKey, body, 3600 * 24 * 7, function (err, result) {
                 if (err)
                   console.error(err);
@@ -161,15 +175,15 @@ function flushCache(req, res) {
 
 exports.flushGraphiteCacheForTestRun = flushGraphiteCacheForTestRun;
 
-function flushGraphiteCacheForTestRun(testRunParam, isBenchmark, callback){
+function flushGraphiteCacheForTestRun(testRun, isBenchmark, callback){
 
-  Testrun.findOne({
-    $and: [
-      { productName: testRunParam.productName },
-      { dashboardName: testRunParam.dashboardName },
-      { testRunId: testRunParam.testRunId }
-    ]
-  }).exec(function (err, testRun) {
+  // Testrun.findOne({
+  //   $and: [
+  //     { productName: testRunParam.productName },
+  //     { dashboardName: testRunParam.dashboardName },
+  //     { testRunId: testRunParam.testRunId }
+  //   ]
+  // }).exec(function (err, testRun) {
 
     Product.findOne({ name: testRun.productName}).exec(function(err, product){
 
@@ -233,6 +247,6 @@ function flushGraphiteCacheForTestRun(testRunParam, isBenchmark, callback){
 
       }
     })
-  })
+  // })
 
 }

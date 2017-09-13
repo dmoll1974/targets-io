@@ -8,54 +8,101 @@ var redis = require('redis'),
     _ = require('lodash'),
     md5 = require('MD5');
 
+
 exports.createKey = createKey;
 exports.setCache = setCache;
 exports.getCache = getCache;
 exports.flushCache = flushCache;
 
+var redisReconnecting = true;
+
+var client = redis.createClient(config.redisPort, config.redisHost,
+      {
+       retry_strategy: function retry(options) {
+          console.log(options);
+          if (options.error && options.error.code === 'ECONNREFUSED') {
+            console.log('connection refused');
+          }
+          if (options.total_retry_time > 1000 * 60 * 60) {
+            return new Error('Retry time exhausted');
+          }
+
+          return Math.max(options.attempt * 100, 2000);
+        }
+
+      }
+  );
 
 
-var client = redis.createClient(config.redisPort, config.redisHost, {no_ready_check: true});
-
-
-client.on('connect', function() {
-  winston.info('Redis host: ' + config.redisHost + ':' + config.redisPort );
+client.on('error', function error(err) {
+    winston.info('Redis error:' + err);
 });
+
+client.on('reconnecting', function reconnecting() {
+    winston.info('Reconnecting to Redis');
+    redisReconnecting = true;
+
+});
+
+client.on('connect', function connect() {
+  winston.info('Connected to Redis');
+
+});
+
+client.on('ready', function connect() {
+  winston.info('Redis is ready!');
+  redisReconnecting = false;
+
+
+});
+
 
 function setCache(key, array, expiry, callback){
 
-  client.set(key, JSON.stringify(array));
-  client.expire(key, expiry);
-  callback();
+    if(redisReconnecting !== true) {
+
+        client.set(key, JSON.stringify(array));
+        client.expire(key, expiry);
+
+    }
+
+    callback();
 
 
 }
 
 function getCache(key, callback){
 
-  client.get(key, function(err, object){
+    if(redisReconnecting !== true) {
 
-    if(err){
-      winston.error(err);
+        client.get(key, function (err, object) {
+
+            if (err) {
+                winston.error('Cannot get key, error: ' + err);
+                callback();
+
+            } else {
+
+                callback(object);
+            }
+        });
     }else{
 
-      callback(object);
+        callback(null);
     }
-  });
+
 }
 
 function flushCache(key, callback){
 
-  client.del(key);
-  //client.del(key, function(err, reply){
-  //
-  //  if(err){
-  //    winston.error(err);
-  //  }else{
+    if(redisReconnecting !== true) {
 
-      callback('flushed key: ' + key );
-  //  }
-  //});
+        client.del(key);
+        callback('flushed key: ' + key);
+    }else{
+
+        callback();
+    }
 }
 
 function createKey(url) {

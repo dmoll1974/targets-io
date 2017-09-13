@@ -49,31 +49,35 @@ function read(req, res) {
  * Update a Metric
  */
 function update(req, res) {
-  var metric = req.metric;
-  /* update testruns if requirements have changed */
-  //	if (req.metric.requirementValue !== req.body.requirementValue || req.metric.requirementOperator !== req.body.requirementOperator){
-  //
-  //		testruns.updateTestRunRequirementForMetric(req.body)
-  //	}
-  metric = _.extend(metric, req.body);
-  metric.lastUpdated = new Date().getTime();
-  metric.save(function (err) {
-    if (err) {
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    } else {
 
-      /* update dashboard lastUpdated */
+    Metric.findOne({_id:req.body._id}).exec(function(err, existingMetric){
 
-      Dashboard.update({_id: metric.dashboardId}
-          , { lastUpdated: new Date().getTime() }, { multi: false },function(err, testRuns){
-            if(err) winston.error(err);
-      })
+            if (err) {
+                return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+            } else{
 
-      res.jsonp(metric);
+                  var updatedMetric = _.extend(existingMetric,req.body);
+                  updatedMetric.lastUpdated = new Date().getTime();
+                  updatedMetric.save(function (err, savedMetric) {
+                      if (err) {
+                          return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+                      } else {
+
+                        /* update dashboard lastUpdated */
+
+                          Dashboard.update({_id: savedMetric.dashboardId}, {lastUpdated: new Date().getTime()}, {multi: false}, function (err, testRuns) {
+                              if (err) winston.error(err);
+                          })
+
+                          res.jsonp(savedMetric);
 
 
-    }
-  });
+                      }
+
+                  });
+            }
+
+   });
 };
 /**
  * Delete an Metric

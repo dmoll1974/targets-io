@@ -43,6 +43,10 @@ var dashboardSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  'markDown': {
+        type: String,
+        default: ''
+  },
   'jenkinsJobName': String,
 
   'tags': {

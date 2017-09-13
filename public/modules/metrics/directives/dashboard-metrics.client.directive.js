@@ -505,13 +505,15 @@ function DashboardMetricsDirective () {
 
           $q.all(updateMetricArrayOfPromises)
               .then(function () {
-                $mdDialog.hide();
 
-                //$state.go('viewDashboard', {
-                //  productName: $stateParams.productName,
-                //  dashboardName: dashboard.name
-                //});
-              });
+                  Dashboards.get($stateParams.productName, $stateParams.dashboardName).success(function (dashboard) {
+                      vm.dashboard = dashboard;
+                      vm.filteredMetrics = filterOnMetricFilter(vm.dashboard.metrics);
+                      $mdDialog.hide();
+                  });
+
+
+          });
 
 
         }

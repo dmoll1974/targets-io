@@ -103,7 +103,7 @@ function getTestrunSummary (req, res){
 
           if(!testRunSummary.lastUpdated || new Date(testRunSummary.lastUpdated).getTime() < new Date(dashboard.lastUpdated).getTime()) {
 
-
+            winston.info('Dashboard last update date ' + new Date(dashboard.lastUpdated) + ' > test run summary last update date ' + new Date(testRunSummary.lastUpdated) );
             Testrun.findOne({
               $and: [
                 {productName: testRunSummary.productName},
@@ -334,33 +334,38 @@ function createTestrunSummary(req, res){
 function updateTestrunSummary(req, res){
 
 
-    TestrunSummary.findOne({$and:[
-      {productName: req.body.productName},
-      {dashboardName: req.body.dashboardName},
-      {testRunId: req.body.testRunId}
-    ]}).exec(function(err, testRunSummary){
+    TestrunSummary.findOne({_id: req.body._id}).exec(function(err, testRunSummary){
 
       if (err) {
         return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
       } else{
 
-        testRunSummary.annotations = req.body.annotations;
-        testRunSummary.metrics = req.body.metrics;
-        testRunSummary.markDown = req.body.markDown;
-        testRunSummary.requirements = req.body.requirements;
-        testRunSummary.productRelease = req.body.productRelease;
-        testRunSummary.lastUpdated = new Date().getTime();
+        if(testRunSummary){
 
-        testRunSummary.save(function(err, savedTestRunSummary){
 
-          if (err) {
-            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-          } else {
+          if(req.body.testRunId) testRunSummary.testRunId = req.body.testRunId;
+          if(req.body.annotations) testRunSummary.annotations = req.body.annotations;
+          if(req.body.metrics) testRunSummary.metrics = req.body.metrics;
+          if(req.body.markDown) testRunSummary.markDown = req.body.markDown;
+          if(req.body.requirements) testRunSummary.requirements = req.body.requirements;
+          if(req.body.productRelease !== null) testRunSummary.productRelease = req.body.productRelease;
+          testRunSummary.lastUpdated = new Date().getTime();
 
-            res.jsonp(savedTestRunSummary);
+          testRunSummary.save(function(err, savedTestRunSummary){
 
-          }
-        });
+            if (err) {
+              return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+            } else {
+
+              res.jsonp(savedTestRunSummary);
+
+            }
+          });
+         }else{
+
+          return res.status(404).send({ message: "Test run summary not found!"});
+        }
+
       }
 
     })

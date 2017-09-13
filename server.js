@@ -13,6 +13,8 @@
 
 	 global.cluster = {};
 
+
+
 	  //Better logging
 	winston.remove(winston.transports.Console);
 	if (config.isDevelopment) {
@@ -46,13 +48,19 @@
 	 * Main application entry file.
 	 * Please note that the order of loading is important.
 	 */
+	winston.info ("Nodejs version: " + process.version);
 	winston.info ("mongoDb connect to: " + config.db);
 	winston.info ("graphite url: " + config.graphiteUrl);
 	winston.info ("redis host: " + config.redisHost + ':' + config.redisPort );
 
+	process.on('uncaughtException', function(err) {
+		winston.error('Uncaught exception found: %s!\n%s', err.message, err.stack);
+		process.exit(1);
+	});
+
 	if(config.nodeCluster === true){
 
-	var	cluster = require('cluster');
+		var	cluster = require('cluster');
 
 		if(cluster.isMaster) {
 			var numWorkers = (require('os').cpus().length - 1 === 0 || config.debugMode) ? 1 : require('os').cpus().length - 1; /* save one core for daemon, unless there is only one core */
@@ -98,7 +106,21 @@
 
 			global.io = io;
 
-			io.adapter(redis_io({host: config.redisHost, port: config.redisPort }));
+			var pub = redis.createClient(config.redisPort, config.redisHost, { returnBuffers: true});
+			var sub = redis.createClient(config.redisPort, config.redisHost, {returnBuffers: true});
+
+			pub.on('error', (err) => {
+				console.log('error from pub');
+				console.log(err);
+			});
+			sub.on('error', (err) => {
+				console.log('error from sub');
+				console.log(err);
+			});
+
+			io.adapter(redis_io({pubClient: pub, subClient: sub}));
+
+			//io.adapter(redis_io({host: config.redisHost, port: config.redisPort }));
 
 			io.on('connection', function(err, socket) {
 
@@ -136,12 +158,12 @@
 		}
 
 
-		}else {
+	}else {
 
 
-		var db = mongoSetup.connect();
+		mongoSetup.connect();
 
-		var app = require('./config/express')(db);
+		var app = require('./config/express')();
 
 		app.disable('etag');
 
@@ -153,14 +175,29 @@
 			winston.info('node is listening to all incoming requests');
 		});
 
-		var io = require('socket.io').listen(server, {'transports': ['polling']});
+		var io = require('socket.io').listen(server, {'transports': ['polling']}); //TODO set fallback mechanism for websocket
 
 		var redis_io = require('socket.io-redis');
 		var redis = require("redis");
 
 		global.io = io;
 
-		io.adapter(redis_io({host: config.redisHost, port: config.redisPort}));
+		var pub = redis.createClient(config.redisPort, config.redisHost, { returnBuffers: true});
+		var sub = redis.createClient(config.redisPort, config.redisHost, {returnBuffers: true});
+
+		pub.on('error', (err) => {
+			console.log('error from pub');
+			console.log(err);
+		});
+		sub.on('error', (err) => {
+			console.log('error from sub');
+			console.log(err);
+		});
+
+		io.adapter(redis_io({pubClient: pub, subClient: sub}));
+
+
+		//io.adapter(redis_io({host: config.redisHost, port: config.redisPort}));
 
 		io.on('connection', function (socket) {
 
@@ -236,7 +273,7 @@
 
 					if(global.cluster[id].intervalId){
 
-						global.cluster[id].intervalId.cancel();
+						clearInterval(global.cluster[id].intervalId);
 						delete global.cluster[id].intervalId;
 					}
 				}

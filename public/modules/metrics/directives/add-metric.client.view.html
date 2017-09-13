@@ -1,11 +1,11 @@
 <div>
     <div class="page-header">
-        <h1>New Metric</h1>
+        <h1>Edit Metric</h1>
     </div>
     <!--<div cg-busy="{promise:updateTestrun,message:'Updating test runs...'}"></div>-->
-    <form name="metricForm">
+    <form name="metricForm" novalidate>
         <div layout="column">
-            <div  class="well">
+            <div >
                 <md-input-container
                         md-is-error="metricForm.metricAlias.$invalid && (metricForm.$submitted || metricForm.metricAlias.$dirty || vm.triedToSubmit === true)"
                         layout-fill>
@@ -17,13 +17,15 @@
                     </div>
                 </md-input-container>
             </div>
-            <div layout="column" class="well">
+
+            <div layout="column">
+                <label class="targets-label">Targets</label>
                 <div ng-repeat="target in vm.metric.targets track by $index">
-                    <div layout="row" layout-align="end center">
+                    <div layout="row" class="metric-targets" layout-align="end center">
                         <md-input-container
                                 md-is-error="metricForm.target.$invalid && (metricForm.$submitted || metricForm.target.$dirty || vm.triedToSubmit === true)"
                                 flex>
-                            <label>Target</label>
+                            <!--<label>Target</label>-->
                             <input name="target" ng-model="vm.metric.targets[$index]"required>
                             <div ng-messages="metricForm.target.$error"
                                  ng-if="metricForm.$submitted || metricForm.metricAlias.$touched || vm.triedToSubmit === true">
@@ -31,7 +33,7 @@
                             </div>
                         </md-input-container>
                         <create-graphite-query  metric="vm.metric" index="$index"></create-graphite-query>
-                        <md-icon md-svg-src="images/assets/ic_content_copy_black_36px.svg" data-ng-click="vm.duplicateTarget($index)"
+                        <md-icon md-svg-src="images/assets/ic_content_copy_black_24px.svg" data-ng-click="vm.duplicateTarget($index)"
                                  data-ng-show="target.length > 0">
                             <md-tooltip>
                                 Duplicate target
@@ -39,28 +41,28 @@
                         </md-icon>
                         <target-preview  metric="vm.metric" index="$index" data-ng-show="target.length > 0"></target-preview>
 
-                        <md-icon md-svg-src="images/assets/ic_clear_black_36px.svg" data-ng-click="vm.removeTarget($index)"
+                        <md-icon md-svg-src="images/assets/ic_clear_black_24px.svg" data-ng-click="vm.removeTarget($index)"
                                  data-ng-show="vm.metric.targets.length>1">
                             <md-tooltip>
                                 Remove target
                             </md-tooltip>
                         </md-icon>
+                        <md-icon md-menu-origin md-svg-src="images/assets/ic_add_black_24px.svg" data-ng-click="vm.addTarget()">
+                            <md-tooltip>
+                                Add target
+                            </md-tooltip>
+                        </md-icon>
 
                     </div>
                 </div>
-                <div>
-                    <md-button md-no-ink class="md-primary md-raised" data-ng-click="vm.addTarget()">Add target</md-button>
-                </div>
+                <!--<div>-->
+                <!--<md-button md-no-ink class="md-primary md-raised" data-ng-click="vm.addTarget()">Add target</md-button>-->
+                <!--</div>-->
             </div>
-            <md-input-container flex class="well">
-                <!--<label>Alias</label>-->
-                <tags-input data-ng-model="vm.metric.tags">
-                    <auto-complete source="vm.loadTags($query)" loadOnDownArrow="true"></auto-complete>
-                </tags-input>
-            </md-input-container>
-            <div  class="well">
+
+            <div layout="row">
                 <div layout="row"  layout-align="start center">
-                    <div class="md-padding">
+                    <div class="metric-type">
                         <md-input-container >
                             <label>Type</label>
                             <md-select ng-model="vm.metric.type">
@@ -70,7 +72,7 @@
                             </md-select>
                         </md-input-container>
                     </div>
-                    <div class="md-padding">
+                    <div class="metric-type">
                         <md-input-container>
                             <label>Unit</label>
                             <md-select ng-model="vm.metric.unit">
@@ -80,7 +82,7 @@
                             </md-select>
                         </md-input-container>
                     </div>
-                    <div layout="row" layout-align="start center" class="md-padding">
+                    <div layout="row" layout-align="start center" class="metric-type">
                         <md-input-container ng-if="vm.metric.unit ==='Custom'">
                             <label>Custom unit</label>
                             <input ng-model="vm.metric.customUnit">
@@ -90,56 +92,88 @@
                         </md-button>
                     </div>
                 </div>
+                <md-input-container class="metric-tags" flex>
+                    <!--<label>Tags</label>-->
+                    <tags-input data-ng-model="vm.metric.tags" class="metric-tags">
+                        <auto-complete source="vm.loadTags($query)" loadOnDownArrow="true"></auto-complete>
+                    </tags-input>
+                </md-input-container>
             </div>
-            <div layout="column" class="well">
-                <md-switch class="md-primary" md-no-ink aria-label="Requirements enabled" ng-model="vm.enableRequirement" ng-class="{'switch-label-disabled': vm.enableRequirement === false }">
-                    Requirements
-                </md-switch>
-                <!--<md-checkbox ng-model="enableRequirement" aria-label="Requirements enabled">-->
+            <div layout="row">
+                <div layout="column">
+                    <md-switch name="enableRequirement" class="md-primary" md-no-ink aria-label="Requirements enabled" ng-model="vm.enableRequirement" ng-class="{'switch-label-disabled': vm.enableRequirement === false }">
+                        Requirements
+                    </md-switch>
+                    <!--<md-checkbox ng-model="enableRequirement" aria-label="Requirements enabled">-->
                     <!--Requirements enabled-->
-                <!--</md-checkbox>-->
-                <div layout="row">
-                    <md-input-container>
-                        <label>Requirement</label>
-                        <md-select ng-disabled="vm.enableRequirement === false" ng-model="vm.metric.requirementOperator" >
-                            <md-option value="<">
-                                should be lower than
-                            </md-option>
-                            <md-option value=">">
-                                should be higher than
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
-                    <md-input-container  flex>
-                        <label>Value</label>
-                        <input ng-model="vm.metric.requirementValue"  ng-disabled="vm.enableRequirement === false">
-                    </md-input-container>
+                    <!--</md-checkbox>-->
+                    <div layout="row">
+                        <md-input-container md-is-error="!vm.metric.requirementOperator && vm.enableRequirement === true && (metricForm.$submitted || metricForm.requirementOperator.$dirty || vm.triedToSubmit === true)"
+                        >
+                            <label>Requirement</label>
+                            <md-select   name="requirementOperator" ng-disabled="vm.enableRequirement === false" ng-model="vm.metric.requirementOperator" ng-required="vm.enableRequirement === true">
+                                <md-option value="<">
+                                    should be lower than
+                                </md-option>
+                                <md-option value=">">
+                                    should be higher than
+                                </md-option>
+                            </md-select>
+                            <div ng-messages="metricForm.requirementOperator.$error"
+                                 ng-if="metricForm.$submitted || vm.enableRequirement === true || triedToSubmit === true">
+                                <div ng-message="required">Select option.</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container
+                                md-is-error="metricForm.requirementValue.$invalid && vm.enableRequirement === true && (metricForm.$submitted || metricForm.enableRequirement.$dirty || vm.triedToSubmit === true)"
+                                flex>
+                            <label>Value</label>
+                            <input name="requirementValue" ng-model="vm.metric.requirementValue"  ng-disabled="vm.enableRequirement === false" ng-required="vm.enableRequirement === true">
+                            <div ng-messages="metricForm.requirementValue.$error"
+                                 ng-if="metricForm.$submitted || vm.enableRequirement === true || triedToSubmit === true">
+                                <div ng-message="required">Value is required.</div>
+                            </div>
+
+                        </md-input-container>
+                    </div>
+                </div>
+                <div layout="column">
+                    <md-switch  class="md-primary" md-no-ink aria-label="Benchmarking enabled" ng-model="vm.enableBenchmarking"  ng-class="{'switch-label-disabled': vm.enableBenchmarking === false }">
+                        Benchmarking
+                    </md-switch>
+                    <div layout="row">
+                        <md-input-container md-is-error="!vm.metric.benchmarkOperator && vm.enableBenchmarking === true && (metricForm.$submitted || vm.triedToSubmit === true)">
+                            <label>Benchmark</label>
+                            <md-select name="benchmarkOperator" ng-disabled="vm.enableBenchmarking === false" ng-model="vm.metric.benchmarkOperator" ng-required="vm.enableBenchmarking === true">
+                                <md-option value=">">
+                                    allow a positive deviation of
+                                </md-option>
+                                <md-option value="<">
+                                    allow a negative deviation of
+                                </md-option>
+                            </md-select>
+                            <div ng-messages="metricForm.benchmarkOperator.$error"
+                                 ng-if="metricForm.$submitted || vm.enableBenchmarking === true || triedToSubmit === true">
+                                <div ng-message="required">Select option.</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container md-is-error="metricForm.benchmarkValue.$invalid && vm.enableBenchmarking === true && (metricForm.$submitted || metricForm.benchmarkValue.$dirty || vm.triedToSubmit === true)">
+                            <label>Value</label>
+                            <input name="benchmarkValue" ng-model="vm.metric.benchmarkValue" ng-disabled="vm.enableBenchmarking === false" ng-required="vm.enableBenchmarking === true">
+                            <div ng-messages="metricForm.benchmarkValue.$error"
+                                 ng-if="metricForm.$submitted || vm.enableBenchmarking === true || triedToSubmit === true">
+                                <div ng-message="required">Value is required.</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                </div>
+                <div >
+
                 </div>
             </div>
-            <div layout="column" class="well">
-                <md-switch class="md-primary" md-no-ink aria-label="Benchmarking enabled" ng-model="vm.enableBenchmarking"  ng-class="{'switch-label-disabled': vm.enableBenchmarking === false }">
-                    Benchmarking
-                </md-switch>
-                <div layout="row">
-                    <md-input-container>
-                        <label>Benchmark</label>
-                        <md-select ng-disabled="vm.enableBenchmarking === false" ng-model="vm.metric.benchmarkOperator">
-                            <md-option value=">">
-                                allow a positive deviation of
-                            </md-option>
-                            <md-option value="<">
-                                allow a negative deviation of
-                            </md-option>
-                        </md-select>
-                    </md-input-container>
-                    <md-input-container flex>
-                        <label>Value</label>
-                        <input ng-model="vm.metric.benchmarkValue" ng-disabled="vm.enableBenchmarking === false">
-                    </md-input-container>
-                </div>
-            </div>
-            <div layout="column" class="well">
-                <md-switch class="md-primary" md-no-ink aria-label="Include in test run summary" ng-model="vm.metric.includeInSummary" ng-class="{'switch-label-disabled': vm.metric.includeInSummary === false }">
+
+            <div layout="column">
+                <md-switch class="md-primary summary-switch" md-no-ink aria-label="Include in test run summary" ng-model="vm.metric.includeInSummary" ng-class="{'switch-label-disabled': vm.metric.includeInSummary === false }">
                     Include in test run summary
                 </md-switch>
                 <md-input-container class="md-block" flex>
@@ -148,14 +182,16 @@
                 </md-input-container>
 
             </div>
-            <div flex layout="row">
+            <div layout="row" flex >
                 <md-button md-no-ink class="md-primary" data-ng-click="vm.triedToSubmit=true; metricForm.$valid && vm.create()">Submit</md-button>
                 <md-button data-ng-click="vm.cancel()">Cancel</md-button>
-                <div flex="75" class="md-padding" layout="column" data-ng-if="vm.progress !== undefined" layout-align="center right">
+                <div flex-offset="50" flex="25" class="md-padding" layout="column" data-ng-if="vm.progress !== undefined" layout-align="center right">
                     <md-progress-linear  md-mode="determinate" value="{{vm.progress}}"></md-progress-linear>
                     <div>Updating test runs ... {{vm.progress}}%</div>
                 </div>
+
             </div>
+
         </div>
     </form>
 </div>

@@ -47,13 +47,22 @@
                 <md-switch ng-model="dashboard.triggerTestRunsWithJenkins" aria-label="Trigger test runs with Jenkins" ng-class="{'switch-label-disabled': dashboard.triggerTestRunsWithJenkins === false }">
                     Trigger test runs from Jenkins
                 </md-switch>
-                <div ng-if="dashboard.triggerTestRunsWithJenkins"  layout="row" layout-align="start center">
+                <div ng-show="dashboard.triggerTestRunsWithJenkins"  layout="row" layout-align="start center">
                     <md-input-container flex  >
                         <label>Jenkins job</label>
                         <input name="jenkinsJobName" ng-model="dashboard.jenkinsJobName">
                     </md-input-container>
                     <select-jenkins-job job="dashboard.jenkinsJobName"></select-jenkins-job>
                 </div>
+                <md-input-container flex style="padding-top:20px;">
+                    <label>Default dashboard markdown</label>
+                    <textarea  ng-model="dashboard.markDown" placeholder="Enter Markdown text here"  class="markdown-textarea"></textarea>
+                </md-input-container>
+                <div>
+                    <h5>Markdown preview</h5>
+                    <div id="markdown" ng-class="{preview: true}"></div>
+                </div>
+
             </div>
             <div layout="row">
                 <md-button md-no-ink class="md-primary" ng-click="triedToSubmit=true; dashboardForm.$valid && create()">Submit</md-button>

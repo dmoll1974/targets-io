@@ -271,14 +271,14 @@ function MergeTemplateDirective () {
                                       if(variableArray.length > 3) {
 
 
-                                              for (var p = 0; p < variableArray[3].replaceItems.length; n++) {
+                                              for (var p = 0; p < variableArray[3].replaceItems.length; p++) {
 
                                                   replace4 = variableArray[3].replaceItems[p];
 
                                                   if(variableArray.length > 4) {
 
 
-                                                          for (var r = 0; r < variableArray[4].replaceItems.length; n++) {
+                                                          for (var r = 0; r < variableArray[4].replaceItems.length; r++) {
 
                                                               replace5 = variableArray[4].replaceItems[r];
                                                               replaceArray.push([replace1, replace2, replace3, replace4, replace5]);

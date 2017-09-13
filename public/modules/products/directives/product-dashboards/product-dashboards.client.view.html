@@ -12,7 +12,12 @@
                     <th>Jenkins integration</th>
                     <th>Jenkins job</th>
                     <th>Trends</th>
-                    <th></th>
+                    <th>
+                        <i class="glyphicon glyphicon-plus" ui-sref="addDashboard({productName: product.name})""></i>
+                        <md-tooltip>
+                            Add dashboard
+                        </md-tooltip>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -22,21 +27,36 @@
                 <tr ng-repeat="dashboard in product.dashboards" class="hover-row dashboard-row"  >
                     <td class="pointer" data-ng-click="viewDashboard(dashboard)" >
                         {{dashboard.name}}
+                        <md-tooltip>
+                            Open dashboard
+                        </md-tooltip>
                     </td>
                     <td class="pointer" data-ng-click="viewDashboard(dashboard)">
                         {{dashboard.description}}
+                        <md-tooltip>
+                            Open dashboard
+                        </md-tooltip>
                     </td>
 
                     <td class="pointer">
                         <md-switch class="md-primary" md-no-ink aria-label="Enable benchmarking" ng-model="dashboard.useInBenchmark" ng-change="updateDashboard(dashboard)"></md-switch>
+                        <md-tooltip>
+                            Click to toggle
+                        </md-tooltip>
                     </td>
                     <td class="pointer">
                         <md-switch class="md-primary" md-no-ink aria-label="Include ramp up in benchmarks" ng-model="dashboard.includeRampUp" ng-change="updateDashboard(dashboard)"></md-switch>
+                        <md-tooltip>
+                            Click to toggle
+                        </md-tooltip>
                     </td>
                     <td class="pointer">
                         <md-switch class="md-primary" md-no-ink aria-label="Jenkins integrations enabled" ng-model="dashboard.triggerTestRunsWithJenkins" ng-change="toggleJenkinsIntegration(dashboard)"></md-switch>
+                        <md-tooltip>
+                            Click to toggle
+                        </md-tooltip>
                     </td>
-                    <td class="pointer">
+                    <td>
                         {{dashboard.jenkinsJobName}}
                     </td>
                     <td>

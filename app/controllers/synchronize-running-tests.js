@@ -11,9 +11,29 @@ var winston = require('winston');
 var RunningTest = mongoose.model('RunningTest');
 var Testrun = mongoose.model('Testrun');
 var runningTestModule = require('./running-test.server.controller');
+var md5 = require('MD5');
+var redis = require("redis");
+var pub = redis.createClient(config.redisPort, config.redisHost, { returnBuffers: true});
+var sub = redis.createClient(config.redisPort, config.redisHost, {returnBuffers: true});
+var mutex = require('node-mutex')({pub: pub, sub: sub});
+
+pub.on('error', (err) => {
+  console.log('error from pub');
+  console.log(err);
+});
+sub.on('error', (err) => {
+  console.log('error from sub');
+  console.log(err);
+});
 
 
 exports.synchronizeRunningTestRuns = synchronizeRunningTestRuns;
+
+function createHash(testRunString) {
+  var hashedKey;
+  hashedKey = md5(testRunString);
+  return hashedKey;
+}
 
 
 function synchronizeRunningTestRuns (clusterId) {
@@ -35,31 +55,43 @@ function synchronizeRunningTestRuns (clusterId) {
 
       _.each(runningTests, function (runningTest) {
 
-        /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
-        if (dateNow - new Date(runningTest.keepAliveTimestamp).getTime() > 16 * 1000) {
+        let lockId = createHash(runningTest.productName + runningTest.dashboardName + runningTest.testRunId );
 
-          /* mark test as not completed */
-          runningTest.completed = false;
-
-          runningTestModule.saveTestRun(runningTest)
-          .then(function(savedTestRun){
-
-            winston.info('removed running test: ' + savedTestRun.testRunId);
-
-          })
-          .catch(runningTestErrorHandler);
+        mutex.lock( lockId, function( err, unlock ) {
 
 
-        }
+            /* if keep alive is older than 16 seconds, save running test in test run collection and remove from running tests collection */
+            if (dateNow - new Date(runningTest.keepAliveTimestamp).getTime() > 16 * 1000) {
 
+              /* mark test as not completed */
+              runningTest.completed = false;
+
+              runningTestModule.saveTestRun(runningTest)
+              .then(function(savedTestRun){
+
+                unlock();
+                winston.info('removed running test: ' + savedTestRun.testRunId);
+
+              })
+              .catch(function(err){
+                unlock();
+                runningTestErrorHandler(err)
+              });
+
+
+            }else{
+
+              unlock();
+            }
+
+        });
       });
     }
   });
 }
 
 let runningTestErrorHandler = function(err){
-
-  winston.error('Error in saving test run: ' + err.stack);
+    winston.error('Error in saving test run: ' + err);
 }
 
 

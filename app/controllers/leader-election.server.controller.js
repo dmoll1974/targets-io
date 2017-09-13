@@ -7,9 +7,19 @@ var mongoose = require('mongoose'),
     config = require('../../config/config'),
     _ = require('lodash'),
     clusterLeader = mongoose.model('clusterLeader'),
-    mutex = require('node-mutex')({host: config.redisHost, port: config.redisPort });
+    redis = require("redis"),
+    pub = redis.createClient(config.redisPort, config.redisHost, { returnBuffers: true}),
+    sub = redis.createClient(config.redisPort, config.redisHost, {returnBuffers: true}),
+    mutex = require('node-mutex')({pub: pub, sub: sub});
 
-
+    pub.on('error', (err) => {
+      console.log('error from pub');
+      console.log(err);
+    });
+    sub.on('error', (err) => {
+      console.log('error from sub');
+      console.log(err);
+    });
 
 
 

@@ -334,7 +334,7 @@ function deleteTestRunById(req, res) {
  * select test runs for product
  */
 function testRunsForProduct(req, res) {
-  Testrun.find({productName: req.params.productName, completed: true}).sort({end: -1}).limit(req.params.limit).exec(function (err, testRuns) {
+  Testrun.find({productName: req.params.productName, completed: true}).sort({end: -1}).limit(parseInt(req.params.limit)).exec(function (err, testRuns) {
     if (err) {
       return res.status(400).send({message: errorHandler.getErrorMessage(err)});
     } else {
@@ -562,9 +562,9 @@ function testRunsForDashboard(req, res) {
 
       Testrun.find({
         $and: query
-      }).sort({end: -1 }).limit(req.params.limit).exec(function(err, testRuns) {
+      }).sort({end: -1 }).limit(parseInt(req.params.limit)).exec(function(err, testRuns) {
         if (err) {
-          return res.status(400).send({message: errorHandler.getErrorMessage(err)});
+          return res.status(400).send({message: 'Something went wrong getting test runs, error: ' + err});
         } else {
 
           /* check if fixed baseline is in the results */
@@ -828,36 +828,50 @@ let upsertTestRun = function(testRun){
 
   return new Promise((resolve, reject) => {
 
-    Testrun.findOneAndUpdate({$and:[
+    Testrun.findOne({$and:[
       {productName: testRun.productName},
       {dashboardName: testRun.dashboardName},
       {testRunId: testRun.testRunId}
-    ]}, {metrics: testRun.metrics,
-        meetsRequirement: testRun.meetsRequirement,
-        benchmarkResultFixedOK: testRun.benchmarkResultFixedOK,
-        benchmarkResultPreviousOK: testRun.benchmarkResultPreviousOK,
-        baseline: testRun.baseline,
-        previousBuild: testRun.previousBuild,
-        humanReadableDuration: humanReadableDuration(testRun.end.getTime() - testRun.start.getTime()),
-        lastUpdated: new Date().getTime()
+    ]}).exec(function(err, storedTestRun){
+
+        if (err) {
+            reject(err);
+        } else {
+
+            storedTestRun.metrics = testRun.metrics;
+            storedTestRun.meetsRequirement = testRun.meetsRequirement;
+            storedTestRun.benchmarkResultFixedOK = testRun.benchmarkResultFixedOK;
+            storedTestRun.benchmarkResultPreviousOK = testRun.benchmarkResultPreviousOK;
+            storedTestRun.baseline = testRun.baseline;
+            storedTestRun.previousBuild = testRun.previousBuild;
+            storedTestRun.humanReadableDuration = humanReadableDuration(testRun.end.getTime() - testRun.start.getTime());
+            storedTestRun.lastUpdated = new Date().getTime();
+
+            storedTestRun.save(function(err, savedTestRun){
+
+                if (err) {
+                    reject(err);
+                } else {
+
+                    var io = global.io;
+                    var room = savedTestRun.productName + '-' + savedTestRun.dashboardName;
+
+                    winston.info('emitting message to room: ' + room);
+                    io.sockets.in(room).emit('testrun', {event: 'saved', testrun: savedTestRun});
+                    winston.info('emitting message to room: recent-test');
+                    io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: savedTestRun});
+
+                    resolve(savedTestRun);
+                }
+
+
+            })
         }
-        , {upsert:true}, function(err, savedTestRun){
-      if (err) {
-        reject(err);
-      } else {
-        var io = global.io;
-        var room = savedTestRun.productName + '-' + savedTestRun.dashboardName;
 
-        winston.info('emitting message to room: ' + room);
-        io.sockets.in(room).emit('testrun', {event: 'saved', testrun: savedTestRun});
-        winston.info('emitting message to room: recent-test');
-        io.sockets.in('recent-test').emit('testrun', {event: 'saved', testrun: savedTestRun});
-
-        resolve(savedTestRun);
-      }
+       })
 
     });
- });
+
 }
 
 function benchmarkAndPersistTestRunById(testRun) {
@@ -926,6 +940,7 @@ function getDataForTestrun(testRun) {
                   _.each(body, function (bodyTarget) {
 
                     /* save value based on metric type */
+
 
                     switch (metric.type) {
 
@@ -1045,15 +1060,17 @@ function calculateAverage(datapoints) {
 
 function calculateMaximum(datapoints){
 
-  var maximum = 0;
+  var maximum = null;
 
   for(var d=0;d<datapoints.length;d++){
 
-    if (datapoints[d][0] > maximum)
+    if (datapoints[d][0] !== null && datapoints[d][0] > maximum)
       maximum = datapoints[d][0];
   }
 
-  return Math.round(maximum * 100)/100;
+  var result = (maximum === null)? null : Math.round(maximum * 100)/100;
+
+  return result;
 }
 
 function calculateMinimum(datapoints){
@@ -1074,13 +1091,13 @@ function getLastDatapoint(datapoints){
 
   for(var d=datapoints.length-1;d>=0;--d){
 
-    if(datapoints[d][0]!= null)
+    if(datapoints[d][0]!= null) {
 
-    /* if no valid number is calculated, return null*/
+      /* if no valid number is calculated, return null*/
 
-      var result = !isNaN(Math.round((datapoints[d][0])*100)/100) ? Math.round((datapoints[d][0])*100)/100 : null;
+      var result = !isNaN(Math.round((datapoints[d][0]) * 100) / 100) ? Math.round((datapoints[d][0]) * 100) / 100 : null;
       return result;
-
+    }
   }
 }
 function calculateLinearFit(datapoints){

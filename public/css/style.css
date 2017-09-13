@@ -52,13 +52,43 @@ html, body {
     background-color: white;
 }
 
-.metric-targets {
+.metric-tags{
+    max-height: 80px;
+}
 
-    width: 98%;
-    margin-bottom: 8px;
-    padding-left: 10px;
-    padding-top: 7px;
-    padding-bottom: 7px;
+.summary-switch{
+
+    margin: 0px;
+}
+
+.targets-label{
+
+    font-size: 10px;
+    color: #757575
+}
+.metric-targets md-input-container{
+
+    margin:0px;
+    padding-left: 5px;
+    padding-top: 0px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+}
+
+.metric-targets div{
+
+    margin:0px;
+    padding-left: 5px;
+    padding-top: 0px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+}
+
+.metric-type md-input-container{
+
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
     padding-right: 10px;
 }
 
@@ -167,11 +197,11 @@ html, body {
 
 }
 
-.side-menu, .side-menu ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 0;
-}
+/*.side-menu, .side-menu ul {*/
+    /*list-style: none;*/
+    /*padding: 0;*/
+    /*margin-top: 0;*/
+/*}*/
 
 .side-menu .md-button.active {
     color: white;
@@ -632,7 +662,7 @@ md-menu-item>.md-button.targets-io-menu-button{
 
 }
 
-ul
+.draggable-metrics
 {
     list-style-type: none;
     padding:0;
@@ -923,4 +953,26 @@ div.jenkins-logo.jenkins-header {
 
     margin: 0px !important;
     padding: 0px !important;
+}
+
+md-autocomplete input::-webkit-input-placeholder {
+    color:lightgrey;
+    font-size: 10.5px;
+}
+md-autocomplete input:-moz-placeholder { /* Firefox 18- */
+    color:lightgrey;
+    font-size: 10.5px;
+
+}
+
+md-autocomplete input::-moz-placeholder {  /* Firefox 19+ */
+    color:lightgrey;
+    font-size: 10.5px;
+
+}
+
+md-autocomplete input:-ms-input-placeholder {
+    color:lightgrey;
+    font-size: 10.5px;
+
 }

@@ -76,7 +76,10 @@
                 <td>
                     {{annotation.x | date:'EEEE, dd-M-yyyy H:mm:ss'}}
                 </td>
-                <td>
+                <td ng-click="goToTestRun(annotation.text)">
+                    <md-tooltip>
+                        Open test run {{annotation.text}}
+                    </md-tooltip>
                     {{annotation.text}}
                 </td>
 

@@ -181,14 +181,14 @@
             <h4>Metrics</h4>
             <div layout="row" ng-show="editMode">
                 <!--<md-menu >-->
-                    <md-button ng-if="!showMetricToAddAutocomplete" id="addMetric" class="md-padding targets-io-menu-button"  aria-label="Add metric to test run summary"
-                               ng-click="toggleShowMetricToAddAutocomplete()">
-                        <md-icon style="margin-right:16px;" md-svg-src="images/assets/ic_add_black_24px.svg"></md-icon>
-                        Add metric
-                        <md-tooltip>
-                            Add metric to test run summary
-                        </md-tooltip>
-                    </md-button>
+                    <!--<md-button ng-if="!showMetricToAddAutocomplete" id="addMetric" class="md-padding targets-io-menu-button"  aria-label="Add metric to test run summary"-->
+                               <!--ng-click="toggleShowMetricToAddAutocomplete()">-->
+                        <!--<md-icon style="margin-right:16px;" md-svg-src="images/assets/ic_add_black_24px.svg"></md-icon>-->
+                        <!--Add metric-->
+                        <!--<md-tooltip>-->
+                            <!--Add metric to test run summary-->
+                        <!--</md-tooltip>-->
+                    <!--</md-button>-->
                     <md-autocomplete tabindex="1" ng-if="showMetricToAddAutocomplete === true" class="target-autocomplete"
                                      md-input-id="metricToAddAutoComplete"
                                      md-selected-item="metricToAdd"
@@ -216,7 +216,7 @@
         </div>
         <p ng-if="testRunSummary.metrics.length === 0">No metrics configured to be included in test run summary. Enable edit mode and choose "add metric" or use the metric configuration screen to add metrics.</p>
         <md-content class="md-padding" layout="column" flex="75" >
-            <ul as-sortable="dragControlListeners"  is-disabled="!hideGraphs" data-ng-model="testRunSummary.metrics">
+            <ul class="draggable-metrics" as-sortable="dragControlListeners"  is-disabled="!hideGraphs" data-ng-model="testRunSummary.metrics">
                 <li  data-ng-repeat="metric in testRunSummary.metrics" data-as-sortable-item>
                 <div ng-class="{boxedGraph: hideGraphs && editMode}"  data-as-sortable-item-handle>
                     <div layout="row" layout-align="space-between center">

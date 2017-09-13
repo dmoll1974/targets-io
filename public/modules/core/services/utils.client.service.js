@@ -75,7 +75,7 @@ angular.module('core').factory('Utils', [
         Utils.zoomFrom = undefined;
         Utils.zoomUntil = undefined;
         Utils.showLegend = true;
-        Utils.numberOfColumns = 2;
+        //Utils.numberOfColumns = 2;
         Utils.sortReverse = false;
         Utils.sortType = 'tags[0].text';
         Utils.loadNumberOfTestRuns = 10;

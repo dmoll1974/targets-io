@@ -64,10 +64,15 @@ function clone (req, res) {
     metricClone.dashboardId = dashboardClone._id;
     metricClone.alias = metric.alias;
     metricClone.targets = metric.targets;
+    metricClone.type = metric.type;
+    metricClone.unit = metric.unit;
     metricClone.benchmarkOperator = metric.benchmarkOperator;
     metricClone.benchmarkValue = metric.benchmarkValue;
     metricClone.requirementValue = metric.requirementValue;
     metricClone.requirementOperator = metric.requirementOperator;
+    metricClone.includeInSummary = metric.includeInSummary;
+    metricClone.defaultSummaryText = metric.defaultSummaryText;
+    metricClone.summaryIndex = metric.summaryIndex;
     metricClone.tags = metric.tags;
     metricCloneArray.push(metricClone._id);
     metricClone.save(function (err) {
@@ -118,6 +123,7 @@ function update(req, res) {
   dashboard.startSteadyState = req.body.startSteadyState;
   dashboard.triggerTestRunsWithJenkins = req.body.triggerTestRunsWithJenkins;
   dashboard.jenkinsJobName = req.body.jenkinsJobName;
+  dashboard.markDown = req.body.markDown;
   dashboard.save(function (err) {
     if (err) {
       return res.status(400).send({ message: errorHandler.getErrorMessage(err) });

@@ -151,6 +151,7 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
     $scope.setAllSeriesSelected = setAllSeriesSelected;
     $scope.selectSeriesToggle = selectSeriesToggle;
     $scope.selectOtherSeriesToggle = selectOtherSeriesToggle;
+    $scope.goToTestRun = goToTestRun;
 
 
 
@@ -617,7 +618,20 @@ function DygraphDirective ($timeout, Interval, TestRuns, Utils) {
 
     };
 
-    function selectOtherSeriesToggle(selectedLegendItem){
+
+
+    function goToTestRun(testRunId){
+
+        $state.go('viewGraphs', {
+            'productName': $stateParams.productName,
+            'dashboardName': $stateParams.dashboardName,
+            'testRunId': testRunId,
+            tag: $stateParams.tag
+        });
+    }
+
+
+     function selectOtherSeriesToggle(selectedLegendItem){
 
       var selectedSeriesIndex = $scope.metric.legendData.map(function(legendItem){return legendItem.id;}).indexOf(selectedLegendItem.id);
 

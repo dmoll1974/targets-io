@@ -1,5 +1,6 @@
-#targets-io #
-##Performance test dashboard
+# targets-io
+
+## Performance test dashboard
 
 Dashboard app for organizing, analyzing, benchmarking and reporting of test results of performance tests executed with Gatling Tool, JMeter or LoadRunner (see [LR2Graphite](https://github.com/ogarling/LR2Graphite) and [LRLauncher](https://github.com/ogarling/LR2Graphite/wiki)).
 The load related metrics are stored in Graphite together with for instance resource usage metrics of the application under test.
@@ -52,7 +53,7 @@ The end result will be 9 started docker containers:
 
 Open the targets-io performance dashboard via
 
-`http://localhost:3000`
+`http://localhost`
 
 First restore the pre-configured demo dashboard configurations via the menu in the right top of the screen
 
@@ -68,9 +69,9 @@ Log in using the credentials admin/targets-io
 
 To see a demo of the automated assertion of benchmark results of a test run, start the TARGETS-IO-GATLING-DEMO job (click "Build now"). This will trigger the [Gatling demo script](https://github.com/dmoll1974/targets-io-demo-script-gatling)
 
-- After the first run has finished, go to `http://localhost:3000/#!/browse/MEAN/GATLING-NIGHTLY/`to check the results.
+- After the first run has finished, go to `http://localhost/#!/browse/MEAN/GATLING-NIGHTLY/`to check the results.
 - Rerun the the TARGETS-IO-GATLING-DEMO job.
-- When this build passes it means all your configured requirements / benchmark thresholds (see explanation above) have passed for this run. If the job fails, check the job logs to find out why and examine  `http://localhost:3000/#!/browse/MEAN/GATLING-NIGHTLY/` to investigate. You can drill down the consolidated results by clicking on the passed/failed icons. 
+- When this build passes it means all your configured requirements / benchmark thresholds (see explanation above) have passed for this run. If the job fails, check the job logs to find out why and examine  `http://localhost/#!/browse/MEAN/GATLING-NIGHTLY/` to investigate. You can drill down the consolidated results by clicking on the passed/failed icons. 
 
 ***Graylog integration demo***
 
@@ -100,12 +101,12 @@ The TARGETS-IO-LOADRUNNER-DEMO job triggers the [LoadRunner TruClient demo scrip
 
 The [targets-io image on Docker hub](https://hub.docker.com/r/dmoll1974/targets-io/) is updated frequently. To deploy the latest version in your demo environment, use `sudo docker-compose stop targetsio`, `sudo docker-compose pull targetsio` and `sudo docker-compose up -d` to update!  
 
-##Documentation
+## Documentation
 
 [Wiki](https://github.com/dmoll1974/targets-io/wiki) (in progress)
 
 
-##Libraries / Dependencies
+## Libraries / Dependencies
 
 + [Meanjs](https://github.com/meanjs/mean)
 + [Dygraphs] (http://dygraphs.com/) 
@@ -120,6 +121,6 @@ The [targets-io image on Docker hub](https://hub.docker.com/r/dmoll1974/targets-
 + [pdfMake](http://pdfmake.org/#/)
 
 
-##License
+## License
 
 [GNU GPL](https://github.com/dmoll1974/targets-io/blob/master/LICENSE.md)
