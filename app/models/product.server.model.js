@@ -23,7 +23,8 @@ var ProductSchema = new mongoose.Schema({
             type: Boolean,
             default: false
         },
-        'jenkinsJobName': String,
+    'jenkinsJobName': String,
+    'graylogFacility': String,
    'dashboards': [{
       type: Schema.Types.ObjectId,
       ref: 'Dashboard'

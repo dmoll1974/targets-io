@@ -45,6 +45,12 @@
                         </md-input-container>
                         <select-jenkins-job job="product.jenkinsJobName"></select-jenkins-job>
                     </div>
+                    <div layout="row" layout-align="start center">
+                        <md-input-container flex  >
+                            <label>Graylog facility name</label>
+                            <input name="graylogFacility" ng-model="product.graylogFacility">
+                        </md-input-container>
+                    </div>
                 </div>
                 <div layout="row">
                     <md-button md-no-ink class="md-primary" ng-click="triedToSubmit=true; productForm.$valid && update()">Submit</md-button>

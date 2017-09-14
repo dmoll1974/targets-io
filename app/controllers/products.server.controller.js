@@ -49,6 +49,7 @@ function update(req, res) {
   product.requirements = req.body.requirements;
   product.triggerTestRunsWithJenkins = req.body.triggerTestRunsWithJenkins;
   product.jenkinsJobName = req.body.jenkinsJobName;
+  product.graylogFacility = req.body.graylogFacility;
 
   product.save(function (err) {
     if (err) {

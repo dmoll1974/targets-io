@@ -109,7 +109,7 @@ function uploadProduct(req, res) {
   jsonfile.readFile(file, function (err, importItems) {
 
     if (err) {
-      res.send(500, {
+        res.status(500).send({
         err: err,
         msg: 'Failed to upload file'
       });
@@ -343,6 +343,7 @@ function uploadProduct(req, res) {
                 newProduct.markDown = importProduct.markDown;
                 newProduct.triggerTestRunsWithJenkins = importProduct.triggerTestRunsWithJenkins;
                 newProduct.jenkinsJobName = importProduct.jenkinsJobName;
+                newProduct.graylogFacility = importProduct.graylogFacility;
 
                 newProduct.save(function (err, NewProduct) {
                   if (err)
@@ -741,6 +742,7 @@ function upload(req, res) {
               newProduct.markDown = importProduct.markDown;
               newProduct.triggerTestRunsWithJenkins = importProduct.triggerTestRunsWithJenkins;
               newProduct.jenkinsJobName = importProduct.jenkinsJobName;
+              newProduct.graylogFacility = importProduct.graylogFacility;
 
               newProduct.save(function (err, NewProduct) {
                 if (err)

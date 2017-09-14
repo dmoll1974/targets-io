@@ -15,7 +15,7 @@
     };
     return directive;
     /* @ngInject */
-    function GatlingDetailsController($scope, $timeout, $filter, $stateParams, Jenkins, TestRuns, ngTableParams, $window, Utils, Dashboards) {
+    function GatlingDetailsController($scope, $timeout, $filter, $stateParams, Jenkins, TestRuns, ngTableParams, $window, Utils, Dashboards, Products) {
 
       $scope.setTab = setTab;
       $scope.isSet = isSet;
@@ -41,14 +41,16 @@
 
       function deepLinkToGraylog(error){
 
-        var query = Dashboards.selected.jenkinsJobName ? '&q=gatling_error%3A%22' + encodeURI(error) + '%22+AND+jenkins_job%3A' + encodeURI(Dashboards.selected.jenkinsJobName): '&q=gatling_error%3A%22' + encodeURI(error) + '%22';
+          var query = Dashboards.selected.jenkinsJobName ? '&q=%28gatling_error%3A%22' + encodeURI(error) + '%22+AND+jenkins_job%3A' + encodeURI(Dashboards.selected.jenkinsJobName) + '%29+OR+%28facility%3A' + encodeURI($scope.graylogFacility) + '+AND+NOT+level%3A6%29' : '&q=%28gatling_error%3A%22' + encodeURI(error) + '%22' + '%29+OR+%28facility%3A' + encodeURI($scope.graylogFacility) + '+AND+NOT+level%3A6%29';
 
-        var url = $scope.graylogUrl + '/search?rangetype=absolute&fields=message%2Csource&width=1680&from=' + encodeURI(new Date(TestRuns.selected.start).toISOString())  + '&to=' + encodeURI(new Date(TestRuns.selected.end).toISOString()) + query;
+          var url = $scope.graylogUrl + '/search?rangetype=absolute&fields=message%2Csource&width=1680&from=' + encodeURI(new Date(TestRuns.selected.start).toISOString())  + '&to=' + encodeURI(new Date(TestRuns.selected.end).toISOString()) + query;
 
         $window.open(url, '_blank');
       }
 
       function activate() {
+
+        $scope.graylogFacility =  (Products.selected.graylogFacility) ? Products.selected.graylogFacility : 'PRODUCT_FACILTY_NAME';
 
         $scope.tabNumber = 0;
 
