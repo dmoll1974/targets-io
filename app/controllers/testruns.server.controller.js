@@ -722,31 +722,31 @@ function testRunById(req, res) {
   });
 }
 function getTestRunBenchmarks(req, res) {
-  Testrun.findOne({
-    $and: [
-      { productName: req.params.productName },
-      { dashboardName: req.params.dashboardName },
-      { testRunId: req.params.testRunId.toUpperCase() }
-    ]
+    Testrun.findOne({
+        $and: [
+            { productName: req.params.productName },
+            { dashboardName: req.params.dashboardName },
+            { testRunId: req.params.testRunId.toUpperCase() }
+        ]
 
-  }).sort('-end').exec(function (err, testRun) {
-    if (err) {
-      return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
-    } else {
-      if (testRun) {
+    }).exec(function (err, testRun) {
+        if (err) {
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        } else {
+            if (testRun && testRun.lastUpdated) {
 
-        var response = {};
+                var response = {};
 
-        response.meetsRequirement = (testRun.meetsRequirement == null || testRun.meetsRequirement == true) ? true : false;
-        response.benchmarkResultPreviousOK = (testRun.benchmarkResultPreviousOK == null || testRun.benchmarkResultPreviousOK == true) ? true : false;
-        response.benchmarkResultFixedOK = (testRun.benchmarkResultFixedOK == null || testRun.benchmarkResultFixedOK == true) ? true : false;
+                response.meetsRequirement = (testRun.meetsRequirement == null || testRun.meetsRequirement == true) ? true : false;
+                response.benchmarkResultPreviousOK = (testRun.benchmarkResultPreviousOK == null || testRun.benchmarkResultPreviousOK == true) ? true : false;
+                response.benchmarkResultFixedOK = (testRun.benchmarkResultFixedOK == null || testRun.benchmarkResultFixedOK == true) ? true : false;
 
-        res.jsonp(response);
-      } else {
-        return res.status(404).send({ message: 'No test run with id ' + req.params.testRunId + 'has been found for this dashboard' });
-      }
-    }
-  });
+                res.jsonp(response);
+            } else {
+                return res.status(404).send({ message: 'No benchmarks found for testRun id ' + req.params.testRunId  });
+            }
+        }
+    });
 }
 
 function refreshTestrun(req, res) {
