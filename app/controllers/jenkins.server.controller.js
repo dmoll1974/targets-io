@@ -381,10 +381,13 @@ function getJenkinsData (jenkinsUrl, running, start, end, productName, dashboard
 
   request.get(consoleUrl, options, function (err, response, body) {
     if (err) {
-      console.error(err);
+      winston.error(err);
     } else {
 
       if (response.statusCode !== 200) {
+
+        if  (response.statusCode === 401) winston.error('Jenkins authorization failed, please update your credentials');
+        else winston.error('Jenkins call failed with statuscode: ' + response.statusCode);
 
         consoleResponse.status = 'fail';
         consoleResponse.data = err;
