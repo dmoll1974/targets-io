@@ -22,6 +22,7 @@ function RunningTestsDirective () {
         $scope.$on('$destroy', function () {
             //  leave the room
             mySocket.emit('exit-room', room);
+            mySocket.disconnect();
         });
 
         /*socket.io*/

@@ -105,6 +105,8 @@ function TestrunsDirective () {
       $interval.cancel(spinner);
       //  leave the room
       mySocket.emit('exit-room', room);
+      mySocket.disconnect();
+
 
     });
 
