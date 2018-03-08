@@ -976,3 +976,12 @@ md-autocomplete input:-ms-input-placeholder {
     font-size: 10.5px;
 
 }
+
+md-tabs-canvas.md-paginated{
+    overflow: visible;
+}
+
+md-tabs-canvas.md-paginated md-tab-item{
+    overflow: hidden;
+}
+
